@@ -270,6 +270,7 @@ jobs:
             TEMP_FILE="$(mktemp)"
             toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
             mv "$TEMP_FILE" "$I"
+            git add "$I"
           done
         shell: bash
         env:
