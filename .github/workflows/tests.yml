@@ -57,10 +57,6 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: test
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
-          args: '-- -h'
   lints:
     runs-on: ubuntu-latest
     steps:
