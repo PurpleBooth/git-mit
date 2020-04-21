@@ -292,7 +292,7 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
           upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./pb-commit-msg-hook-x86_64-unknown-linux-gnu/pb-pre-commit
+          asset_path: ./pb-pre-commit-x86_64-unknown-linux-gnu/pb-pre-commit
           asset_name: pb-commit-msg-hook-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.1
@@ -316,8 +316,8 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
           upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./pb-commit-msg-hook-x86_64-apple-darwin/pb-pre-commit
-          asset_name: pb-commit-msg-hook-x86_64-apple-darwin
+          asset_path: ./pb-pre-commit-x86_64-apple-darwin/pb-pre-commit
+          asset_name: pb-pre-commit-x86_64-apple-darwin
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.1
         env:
