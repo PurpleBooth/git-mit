@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "pb-prepare-commit-msg",
+    "pb-pre-commit",
+    "pb-commit-msg",
+]

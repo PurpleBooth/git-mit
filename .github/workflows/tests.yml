@@ -1,0 +1,355 @@
+'on':
+  push:
+    branches:
+      - '*'
+  pull_request: null
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: '${{ runner.os }}-cargo-registry-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: '${{ runner.os }}-cargo-index-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
+  test:
+    runs-on: '${{ matrix.os }}'
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+          - os: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: '${{ runner.os }}-cargo-registry-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: '${{ runner.os }}-cargo-index-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+      - uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: '-- -h'
+  lints:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: '${{ runner.os }}-cargo-registry-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: '${{ runner.os }}-cargo-index-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: 'rustfmt, clippy'
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: '--all -- --check'
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: '-- -D warnings'
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          lfs: true
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - id: get_previous_version
+        run: echo ::set-output name=PREVIOUS_VERSION::$(git describe --tags "$(git rev-list --tags --max-count=1)")
+        shell: bash
+      - id: semvers
+        uses: WyriHaximus/github-action-next-semvers@master
+        with:
+          version: '${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}'
+      - run: mkdir -p ./version
+      - if: "!contains(github.event.head_commit.message, 'BC BREAK') && !contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
+        run: echo "$VERSION" >./version/version
+        env:
+          VERSION: ${{ steps.semvers.outputs.v_minor }}
+      - if: "contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
+        run: echo "$VERSION" >./version/version
+        env:
+          VERSION: ${{ steps.semvers.outputs.v_patch }}
+      - run: echo "$VERSION" > ./version/version
+        env:
+          VERSION: ${{ steps.semvers.outputs.v_major }}
+        if: "contains(github.event.head_commit.message, 'BC BREAK')"
+      - uses: actions/upload-artifact@master
+        with:
+          name: version
+          path: ./version/version
+  build:
+    needs:
+      - version
+      - lints
+      - test
+      - check
+    runs-on: '${{ matrix.os }}'
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            suffix: ''
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            suffix: ''
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            suffix: '.exe'
+    steps:
+      - uses: actions/checkout@master
+        with:
+          lfs: true
+      - id: get_repository_name
+        run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+        shell: bash
+      - uses: actions/download-artifact@master
+        with:
+          name: version
+      - id: get_version
+        run: 'echo ::set-output "name=VERSION::$(cat ./version/version)"'
+        shell: bash
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: '${{ runner.os }}-cargo-registry-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: '${{ runner.os }}-cargo-index-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: 'toml-cli'
+      - shell: bash
+        env:
+          VERSION: '${{ steps.get_version.outputs.VERSION }}'
+        run: |
+          for I in */src/Cargo.toml ; do
+            TEMP_FILE="$(mktemp)"
+            toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
+            mv "$TEMP_FILE" "$I"
+          done
+      - uses: actions-rs/cargo@v1
+        env:
+          VERSION: '${{ steps.get_version.outputs.VERSION }}'
+          REPOSITORY_NAME: '${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}'
+        with:
+          command: build
+          args: '--release'
+      - uses: actions/upload-artifact@master
+        with:
+          name: pb-commit-msg-hook-${{ matrix.target }}
+          path: ./target/release/pb-commit-msg-hook${{ matrix.suffix }}
+      - uses: actions/upload-artifact@master
+        with:
+          name: pb-pre-commit-${{ matrix.target }}
+          path: ./target/release/pb-pre-commit${{ matrix.suffix }}
+      - uses: actions/upload-artifact@master
+        with:
+          name: pb-prepare-commit-msg-${{ matrix.target }}
+          path: ./target/release/pb-prepare-commit-msg${{ matrix.suffix }}
+  release:
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          lfs: true
+      - id: get_repository_name
+        run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+        shell: bash
+      - uses: actions/download-artifact@master
+        with:
+          name: version
+      - id: get_version
+        run: 'echo ::set-output name=VERSION::$(cat ./version/version)'
+        shell: bash
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-commit-msg-hook-x86_64-unknown-linux-gnu
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-pre-commit-x86_64-unknown-linux-gnu
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-commit-msg-hook-x86_64-apple-darwin
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-prepare-commit-msg-x86_64-apple-darwin
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-pre-commit-x86_64-apple-darwin
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-commit-msg-hook-x86_64-pc-windows-msvc
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-prepare-commit-msg-x86_64-pc-windows-msvc
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-pre-commit-x86_64-pc-windows-msvc
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: 'toml-cli'
+      - run: |
+          for I in */src/Cargo.toml ; do
+            TEMP_FILE="$(mktemp)"
+            toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
+            mv "$TEMP_FILE" "$I"
+          done
+        shell: bash
+        env:
+          VERSION: '${{ steps.get_version.outputs.VERSION }}'
+      - uses: stefanzweifel/git-auto-commit-action@v4.1.3
+        with:
+          commit_message: Bump cargo version
+          branch: ${{ github.head_ref }}
+          file_pattern: Cargo.toml
+      - id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: '${{ secrets.COMMITTER_TOKEN }}'
+        with:
+          tag_name: '${{ steps.get_version.outputs.VERSION }}'
+          release_name: 'Release ${{ steps.get_version.outputs.VERSION }}'
+          draft: false
+          prerelease: false
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-commit-msg-hook-x86_64-unknown-linux-gnu/pb-pre-commit
+          asset_name: pb-commit-msg-hook-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-prepare-commit-msg-x86_64-unknown-linux-gnu/pb-prepare-commit-msg
+          asset_name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-commit-msg-hook-x86_64-unknown-linux-gnu/pb-commit-msg-hook
+          asset_name: pb-commit-msg-hook-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-commit-msg-hook-x86_64-pc-windows-msvc/pb-pre-commit
+          asset_name: pb-commit-msg-hook-x86_64-pc-windows-msvc
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-prepare-commit-msg-x86_64-pc-windows-msvc/pb-prepare-commit-msg
+          asset_name: pb-prepare-commit-msg-x86_64-pc-windows-msvc
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-commit-msg-hook-x86_64-pc-windows-msvc/pb-commit-msg-hook
+          asset_name: pb-commit-msg-hook-x86_64-pc-windows-msvc
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-commit-msg-hook-x86_64-apple-darwin/pb-pre-commit
+          asset_name: pb-commit-msg-hook-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-prepare-commit-msg-x86_64-apple-darwin/pb-prepare-commit-msg
+          asset_name: pb-prepare-commit-msg-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-commit-msg-hook-x86_64-apple-darwin/pb-commit-msg-hook
+          asset_name: pb-commit-msg-hook-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
