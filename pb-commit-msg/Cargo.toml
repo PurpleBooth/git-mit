@@ -3,6 +3,7 @@ name = "pb-commit-msg-hook"
 version = "0.1.0"
 authors = ["Billie Thompson <billie@billiecodes.com>"]
 edition = "2018"
+license = "Creative Commons Zero v1.0 Universal"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
