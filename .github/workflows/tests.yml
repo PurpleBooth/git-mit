@@ -176,7 +176,7 @@ jobs:
         env:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
         run: |
-          for I in */src/Cargo.toml ; do
+          for I in ./*/Cargo.toml ; do
             TEMP_FILE="$(mktemp)"
             toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
             mv "$TEMP_FILE" "$I"
@@ -256,7 +256,7 @@ jobs:
           command: install
           args: 'toml-cli'
       - run: |
-          for I in */src/Cargo.toml ; do
+          for I in */Cargo.toml ; do
             TEMP_FILE="$(mktemp)"
             toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
             mv "$TEMP_FILE" "$I"
