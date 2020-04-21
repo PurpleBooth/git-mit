@@ -1,6 +1,6 @@
 [package]
 name = "pb-commit-msg-hook"
-version = "v0.1.0"
+version = "0.1.0"
 authors = ["Billie Thompson <billie@billiecodes.com>"]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
