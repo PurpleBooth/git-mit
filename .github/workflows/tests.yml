@@ -238,24 +238,6 @@ jobs:
       - id: get_version
         run: 'echo ::set-output name=VERSION::$(cat ./version/version)'
         shell: bash
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-commit-msg-hook-x86_64-unknown-linux-gnu
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-pre-commit-x86_64-unknown-linux-gnu
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-commit-msg-hook-x86_64-apple-darwin
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-prepare-commit-msg-x86_64-apple-darwin
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-pre-commit-x86_64-apple-darwin
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -278,8 +260,24 @@ jobs:
         with:
           commit_message: Bump cargo version
           branch: ${{ github.head_ref }}
-          file_pattern: ./*/Cargo.toml
-
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-commit-msg-hook-x86_64-unknown-linux-gnu
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-pre-commit-x86_64-unknown-linux-gnu
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-commit-msg-hook-x86_64-apple-darwin
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-prepare-commit-msg-x86_64-apple-darwin
+      - uses: actions/download-artifact@master
+        with:
+          name: pb-pre-commit-x86_64-apple-darwin
       - id: create_release
         uses: actions/create-release@v1.0.0
         env:
