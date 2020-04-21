@@ -93,6 +93,18 @@ jobs:
       - uses: actions/checkout@master
         with:
           lfs: true
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: '${{ runner.os }}-cargo-registry-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: '${{ runner.os }}-cargo-index-${{ hashFiles(''**/Cargo.lock'') }}'
+      - uses: actions/cache@v1
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - id: get_previous_version
         run: echo ::set-output name=PREVIOUS_VERSION::$(git describe --tags "$(git rev-list --tags --max-count=1)")
