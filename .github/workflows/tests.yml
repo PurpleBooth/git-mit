@@ -262,7 +262,7 @@ jobs:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
       - uses: stefanzweifel/git-auto-commit-action@v4.1.3
         with:
-          commit_message: Bump cargo version
+          commit_message: Creating Release '${{ steps.get_version.outputs.VERSION }}'
           branch: ${{ github.head_ref }}
       - uses: actions/download-artifact@master
         with:
