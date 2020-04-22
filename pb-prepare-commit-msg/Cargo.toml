@@ -9,3 +9,5 @@ description = "This hook is invoked by git-commit right after preparing the defa
 
 [dependencies]
 clap = "~2.33"
+[dev-dependencies]
+itertools = "0.9.0"

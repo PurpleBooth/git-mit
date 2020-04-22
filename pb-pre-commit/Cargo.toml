@@ -9,3 +9,5 @@ description = "Run first, before you even type in a commit message. It’s used 
 
 [dependencies]
 clap = "~2.33"
+[dev-dependencies]
+itertools = "0.9.0"

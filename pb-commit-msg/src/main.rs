@@ -17,13 +17,7 @@ fn main() -> std::io::Result<()> {
         )
         .get_matches();
 
-    let commit_file_path: &str;
-    if let Some(config) = matches.value_of("commit-message-path") {
-        commit_file_path = config
-    } else {
-        panic!("Unreachable statement, matches would exit before this")
-    }
-
+    let commit_file_path = matches.value_of("commit-file-path").unwrap();
     let commit_message =
         fs::read_to_string(commit_file_path).expect("Something went wrong reading the file");
 

@@ -1,7 +1,7 @@
 [package]
 name = "pb-commit-msg"
 version = "0.6.0"
-authors = ["Billie Thompson <billie@billiecodes.com>"]
+authors = ["Billie Thompson <billie+pb-commit-msg@billiecodes.com>"]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
 description = "Validate the commit message that a user has input"
@@ -10,3 +10,5 @@ description = "Validate the commit message that a user has input"
 
 [dependencies]
 clap = "~2.33"
+[dev-dependencies]
+itertools = "0.9.0"
