@@ -1,11 +1,29 @@
+use clap::{crate_authors, crate_version, App, Arg};
 use std::collections::HashSet;
 use std::env;
 use std::fs;
 use std::iter::FromIterator;
 
 fn main() -> std::io::Result<()> {
-    let args: Vec<String> = env::args().collect();
-    let commit_file_path = &args[1];
+    let matches = App::new(env!("CARGO_PKG_NAME"))
+        .version(crate_version!())
+        .author(crate_authors!())
+        .about(env!("CARGO_PKG_DESCRIPTION"))
+        .arg(
+            Arg::with_name("commit-file-path")
+                .help("Path to a temporary file that contains the commit message written by the developer")
+                .index(1)
+                .required(true)
+        )
+        .get_matches();
+
+    let commit_file_path: &str;
+    if let Some(config) = matches.value_of("commit-message-path") {
+        commit_file_path = config
+    } else {
+        panic!("Unreachable statement, matches would exit before this")
+    }
+
     let commit_message =
         fs::read_to_string(commit_file_path).expect("Something went wrong reading the file");
 

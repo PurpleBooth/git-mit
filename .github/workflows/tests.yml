@@ -65,6 +65,10 @@ jobs:
         with:
           command: run
           args: '--bin pb-pre-commit -- -h'
+      - uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: '--bin pb-commit-msg -- -h'
   lints:
     runs-on: ubuntu-latest
     steps:

@@ -51,19 +51,22 @@ version = "0.2.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "pb-commit-msg-hook"
-version = "0.5.0"
+name = "pb-commit-msg"
+version = "0.6.0"
+dependencies = [
+ "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "pb-pre-commit"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "pb-prepare-commit-msg"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
