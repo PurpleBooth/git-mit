@@ -210,8 +210,8 @@ jobs:
           args: '--release'
       - uses: actions/upload-artifact@master
         with:
-          name: pb-commit-msg-hook-${{ matrix.target }}
-          path: ./target/release/pb-commit-msg-hook${{ matrix.suffix }}
+          name: pb-commit-msg-${{ matrix.target }}
+          path: ./target/release/pb-commit-msg${{ matrix.suffix }}
       - uses: actions/upload-artifact@master
         with:
           name: pb-pre-commit-${{ matrix.target }}
@@ -274,7 +274,7 @@ jobs:
           branch: ${{ github.head_ref }}
       - uses: actions/download-artifact@master
         with:
-          name: pb-commit-msg-hook-x86_64-unknown-linux-gnu
+          name: pb-commit-msg-x86_64-unknown-linux-gnu
       - uses: actions/download-artifact@master
         with:
           name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
@@ -283,7 +283,7 @@ jobs:
           name: pb-pre-commit-x86_64-unknown-linux-gnu
       - uses: actions/download-artifact@master
         with:
-          name: pb-commit-msg-hook-x86_64-apple-darwin
+          name: pb-commit-msg-x86_64-apple-darwin
       - uses: actions/download-artifact@master
         with:
           name: pb-prepare-commit-msg-x86_64-apple-darwin
@@ -320,8 +320,8 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
           upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./pb-commit-msg-hook-x86_64-unknown-linux-gnu/pb-commit-msg-hook
-          asset_name: pb-commit-msg-hook-x86_64-unknown-linux-gnu
+          asset_path: ./pb-commit-msg-x86_64-unknown-linux-gnu/pb-commit-msg
+          asset_name: pb-commit-msg-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.1
         env:
@@ -344,6 +344,6 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
           upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./pb-commit-msg-hook-x86_64-apple-darwin/pb-commit-msg-hook
-          asset_name: pb-commit-msg-hook-x86_64-apple-darwin
+          asset_path: ./pb-commit-msg-x86_64-apple-darwin/pb-commit-msg
+          asset_name: pb-commit-msg-x86_64-apple-darwin
           asset_content_type: application/octet-stream
