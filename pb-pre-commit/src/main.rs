@@ -2,11 +2,16 @@ use std::env;
 use std::os::unix::process::CommandExt;
 use std::process;
 
+use clap::{crate_authors, crate_version, App};
+
 fn main() {
-    let mut arguments: Vec<String> = vec!["duet-pre-commit".to_string()];
-    arguments.extend(env::args().skip(1).collect::<Vec<String>>().iter().cloned());
+    App::new(env!("CARGO_PKG_NAME"))
+        .version(crate_version!())
+        .author(crate_authors!())
+        .about(env!("CARGO_PKG_DESCRIPTION"))
+        .get_matches();
 
     let cmd = "git";
-    let err = process::Command::new(cmd).args(arguments).exec();
+    let err = process::Command::new(cmd).exec();
     panic!("panic!: {}", err)
 }
