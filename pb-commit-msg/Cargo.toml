@@ -12,3 +12,4 @@ description = "Validate the commit message that a user has input"
 clap = "~2.33"
 [dev-dependencies]
 itertools = "0.9.0"
+tempfile = "3"

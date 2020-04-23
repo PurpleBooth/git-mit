@@ -56,6 +56,9 @@ jobs:
           override: true
       - uses: actions-rs/cargo@v1
         with:
+          command: clean
+      - uses: actions-rs/cargo@v1
+        with:
           command: test
       - uses: actions-rs/cargo@v1
         with:
@@ -190,6 +193,9 @@ jobs:
           override: true
       - uses: actions-rs/cargo@v1
         with:
+          command: clean
+      - uses: actions-rs/cargo@v1
+        with:
           command: install
           args: 'toml-cli'
       - shell: bash
@@ -265,11 +271,15 @@ jobs:
             toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
             mv "$TEMP_FILE" "$I"
           done
-          cargo build --bin pb-commit-msg # we do this to update the Cargo.lock file
-          cargo clean
         shell: bash
         env:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clean
       - uses: stefanzweifel/git-auto-commit-action@v4.1.3
         with:
           commit_message: Creating Release '${{ steps.get_version.outputs.VERSION }}'

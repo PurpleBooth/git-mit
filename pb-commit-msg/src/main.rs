@@ -23,7 +23,7 @@ fn main() -> std::io::Result<()> {
 
     for trailer in &["Signed-off-by", "Co-authored-by"] {
         if has_duplicated_trailers(&commit_message, trailer) {
-            println!(
+            eprintln!(
                 r#"
 {}
 
