@@ -1,6 +1,6 @@
 [package]
 name = "pb-prepare-commit-msg"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Billie Thompson <billie+pb-prepare-commit-msg@billiecodes.com>"]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
