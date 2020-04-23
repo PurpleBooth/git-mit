@@ -265,6 +265,8 @@ jobs:
             toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
             mv "$TEMP_FILE" "$I"
           done
+          cargo build --bin pb-commit-msg # we do this to update the Cargo.lock file
+          cargo clean
         shell: bash
         env:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
