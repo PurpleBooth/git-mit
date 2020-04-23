@@ -29,7 +29,8 @@ fn main() {
         )
         .get_matches();
 
-    let mut arguments: Vec<String> = vec![];
+    let cmd = "git";
+    let mut arguments: Vec<String> = vec!["duet-prepare-commit-msg".to_string()];
 
     if let Some(config) = matches.value_of("commit-message-path") {
         arguments.push(config.to_string())
@@ -45,7 +46,6 @@ fn main() {
 
     arguments.extend(env::args().skip(1).collect::<Vec<String>>().iter().cloned());
 
-    let cmd = "git";
     let err = process::Command::new(cmd).args(arguments).exec();
     panic!("panic!: {}", err)
 }

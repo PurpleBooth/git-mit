@@ -10,31 +10,37 @@ fn version_returned_by_long_flag() {
         .arg("--version")
         .output()
         .expect("failed to execute process");
-    assert!(
-        &output.status.success(),
-        "Expected command to run successfully, instead got {}",
-        output.status.code().unwrap()
-    );
 
-    let stdout = str::from_utf8(&output.stdout).unwrap();
+    let stdout = str::from_utf8(&output.stdout)
+        .expect("Failed to convert stdout to a string, is it valid UTF-8?");
+    let stderr = str::from_utf8(&output.stderr)
+        .expect("Failed to convert stderr to a string, is it valid UTF-8?");
+
     let expected_prefix = "pb-pre-commit ";
     assert!(
         stdout.starts_with(expected_prefix),
-        "Expected stdout to start with \"{}\", instead got \"{}\"",
+        "Expected stdout to start with {:?}, instead got stdout: {:?} stderr: {:?}",
         expected_prefix,
-        stdout
+        stdout,
+        stderr
     );
     assert!(
         stdout.ends_with("\n"),
-        "Expected stdout to end with a new line, instead got \"{}\"",
-        stdout
+        "Expected stdout to end with a new line, instead got stdout: {:?} stderr: {:?}",
+        stdout,
+        stderr
     );
 
-    let stderr = str::from_utf8(&output.stderr).unwrap();
     assert!(
         stderr.is_empty(),
-        "Expected stderr to be empty, instead got \"{}\"",
+        "Expected stderr to be empty, instead got stdout: {:?} stderr: {:?}",
+        stdout,
         stderr
+    );
+    assert!(
+        &output.status.success(),
+        "Expected command to run successfully, instead got {:?}",
+        output.status.code()
     );
 }
 
@@ -47,30 +53,37 @@ fn version_returned_by_short_flag() {
         .arg("-V")
         .output()
         .expect("failed to execute process");
+
+    let stderr = str::from_utf8(&output.stderr)
+        .expect("Failed to convert stdout to a string, is it valid UTF-8?");
+    let stdout = str::from_utf8(&output.stdout)
+        .expect("Failed to convert stderr to a string, is it valid UTF-8?");
+
     assert!(
-        &output.status.success(),
-        "Expected command to run successfully, instead got {}",
-        output.status.code().unwrap()
+        stderr.is_empty(),
+        "Expected stderr to be empty, instead got stdout: {:?} stderr: {:?}",
+        stdout,
+        stderr
     );
 
-    let stdout = str::from_utf8(&output.stdout).unwrap();
     let expected_prefix = "pb-pre-commit ";
     assert!(
         stdout.starts_with(expected_prefix),
-        "Expected stdout to start with \"{}\", instead got \"{}\"",
+        "Expected stdout to start with {:?}, instead got stdout: {:?} stderr: {:?}",
         expected_prefix,
-        stdout
+        stdout,
+        stderr
     );
     assert!(
         stdout.ends_with("\n"),
-        "Expected stdout to end with a new line, instead got \"{}\"",
-        stdout
+        "Expected stdout to end with a new line, instead got stdout: {:?} stderr: {:?}",
+        stdout,
+        stderr
     );
 
-    let stderr = str::from_utf8(&output.stderr).unwrap();
     assert!(
-        stderr.is_empty(),
-        "Expected stderr to be empty, instead got \"{}\"",
-        stderr
+        &output.status.success(),
+        "Expected command to run successfully, instead got {:?}",
+        output.status.code()
     );
 }
