@@ -87,16 +87,7 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
         .arg("run")
         .arg("--quiet")
         .arg("--")
-        .arg("-q")
-        .arg("-w")
-        .arg("-e")
-        .arg("-r")
-        .arg("-t")
-        .arg("-y")
-        .arg("-i")
-        .arg("-o")
-        .arg("-u")
-        .arg("-p")
+        .arg("--banana")
         .output()
         .expect("failed to execute process");
     assert!(!&output.status.success());
@@ -104,7 +95,7 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
     assert!(stdout.is_empty());
 
     let stderr = str::from_utf8(&output.stderr).unwrap();
-    let expected = r#"error: Found argument '-q' which wasn't expected, or isn't valid in this context
+    let expected = r#"error: Found argument '--banana' which wasn't expected, or isn't valid in this context
 
 USAGE:
     pb-prepare-commit-msg <commit-message-path> [ARGS]
