@@ -4,6 +4,8 @@ use pb_commit_message_lints::has_duplicated_trailers;
 use std::env;
 use std::fs;
 
+const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
+
 fn main() -> std::io::Result<()> {
     let matches = App::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
@@ -21,7 +23,7 @@ fn main() -> std::io::Result<()> {
     let commit_message =
         fs::read_to_string(commit_file_path).expect("Something went wrong reading the file");
 
-    for trailer in &["Signed-off-by", "Co-authored-by"] {
+    for trailer in &TRAILERS_TO_CHECK_FOR_DUPLICATES {
         if has_duplicated_trailers(&commit_message, trailer) {
             eprintln!(
                 r#"
