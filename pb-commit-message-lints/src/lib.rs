@@ -19,7 +19,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn no_trailer_is_fine() {
+    fn has_duplicated_trailers_no_trailer_is_fine() {
         let commit_message = r#"
 An example commit
 
@@ -31,7 +31,7 @@ This is an example commit without any duplicate trailers
     }
 
     #[test]
-    fn two_identical_trailers_is_bad() {
+    fn has_duplicated_trailers_two_identical_trailers_is_bad() {
         let commit_message = r#"
 An example commit
 
@@ -46,7 +46,7 @@ Signed-off-by: Billie Thompson <email@example.com>
     }
 
     #[test]
-    fn two_trailers_with_different_names_is_fine() {
+    fn has_duplicated_trailers_two_trailers_with_different_names_is_fine() {
         let commit_message = r#"
 An example commit
 
@@ -75,7 +75,7 @@ Signed-off-by: Billie Thompson <email@example.com>
     }
 
     #[test]
-    fn the_trailer_has_to_have_a_colon_to_count() {
+    fn has_duplicated_trailers_the_trailer_has_to_have_a_colon_to_count() {
         let commit_message = r#"
 An example commit
 
@@ -90,7 +90,7 @@ Signed-off-by Billie Thompson <email@example.com>
     }
 
     #[test]
-    fn the_trailer_can_be_anything() {
+    fn has_duplicated_trailers_the_trailer_can_be_anything() {
         let commit_message = r#"
 An example commit
 
