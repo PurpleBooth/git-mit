@@ -167,7 +167,7 @@ Signed-off-by: Ada Lovelace <ada@example.com>
     }
 
     #[test]
-    fn one_trailer_is_fine() {
+    fn has_duplicated_trailer_one_trailer_is_fine() {
         let commit_message = r#"
 An example commit
 
