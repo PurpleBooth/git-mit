@@ -1,4 +1,4 @@
-use std::process::Command;
+use std::process::{Command, Stdio};
 use std::str;
 
 #[test]
@@ -8,6 +8,7 @@ fn version_returned_by_long_flag() {
         .arg("--quiet")
         .arg("--")
         .arg("--version")
+        .stdin(Stdio::inherit())
         .output()
         .expect("failed to execute process");
 
