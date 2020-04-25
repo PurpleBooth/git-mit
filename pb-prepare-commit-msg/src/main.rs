@@ -44,8 +44,6 @@ fn main() {
         arguments.push(config.to_string())
     }
 
-    arguments.extend(env::args().skip(1).collect::<Vec<String>>().iter().cloned());
-
     let err = process::Command::new(cmd).args(arguments).exec();
     panic!("panic!: {}", err)
 }

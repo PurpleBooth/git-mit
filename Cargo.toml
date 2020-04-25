@@ -4,4 +4,5 @@ members = [
     "pb-prepare-commit-msg",
     "pb-pre-commit",
     "pb-commit-msg",
+    "pb-commit-message-lints"
 ]
