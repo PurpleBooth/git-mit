@@ -11,7 +11,9 @@ description = "Validate the commit message that a user has input"
 [dependencies]
 clap = "~2.33"
 pb-commit-message-lints = { path = "../pb-commit-message-lints" }
+git2 = "0.13"
 
 [dev-dependencies]
 itertools = "0.9.0"
 tempfile = "3"
+pretty_assertions = "0.6.1"

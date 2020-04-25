@@ -11,3 +11,4 @@ description = "Run first, before you even type in a commit message. It’s used 
 clap = "~2.33"
 [dev-dependencies]
 itertools = "0.9.0"
+pretty_assertions = "0.6.1"
