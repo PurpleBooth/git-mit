@@ -214,7 +214,7 @@ dependencies = [
 
 [[package]]
 name = "pb-commit-message-lints"
-version = "2.3.0"
+version = "2.4.0"
 dependencies = [
  "git2 0.13.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "pretty_assertions 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -223,19 +223,19 @@ dependencies = [
 
 [[package]]
 name = "pb-commit-msg"
-version = "2.3.0"
+version = "2.4.0"
 dependencies = [
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "git2 0.13.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pb-commit-message-lints 2.3.0",
+ "pb-commit-message-lints 2.4.0",
  "pretty_assertions 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "tempfile 3.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "pb-pre-commit"
-version = "2.3.0"
+version = "2.4.0"
 dependencies = [
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -244,7 +244,7 @@ dependencies = [
 
 [[package]]
 name = "pb-prepare-commit-msg"
-version = "2.3.0"
+version = "2.4.0"
 dependencies = [
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
