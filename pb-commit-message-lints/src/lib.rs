@@ -48,7 +48,7 @@ pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
     None
 }
 
-pub fn has_duplicated_trailer(commit_message: &str, trailer: &str) -> bool {
+fn has_duplicated_trailer(commit_message: &str, trailer: &str) -> bool {
     let trailers: Vec<&str> = commit_message
         .lines()
         .filter(|x| x.starts_with(&format!("{}:", trailer)))
