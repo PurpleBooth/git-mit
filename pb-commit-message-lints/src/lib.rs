@@ -14,15 +14,16 @@ pub enum Lints {
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
+/// # Errors
+///
+/// Will return `Err` if we can't read the git configuration for some reason or it's not parsable
 pub fn get_lint_configuration(config: &Config) -> Result<Vec<Lints>> {
     let mut result_vec: Vec<Lints> = vec![];
 
     let lint_name = "pb.message.duplicated-trailers";
 
     // If it's not defined default to on
-    if let Ok(false) = config_defined(config, lint_name) {
-        result_vec.push(DuplicatedTrailers)
-    } else if let Ok(true) = config.get_bool(lint_name) {
+    if !config_defined(config, lint_name)? || config.get_bool(lint_name)? {
         result_vec.push(DuplicatedTrailers)
     }
 
@@ -36,11 +37,17 @@ fn config_defined(config: &Config, lint_name: &str) -> Result<bool> {
         .map_err(Box::from)
 }
 
+#[must_use]
 pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
     let duplicated_trailers: Vec<String> = TRAILERS_TO_CHECK_FOR_DUPLICATES
         .iter()
-        .filter(|x| has_duplicated_trailer(commit_message, x))
-        .map(|x| (*x).to_string())
+        .filter_map(|x| {
+            if !has_duplicated_trailer(commit_message, x) {
+                return None;
+            }
+
+            Some((*x).to_string())
+        })
         .collect();
 
     if !duplicated_trailers.is_empty() {
@@ -64,18 +71,19 @@ fn has_duplicated_trailer(commit_message: &str, trailer: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::wildcard_imports)]
     use super::*;
     use pretty_assertions::assert_eq;
 
     #[test]
     fn has_duplicated_trailers_runs_both_tests() {
-        let commit_message = r#"
+        let valid_commit_message = r#"
 An example commit
 
 This is an example commit without any duplicate trailers
 "#;
 
-        let actual = has_duplicated_trailers(commit_message);
+        let actual = has_duplicated_trailers(valid_commit_message);
         let expected = None;
         assert_eq!(
             actual, expected,
@@ -83,7 +91,7 @@ This is an example commit without any duplicate trailers
             expected, actual
         );
 
-        let commit_message = r#"
+        let commit_message_with_both_repeated_trailers = r#"
 An example commit
 
 This is an example commit without any duplicate trailers
@@ -94,14 +102,14 @@ Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 "#;
 
-        let actual = has_duplicated_trailers(commit_message);
+        let actual = has_duplicated_trailers(commit_message_with_both_repeated_trailers);
         let expected = Some(vec![
             "Signed-off-by".to_string(),
             "Co-authored-by".to_string(),
         ]);
         assert_eq!(actual, expected);
 
-        let commit_message = r#"
+        let commit_message_with_repeating_signed_off_by = r#"
 An example commit
 
 This is an example commit without any duplicate trailers
@@ -110,10 +118,10 @@ Signed-off-by: Billie Thompson <email@example.com>
 Signed-off-by: Billie Thompson <email@example.com>
 "#;
 
-        let actual = has_duplicated_trailers(commit_message);
+        let actual = has_duplicated_trailers(commit_message_with_repeating_signed_off_by);
         assert_eq!(actual, Some(vec!["Signed-off-by".to_string()]));
 
-        let commit_message = r#"
+        let commit_message_with_repeating_co_authors = r#"
 An example commit
 
 This is an example commit without any duplicate trailers
@@ -122,7 +130,7 @@ Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 "#;
 
-        let actual = has_duplicated_trailers(commit_message);
+        let actual = has_duplicated_trailers(commit_message_with_repeating_co_authors);
         assert_eq!(actual, Some(vec!["Co-authored-by".to_string()]));
     }
 

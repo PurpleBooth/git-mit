@@ -3,6 +3,12 @@ name = "pb-commit-message-lints"
 version = "2.6.0"
 authors = ["Billie Thompson <billie@billiecodes.com>"]
 edition = "2018"
+license = "CC0 1.0 Universal"
+categories = ["development-tools", "command-line-utilities"]
+keywords = ["git", "git-hooks"]
+readme = "../README.md"
+repository = "https://github.com/PurpleBooth/pb-git-hooks"
+description = "Check the correctness of a specific commit message. Designed to be used in tools providing commit-msg style hooks"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

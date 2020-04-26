@@ -18,7 +18,7 @@ fn help_returned_by_long_flag() {
 
     let mut stdout = str::from_utf8(&output.stdout).unwrap().lines();
     let expected = r#"Billie Thompson <billie+pb-pre-commit@billiecodes.com>
-Run first, before you even type in a commit message. It’s used to inspect the snapshot that’s about to be committed.
+Run first, before you even type in a commit message. It's used to inspect the snapshot that's about to be committed.
 
 USAGE:
     pb-pre-commit
@@ -49,7 +49,7 @@ fn help_returned_by_short_flag() {
 
     let mut stdout = str::from_utf8(&output.stdout).unwrap().lines();
     let expected = r#"Billie Thompson <billie+pb-pre-commit@billiecodes.com>
-Run first, before you even type in a commit message. It’s used to inspect the snapshot that’s about to be committed.
+Run first, before you even type in a commit message. It's used to inspect the snapshot that's about to be committed.
 
 USAGE:
     pb-pre-commit

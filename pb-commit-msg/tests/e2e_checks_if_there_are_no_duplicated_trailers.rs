@@ -10,9 +10,9 @@ fn calculate_cargo_toml_path() -> String {
     env::current_exe()
         .unwrap()
         .parent()
-        .and_then(|x| x.parent())
-        .and_then(|x| x.parent())
-        .and_then(|x| x.parent())
+        .and_then(std::path::Path::parent)
+        .and_then(std::path::Path::parent)
+        .and_then(std::path::Path::parent)
         .map(|x| x.join("pb-commit-msg").join("Cargo.toml"))
         .unwrap()
         .to_str()
@@ -31,7 +31,7 @@ Signed-off-by: Billie Thompson <email@example.com>
 "#;
 
     let working_dir = setup_working_dir();
-    let output = run_hook(input, working_dir);
+    let output = run_hook(input, &working_dir);
     let stdout = str::from_utf8(&output.stdout).unwrap();
     assert!(
         stdout.is_empty(),
@@ -67,7 +67,7 @@ Your commit cannot have the same name duplicated in the "Signed-off-by" field
     );
 }
 
-fn run_hook(fake_commit_message: &str, working_dir: PathBuf) -> Output {
+fn run_hook(fake_commit_message: &str, working_dir: &PathBuf) -> Output {
     let mut commit_path = NamedTempFile::new().unwrap();
     write!(commit_path, "{}", fake_commit_message).unwrap();
 
@@ -102,7 +102,7 @@ Signed-off-by: Billie Thompson <email@example.com>
 "#;
 
     let working_dir = setup_working_dir();
-    let output = run_hook(input, working_dir);
+    let output = run_hook(input, &working_dir);
     let stdout = str::from_utf8(&output.stdout).unwrap();
     assert!(
         stdout.is_empty(),
@@ -142,7 +142,7 @@ Signed-off-by: Billie Thompson <email@example.com>
         .arg("false")
         .output()
         .expect("failed to execute process");
-    let output = run_hook(input, working_dir);
+    let output = run_hook(input, &working_dir);
 
     let stdout = str::from_utf8(&output.stdout).expect("stdout couldn't be parsed");
     let stderr = str::from_utf8(&output.stderr).expect("stderr couldn't be parsed");

@@ -4,8 +4,11 @@ version = "2.6.0"
 authors = ["Billie Thompson <billie+pb-pre-commit@billiecodes.com>"]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
-description = "Run first, before you even type in a commit message. It’s used to inspect the snapshot that’s about to be committed."
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "Run first, before you even type in a commit message. It's used to inspect the snapshot that's about to be committed."
+categories = ["development-tools", "command-line-utilities"]
+keywords = ["git", "git-hooks"]
+readme = "../README.md"
+repository = "https://github.com/PurpleBooth/pb-git-hooks"
 
 [dependencies]
 clap = "~2.33"
