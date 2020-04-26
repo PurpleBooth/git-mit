@@ -17,21 +17,23 @@ type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 pub fn get_lint_configuration(config: &Config) -> Result<Vec<Lints>> {
     let mut result_vec: Vec<Lints> = vec![];
 
-    let defined = config
-        .entries(Some("pb.message.duplicated-trailers"))
-        .map(|x| x.count() > 0);
+    let lint_name = "pb.message.duplicated-trailers";
 
-    match defined {
-        Err(e) => return Err(Box::from(e)),
-        Ok(false) => result_vec.push(DuplicatedTrailers),
-        _ => {}
-    }
-
-    if let Ok(true) = config.get_bool("pb.message.duplicated-trailers") {
+    // If it's not defined default to on
+    if let Ok(false) = config_defined(config, lint_name) {
+        result_vec.push(DuplicatedTrailers)
+    } else if let Ok(true) = config.get_bool(lint_name) {
         result_vec.push(DuplicatedTrailers)
     }
 
     Ok(result_vec)
+}
+
+fn config_defined(config: &Config, lint_name: &str) -> Result<bool> {
+    config
+        .entries(Some(lint_name))
+        .map(|x| x.count() > 0)
+        .map_err(Box::from)
 }
 
 pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
