@@ -22,7 +22,7 @@ build:
 ## Lint it
 lint:
 	cargo fmt --all -- --check
-	cargo clippy -- -D warnings
+	cargo clippy --all-targets --all-features -- -D warnings
 	cargo check
 
 .PHONY: fmt

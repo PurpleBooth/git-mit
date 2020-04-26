@@ -28,7 +28,7 @@ fn version_returned_by_long_flag() {
         stderr
     );
     assert!(
-        stdout.ends_with("\n"),
+        stdout.ends_with('\n'),
         "Expected stdout to end with a new line, instead got status: {:?} stdout: {:?} stderr: {:?}",
         status,
         stdout,
@@ -78,7 +78,7 @@ fn version_returned_by_short_flag() {
         stderr
     );
     assert!(
-        stdout.ends_with("\n"),
+        stdout.ends_with('\n'),
         "Expected stdout to end with a new line, instead got status: {:?} stdout: {:?} stderr: {:?}",
         status,
         stdout,

@@ -29,7 +29,7 @@ FLAGS:
 
     assert!(&stdout.next().unwrap().starts_with("pb-pre-commit "));
 
-    let actual_stdout = join(stdout.into_iter(), "\n");
+    let actual_stdout = join(stdout, &'\n'.to_string());
 
     assert_eq!(actual_stdout, expected);
 }
@@ -60,7 +60,7 @@ FLAGS:
 
     assert!(&stdout.next().unwrap().starts_with("pb-pre-commit "));
 
-    let actual_stdout = join(stdout.into_iter(), "\n");
+    let actual_stdout = join(stdout, &'\n'.to_string());
 
     assert_eq!(actual_stdout, expected);
 }

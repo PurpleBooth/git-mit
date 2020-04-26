@@ -7,7 +7,7 @@ use std::{env, str};
 use tempfile::{NamedTempFile, TempDir};
 
 fn calculate_cargo_toml_path() -> String {
-    return env::current_exe()
+    env::current_exe()
         .unwrap()
         .parent()
         .and_then(|x| x.parent())
@@ -17,7 +17,7 @@ fn calculate_cargo_toml_path() -> String {
         .unwrap()
         .to_str()
         .unwrap()
-        .to_string();
+        .to_string()
 }
 
 #[test]
@@ -71,7 +71,7 @@ fn run_hook(fake_commit_message: &str, working_dir: PathBuf) -> Output {
     let mut commit_path = NamedTempFile::new().unwrap();
     write!(commit_path, "{}", fake_commit_message).unwrap();
 
-    let output = Command::new("cargo")
+    Command::new("cargo")
         .current_dir(&working_dir)
         .arg("run")
         .arg("--quiet")
@@ -80,8 +80,7 @@ fn run_hook(fake_commit_message: &str, working_dir: PathBuf) -> Output {
         .arg("--")
         .arg(commit_path.path().to_str().unwrap())
         .output()
-        .expect("failed to execute process");
-    output
+        .expect("failed to execute process")
 }
 
 fn setup_working_dir() -> PathBuf {

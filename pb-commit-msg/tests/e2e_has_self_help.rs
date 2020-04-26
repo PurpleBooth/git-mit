@@ -32,7 +32,7 @@ ARGS:
 
     assert!(&stdout.next().unwrap().starts_with("pb-commit-msg "));
 
-    let actual_stdout = join(stdout.into_iter(), "\n");
+    let actual_stdout = join(stdout, &'\n'.to_string());
 
     assert_eq!(actual_stdout, expected);
 }
@@ -66,7 +66,7 @@ ARGS:
 
     assert!(&stdout.next().unwrap().starts_with("pb-commit-msg "));
 
-    let actual_stdout = join(stdout.into_iter(), "\n");
+    let actual_stdout = join(stdout, &'\n'.to_string());
 
     assert_eq!(actual_stdout, expected);
 }
