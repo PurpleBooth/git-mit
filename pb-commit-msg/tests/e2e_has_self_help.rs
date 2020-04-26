@@ -1,7 +1,8 @@
-use itertools::join;
-use pretty_assertions::assert_eq;
 use std::process::Command;
 use std::str;
+
+use itertools::join;
+use pretty_assertions::assert_eq;
 
 #[test]
 fn help_returned_by_long_flag() {

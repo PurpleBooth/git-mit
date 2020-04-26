@@ -1,9 +1,11 @@
+use std::process::Command;
+
 use git2::Repository;
+use pretty_assertions::assert_eq;
+use tempfile::TempDir;
+
 use pb_commit_message_lints::Lints::DuplicatedTrailers;
 use pb_commit_message_lints::{get_lint_configuration, Lints};
-use pretty_assertions::assert_eq;
-use std::process::Command;
-use tempfile::TempDir;
 
 #[test]
 fn with_no_config_return_a_hash_map_default_lints() {
@@ -66,6 +68,7 @@ fn duplicate_trailer_detection_can_be_disabled() {
         expected, actual
     )
 }
+
 #[test]
 fn duplicate_trailer_detection_can_be_explicitly_enabled() {
     unset_git_config();

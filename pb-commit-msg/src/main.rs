@@ -1,11 +1,13 @@
 extern crate pb_commit_message_lints;
+
+use std::env;
+use std::fs;
+
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
+
 use pb_commit_message_lints::Lints::DuplicatedTrailers;
 use pb_commit_message_lints::{get_lint_configuration, has_duplicated_trailers};
-use std::env;
-
-use std::fs;
 
 const COMMIT_FILE_PATH_NAME: &str = "commit-file-path";
 const FIELD_SINGULAR: &str = "field";
