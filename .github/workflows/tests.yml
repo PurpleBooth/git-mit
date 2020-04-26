@@ -11,13 +11,8 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly
-          override: true
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
           toolchain: stable
-          override: true
+          default: true
       - uses: actions-rs/cargo@v1
         with:
           command: check
@@ -33,13 +28,8 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly
-          override: true
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
           toolchain: stable
-          override: true
+          default: true
       - uses: actions-rs/cargo@v1
         with:
           command: test
@@ -64,12 +54,7 @@ jobs:
         with:
           profile: minimal
           toolchain: nightly
-          override: true
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+          default: true
           components: 'rustfmt, clippy'
       - uses: actions-rs/cargo@v1
         with:
@@ -142,13 +127,8 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly
-          override: true
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
           toolchain: stable
-          override: true
+          default: true
       - uses: actions-rs/cargo@v1
         with:
           command: install
