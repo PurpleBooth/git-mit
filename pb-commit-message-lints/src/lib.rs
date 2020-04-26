@@ -1,12 +1,14 @@
 use std::collections::HashSet;
-
-use crate::Lints::DuplicatedTrailers;
-use git2::Config;
 use std::error;
 use std::iter::FromIterator;
 
+use git2::Config;
+
+use crate::Lints::DuplicatedTrailers;
+
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 
+/// The lints that are supported
 #[derive(Debug, Eq, PartialEq)]
 pub enum Lints {
     DuplicatedTrailers,
@@ -14,6 +16,35 @@ pub enum Lints {
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
+/// Look at a git config and work out what lints should be turned on and off
+///
+/// # Example
+///
+/// ```
+/// use tempfile::TempDir;
+/// use git2::Repository;
+/// use pb_commit_message_lints::get_lint_configuration;
+/// use pb_commit_message_lints::Lints::DuplicatedTrailers;
+///
+/// let config = TempDir::new()
+///     .map(TempDir::into_path)
+///     .map(|x| x.join("repository"))
+///     .map(Repository::init)
+///     .expect("Failed to initialise the repository")
+///     .expect("Failed create temporary directory")
+///     .config()
+///     .expect("Failed to get configuration");
+///
+/// let actual = get_lint_configuration(&config).expect("To be able to get a configuration");
+///
+/// let expected = vec![DuplicatedTrailers];
+/// assert_eq!(
+///     expected, actual,
+///     "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+///     expected, actual
+/// )
+/// ```
+///
 /// # Errors
 ///
 /// Will return `Err` if we can't read the git configuration for some reason or it's not parsable
@@ -37,6 +68,36 @@ fn config_defined(config: &Config, lint_name: &str) -> Result<bool> {
         .map_err(Box::from)
 }
 
+/// Check if a commit message message has duplicated trailers with names in
+///
+/// # Example
+///
+/// ```
+/// use pb_commit_message_lints::has_duplicated_trailers;
+///
+/// let commit_message_with_repeating_signed_off_by = r#"
+/// An example commit
+///
+/// This is an example commit without any duplicate trailers
+///
+/// Signed-off-by: Billie Thompson <email@example.com>
+/// Signed-off-by: Billie Thompson <email@example.com>
+/// "#;
+/// let actual = has_duplicated_trailers(commit_message_with_repeating_signed_off_by);
+///         assert_eq!(actual, Some(vec!["Signed-off-by".to_string()]));
+///
+///         let commit_message_with_repeating_co_authors = r#"
+/// An example commit
+///
+/// This is an example commit without any duplicate trailers
+///
+/// Co-authored-by: Billie Thompson <email@example.com>
+/// Co-authored-by: Billie Thompson <email@example.com>
+/// "#;
+///
+///         let actual = has_duplicated_trailers(commit_message_with_repeating_co_authors);
+///         assert_eq!(actual, Some(vec!["Co-authored-by".to_string()]));
+/// ```
 #[must_use]
 pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
     let duplicated_trailers: Vec<String> = TRAILERS_TO_CHECK_FOR_DUPLICATES
@@ -72,8 +133,10 @@ fn has_duplicated_trailer(commit_message: &str, trailer: &str) -> bool {
 #[cfg(test)]
 mod tests {
     #![allow(clippy::wildcard_imports)]
-    use super::*;
+
     use pretty_assertions::assert_eq;
+
+    use super::*;
 
     #[test]
     fn has_duplicated_trailers_runs_both_tests() {

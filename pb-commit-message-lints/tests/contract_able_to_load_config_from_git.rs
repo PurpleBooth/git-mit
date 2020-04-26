@@ -9,11 +9,14 @@ use tempfile::TempDir;
 fn with_no_config_return_a_hash_map_default_lints() {
     unset_git_config();
     let config = TempDir::new()
-        .map(|x| x.path().join("repository"))
-        .map(|x| Repository::init(&x).map(|x| x.config()))
-        .unwrap()
-        .unwrap()
-        .unwrap();
+        .map(TempDir::into_path)
+        .map(|x| x.join("repository"))
+        .map(Repository::init)
+        .expect("Failed to initialise the repository")
+        .expect("Failed create temporary directory")
+        .config()
+        .expect("Failed to get configuration");
+
     let actual = get_lint_configuration(&config).expect("To be able to get a configuration");
 
     let expected = vec![DuplicatedTrailers];
