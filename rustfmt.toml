@@ -1,0 +1,6 @@
+format_code_in_doc_comments = true
+format_strings = true
+reorder_impl_items = true
+merge_imports = true
+imports_layout = "HorizontalVertical"
+

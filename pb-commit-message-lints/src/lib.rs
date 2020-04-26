@@ -1,6 +1,4 @@
-use std::collections::HashSet;
-use std::error;
-use std::iter::FromIterator;
+use std::{collections::HashSet, error, iter::FromIterator};
 
 use git2::Config;
 
@@ -21,10 +19,9 @@ type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 /// # Example
 ///
 /// ```
-/// use tempfile::TempDir;
 /// use git2::Repository;
-/// use pb_commit_message_lints::get_lint_configuration;
-/// use pb_commit_message_lints::Lints::DuplicatedTrailers;
+/// use pb_commit_message_lints::{get_lint_configuration, Lints::DuplicatedTrailers};
+/// use tempfile::TempDir;
 ///
 /// let config = TempDir::new()
 ///     .map(TempDir::into_path)
@@ -84,9 +81,9 @@ fn config_defined(config: &Config, lint_name: &str) -> Result<bool> {
 /// Signed-off-by: Billie Thompson <email@example.com>
 /// "#;
 /// let actual = has_duplicated_trailers(commit_message_with_repeating_signed_off_by);
-///         assert_eq!(actual, Some(vec!["Signed-off-by".to_string()]));
+/// assert_eq!(actual, Some(vec!["Signed-off-by".to_string()]));
 ///
-///         let commit_message_with_repeating_co_authors = r#"
+/// let commit_message_with_repeating_co_authors = r#"
 /// An example commit
 ///
 /// This is an example commit without any duplicate trailers
@@ -95,8 +92,8 @@ fn config_defined(config: &Config, lint_name: &str) -> Result<bool> {
 /// Co-authored-by: Billie Thompson <email@example.com>
 /// "#;
 ///
-///         let actual = has_duplicated_trailers(commit_message_with_repeating_co_authors);
-///         assert_eq!(actual, Some(vec!["Co-authored-by".to_string()]));
+/// let actual = has_duplicated_trailers(commit_message_with_repeating_co_authors);
+/// assert_eq!(actual, Some(vec!["Co-authored-by".to_string()]));
 /// ```
 #[must_use]
 pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {

@@ -1,6 +1,4 @@
-use std::env;
-use std::os::unix::process::CommandExt;
-use std::process;
+use std::{env, os::unix::process::CommandExt, process};
 
 use clap::{crate_authors, crate_version, App};
 

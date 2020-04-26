@@ -21,14 +21,14 @@ build:
 .PHONY: lint
 ## Lint it
 lint:
-	cargo fmt --all -- --check
+	cargo +nightly fmt --all -- --check
 	cargo clippy --all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo
 	cargo check
 
 .PHONY: fmt
 ## Format what can be foramtted
 fmt:
-	cargo fmt
+	cargo +nightly fmt --all
 	cargo fix --allow-dirty
 
 .PHONY: clean

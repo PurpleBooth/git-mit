@@ -1,13 +1,15 @@
 extern crate pb_commit_message_lints;
 
-use std::env;
-use std::fs;
+use std::{env, fs};
 
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
 
-use pb_commit_message_lints::Lints::DuplicatedTrailers;
-use pb_commit_message_lints::{get_lint_configuration, has_duplicated_trailers};
+use pb_commit_message_lints::{
+    get_lint_configuration,
+    has_duplicated_trailers,
+    Lints::DuplicatedTrailers,
+};
 
 const COMMIT_FILE_PATH_NAME: &str = "commit-file-path";
 const FIELD_SINGULAR: &str = "field";
@@ -20,9 +22,12 @@ fn main() -> std::io::Result<()> {
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::with_name(COMMIT_FILE_PATH_NAME)
-                .help("Path to a temporary file that contains the commit message written by the developer")
+                .help(
+                    "Path to a temporary file that contains the commit message written by the \
+                     developer",
+                )
                 .index(1)
-                .required(true)
+                .required(true),
         )
         .get_matches();
 

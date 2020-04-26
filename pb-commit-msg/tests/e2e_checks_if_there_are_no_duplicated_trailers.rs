@@ -1,7 +1,10 @@
-use std::io::Write;
-use std::path::PathBuf;
-use std::process::{Command, Output};
-use std::{env, str};
+use std::{
+    env,
+    io::Write,
+    path::PathBuf,
+    process::{Command, Output},
+    str,
+};
 
 use git2::Repository;
 use pretty_assertions::assert_eq;

@@ -1,5 +1,4 @@
-use std::process::Command;
-use std::str;
+use std::{process::Command, str};
 
 #[test]
 fn version_returned_by_long_flag() {
@@ -29,7 +28,8 @@ fn version_returned_by_long_flag() {
     );
     assert!(
         stdout.ends_with('\n'),
-        "Expected stdout to end with a new line, instead got status: {:?} stdout: {:?} stderr: {:?}",
+        "Expected stdout to end with a new line, instead got status: {:?} stdout: {:?} stderr: \
+         {:?}",
         status,
         stdout,
         stderr
@@ -79,7 +79,8 @@ fn version_returned_by_short_flag() {
     );
     assert!(
         stdout.ends_with('\n'),
-        "Expected stdout to end with a new line, instead got status: {:?} stdout: {:?} stderr: {:?}",
+        "Expected stdout to end with a new line, instead got status: {:?} stdout: {:?} stderr: \
+         {:?}",
         status,
         stdout,
         stderr

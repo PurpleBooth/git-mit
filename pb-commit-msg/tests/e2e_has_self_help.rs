@@ -1,5 +1,4 @@
-use std::process::Command;
-use std::str;
+use std::{process::Command, str};
 
 use itertools::join;
 use pretty_assertions::assert_eq;

@@ -1,5 +1,4 @@
-use std::process::Command;
-use std::str;
+use std::{process::Command, str};
 
 #[test]
 fn version_returned_by_long_flag() {

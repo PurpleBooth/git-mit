@@ -4,8 +4,7 @@ use git2::Repository;
 use pretty_assertions::assert_eq;
 use tempfile::TempDir;
 
-use pb_commit_message_lints::Lints::DuplicatedTrailers;
-use pb_commit_message_lints::{get_lint_configuration, Lints};
+use pb_commit_message_lints::{get_lint_configuration, Lints, Lints::DuplicatedTrailers};
 
 #[test]
 fn with_no_config_return_a_hash_map_default_lints() {
