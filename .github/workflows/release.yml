@@ -66,7 +66,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
         with:
           lfs: true
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
@@ -90,7 +90,7 @@ jobs:
         env:
           VERSION: ${{ steps.semvers.outputs.v_major }}
         if: "contains(github.event.head_commit.message, 'BC BREAK')"
-      - uses: actions/upload-artifact@master
+      - uses: actions/upload-artifact@v2
         with:
           name: version
           path: ./version/version
@@ -111,15 +111,13 @@ jobs:
             target: x86_64-unknown-linux-gnu
             suffix: ''
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
         with:
           lfs: true
       - id: get_repository_name
         run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
         shell: bash
-      - uses: actions/download-artifact@master
-        with:
-          name: version
+      - uses: actions/download-artifact@v2
       - id: get_version
         run: 'echo ::set-output "name=VERSION::$(cat ./version/version)"'
         shell: bash
@@ -171,9 +169,7 @@ jobs:
       - id: get_repository_name
         run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
         shell: bash
-      - uses: actions/download-artifact@master
-        with:
-          name: version
+      - uses: actions/download-artifact@v2
       - id: get_version
         run: 'echo ::set-output name=VERSION::$(cat ./version/version)'
         shell: bash
@@ -205,24 +201,7 @@ jobs:
         with:
           commit_message: Creating Release '${{ steps.get_version.outputs.VERSION }}'
           branch: ${{ github.head_ref }}
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-commit-msg-x86_64-unknown-linux-gnu
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-pre-commit-x86_64-unknown-linux-gnu
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-commit-msg-x86_64-apple-darwin
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-prepare-commit-msg-x86_64-apple-darwin
-      - uses: actions/download-artifact@master
-        with:
-          name: pb-pre-commit-x86_64-apple-darwin
+      - uses: actions/download-artifact@v2
       - id: create_release
         uses: actions/create-release@v1.0.0
         env:
