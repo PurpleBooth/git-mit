@@ -157,89 +157,90 @@ mod tests {
     use super::*;
 
     #[test]
-    fn has_duplicated_trailers_runs_both_tests() {
-        let actual = has_duplicated_trailers(
+    fn has_duplicated_trailers_runs_both_co_authored_and_signed_off_by() {
+        assert_has_duplicated_trailers(
             r#"
 An example commit
 
 This is an example commit without any duplicate trailers
 "#,
+            None,
         );
-        let expected = None;
+        assert_has_duplicated_trailers(
+            r#"
+An example commit
+
+This is an example commit without any duplicate trailers
+
+Signed-off-by: Billie Thompson <email@example.com>
+Signed-off-by: Billie Thompson <email@example.com>
+Co-authored-by: Billie Thompson <email@example.com>
+Co-authored-by: Billie Thompson <email@example.com>
+"#,
+            Some(vec![
+                "Signed-off-by".to_string(),
+                "Co-authored-by".to_string(),
+            ]),
+        );
+        assert_has_duplicated_trailers(
+            r#"
+An example commit
+
+This is an example commit without any duplicate trailers
+
+Signed-off-by: Billie Thompson <email@example.com>
+Signed-off-by: Billie Thompson <email@example.com>
+"#,
+            Some(vec!["Signed-off-by".to_string()]),
+        );
+        assert_has_duplicated_trailers(
+            r#"
+An example commit
+
+This is an example commit without any duplicate trailers
+
+Co-authored-by: Billie Thompson <email@example.com>
+Co-authored-by: Billie Thompson <email@example.com>
+"#,
+            Some(vec!["Co-authored-by".to_string()]),
+        );
+    }
+
+    fn assert_has_duplicated_trailers(message: &str, expected: Option<Vec<String>>) {
+        let actual = has_duplicated_trailers(message);
         assert_eq!(
             actual, expected,
             "Expected {:?}, found {:?}",
             expected, actual
         );
+    }
 
+    fn assert_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {
+        let actual = has_duplicated_trailer(message, trailer);
         assert_eq!(
-            has_duplicated_trailers(
-                r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-
-Signed-off-by: Billie Thompson <email@example.com>
-Signed-off-by: Billie Thompson <email@example.com>
-Co-authored-by: Billie Thompson <email@example.com>
-Co-authored-by: Billie Thompson <email@example.com>
-"#,
-            ),
-            Some(vec![
-                "Signed-off-by".to_string(),
-                "Co-authored-by".to_string(),
-            ])
-        );
-
-        assert_eq!(
-            has_duplicated_trailers(
-                r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-
-Signed-off-by: Billie Thompson <email@example.com>
-Signed-off-by: Billie Thompson <email@example.com>
-"#,
-            ),
-            Some(vec!["Signed-off-by".to_string()])
-        );
-
-        assert_eq!(
-            has_duplicated_trailers(
-                r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-
-Co-authored-by: Billie Thompson <email@example.com>
-Co-authored-by: Billie Thompson <email@example.com>
-"#,
-            ),
-            Some(vec!["Co-authored-by".to_string()])
+            actual, expected,
+            "Message {:?} with trailer {:?} should have returned {:?}, found {:?}",
+            message, trailer, expected, actual
         );
     }
 
     #[test]
-    fn has_duplicated_trailer_no_trailer_is_fine() {
-        assert_eq!(
-            has_duplicated_trailer(
-                r#"
+    fn has_duplicated_trailer_does_nothing_on_no_trailer() {
+        assert_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit without any duplicate trailers
 "#,
-                "Signed-off-by",
-            ),
-            false
+            "Signed-off-by",
+            false,
         );
     }
 
     #[test]
-    fn has_duplicated_trailer_two_identical_trailers_is_bad() {
-        assert_eq!(
-            has_duplicated_trailer(
-                r#"
+    fn has_duplicated_trailer_detects_duplicated_trailers() {
+        assert_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit with duplicate trailers
@@ -247,17 +248,15 @@ This is an example commit with duplicate trailers
 Signed-off-by: Billie Thompson <email@example.com>
 Signed-off-by: Billie Thompson <email@example.com>
 "#,
-                "Signed-off-by",
-            ),
-            true
+            "Signed-off-by",
+            true,
         );
     }
 
     #[test]
     fn has_duplicated_trailer_two_trailers_with_different_names_is_fine() {
-        assert_eq!(
-            has_duplicated_trailer(
-                r#"
+        assert_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit without any duplicate trailers
@@ -265,34 +264,30 @@ This is an example commit without any duplicate trailers
 Signed-off-by: Billie Thompson <billie@example.com>
 Signed-off-by: Ada Lovelace <ada@example.com>
 "#,
-                "Signed-off-by",
-            ),
-            false
+            "Signed-off-by",
+            false,
         );
     }
 
     #[test]
     fn has_duplicated_trailer_one_trailer_is_fine() {
-        assert_eq!(
-            has_duplicated_trailer(
-                r#"
+        assert_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit without any duplicate trailers
 
 Signed-off-by: Billie Thompson <email@example.com>
 "#,
-                "Signed-off-by",
-            ),
-            false
+            "Signed-off-by",
+            false,
         );
     }
 
     #[test]
     fn has_duplicated_trailer_the_trailer_has_to_have_a_colon_to_count() {
-        assert_eq!(
-            has_duplicated_trailer(
-                r#"
+        assert_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit without any duplicate trailers
@@ -300,17 +295,15 @@ This is an example commit without any duplicate trailers
 Signed-off-by Billie Thompson <email@example.com>
 Signed-off-by Billie Thompson <email@example.com>
 "#,
-                "Signed-off-by",
-            ),
-            false
+            "Signed-off-by",
+            false,
         );
     }
 
     #[test]
     fn has_duplicated_trailer_the_trailer_can_be_anything() {
-        assert_eq!(
-            has_duplicated_trailer(
-                r#"
+        assert_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit with duplicate trailers
@@ -318,288 +311,265 @@ This is an example commit with duplicate trailers
 Anything: Billie Thompson <email@example.com>
 Anything: Billie Thompson <email@example.com>
 "#,
-                "Anything",
-            ),
-            true
+            "Anything",
+            true,
         );
     }
 
     #[test]
-    fn has_has_pivotal_tracker_id_with_id_is_fine() {
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+    fn has_missing_pivotal_tracker_id_with_id_is_fine() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [#12345678]
     "#,
-            ),
-            None
+            None,
+        );
+    }
+
+    fn assert_has_missing_pivotal_tracker_id(message: &str, expected: Option<()>) {
+        let actual = has_missing_pivotal_tracker_id(message);
+        assert_eq!(
+            actual, expected,
+            "Message {:?} should have returned {:?}, found {:?}",
+            message, expected, actual
         );
     }
 
     #[test]
-    fn has_has_pivotal_tracker_id_with_multiple_ids_is_fine() {
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+    fn has_missing_pivotal_tracker_id_with_multiple_ids_is_fine() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [#12345678,#87654321]
     "#,
-            ),
-            None
+            None,
         );
-
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [#12345678,#87654321,#11223344]
     "#,
-            ),
-            None
+            None,
         );
-
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [#12345678 #87654321 #11223344]
     "#,
-            ),
-            None
+            None,
         );
     }
 
     #[test]
-    fn has_has_pivotal_tracker_id_with_a_state_fix_change_is_fine() {
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+    fn has_missing_pivotal_tracker_id_with_a_state_fix_change_is_fine() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [fix #12345678]
     "#,
-            ),
-            None
+            None,
         );
-
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [FIX #12345678]
     "#,
-            ),
-            None
+            None,
         );
+        assert_has_missing_pivotal_tracker_id(
+            r#"
+An example commit
 
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+This is an example commit
+
+[Fix #12345678]
+    "#,
+            None,
+        );
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [fixed #12345678]
     "#,
-            ),
-            None
+            None,
         );
-
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [fixes #12345678]
     "#,
-            ),
-            None
+            None,
         );
     }
 
     #[test]
-    fn has_has_pivotal_tracker_id_with_a_complete_state_change_is_fine() {
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+    fn has_missing_pivotal_tracker_id_with_a_complete_state_change_is_fine() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [complete #12345678]
     "#,
-            ),
-            None
+            None,
         );
 
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [completed #12345678]
     "#,
-            ),
-            None
+            None,
         );
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [Completed #12345678]
     "#,
-            ),
-            None
+            None,
         );
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [completes #12345678]
     "#,
-            ),
-            None
+            None,
         );
     }
 
     #[test]
-    fn has_has_pivotal_tracker_id_with_a_finish_state_change_is_fine() {
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+    fn has_missing_pivotal_tracker_id_with_a_finish_state_change_is_fine() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [finish #12345678]
     "#,
-            ),
-            None
+            None,
         );
 
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [finished #12345678]
     "#,
-            ),
-            None
+            None,
         );
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [finishes #12345678]
     "#,
-            ),
-            None
+            None,
         );
     }
 
     #[test]
-    fn has_has_pivotal_tracker_id_with_a_state_change_and_multiple_ids_is_fine() {
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+    fn has_missing_pivotal_tracker_id_with_a_state_change_and_multiple_ids_is_fine() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [fix #12345678 #12345678]
     "#,
-            ),
-            None
+            None,
         );
     }
 
     #[test]
-    fn has_has_pivotal_tracker_id_with_prefixing_text_is_fine() {
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+    fn has_missing_pivotal_tracker_id_with_prefixing_text_is_fine() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 Finally [fix #12345678 #12345678]
     "#,
-            ),
-            None
+            None,
         );
     }
 
     #[test]
-    fn has_has_pivotal_tracker_without_an_id_is_bad() {
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
-An example commit
-
-This is an example commit
-"#,
-            ),
-            Some(())
-        );
-
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
-An example commit
-
-This is an example commit
-
-[#]
-"#,
-            ),
-            Some(())
-        );
-
-        assert_eq!(
-            has_missing_pivotal_tracker_id(
-                r#"
+    fn has_missing_pivotal_tracker_with_a_fake_verb_does_not_work() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
 An example commit
 
 This is an example commit
 
 [fake #12345678]
-"#,
-            ),
-            Some(())
+    "#,
+            Some(()),
+        );
+    }
+    #[test]
+    fn has_missing_pivotal_tracker_without_an_id_is_bad() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
+An example commit
+
+This is an example commit
+    "#,
+            Some(()),
+        );
+
+        assert_has_missing_pivotal_tracker_id(
+            r#"
+An example commit
+
+This is an example commit
+
+[#]
+    "#,
+            Some(()),
         );
     }
 }
