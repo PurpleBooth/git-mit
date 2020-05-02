@@ -8,8 +8,8 @@ use crate::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing};
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const CONFIG_DUPLICATED_TRAILERS: &str = "pb.message.duplicated-trailers";
 const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pb.message.pivotal-tracker-id-missing";
-const PIVOTAL_TRACKER_ID_REGEX: &str =
-    r"\[(((finish|fix)(ed|es)?|complete[ds]?) )?#\d+([, ]#\d+)*]";
+const REGEX_PIVOTAL_TRACKER_ID: &str =
+    r"\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
 
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq)]
@@ -127,7 +127,7 @@ pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
 }
 
 pub fn has_missing_pivotal_tracker_id(commit_message: &str) -> Option<()> {
-    let re = Regex::new(PIVOTAL_TRACKER_ID_REGEX).unwrap();
+    let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
 
     if !re.is_match(&commit_message.to_lowercase()) {
         return Some(());
@@ -504,6 +504,41 @@ An example commit
 This is an example commit
 
 [finishes #12345678]
+    "#,
+            None,
+        );
+    }
+
+    #[test]
+    fn has_missing_pivotal_tracker_id_with_a_deliver_state_change_is_fine() {
+        assert_has_missing_pivotal_tracker_id(
+            r#"
+An example commit
+
+This is an example commit
+
+[deliver #12345678]
+    "#,
+            None,
+        );
+
+        assert_has_missing_pivotal_tracker_id(
+            r#"
+An example commit
+
+This is an example commit
+
+[delivered #12345678]
+    "#,
+            None,
+        );
+        assert_has_missing_pivotal_tracker_id(
+            r#"
+An example commit
+
+This is an example commit
+
+[delivers #12345678]
     "#,
             None,
         );
