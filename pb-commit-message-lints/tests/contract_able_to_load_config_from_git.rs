@@ -4,7 +4,11 @@ use git2::Repository;
 use pretty_assertions::assert_eq;
 use tempfile::TempDir;
 
-use pb_commit_message_lints::{get_lint_configuration, Lints, Lints::DuplicatedTrailers};
+use pb_commit_message_lints::{
+    get_lint_configuration,
+    Lints,
+    Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
+};
 
 #[test]
 fn with_no_config_return_a_hash_map_default_lints() {
@@ -34,6 +38,14 @@ fn unset_git_config() {
         .arg("--local")
         .arg("--unset")
         .arg("pb.message.duplicated-trailers")
+        .output()
+        .expect("failed to execute process");
+
+    Command::new("git")
+        .arg("config")
+        .arg("--local")
+        .arg("--unset")
+        .arg("pb.message.pivotal-tracker-id-missing")
         .output()
         .expect("failed to execute process");
 }
@@ -85,6 +97,30 @@ fn duplicate_trailer_detection_can_be_explicitly_enabled() {
     let actual = get_lint_configuration(&config).expect("To be able to get a configuration");
 
     let expected: Vec<Lints> = vec![DuplicatedTrailers];
+    assert_eq!(
+        expected, actual,
+        "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+        expected, actual
+    )
+}
+
+#[test]
+fn pivotal_tracker_id_being_missing_can_be_explicitly_enabled() {
+    unset_git_config();
+
+    let mut config = TempDir::new()
+        .map(|x| x.path().join("repository"))
+        .map(|x| Repository::init(&x).map(|x| x.config()))
+        .unwrap()
+        .unwrap()
+        .unwrap();
+    config
+        .set_bool("pb.message.pivotal-tracker-id-missing", true)
+        .expect("Failed to enable pivotal tracker id?");
+
+    let actual = get_lint_configuration(&config).expect("To be able to get a configuration");
+
+    let expected: Vec<Lints> = vec![DuplicatedTrailers, PivotalTrackerIdMissing];
     assert_eq!(
         expected, actual,
         "Expected the list of lint identifiers to be {:?}, instead got {:?}",

@@ -8,6 +8,8 @@ use git2::{Config, Repository};
 use pb_commit_message_lints::{
     get_lint_configuration,
     has_duplicated_trailers,
+    has_missing_pivotal_tracker_id,
+    Lints,
     Lints::DuplicatedTrailers,
 };
 
@@ -63,6 +65,29 @@ Your commit cannot have the same name duplicated in the "{}" {}
                         commit_message,
                         trailers.join("\", \""),
                         fields
+                    );
+
+                    std::process::exit(1);
+                }
+            }
+            Lints::PivotalTrackerIdMissing => {
+                if let Some(()) = has_missing_pivotal_tracker_id(&commit_message) {
+                    eprintln!(
+                        r#"
+{}
+
+Your commit is missing a Pivotal Tracker Id
+
+Examples:
+[Delivers #12345678]
+[fixes #12345678]
+[finishes #12345678]
+[#12345884 #12345678]
+[#12345884,#12345678]
+[#12345678],[#12345884]
+This will address [#12345884]
+"#,
+                        commit_message
                     );
 
                     std::process::exit(1);
