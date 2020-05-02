@@ -16,9 +16,9 @@ test:
 .PHONY: smoke-test
 ## Run a smoke test and see if the app runs
 smoke-test:
-	cargo --bin pb-prepare-commit-msg -- -h
-	cargo --bin pb-pre-commit -- -h
-	cargo --bin pb-commit-msg -- -h
+	cargo run --bin pb-prepare-commit-msg -- -h
+	cargo run --bin pb-pre-commit -- -h
+	cargo run --bin pb-commit-msg -- -h
 
 .PHONY: build
 ## Build release version
