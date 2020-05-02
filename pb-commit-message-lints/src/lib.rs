@@ -126,6 +126,39 @@ pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
     None
 }
 
+/// Check if a commit message message has a pivotal tracker id in it
+///
+/// # Example
+///
+/// ```
+/// use pb_commit_message_lints::has_missing_pivotal_tracker_id;
+///
+/// let message = r#"
+/// [fix #12345678] correct bug the build
+/// "#;
+/// let actual = has_missing_pivotal_tracker_id(message);
+/// assert_eq!(actual, None);
+///
+/// let message = r#"
+/// Add a new commit linter
+///
+/// This will add a new linter. This linter checks for the presence of a Pivotal Tracker Id. In this
+/// example I have forgotten my Id.
+/// "#;
+/// let actual = has_missing_pivotal_tracker_id(message);
+/// assert_eq!(actual, Some(()));
+///
+/// let message = r#"
+/// Add a new commit linter
+///
+/// This will add a new linter. This linter checks for the presence of a Pivotal Tracker Id. In this
+/// example I have not forgotten my Id
+///
+/// [deliver #12345678,#88335556,#87654321]
+/// "#;
+/// let actual = has_missing_pivotal_tracker_id(message);
+/// assert_eq!(actual, None);
+/// ```
 pub fn has_missing_pivotal_tracker_id(commit_message: &str) -> Option<()> {
     let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
 
