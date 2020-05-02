@@ -11,25 +11,32 @@ show-help:
 .PHONY: test
 ## Test it was built ok
 test:
-	RUST_BACKTRACE=1 cargo test
+	RUST_BACKTRACE=1 cargo test -- --test-threads=1
+
+.PHONY: smoke-test
+## Run a smoke test and see if the app runs
+smoke-test:
+	cargo --bin pb-prepare-commit-msg -- -h
+	cargo --bin pb-pre-commit -- -h
+	cargo --bin pb-commit-msg -- -h
 
 .PHONY: build
-## Test it was built ok
+## Build release version
 build:
-	cargo build
+	cargo build --release
 
 .PHONY: lint
 ## Lint it
 lint:
-	cargo +nightly fmt --all -- --check
-	cargo +nightly clippy --all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo
+	cargo fmt --all -- --check
+	cargo clippy --all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo
 	cargo check
 
 .PHONY: fmt
-## Format what can be foramtted
+## Format what can be formatted
 fmt:
-	cargo +nightly fmt --all
-	cargo +nightly fix --allow-dirty
+	cargo fmt --all
+	cargo fix --allow-dirty
 
 .PHONY: clean
 ## Clean the build directory

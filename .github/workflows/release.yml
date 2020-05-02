@@ -3,18 +3,6 @@
     branches:
       - 'master'
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          default: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
   test:
     runs-on: '${{ matrix.os }}'
     strategy:
@@ -27,24 +15,10 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: nightly
+          components: 'rustfmt, clippy'
           default: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: "-- --test-threads=1"
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
-          args: '--bin pb-prepare-commit-msg -- -h'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
-          args: '--bin pb-pre-commit -- -h'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
-          args: '--bin pb-commit-msg -- -h'
+      - run: make fmt test smoke-test
   lints:
     runs-on: ubuntu-latest
     steps:
@@ -55,14 +29,7 @@ jobs:
           toolchain: nightly
           components: 'rustfmt, clippy'
           default: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: '--all -- --check'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: '--all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo'
+      - run: make fmt lint
   version:
     runs-on: ubuntu-latest
     steps:
@@ -99,7 +66,6 @@ jobs:
       - version
       - lints
       - test
-      - check
     runs-on: '${{ matrix.os }}'
     strategy:
       matrix:
@@ -124,7 +90,8 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: nightly
+          components: 'rustfmt, clippy'
           default: true
       - uses: actions-rs/cargo@v1
         with:
@@ -133,28 +100,23 @@ jobs:
       - shell: bash
         env:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
+          REPOSITORY_NAME: '${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}'
         run: |
           for I in ./*/Cargo.toml ; do
             TEMP_FILE="$(mktemp)"
             toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
             mv "$TEMP_FILE" "$I"
           done
-      - uses: actions-rs/cargo@v1
-        env:
-          VERSION: '${{ steps.get_version.outputs.VERSION }}'
-          REPOSITORY_NAME: '${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}'
-        with:
-          command: build
-          args: '--release'
-      - uses: actions/upload-artifact@master
+          make fmt build
+      - uses: actions/upload-artifact@v2
         with:
           name: pb-commit-msg-${{ matrix.target }}
           path: ./target/release/pb-commit-msg${{ matrix.suffix }}
-      - uses: actions/upload-artifact@master
+      - uses: actions/upload-artifact@v2
         with:
           name: pb-pre-commit-${{ matrix.target }}
           path: ./target/release/pb-pre-commit${{ matrix.suffix }}
-      - uses: actions/upload-artifact@master
+      - uses: actions/upload-artifact@v2
         with:
           name: pb-prepare-commit-msg-${{ matrix.target }}
           path: ./target/release/pb-prepare-commit-msg${{ matrix.suffix }}
@@ -163,7 +125,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
         with:
           lfs: true
       - id: get_repository_name
@@ -176,8 +138,9 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
-          override: true
+          toolchain: nightly
+          components: 'rustfmt, clippy'
+          default: true
       - uses: actions-rs/cargo@v1
         with:
           command: install
@@ -188,15 +151,10 @@ jobs:
             toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
             mv "$TEMP_FILE" "$I"
           done
+          make fmt build
         shell: bash
         env:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: build
-      - uses: actions-rs/cargo@v1
-        with:
-          command: clean
       - uses: stefanzweifel/git-auto-commit-action@v4.1.3
         with:
           commit_message: Creating Release '${{ steps.get_version.outputs.VERSION }}'

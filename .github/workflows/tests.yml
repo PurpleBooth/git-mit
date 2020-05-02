@@ -2,20 +2,8 @@
   push:
     branches:
       - '*'
-  pull_request: null
+  pull_request: ~
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          default: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
   test:
     runs-on: '${{ matrix.os }}'
     strategy:
@@ -28,24 +16,10 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: nightly
+          components: 'rustfmt, clippy'
           default: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: "-- --test-threads=1"
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
-          args: '--bin pb-prepare-commit-msg -- -h'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
-          args: '--bin pb-pre-commit -- -h'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
-          args: '--bin pb-commit-msg -- -h'
+      - run: make fmt test smoke-test
   lints:
     runs-on: ubuntu-latest
     steps:
@@ -54,16 +28,9 @@ jobs:
         with:
           profile: minimal
           toolchain: nightly
-          default: true
           components: 'rustfmt, clippy'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: '--all -- --check'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: '--all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo'
+          default: true
+      - run: make fmt lint
   version:
     runs-on: ubuntu-latest
     steps:
@@ -100,7 +67,6 @@ jobs:
       - version
       - lints
       - test
-      - check
     runs-on: '${{ matrix.os }}'
     strategy:
       matrix:
@@ -125,7 +91,8 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: nightly
+          components: 'rustfmt, clippy'
           default: true
       - uses: actions-rs/cargo@v1
         with:
@@ -134,19 +101,14 @@ jobs:
       - shell: bash
         env:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
+          REPOSITORY_NAME: '${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}'
         run: |
           for I in ./*/Cargo.toml ; do
             TEMP_FILE="$(mktemp)"
             toml set "$I" package.version "${VERSION:1}" > "$TEMP_FILE"
             mv "$TEMP_FILE" "$I"
           done
-      - uses: actions-rs/cargo@v1
-        env:
-          VERSION: '${{ steps.get_version.outputs.VERSION }}'
-          REPOSITORY_NAME: '${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}'
-        with:
-          command: build
-          args: '--release'
+          make fmt build
       - uses: actions/upload-artifact@v2
         with:
           name: pb-commit-msg-${{ matrix.target }}
