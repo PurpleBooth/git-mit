@@ -27,6 +27,7 @@ type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 /// ```
 /// use git2::Repository;
 /// use pb_commit_message_lints::{get_lint_configuration, Lints::DuplicatedTrailers};
+/// use pretty_assertions::assert_eq;
 /// use tempfile::TempDir;
 ///
 /// let config = TempDir::new()
