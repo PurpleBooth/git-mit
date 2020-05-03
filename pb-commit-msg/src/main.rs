@@ -51,29 +51,23 @@ fn main() -> std::io::Result<()> {
         match check {
             DuplicatedTrailers => {
                 if let Some(trailers) = has_duplicated_trailers(&commit_message) {
-                    let mut fields = FIELD_SINGULAR;
-                    if trailers.len() > 1 {
-                        fields = FIELD_PLURAL
-                    }
-
-                    eprintln!(
-                        r#"
-{}
-
-Your commit cannot have the same name duplicated in the "{}" {}
-"#,
-                        commit_message,
-                        trailers.join("\", \""),
-                        fields
-                    );
-
-                    std::process::exit(1);
+                    exit_duplicated_trailers(&commit_message, trailers);
                 }
             }
             Lints::PivotalTrackerIdMissing => {
                 if let Some(()) = has_missing_pivotal_tracker_id(&commit_message) {
-                    eprintln!(
-                        r#"
+                    exit_missing_pivotal_tracker_id(&commit_message);
+                }
+            }
+        }
+    }
+
+    Ok(())
+}
+
+fn exit_missing_pivotal_tracker_id(commit_message: &String) {
+    eprintln!(
+        r#"
 {}
 
 Your commit is missing a Pivotal Tracker Id
@@ -87,14 +81,28 @@ Examples:
 [#12345678],[#12345884]
 This will address [#12345884]
 "#,
-                        commit_message
-                    );
+        commit_message
+    );
 
-                    std::process::exit(1);
-                }
-            }
-        }
+    std::process::exit(1);
+}
+
+fn exit_duplicated_trailers(commit_message: &String, trailers: Vec<String>) {
+    let mut fields = FIELD_SINGULAR;
+    if trailers.len() > 1 {
+        fields = FIELD_PLURAL
     }
 
-    Ok(())
+    eprintln!(
+        r#"
+{}
+
+Your commit cannot have the same name duplicated in the "{}" {}
+"#,
+        commit_message,
+        trailers.join("\", \""),
+        fields
+    );
+
+    std::process::exit(1);
 }
