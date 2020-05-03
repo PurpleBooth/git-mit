@@ -55,6 +55,8 @@ Signed-off-by: Billie Thompson <email@example.com>
 
 Your commit cannot have the same name duplicated in the "Signed-off-by" field
 
+You can fix this by removing the duplicated field when you commit again
+
 "#;
     assert_eq!(
         stderr.to_string(),

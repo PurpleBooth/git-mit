@@ -10,7 +10,7 @@ fn main() {
         .get_matches();
 
     let cmd = "git";
-    let arguments: Vec<String> = vec!["duet-pre-commit".to_string()];
+    let arguments: Vec<String> = vec!["duet-pre-commit".into()];
     let err = process::Command::new(cmd).args(arguments).exec();
     panic!("panic!: {}", err)
 }

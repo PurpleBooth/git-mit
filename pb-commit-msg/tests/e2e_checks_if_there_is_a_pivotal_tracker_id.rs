@@ -123,7 +123,7 @@ This is an example commit without the pivotal tracker id
 
 Your commit is missing a Pivotal Tracker Id
 
-Examples:
+You can fix this by adding the Id in one of the styles below to the commit message
 [Delivers #12345678]
 [fixes #12345678]
 [finishes #12345678]

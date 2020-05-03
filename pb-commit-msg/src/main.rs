@@ -72,7 +72,7 @@ fn exit_missing_pivotal_tracker_id(commit_message: &String) {
 
 Your commit is missing a Pivotal Tracker Id
 
-Examples:
+You can fix this by adding the Id in one of the styles below to the commit message
 [Delivers #12345678]
 [fixes #12345678]
 [finishes #12345678]
@@ -98,6 +98,8 @@ fn exit_duplicated_trailers(commit_message: &String, trailers: Vec<String>) {
 {}
 
 Your commit cannot have the same name duplicated in the "{}" {}
+
+You can fix this by removing the duplicated field when you commit again
 "#,
         commit_message,
         trailers.join("\", \""),
