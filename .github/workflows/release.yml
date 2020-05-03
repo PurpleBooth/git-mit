@@ -152,10 +152,10 @@ jobs:
             mv "$TEMP_FILE" "$I"
           done
           make fmt build
-          git add .
+
           git config user.name 'GitHub Action[bot]'
           git config user.email 'actions@github.com'
-          git commit -m "Creating Release '$VERSION'"
+          git commit --all --message="Creating Release '$VERSION'"
           git push || true
         shell: bash
         env:
