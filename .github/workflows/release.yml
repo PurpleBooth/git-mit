@@ -156,12 +156,14 @@ jobs:
           git config user.name 'GitHub Action[bot]'
           git config user.email 'actions@github.com'
           git commit --all --message="Creating Release '$VERSION'"
-          git push || true
+          git push
         shell: bash
         env:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
       - uses: actions/download-artifact@v2
+        if: succeeded()
       - id: create_release
+        if: succeeded()
         uses: actions/create-release@v1.0.0
         env:
           GITHUB_TOKEN: '${{ secrets.COMMITTER_TOKEN }}'
@@ -171,6 +173,7 @@ jobs:
           draft: false
           prerelease: false
       - uses: actions/upload-release-asset@v1.0.1
+        if: succeeded()
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -179,6 +182,7 @@ jobs:
           asset_name: pb-pre-commit-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.1
+        if: succeeded()
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -187,6 +191,7 @@ jobs:
           asset_name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.1
+        if: succeeded()
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -195,6 +200,7 @@ jobs:
           asset_name: pb-commit-msg-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.1
+        if: succeeded()
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -203,6 +209,7 @@ jobs:
           asset_name: pb-pre-commit-x86_64-apple-darwin
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.1
+        if: succeeded()
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -211,6 +218,7 @@ jobs:
           asset_name: pb-prepare-commit-msg-x86_64-apple-darwin
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.1
+        if: succeeded()
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
