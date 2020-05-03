@@ -27,7 +27,6 @@ type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 /// ```
 /// use git2::Repository;
 /// use pb_commit_message_lints::{get_lint_configuration, Lints::DuplicatedTrailers};
-/// use pretty_assertions::assert_eq;
 /// use tempfile::TempDir;
 ///
 /// let config = TempDir::new()
@@ -39,13 +38,9 @@ type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 ///     .config()
 ///     .expect("Failed to get configuration");
 ///
-/// let actual = get_lint_configuration(&config).expect("To be able to get a configuration");
-///
-/// let expected = vec![DuplicatedTrailers];
 /// assert_eq!(
-///     expected, actual,
-///     "Expected the list of lint identifiers to be {:?}, instead got {:?}",
-///     expected, actual
+///     get_lint_configuration(&config).expect("To be able to get a configuration"),
+///     vec![DuplicatedTrailers],
 /// )
 /// ```
 ///
@@ -84,28 +79,33 @@ fn config_defined(config: &Config, lint_name: &str) -> Result<bool> {
 /// ```
 /// use pb_commit_message_lints::has_duplicated_trailers;
 ///
-/// let commit_message_with_repeating_signed_off_by = r#"
+/// assert_eq!(
+///     has_duplicated_trailers(
+///         r#"
 /// An example commit
 ///
 /// This is an example commit without any duplicate trailers
 ///
 /// Signed-off-by: Billie Thompson <email@example.com>
 /// Signed-off-by: Billie Thompson <email@example.com>
-/// "#;
-/// let actual = has_duplicated_trailers(commit_message_with_repeating_signed_off_by);
-/// assert_eq!(actual, Some(vec!["Signed-off-by".to_string()]));
+/// "#
+///     ),
+///     Some(vec!["Signed-off-by".to_string()])
+/// );
 ///
-/// let commit_message_with_repeating_co_authors = r#"
+/// assert_eq!(
+///     has_duplicated_trailers(
+///         r#"
 /// An example commit
 ///
 /// This is an example commit without any duplicate trailers
 ///
 /// Co-authored-by: Billie Thompson <email@example.com>
 /// Co-authored-by: Billie Thompson <email@example.com>
-/// "#;
-///
-/// let actual = has_duplicated_trailers(commit_message_with_repeating_co_authors);
-/// assert_eq!(actual, Some(vec!["Co-authored-by".to_string()]));
+/// "#
+///     ),
+///     Some(vec!["Co-authored-by".to_string()])
+/// );
 /// ```
 #[must_use]
 pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
@@ -134,31 +134,39 @@ pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
 /// ```
 /// use pb_commit_message_lints::has_missing_pivotal_tracker_id;
 ///
-/// let message = r#"
+/// assert_eq!(
+///     has_missing_pivotal_tracker_id(
+///         r#"
 /// [fix #12345678] correct bug the build
-/// "#;
-/// let actual = has_missing_pivotal_tracker_id(message);
-/// assert_eq!(actual, None);
-///
-/// let message = r#"
+/// "#,
+///     ),
+///     None
+/// );
+/// assert_eq!(
+///     has_missing_pivotal_tracker_id(
+///         r#"
 /// Add a new commit linter
 ///
 /// This will add a new linter. This linter checks for the presence of a Pivotal Tracker Id. In this
 /// example I have forgotten my Id.
-/// "#;
-/// let actual = has_missing_pivotal_tracker_id(message);
-/// assert_eq!(actual, Some(()));
+/// "#,
+///     ),
+///     Some(())
+/// );
 ///
-/// let message = r#"
+/// assert_eq!(
+///     has_missing_pivotal_tracker_id(
+///         r#"
 /// Add a new commit linter
 ///
 /// This will add a new linter. This linter checks for the presence of a Pivotal Tracker Id. In this
-/// example I have not forgotten my Id
+/// example I have remembered my Id
 ///
 /// [deliver #12345678,#88335556,#87654321]
-/// "#;
-/// let actual = has_missing_pivotal_tracker_id(message);
-/// assert_eq!(actual, None);
+/// "#
+///     ),
+///     None
+/// );
 /// ```
 pub fn has_missing_pivotal_tracker_id(commit_message: &str) -> Option<()> {
     let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
