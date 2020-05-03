@@ -152,13 +152,14 @@ jobs:
             mv "$TEMP_FILE" "$I"
           done
           make fmt build
+          git add .
+          git config user.name 'GitHub Action[bot]'
+          git config user.email 'actions@github.com'
+          git commit -m "Creating Release '$VERSION'"
+          git push || true
         shell: bash
         env:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
-      - uses: stefanzweifel/git-auto-commit-action@v4.1.3
-        with:
-          commit_message: Creating Release '${{ steps.get_version.outputs.VERSION }}'
-          branch: ${{ github.head_ref }}
       - uses: actions/download-artifact@v2
       - id: create_release
         uses: actions/create-release@v1.0.0
