@@ -37,7 +37,7 @@ fn unset_git_config() {
         .arg("config")
         .arg("--local")
         .arg("--unset")
-        .arg("pb.message.duplicated-trailers")
+        .arg("pb.lint.duplicated-trailers")
         .output()
         .expect("failed to execute process");
 
@@ -45,7 +45,7 @@ fn unset_git_config() {
         .arg("config")
         .arg("--local")
         .arg("--unset")
-        .arg("pb.message.pivotal-tracker-id-missing")
+        .arg("pb.lint.pivotal-tracker-id-missing")
         .output()
         .expect("failed to execute process");
 }
@@ -55,7 +55,7 @@ fn duplicate_trailer_detection_can_be_disabled() {
     unset_git_config();
     Command::new("git")
         .arg("config")
-        .arg("pb.message.duplicated-trailers")
+        .arg("pb.lint.duplicated-trailers")
         .arg("false")
         .output()
         .expect("failed to execute process");
@@ -67,7 +67,7 @@ fn duplicate_trailer_detection_can_be_disabled() {
         .unwrap()
         .unwrap();
     config
-        .set_bool("pb.message.duplicated-trailers", false)
+        .set_bool("pb.lint.duplicated-trailers", false)
         .expect("Failed to disable duplicate trailers?");
 
     let actual = get_lint_configuration(&config).expect("To be able to get a configuration");
@@ -91,7 +91,7 @@ fn duplicate_trailer_detection_can_be_explicitly_enabled() {
         .unwrap()
         .unwrap();
     config
-        .set_bool("pb.message.duplicated-trailers", true)
+        .set_bool("pb.lint.duplicated-trailers", true)
         .expect("Failed to disable duplicate trailers?");
 
     let actual = get_lint_configuration(&config).expect("To be able to get a configuration");
@@ -115,7 +115,7 @@ fn pivotal_tracker_id_being_missing_can_be_explicitly_enabled() {
         .unwrap()
         .unwrap();
     config
-        .set_bool("pb.message.pivotal-tracker-id-missing", true)
+        .set_bool("pb.lint.pivotal-tracker-id-missing", true)
         .expect("Failed to enable pivotal tracker id?");
 
     let actual = get_lint_configuration(&config).expect("To be able to get a configuration");

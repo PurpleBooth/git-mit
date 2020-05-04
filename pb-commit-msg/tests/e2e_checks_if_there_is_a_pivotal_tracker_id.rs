@@ -62,7 +62,7 @@ This is an example commit without the pivotal tracker id
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.message.pivotal-tracker-id-missing")
+        .arg("pb.lint.pivotal-tracker-id-missing")
         .arg("true")
         .output()
         .expect("failed to execute process");
@@ -107,7 +107,7 @@ This is an example commit without the pivotal tracker id
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.message.pivotal-tracker-id-missing")
+        .arg("pb.lint.pivotal-tracker-id-missing")
         .arg("true")
         .output()
         .expect("failed to execute process");
@@ -173,7 +173,7 @@ This is an example commit without the pivotal tracker id
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.message.pivotal-tracker-id-missing")
+        .arg("pb.lint.pivotal-tracker-id-missing")
         .arg("false")
         .output()
         .expect("failed to execute process");

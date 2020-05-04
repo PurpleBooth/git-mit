@@ -6,8 +6,8 @@ use regex::Regex;
 use crate::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing};
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
-const CONFIG_DUPLICATED_TRAILERS: &str = "pb.message.duplicated-trailers";
-const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pb.message.pivotal-tracker-id-missing";
+const CONFIG_DUPLICATED_TRAILERS: &str = "pb.lint.duplicated-trailers";
+const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pb.lint.pivotal-tracker-id-missing";
 const REGEX_PIVOTAL_TRACKER_ID: &str =
     r"\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
 

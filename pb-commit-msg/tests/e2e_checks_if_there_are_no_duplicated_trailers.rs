@@ -144,7 +144,7 @@ Signed-off-by: Billie Thompson <email@example.com>
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.message.duplicated-trailers")
+        .arg("pb.lint.duplicated-trailers")
         .arg("false")
         .output()
         .expect("failed to execute process");
