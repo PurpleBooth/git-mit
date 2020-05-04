@@ -10,8 +10,13 @@ use pb_commit_message_lints::{
     has_duplicated_trailers,
     has_missing_pivotal_tracker_id,
     Lints,
-    Lints::DuplicatedTrailers,
 };
+
+#[repr(i32)]
+enum ExitCode {
+    DuplicatedTrailers = 1,
+    PivotalTrackerIdMissing,
+}
 
 const COMMIT_FILE_PATH_NAME: &str = "commit-file-path";
 const FIELD_SINGULAR: &str = "field";
@@ -49,7 +54,7 @@ fn main() -> std::io::Result<()> {
 
     for check in checks {
         match check {
-            DuplicatedTrailers => {
+            Lints::DuplicatedTrailers => {
                 if let Some(trailers) = has_duplicated_trailers(&commit_message) {
                     exit_duplicated_trailers(&commit_message, trailers);
                 }
@@ -84,7 +89,7 @@ This will address [#12345884]
         commit_message
     );
 
-    std::process::exit(1);
+    std::process::exit(ExitCode::PivotalTrackerIdMissing as i32);
 }
 
 fn exit_duplicated_trailers(commit_message: &String, trailers: Vec<String>) {
@@ -106,5 +111,5 @@ You can fix this by removing the duplicated field when you commit again
         fields
     );
 
-    std::process::exit(1);
+    std::process::exit(ExitCode::DuplicatedTrailers as i32);
 }
