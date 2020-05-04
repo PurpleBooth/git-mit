@@ -1,6 +1,6 @@
 [package]
 name = "pb-commit-author"
-version = "2.21.0"
+version = "2.23.0"
 authors = ["Billie Thompson <billie@billiecodes.com>"]
 edition = "2018"
 license = "CC0 1.0 Universal"
