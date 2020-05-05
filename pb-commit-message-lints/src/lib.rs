@@ -627,6 +627,7 @@ This is an example commit
             Some(()),
         );
     }
+
     #[test]
     fn has_missing_pivotal_tracker_without_an_id_is_bad() {
         assert_has_missing_pivotal_tracker_id(

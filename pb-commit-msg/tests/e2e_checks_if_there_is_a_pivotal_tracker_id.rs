@@ -1,4 +1,3 @@
-use pretty_assertions::assert_eq;
 use std::{
     env,
     io::Write,
@@ -8,6 +7,7 @@ use std::{
 };
 
 use git2::Repository;
+use pretty_assertions::assert_eq;
 use tempfile::{NamedTempFile, TempDir};
 
 fn calculate_cargo_toml_path() -> String {

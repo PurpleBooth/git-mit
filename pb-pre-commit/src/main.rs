@@ -2,6 +2,7 @@ use std::{env, os::unix::process::CommandExt, process};
 
 use clap::{crate_authors, crate_version, App};
 use git2::{Config, Repository};
+
 use pb_commit_author::get_author_configuration;
 
 #[repr(i32)]
