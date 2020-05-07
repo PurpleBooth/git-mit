@@ -22,7 +22,9 @@ fn main() {
     let git_config = Repository::discover(current_dir)
         .and_then(|x| x.config())
         .or_else(|_| Config::open_default())
-        .expect("Couldn't load any git config");
+        .expect("Couldn't load any git config")
+        .snapshot()
+        .expect("Could not freeze git config");
 
     if let None = get_author_configuration(&git_config) {
         eprintln!(

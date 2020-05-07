@@ -1,9 +1,10 @@
-use std::{env, fs};
+use std::{env, fs, fs::File, io::Write};
 
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
+
+use itertools::Itertools;
 use pb_commit_author::get_author_configuration;
-use std::{fs::File, io::Write};
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -43,9 +44,11 @@ fn main() {
     let git_config = Repository::discover(current_dir)
         .and_then(|x| x.config())
         .or_else(|_| Config::open_default())
-        .expect("Couldn't load any git config");
+        .expect("Couldn't load any git config")
+        .snapshot()
+        .expect("Could not freeze git config");
 
-    if let Some(()) = get_author_configuration(&git_config) {
+    if let Some(authors) = get_author_configuration(&git_config) {
         let commit_message =
             fs::read_to_string(commit_message_path).expect("Could not read commit message");
         File::create(commit_message_path)
@@ -53,9 +56,13 @@ fn main() {
             .write_all(
                 format!(
                     r#"{}
-Co-authored-by: Annie Example <test@example.com>
+{}
 "#,
-                    commit_message
+                    commit_message,
+                    authors
+                        .iter()
+                        .map(|x| format!("Co-authored-by: {} <{}>", x.name(), x.email()))
+                        .join("\n")
                 )
                 .as_bytes(),
             )
