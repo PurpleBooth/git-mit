@@ -1,4 +1,4 @@
-use std::{env, os::unix::process::CommandExt, process};
+use std::{env, process};
 
 use clap::{crate_authors, crate_version, App};
 use git2::{Config, Repository};
@@ -38,9 +38,4 @@ git author bt se"#,
 
         process::exit(ExitCode::StaleAuthor as i32);
     }
-
-    let cmd = "git";
-    let arguments: Vec<String> = vec!["duet-pre-commit".into()];
-    let err = process::Command::new(cmd).args(arguments).exec();
-    panic!("panic!: {}", err)
 }

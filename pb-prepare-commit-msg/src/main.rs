@@ -1,6 +1,9 @@
-use std::{env, os::unix::process::CommandExt, process};
+use std::{env, fs};
 
 use clap::{crate_authors, crate_version, App, Arg};
+use git2::{Config, Repository};
+use pb_commit_author::get_author_configuration;
+use std::{fs::File, io::Write};
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -33,21 +36,29 @@ fn main() {
         )
         .get_matches();
 
-    let cmd = "git";
-    let mut arguments: Vec<String> = vec!["duet-prepare-commit-msg".to_string()];
+    let commit_message_path = matches.value_of("commit-message-path").unwrap();
 
-    if let Some(config) = matches.value_of("commit-message-path") {
-        arguments.push(config.to_string())
+    let current_dir = env::current_dir().expect("Unable to retrieve current directory");
+
+    let git_config = Repository::discover(current_dir)
+        .and_then(|x| x.config())
+        .or_else(|_| Config::open_default())
+        .expect("Couldn't load any git config");
+
+    if let Some(()) = get_author_configuration(&git_config) {
+        let commit_message =
+            fs::read_to_string(commit_message_path).expect("Could not read commit message");
+        File::create(commit_message_path)
+            .expect("Unable to open commit message file")
+            .write_all(
+                format!(
+                    r#"{}
+Co-authored-by: Annie Example <test@example.com>
+"#,
+                    commit_message
+                )
+                .as_bytes(),
+            )
+            .expect("Failed to write an updated commit message");
     }
-
-    if let Some(config) = matches.value_of("commit-message-source") {
-        arguments.push(config.to_string())
-    }
-
-    if let Some(config) = matches.value_of("commit-sha") {
-        arguments.push(config.to_string())
-    }
-
-    let err = process::Command::new(cmd).args(arguments).exec();
-    panic!("panic!: {}", err)
 }

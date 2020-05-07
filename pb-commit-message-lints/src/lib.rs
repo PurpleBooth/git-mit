@@ -5,9 +5,10 @@ use regex::Regex;
 
 use crate::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing};
 
-const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
-const CONFIG_DUPLICATED_TRAILERS: &str = "pb.lint.duplicated-trailers";
-const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pb.lint.pivotal-tracker-id-missing";
+const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&TrailerNameConfig; 2] =
+    ["Signed-off-by", "Co-authored-by"];
+const CONFIG_DUPLICATED_TRAILERS: &LintConfigName = "pb.lint.duplicated-trailers";
+const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &LintConfigName = "pb.lint.pivotal-tracker-id-missing";
 const REGEX_PIVOTAL_TRACKER_ID: &str =
     r"\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
 
@@ -19,6 +20,10 @@ pub enum Lints {
 }
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
+type CommitMessage = str;
+type TrailerName = String;
+type TrailerNameConfig = str;
+type LintConfigName = str;
 
 /// Look at a git config and work out what lints should be turned on and off
 ///
@@ -65,7 +70,7 @@ pub fn get_lint_configuration(config: &Config) -> Result<Vec<Lints>> {
     Ok(result_vec)
 }
 
-fn config_defined(config: &Config, lint_name: &str) -> Result<bool> {
+fn config_defined(config: &Config, lint_name: &LintConfigName) -> Result<bool> {
     config
         .entries(Some(lint_name))
         .map(|x| x.count() > 0)
@@ -108,8 +113,8 @@ fn config_defined(config: &Config, lint_name: &str) -> Result<bool> {
 /// );
 /// ```
 #[must_use]
-pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
-    let duplicated_trailers: Vec<String> = TRAILERS_TO_CHECK_FOR_DUPLICATES
+pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Option<Vec<TrailerName>> {
+    let duplicated_trailers: Vec<TrailerName> = TRAILERS_TO_CHECK_FOR_DUPLICATES
         .iter()
         .filter_map(|x| {
             if !has_duplicated_trailer(commit_message, x) {
@@ -168,7 +173,7 @@ pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
 ///     None
 /// );
 /// ```
-pub fn has_missing_pivotal_tracker_id(commit_message: &str) -> Option<()> {
+pub fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> Option<()> {
     let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
 
     if !re.is_match(&commit_message.to_lowercase()) {
@@ -178,7 +183,7 @@ pub fn has_missing_pivotal_tracker_id(commit_message: &str) -> Option<()> {
     None
 }
 
-fn has_duplicated_trailer(commit_message: &str, trailer: &str) -> bool {
+fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &TrailerNameConfig) -> bool {
     let trailers: Vec<&str> = commit_message
         .lines()
         .filter(|x| x.starts_with(&format!("{}:", trailer)))

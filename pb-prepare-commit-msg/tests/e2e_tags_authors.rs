@@ -1,15 +1,19 @@
 use std::{
     env,
-    ops::{Add, Sub},
+    fs,
+    io::prelude::*,
+    ops::Add,
     path::PathBuf,
     process::{Command, Output},
     str,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use git2::Repository;
 use pretty_assertions::assert_eq;
-use tempfile::TempDir;
+
+use git2::Repository;
+
+use tempfile::{NamedTempFile, TempDir};
 
 fn calculate_cargo_toml_path() -> String {
     env::current_exe()
@@ -18,20 +22,22 @@ fn calculate_cargo_toml_path() -> String {
         .and_then(std::path::Path::parent)
         .and_then(std::path::Path::parent)
         .and_then(std::path::Path::parent)
-        .map(|x| x.join("pb-pre-commit").join("Cargo.toml"))
+        .map(|x| x.join("pb-prepare-commit-msg").join("Cargo.toml"))
         .unwrap()
         .to_str()
         .unwrap()
         .to_string()
 }
 
-fn run_hook(working_dir: &PathBuf) -> Output {
+fn run_hook(working_dir: &PathBuf, commit_location: &PathBuf) -> Output {
     Command::new("cargo")
         .current_dir(&working_dir)
         .arg("run")
         .arg("--quiet")
         .arg("--manifest-path")
         .arg(calculate_cargo_toml_path())
+        .arg("--")
+        .arg(commit_location)
         .output()
         .expect("failed to execute process")
 }
@@ -46,58 +52,54 @@ fn setup_working_dir() -> PathBuf {
 }
 
 #[test]
-fn pre_commit_fails_if_expires_time_has_passed() {
+fn co_author_trailer_should_be_appended() {
     let working_dir = setup_working_dir();
     set_author_expires(
+        &working_dir,
         SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("Failed to get Unix Epoch")
-            .sub(Duration::from_secs(100)),
-        &working_dir,
+            .add(Duration::from_secs(1000)),
     );
-    let expected_stdout = "";
-    let expected_stderr = r#"
-The details of the author of this commit are a bit stale. Can you confirm who's currently coding?
+    set_co_author(&working_dir, "Annie Example", "test@example.com", 0);
 
-It's nice to get and give the right credit.
+    let commit_message_file = NamedTempFile::new().unwrap();
+    writeln!(
+        commit_message_file.as_file(),
+        r#"Lorem Ipsum
 
-You can fix this by running `git author` then the initials of whoever is coding for example:
-git author bt
-git author bt se
-"#;
-    let expect_success = false;
-    assert_output(
-        &working_dir,
-        expected_stdout,
-        expected_stderr,
-        expect_success,
-    );
-}
+In this commit message I have put a witty message"#
+    )
+    .unwrap();
 
-#[test]
-fn pre_commit_does_not_fail_if_time_has_not_passed() {
-    let working_dir = setup_working_dir();
-    set_author_expires(
-        SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("Failed to get Unix Epoch")
-            .add(Duration::from_secs(100)),
-        &working_dir,
-    );
+    let actual_output = run_hook(&working_dir, &commit_message_file.path().to_path_buf());
+    let actual_commit_message = fs::read_to_string(commit_message_file).unwrap();
 
     let expected_stdout = "";
-    let expected_stderr = "";
+    let expected_stderr = r#""#;
     let expect_success = true;
+    let expected_commit_message = r#"Lorem Ipsum
+
+In this commit message I have put a witty message
+
+Co-authored-by: Annie Example <test@example.com>
+"#;
+
     assert_output(
-        &working_dir,
+        actual_output,
         expected_stdout,
         expected_stderr,
         expect_success,
     );
+    assert_eq!(
+        actual_commit_message, expected_commit_message,
+        "Expected the commit message to contain {:?}, instead it contained {:?}",
+        expected_commit_message, actual_commit_message
+    );
 }
 
-fn set_author_expires(expiration_time: Duration, working_dir: &PathBuf) {
-    let now = format!("{}", expiration_time.as_secs());
+fn set_author_expires(working_dir: &PathBuf, expiration_time: Duration) {
+    let epoch_time = format!("{}", expiration_time.as_secs());
     Command::new("git")
         .current_dir(&working_dir)
         .arg("config")
@@ -105,18 +107,36 @@ fn set_author_expires(expiration_time: Duration, working_dir: &PathBuf) {
         .arg("--type")
         .arg("expiry-date")
         .arg("pb.author.expires")
-        .arg(now)
+        .arg(epoch_time)
+        .output()
+        .expect("failed to execute process");
+}
+
+fn set_co_author(working_dir: &PathBuf, author_name: &str, author_email: &str, index: i64) {
+    Command::new("git")
+        .current_dir(&working_dir)
+        .arg("config")
+        .arg("--local")
+        .arg(format!("pb.author.coauthors.{}.name", index))
+        .arg(author_name)
+        .output()
+        .expect("failed to execute process");
+    Command::new("git")
+        .current_dir(&working_dir)
+        .arg("config")
+        .arg("--local")
+        .arg(format!("pb.author.coauthors.{}.email", index))
+        .arg(author_email)
         .output()
         .expect("failed to execute process");
 }
 
 fn assert_output(
-    working_dir: &PathBuf,
+    output: Output,
     expected_stdout: &str,
     expected_stderr: &str,
     expect_success: bool,
 ) {
-    let output = run_hook(&working_dir);
     let stdout = str::from_utf8(&output.stdout).expect("stdout couldn't be parsed");
     let stderr = str::from_utf8(&output.stderr).expect("stderr couldn't be parsed");
     assert_eq!(
