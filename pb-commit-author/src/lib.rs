@@ -4,7 +4,7 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use git2::Config;
+use git2::{Config, ConfigEntries};
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
@@ -32,21 +32,30 @@ impl Author {
 }
 
 pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Author>> {
+    let time_error_to_false = |_: std::time::SystemTimeError| false;
+    let right_less_than_left = |pair: (Duration, Duration)| -> bool { pair.0.lt(&pair.1) };
+
+    let config_to_duration_pair =
+        |time_since_epoch| -> std::result::Result<(Duration, Duration), bool> {
+            let git2_error_to_false = |_: git2::Error| false;
+            let u64_try_error_to_false = |_: std::num::TryFromIntError| false;
+            let i64_into_u64 = |x| u64::try_from(x).map_err(u64_try_error_to_false);
+            let pair_duration_with_duration =
+                |expires_after_time| (time_since_epoch, expires_after_time);
+
+            config
+                .get_i64("pb.author.expires")
+                .map_err(git2_error_to_false)
+                .and_then(i64_into_u64)
+                .map(Duration::from_secs)
+                .map(pair_duration_with_duration)
+        };
+
     match SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
-        .map_err(|_err| false)
-        .and_then(
-            |time_since_epoch| -> std::result::Result<(Duration, Duration), bool> {
-                config
-                    .get_i64("pb.author.expires")
-                    .map_err(|_err| false)
-                    .and_then(|x| u64::try_from(x).map_err(|_x| false))
-                    .map(Duration::from_secs)
-                    .map(|expires_after_time| (time_since_epoch, expires_after_time))
-                    .map_err(|_err| -> bool { false })
-            },
-        )
-        .map(|(time_since_epoch, expires_after_time)| time_since_epoch.lt(&expires_after_time))
+        .map_err(time_error_to_false)
+        .and_then(config_to_duration_pair)
+        .map(right_less_than_left)
     {
         Ok(true) => {}
         _ => return None,
@@ -75,9 +84,10 @@ pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Auth
 }
 
 fn config_defined(config: &Config, config_key: &str) -> Result<bool> {
+    let more_than_1_config_variable = |x: ConfigEntries| x.count() > 1;
     config
         .entries(Some(config_key))
-        .map(|x| x.count() > 1)
+        .map(more_than_1_config_variable)
         .map_err(Box::from)
 }
 

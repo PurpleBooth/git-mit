@@ -1,5 +1,6 @@
 use std::{
     env,
+    fmt,
     fs,
     io::prelude::*,
     ops::Add,
@@ -13,20 +14,38 @@ use pretty_assertions::assert_eq;
 
 use git2::Repository;
 
+use std::{
+    error::Error,
+    fmt::{Display, Formatter},
+};
 use tempfile::{NamedTempFile, TempDir};
 
+#[derive(Debug)]
+struct PathError;
+impl Error for PathError {}
+impl Display for PathError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "Path not found")
+    }
+}
+
 fn calculate_cargo_toml_path() -> String {
+    let boxed_path_error = || Box::from(PathError);
+    let parent_directory = |x: PathBuf| x.parent().ok_or_else(boxed_path_error).map(PathBuf::from);
+    let bin_root = |x: PathBuf| x.join("pb-prepare-commit-msg");
+    let cargo_toml = |x: PathBuf| x.join("Cargo.toml");
+    let path_buf_to_string = |x: PathBuf| x.to_str().ok_or_else(boxed_path_error).map(String::from);
+
     env::current_exe()
+        .map_err(Box::<dyn Error>::from)
+        .and_then(parent_directory)
+        .and_then(parent_directory)
+        .and_then(parent_directory)
+        .and_then(parent_directory)
+        .map(bin_root)
+        .map(cargo_toml)
+        .and_then(path_buf_to_string)
         .unwrap()
-        .parent()
-        .and_then(std::path::Path::parent)
-        .and_then(std::path::Path::parent)
-        .and_then(std::path::Path::parent)
-        .map(|x| x.join("pb-prepare-commit-msg").join("Cargo.toml"))
-        .unwrap()
-        .to_str()
-        .unwrap()
-        .to_string()
 }
 
 fn run_hook(working_dir: &PathBuf, commit_location: &PathBuf) -> Output {
@@ -43,8 +62,10 @@ fn run_hook(working_dir: &PathBuf, commit_location: &PathBuf) -> Output {
 }
 
 fn setup_working_dir() -> PathBuf {
+    let add_repository = |x: PathBuf| x.join("repository");
     let temp = TempDir::new()
-        .map(|x| x.into_path().join("repository"))
+        .map(TempDir::into_path)
+        .map(add_repository)
         .expect("Unable to make path");
     Repository::init(&temp).expect("Couldn't create repo");
 

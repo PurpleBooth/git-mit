@@ -44,9 +44,11 @@ fn main() -> std::io::Result<()> {
 
     let current_dir = env::current_dir().expect("Unable to retrieve current directory");
 
+    let get_repository_config = |x: Repository| x.config();
+    let get_default_config = |_| Config::open_default();
     let git_config = Repository::discover(current_dir)
-        .and_then(|x| x.config())
-        .or_else(|_| Config::open_default())
+        .and_then(get_repository_config)
+        .or_else(get_default_config)
         .expect("Couldn't load any git config");
 
     let checks =

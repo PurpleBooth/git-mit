@@ -4,7 +4,7 @@ use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
 
 use itertools::Itertools;
-use pb_commit_author::get_author_configuration;
+use pb_commit_author::{get_author_configuration, Author};
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -41,9 +41,11 @@ fn main() {
 
     let current_dir = env::current_dir().expect("Unable to retrieve current directory");
 
+    let get_repository_config = |x: Repository| x.config();
+    let get_default_config = |_| Config::open_default();
     let git_config = Repository::discover(current_dir)
-        .and_then(|x| x.config())
-        .or_else(|_| Config::open_default())
+        .and_then(get_repository_config)
+        .or_else(get_default_config)
         .expect("Couldn't load any git config")
         .snapshot()
         .expect("Could not freeze git config");
@@ -51,6 +53,8 @@ fn main() {
     if let Some(authors) = get_author_configuration(&git_config) {
         let commit_message =
             fs::read_to_string(commit_message_path).expect("Could not read commit message");
+        let write_co_author_trailer =
+            |x: &Author| format!("Co-authored-by: {} <{}>", x.name(), x.email());
         File::create(commit_message_path)
             .expect("Unable to open commit message file")
             .write_all(
@@ -59,10 +63,7 @@ fn main() {
 {}
 "#,
                     commit_message,
-                    authors
-                        .iter()
-                        .map(|x| format!("Co-authored-by: {} <{}>", x.name(), x.email()))
-                        .join("\n")
+                    authors.iter().map(write_co_author_trailer).join("\n")
                 )
                 .as_bytes(),
             )

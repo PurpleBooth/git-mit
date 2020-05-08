@@ -1,6 +1,6 @@
 use std::{collections::HashSet, error, iter::FromIterator};
 
-use git2::Config;
+use git2::{Config, ConfigEntries};
 use regex::Regex;
 
 use crate::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing};
@@ -71,9 +71,10 @@ pub fn get_lint_configuration(config: &Config) -> Result<Vec<Lints>> {
 }
 
 fn config_defined(config: &Config, lint_name: &LintConfigName) -> Result<bool> {
+    let at_least_one = |x: ConfigEntries| x.count() > 0;
     config
         .entries(Some(lint_name))
-        .map(|x| x.count() > 0)
+        .map(at_least_one)
         .map_err(Box::from)
 }
 
@@ -114,15 +115,16 @@ fn config_defined(config: &Config, lint_name: &LintConfigName) -> Result<bool> {
 /// ```
 #[must_use]
 pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Option<Vec<TrailerName>> {
+    let trailer_duplications = |x: &&str| {
+        if !has_duplicated_trailer(commit_message, x) {
+            return None;
+        }
+
+        Some((*x).to_string())
+    };
     let duplicated_trailers: Vec<TrailerName> = TRAILERS_TO_CHECK_FOR_DUPLICATES
         .iter()
-        .filter_map(|x| {
-            if !has_duplicated_trailer(commit_message, x) {
-                return None;
-            }
-
-            Some((*x).to_string())
-        })
+        .filter_map(trailer_duplications)
         .collect();
 
     if !duplicated_trailers.is_empty() {
@@ -184,10 +186,8 @@ pub fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> Option<
 }
 
 fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &TrailerNameConfig) -> bool {
-    let trailers: Vec<&str> = commit_message
-        .lines()
-        .filter(|x| x.starts_with(&format!("{}:", trailer)))
-        .collect();
+    let starts_with_trailer = |x: &&str| x.starts_with(&format!("{}:", trailer));
+    let trailers: Vec<&str> = commit_message.lines().filter(starts_with_trailer).collect();
 
     let unique_trailers: std::collections::HashSet<&str> =
         HashSet::from_iter(trailers.to_owned().into_iter());
