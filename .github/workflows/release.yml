@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           lfs: true
-      - run: git fetch --unshallow
+      - run: git fetch --unshallow --tags
       - id: get_previous_version
         run: |
           echo ::set-output name=PREVIOUS_VERSION::$(git describe --tags "$(git rev-list --tags --max-count=1)")
