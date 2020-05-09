@@ -40,7 +40,13 @@ jobs:
       - id: get_previous_version
         run: |
           echo ::set-output name=PREVIOUS_VERSION::$(git describe --tags "$(git rev-list --tags --max-count=1)")
-          echo ::set-output name=MESSAGES::"$(git log "$(git describe --tags --abbrev=0)"..HEAD --pretty=format:"%B" )"
+
+          MESSAGES="$(git log "$(git describe --tags --abbrev=0)"..HEAD --pretty=format:"%B" )"
+          MESSAGES="${MESSAGES//'%'/'%25'}"
+          MESSAGES="${MESSAGES//$'\n'/'%0A'}"
+          MESSAGES="${MESSAGES//$'\r'/'%0D'}"
+
+          echo ::set-output name=MESSAGES::"$MESSAGES"
         shell: bash
       - id: semvers
         uses: WyriHaximus/github-action-next-semvers@master

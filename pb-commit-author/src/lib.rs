@@ -5,6 +5,7 @@ use std::{
 };
 
 use git2::{Config, ConfigEntries};
+use std::error::Error;
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
@@ -32,20 +33,17 @@ impl Author {
 }
 
 pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Author>> {
-    let time_error_to_false = |_: std::time::SystemTimeError| false;
+    let time_error_to_false = |err: std::time::SystemTimeError| Box::from(err);
     let right_less_than_left = |pair: (Duration, Duration)| -> bool { pair.0.lt(&pair.1) };
 
     let config_to_duration_pair =
-        |time_since_epoch| -> std::result::Result<(Duration, Duration), bool> {
-            let git2_error_to_false = |_: git2::Error| false;
-            let u64_try_error_to_false = |_: std::num::TryFromIntError| false;
-            let i64_into_u64 = |x| u64::try_from(x).map_err(u64_try_error_to_false);
-            let pair_duration_with_duration =
-                |expires_after_time| (time_since_epoch, expires_after_time);
+        |time_since_epoch| -> std::result::Result<(Duration, Duration), Box<dyn Error>> {
+            let i64_into_u64 = |x| u64::try_from(x).map_err(Box::from);
+            let pair_duration_with_duration = |expires_after_time| (time_since_epoch, expires_after_time);
 
             config
                 .get_i64("pb.author.expires")
-                .map_err(git2_error_to_false)
+                .map_err(Box::from)
                 .and_then(i64_into_u64)
                 .map(Duration::from_secs)
                 .map(pair_duration_with_duration)
