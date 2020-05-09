@@ -1,19 +1,12 @@
-use std::{
-    env,
-    fmt,
-    io::Write,
-    path::PathBuf,
-    process::{Command, Output},
-    str,
-};
+use std::{fmt, io::Write, process::Command};
 
-use git2::Repository;
-use pretty_assertions::assert_eq;
+use pb_hook_test_helper::{assert_output, setup_working_dir};
+
 use std::{
     error::Error,
     fmt::{Display, Formatter},
 };
-use tempfile::{NamedTempFile, TempDir};
+use tempfile::NamedTempFile;
 
 #[derive(Debug)]
 struct PathError;
@@ -22,50 +15,6 @@ impl Display for PathError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "Path not found")
     }
-}
-
-fn calculate_cargo_toml_path() -> String {
-    let boxed_path_error = || Box::from(PathError);
-    let parent_directory = |x: PathBuf| x.parent().ok_or_else(boxed_path_error).map(PathBuf::from);
-    let bin_root = |x: PathBuf| x.join("pb-commit-msg");
-    let cargo_toml = |x: PathBuf| x.join("Cargo.toml");
-    let path_buf_to_string = |x: PathBuf| x.to_str().ok_or_else(boxed_path_error).map(String::from);
-
-    env::current_exe()
-        .map_err(Box::<dyn Error>::from)
-        .and_then(parent_directory)
-        .and_then(parent_directory)
-        .and_then(parent_directory)
-        .and_then(parent_directory)
-        .map(bin_root)
-        .map(cargo_toml)
-        .and_then(path_buf_to_string)
-        .unwrap()
-}
-
-fn run_hook(fake_commit_message: &str, working_dir: &PathBuf) -> Output {
-    let mut commit_path = NamedTempFile::new().unwrap();
-    write!(commit_path, "{}", fake_commit_message).unwrap();
-
-    Command::new("cargo")
-        .current_dir(&working_dir)
-        .arg("run")
-        .arg("--quiet")
-        .arg("--manifest-path")
-        .arg(calculate_cargo_toml_path())
-        .arg("--")
-        .arg(commit_path.path().to_str().unwrap())
-        .output()
-        .expect("failed to execute process")
-}
-
-fn setup_working_dir() -> PathBuf {
-    let temp = TempDir::new()
-        .map(|x| x.into_path().join("repository"))
-        .expect("Unable to make path");
-    Repository::init(&temp).expect("Couldn't create repo");
-
-    temp
 }
 
 #[test]
@@ -85,34 +34,17 @@ This is an example commit without the pivotal tracker id
         .arg("true")
         .output()
         .expect("failed to execute process");
-    let output = run_hook(input, &working_dir);
 
-    let stdout = str::from_utf8(&output.stdout).expect("stdout couldn't be parsed");
-    let stderr = str::from_utf8(&output.stderr).expect("stderr couldn't be parsed");
+    let mut commit_path = NamedTempFile::new().unwrap();
+    write!(commit_path, "{}", input).unwrap();
 
-    assert!(
-        stdout.is_empty(),
-        "Expected stdout to be empty, instead it contained {:?} stderr {:?} status {:?}",
-        stdout,
-        stderr,
-        output.status.code()
+    let output = pb_hook_test_helper::run_hook(
+        &working_dir,
+        "pb-commit-msg",
+        vec![commit_path.path().to_str().unwrap()],
     );
 
-    assert!(
-        stderr.is_empty(),
-        "Expected stderr to be empty, instead it contained {:?} stderr {:?} status {:?}",
-        stderr,
-        stdout,
-        output.status.code()
-    );
-
-    assert!(
-        output.status.success(),
-        "Expected status to be a failure, instead it was {:?}  stdout {:?} stderr {:?}",
-        &output.status.code(),
-        stdout,
-        stderr
-    );
+    assert_output(&output, "", "", true)
 }
 
 #[test]
@@ -130,10 +62,16 @@ This is an example commit without the pivotal tracker id
         .arg("true")
         .output()
         .expect("failed to execute process");
-    let output = run_hook(input, &working_dir);
 
-    let stdout = str::from_utf8(&output.stdout).expect("stdout couldn't be parsed");
-    let stderr = str::from_utf8(&output.stderr).expect("stderr couldn't be parsed");
+    let mut commit_path = NamedTempFile::new().unwrap();
+    write!(commit_path, "{}", input).unwrap();
+
+    let output = pb_hook_test_helper::run_hook(
+        &working_dir,
+        "pb-commit-msg",
+        vec![commit_path.path().to_str().unwrap()],
+    );
+
     let expected_stderr = r#"
 An example commit
 
@@ -153,32 +91,7 @@ This will address [#12345884]
 
 "#;
 
-    assert!(
-        stdout.is_empty(),
-        "Expected stdout to be empty, instead it contained {:?} stderr {:?} status {:?}",
-        stdout,
-        stderr,
-        output.status.code()
-    );
-
-    assert_eq!(
-        stderr,
-        expected_stderr,
-        "Expected stderr to be contain a nice version out the output, instead it contained {:?} \
-         stdout {:?} status {:?}",
-        stderr,
-        stdout,
-        output.status.code()
-    );
-
-    assert_eq!(
-        output.status.success(),
-        false,
-        "Expected status to be a failure, instead it was {:?}  stdout {:?} stderr {:?}",
-        &output.status.code(),
-        stdout,
-        stderr
-    );
+    assert_output(&output, "", expected_stderr, false)
 }
 
 #[test]
@@ -196,33 +109,14 @@ This is an example commit without the pivotal tracker id
         .arg("false")
         .output()
         .expect("failed to execute process");
-    let output = run_hook(input, &working_dir);
 
-    let stdout = str::from_utf8(&output.stdout).expect("stdout couldn't be parsed");
-    let stderr = str::from_utf8(&output.stderr).expect("stderr couldn't be parsed");
+    let mut commit_path = NamedTempFile::new().unwrap();
+    write!(commit_path, "{}", input).unwrap();
 
-    assert!(
-        stdout.is_empty(),
-        "Expected stdout to be empty, instead it contained {:?} stderr {:?} status {:?}",
-        stdout,
-        stderr,
-        output.status.code()
+    let output = pb_hook_test_helper::run_hook(
+        &working_dir,
+        "pb-commit-msg",
+        vec![commit_path.path().to_str().unwrap()],
     );
-
-    assert!(
-        stderr.is_empty(),
-        "Expected stderr to be empty, instead it contained {:?} stderr {:?} status {:?}",
-        stderr,
-        stdout,
-        output.status.code()
-    );
-
-    assert_eq!(
-        output.status.success(),
-        true,
-        "Expected status to be a success, instead it was {:?}  stdout {:?} stderr {:?}",
-        &output.status.code(),
-        stdout,
-        stderr
-    );
+    assert_output(&output, "", r#""#, true)
 }

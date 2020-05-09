@@ -1,5 +1,4 @@
 use std::{
-    env,
     fmt,
     fs,
     io::prelude::*,
@@ -12,13 +11,12 @@ use std::{
 
 use pretty_assertions::assert_eq;
 
-use git2::Repository;
-
+use pb_hook_test_helper::setup_working_dir;
 use std::{
     error::Error,
     fmt::{Display, Formatter},
 };
-use tempfile::{NamedTempFile, TempDir};
+use tempfile::NamedTempFile;
 
 #[derive(Debug)]
 struct PathError;
@@ -29,58 +27,15 @@ impl Display for PathError {
     }
 }
 
-fn calculate_cargo_toml_path() -> String {
-    let boxed_path_error = || Box::from(PathError);
-    let parent_directory = |x: PathBuf| x.parent().ok_or_else(boxed_path_error).map(PathBuf::from);
-    let bin_root = |x: PathBuf| x.join("pb-prepare-commit-msg");
-    let cargo_toml = |x: PathBuf| x.join("Cargo.toml");
-    let path_buf_to_string = |x: PathBuf| x.to_str().ok_or_else(boxed_path_error).map(String::from);
-
-    env::current_exe()
-        .map_err(Box::<dyn Error>::from)
-        .and_then(parent_directory)
-        .and_then(parent_directory)
-        .and_then(parent_directory)
-        .and_then(parent_directory)
-        .map(bin_root)
-        .map(cargo_toml)
-        .and_then(path_buf_to_string)
-        .unwrap()
-}
-
-fn run_hook(working_dir: &PathBuf, commit_location: &PathBuf) -> Output {
-    Command::new("cargo")
-        .current_dir(&working_dir)
-        .arg("run")
-        .arg("--quiet")
-        .arg("--manifest-path")
-        .arg(calculate_cargo_toml_path())
-        .arg("--")
-        .arg(commit_location)
-        .output()
-        .expect("failed to execute process")
-}
-
-fn setup_working_dir() -> PathBuf {
-    let add_repository = |x: PathBuf| x.join("repository");
-    let temp = TempDir::new()
-        .map(TempDir::into_path)
-        .map(add_repository)
-        .expect("Unable to make path");
-    Repository::init(&temp).expect("Couldn't create repo");
-
-    temp
-}
-
 #[test]
 fn co_author_trailer_should_be_appended() {
     let working_dir = setup_working_dir();
-    set_author_expires(
-        &working_dir,
+    pb_hook_test_helper::set_author_expires(
         SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("Failed to get Unix Epoch")
             .add(Duration::from_secs(1000)),
+        &working_dir,
     );
     set_co_author(&working_dir, "Annie Example", "test@example.com", 0);
 
@@ -93,7 +48,12 @@ In this commit message I have put a witty message"#
     )
     .unwrap();
 
-    let actual_output = run_hook(&working_dir, &commit_message_file.path().to_path_buf());
+    let actual_output = pb_hook_test_helper::run_hook(
+        &working_dir,
+        "pb-prepare-commit-msg",
+        vec![&commit_message_file.path().to_str().unwrap()],
+    );
+
     let actual_commit_message = fs::read_to_string(commit_message_file).unwrap();
 
     let expected_stdout = "";
@@ -122,12 +82,12 @@ Co-authored-by: Annie Example <test@example.com>
 #[test]
 fn commit_message_produced_varies_based_on_given_commit_message() {
     let working_dir = setup_working_dir();
-    set_author_expires(
-        &working_dir,
+    pb_hook_test_helper::set_author_expires(
         SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("Failed to get Unix Epoch")
             .add(Duration::from_secs(1000)),
+        &working_dir,
     );
     set_co_author(&working_dir, "Annie Example", "test@example.com", 0);
 
@@ -140,7 +100,11 @@ In this commit message I have put a witty message"#
     )
     .unwrap();
 
-    let actual_output = run_hook(&working_dir, &commit_message_file.path().to_path_buf());
+    let actual_output = pb_hook_test_helper::run_hook(
+        &working_dir,
+        "pb-prepare-commit-msg",
+        vec![&commit_message_file.path().to_str().unwrap()],
+    );
     let actual_commit_message = fs::read_to_string(commit_message_file).unwrap();
 
     let expected_stdout = "";
@@ -169,12 +133,12 @@ Co-authored-by: Annie Example <test@example.com>
 #[test]
 fn commit_message_co_author_varies_based_on_message() {
     let working_dir = setup_working_dir();
-    set_author_expires(
-        &working_dir,
+    pb_hook_test_helper::set_author_expires(
         SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("Failed to get Unix Epoch")
             .add(Duration::from_secs(1000)),
+        &working_dir,
     );
     set_co_author(&working_dir, "Joseph Bloggs", "joe@example.com", 0);
     set_co_author(&working_dir, "Annie Example", "annie@example.com", 1);
@@ -188,7 +152,11 @@ In this commit message I have put a witty message"#
     )
     .unwrap();
 
-    let actual_output = run_hook(&working_dir, &commit_message_file.path().to_path_buf());
+    let actual_output = pb_hook_test_helper::run_hook(
+        &working_dir,
+        "pb-prepare-commit-msg",
+        vec![&commit_message_file.path().to_str().unwrap()],
+    );
     let actual_commit_message = fs::read_to_string(commit_message_file).unwrap();
 
     let expected_stdout = "";
@@ -213,20 +181,6 @@ Co-authored-by: Annie Example <annie@example.com>
         "Expected the commit message to contain {:?}, instead it contained {:?}",
         expected_commit_message, actual_commit_message
     );
-}
-
-fn set_author_expires(working_dir: &PathBuf, expiration_time: Duration) {
-    let epoch_time = format!("{}", expiration_time.as_secs());
-    Command::new("git")
-        .current_dir(&working_dir)
-        .arg("config")
-        .arg("--local")
-        .arg("--type")
-        .arg("expiry-date")
-        .arg("pb.author.expires")
-        .arg(epoch_time)
-        .output()
-        .expect("failed to execute process");
 }
 
 fn set_co_author(working_dir: &PathBuf, author_name: &str, author_email: &str, index: i64) {

@@ -4,12 +4,10 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use git2::{Config, Repository};
 use pretty_assertions::assert_eq;
-use tempfile::TempDir;
 
 use pb_commit_author::{get_author_configuration, Author};
-use std::path::PathBuf;
+use pb_hook_test_helper::make_config;
 
 #[test]
 fn there_is_no_author_config_if_it_has_expired() {
@@ -136,17 +134,4 @@ fn epoch_with_offset(x: fn(Duration) -> Duration) -> i64 {
         .map(i64::try_from)
         .expect("Failed to get Unix Epoch")
         .expect("Convert epoch to int")
-}
-
-fn make_config() -> Config {
-    let add_repository_to_path = |x: PathBuf| x.join("repository");
-    let config = TempDir::new()
-        .map(TempDir::into_path)
-        .map(add_repository_to_path)
-        .map(Repository::init)
-        .expect("Failed to initialise the repository")
-        .expect("Failed create temporary directory")
-        .config()
-        .expect("Failed to get configuration");
-    config
 }

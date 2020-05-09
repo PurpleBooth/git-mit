@@ -1,17 +1,13 @@
-use std::{process::Command, str};
+use std::str;
 
 use itertools::join;
 use pretty_assertions::assert_eq;
 
 #[test]
 fn help_returned_by_long_flag() {
-    let output = Command::new("cargo")
-        .arg("run")
-        .arg("--quiet")
-        .arg("--")
-        .arg("--help")
-        .output()
-        .expect("failed to execute process");
+    let working_dir = pb_hook_test_helper::setup_working_dir();
+    let output =
+        pb_hook_test_helper::run_hook(&working_dir, "pb-prepare-commit-msg", vec!["--help"]);
     assert!(&output.status.success());
     let stderr = str::from_utf8(&output.stderr).unwrap();
     assert!(stderr.is_empty());
@@ -45,13 +41,8 @@ ARGS:
 
 #[test]
 fn help_returned_by_short_flag() {
-    let output = Command::new("cargo")
-        .arg("run")
-        .arg("--quiet")
-        .arg("--")
-        .arg("-h")
-        .output()
-        .expect("failed to execute process");
+    let working_dir = pb_hook_test_helper::setup_working_dir();
+    let output = pb_hook_test_helper::run_hook(&working_dir, "pb-prepare-commit-msg", vec!["-h"]);
     assert!(&output.status.success());
     let stderr = str::from_utf8(&output.stderr).unwrap();
     assert!(stderr.is_empty());
@@ -84,13 +75,9 @@ ARGS:
 
 #[test]
 fn short_help_returned_when_a_wrong_message_commands_passed() {
-    let output = Command::new("cargo")
-        .arg("run")
-        .arg("--quiet")
-        .arg("--")
-        .arg("--banana")
-        .output()
-        .expect("failed to execute process");
+    let working_dir = pb_hook_test_helper::setup_working_dir();
+    let output =
+        pb_hook_test_helper::run_hook(&working_dir, "pb-prepare-commit-msg", vec!["--banana"]);
     assert!(!&output.status.success());
     let stdout = str::from_utf8(&output.stdout).unwrap();
     assert!(stdout.is_empty());

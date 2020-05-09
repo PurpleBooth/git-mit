@@ -5,13 +5,9 @@ use pretty_assertions::assert_eq;
 
 #[test]
 fn help_returned_by_long_flag() {
-    let output = Command::new("cargo")
-        .arg("run")
-        .arg("--quiet")
-        .arg("--")
-        .arg("--help")
-        .output()
-        .expect("failed to execute process");
+    let working_dir = pb_hook_test_helper::setup_working_dir();
+    let output = pb_hook_test_helper::run_hook(&working_dir, "pb-pre-commit", vec!["--help"]);
+
     assert!(&output.status.success());
     let stderr = str::from_utf8(&output.stderr).unwrap();
     assert!(stderr.is_empty());
@@ -36,13 +32,9 @@ FLAGS:
 
 #[test]
 fn help_returned_by_short_flag() {
-    let output = Command::new("cargo")
-        .arg("run")
-        .arg("--quiet")
-        .arg("--")
-        .arg("-h")
-        .output()
-        .expect("failed to execute process");
+    let working_dir = pb_hook_test_helper::setup_working_dir();
+    let output = pb_hook_test_helper::run_hook(&working_dir, "pb-pre-commit", vec!["-h"]);
+
     assert!(&output.status.success());
     let stderr = str::from_utf8(&output.stderr).unwrap();
     assert!(stderr.is_empty());

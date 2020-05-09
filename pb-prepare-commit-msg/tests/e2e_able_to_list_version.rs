@@ -1,14 +1,10 @@
-use std::{process::Command, str};
+use std::str;
 
 #[test]
 fn version_returned_by_long_flag() {
-    let output = Command::new("cargo")
-        .arg("run")
-        .arg("--quiet")
-        .arg("--")
-        .arg("--version")
-        .output()
-        .expect("failed to execute process");
+    let working_dir = pb_hook_test_helper::setup_working_dir();
+    let output =
+        pb_hook_test_helper::run_hook(&working_dir, "pb-prepare-commit-msg", vec!["--version"]);
 
     let stdout = str::from_utf8(&output.stdout)
         .expect("Failed to convert stdout to a string, is it valid UTF-8?");
@@ -45,13 +41,8 @@ fn version_returned_by_long_flag() {
 
 #[test]
 fn version_returned_by_short_flag() {
-    let output = Command::new("cargo")
-        .arg("run")
-        .arg("--quiet")
-        .arg("--")
-        .arg("-V")
-        .output()
-        .expect("failed to execute process");
+    let working_dir = pb_hook_test_helper::setup_working_dir();
+    let output = pb_hook_test_helper::run_hook(&working_dir, "pb-prepare-commit-msg", vec!["-V"]);
 
     let stderr = str::from_utf8(&output.stderr)
         .expect("Failed to convert stdout to a string, is it valid UTF-8?");
