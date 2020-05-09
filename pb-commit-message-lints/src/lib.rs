@@ -120,13 +120,14 @@ pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Option<Vec<Tra
             .map(String::from)
             .filter(|x| has_duplicated_trailer(commit_message, x))
     };
+    let is_not_empty = |x: &Vec<_>| !x.is_empty();
     Some(
         TRAILERS_TO_CHECK_FOR_DUPLICATES
             .iter()
             .filter_map(trailer_duplications)
             .collect::<Vec<TrailerName>>(),
     )
-    .filter(|x| !x.is_empty())
+    .filter(is_not_empty)
 }
 
 /// Check if a commit message message has a pivotal tracker id in it
@@ -172,12 +173,12 @@ pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Option<Vec<Tra
 /// ```
 pub fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> Option<()> {
     let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
-
-    if !re.is_match(&commit_message.to_lowercase()) {
-        return Some(());
-    }
-
-    None
+    let to_empty_some = |_| Some(());
+    let is_not_match = |x: &String| !re.is_match(x);
+    Some(commit_message)
+        .map(str::to_lowercase)
+        .filter(is_not_match)
+        .and_then(to_empty_some)
 }
 
 fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &TrailerNameConfig) -> bool {
