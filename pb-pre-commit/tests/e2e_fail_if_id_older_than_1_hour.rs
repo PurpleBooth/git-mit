@@ -1,13 +1,11 @@
 use std::{
     fmt,
     ops::{Add, Sub},
-    path::PathBuf,
-    str,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use pb_hook_test_helper::setup_working_dir;
-use pretty_assertions::assert_eq;
+use pb_hook_test_helper::{assert_output, run_hook, setup_working_dir};
+
 use std::{
     error::Error,
     fmt::{Display, Formatter},
@@ -43,12 +41,8 @@ git author bt
 git author bt se
 "#;
     let expect_success = false;
-    assert_output(
-        &working_dir,
-        expected_stdout,
-        expected_stderr,
-        expect_success,
-    );
+    let output = run_hook(&working_dir, "pb-pre-commit", vec![]);
+    assert_output(&output, expected_stdout, expected_stderr, expect_success);
 }
 
 #[test]
@@ -65,49 +59,8 @@ fn pre_commit_does_not_fail_if_time_has_not_passed() {
     let expected_stdout = "";
     let expected_stderr = "";
     let expect_success = true;
-    assert_output(
-        &working_dir,
-        expected_stdout,
-        expected_stderr,
-        expect_success,
-    );
-}
 
-fn assert_output(
-    working_dir: &PathBuf,
-    expected_stdout: &str,
-    expected_stderr: &str,
-    expect_success: bool,
-) {
-    let output = pb_hook_test_helper::run_hook(&working_dir, "pb-pre-commit", vec![]);
-    let stdout = str::from_utf8(&output.stdout).expect("stdout couldn't be parsed");
-    let stderr = str::from_utf8(&output.stderr).expect("stderr couldn't be parsed");
-    assert_eq!(
-        stdout,
-        expected_stdout,
-        "Expected stdout to be {:?}, instead it contained {:?} stderr {:?} status {:?}",
-        expected_stdout,
-        stdout,
-        stderr,
-        output.status.code()
-    );
-    assert_eq!(
-        stderr,
-        expected_stderr,
-        "Expected stderr to {:?}, instead it contained {:?} stderr {:?} status {:?}",
-        expected_stderr,
-        stderr,
-        stdout,
-        output.status.code()
-    );
+    let output = run_hook(&working_dir, "pb-pre-commit", vec![]);
 
-    assert_eq!(
-        output.status.success(),
-        expect_success,
-        "Expected status to be {:?}, instead it was {:?}  stdout {:?} stderr {:?}",
-        expect_success,
-        &output.status.code(),
-        stdout,
-        stderr
-    );
+    assert_output(&output, expected_stdout, expected_stderr, expect_success);
 }
