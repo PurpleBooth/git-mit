@@ -1,4 +1,5 @@
 use git2::{Config, Repository};
+use pretty_assertions::assert_eq;
 use std::{
     env,
     error::Error,

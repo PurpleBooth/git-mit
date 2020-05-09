@@ -14,3 +14,4 @@ description = "Testing help tools for pb-git-hooks"
 [dependencies]
 tempfile = "3"
 git2 = "0.13"
+pretty_assertions = "0.6.1"
