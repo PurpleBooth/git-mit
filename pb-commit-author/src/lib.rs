@@ -35,12 +35,12 @@ impl Author {
 pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Author>> {
     let time_error_to_false = |err: std::time::SystemTimeError| Box::from(err);
     let right_less_than_left = |pair: (Duration, Duration)| -> bool { pair.0.lt(&pair.1) };
+    let i64_into_u64 = |x| u64::try_from(x).map_err(Box::from);
 
     let config_to_duration_pair =
         |time_since_epoch| -> std::result::Result<(Duration, Duration), Box<dyn Error>> {
-            let i64_into_u64 = |x| u64::try_from(x).map_err(Box::from);
-            let pair_duration_with_duration = |expires_after_time| (time_since_epoch, expires_after_time);
-
+            let pair_duration_with_duration =
+                |expires_after_time| (time_since_epoch, expires_after_time);
             config
                 .get_i64("pb.author.expires")
                 .map_err(Box::from)
