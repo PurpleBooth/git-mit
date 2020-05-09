@@ -39,14 +39,22 @@ jobs:
           lfs: true
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - id: get_previous_version
-        run: echo ::set-output name=PREVIOUS_VERSION::$(git describe --tags "$(git rev-list --tags --max-count=1)")
+        run: |
+          echo ::set-output name=PREVIOUS_VERSION::$(git describe --tags "$(git rev-list --tags --max-count=1)")
+
+          MESSAGES="$(git log "$(git describe --tags --abbrev=0)"..HEAD --pretty=format:"%B" )"
+          MESSAGES="${MESSAGES//'%'/'%25'}"
+          MESSAGES="${MESSAGES//$'\n'/'%0A'}"
+          MESSAGES="${MESSAGES//$'\r'/'%0D'}"
+
+          echo ::set-output name=MESSAGES::"$MESSAGES"
         shell: bash
       - id: semvers
         uses: WyriHaximus/github-action-next-semvers@master
         with:
           version: '${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}'
       - run: mkdir -p ./version
-      - if: "!contains(github.event.head_commit.message, 'BC BREAK') && !contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
+      - if: "!contains(steps.get_previous_version.outputs.MESSAGES, 'BC BREAK') && !contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
         run: echo "$VERSION" >./version/version
         env:
           VERSION: ${{ steps.semvers.outputs.v_minor }}
@@ -57,7 +65,7 @@ jobs:
       - run: echo "$VERSION" > ./version/version
         env:
           VERSION: ${{ steps.semvers.outputs.v_major }}
-        if: "contains(github.event.head_commit.message, 'BC BREAK')"
+        if: "contains(steps.get_previous_version.outputs.MESSAGES, 'BC BREAK')"
       - uses: actions/upload-artifact@v2
         with:
           name: version
