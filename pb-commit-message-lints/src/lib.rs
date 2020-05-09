@@ -116,22 +116,17 @@ fn config_defined(config: &Config, lint_name: &LintConfigName) -> Result<bool> {
 #[must_use]
 pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Option<Vec<TrailerName>> {
     let trailer_duplications = |x: &&str| {
-        if !has_duplicated_trailer(commit_message, x) {
-            return None;
-        }
-
-        Some((*x).to_string())
+        Some(*x)
+            .map(String::from)
+            .filter(|x| has_duplicated_trailer(commit_message, x))
     };
-    let duplicated_trailers: Vec<TrailerName> = TRAILERS_TO_CHECK_FOR_DUPLICATES
-        .iter()
-        .filter_map(trailer_duplications)
-        .collect();
-
-    if !duplicated_trailers.is_empty() {
-        return Some(duplicated_trailers);
-    }
-
-    None
+    Some(
+        TRAILERS_TO_CHECK_FOR_DUPLICATES
+            .iter()
+            .filter_map(trailer_duplications)
+            .collect::<Vec<TrailerName>>(),
+    )
+    .filter(|x| !x.is_empty())
 }
 
 /// Check if a commit message message has a pivotal tracker id in it
