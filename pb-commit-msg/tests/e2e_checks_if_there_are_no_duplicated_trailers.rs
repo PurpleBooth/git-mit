@@ -1,25 +1,8 @@
-use std::{
-    error::Error,
-    fmt,
-    fmt::{Display, Formatter},
-    io::Write,
-    process::Command,
-};
+use std::{io::Write, process::Command};
 
 use pb_hook_test_helper::{assert_output, setup_working_dir};
 
 use tempfile::NamedTempFile;
-
-#[derive(Debug)]
-struct PathError;
-
-impl Error for PathError {}
-
-impl Display for PathError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "Path not found")
-    }
-}
 
 #[test]
 fn duplicated_trailers_cause_errors() {

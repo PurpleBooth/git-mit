@@ -1,20 +1,15 @@
-use std::str;
-
-use itertools::join;
-use pretty_assertions::assert_eq;
+use pb_hook_test_helper::assert_output;
 
 #[test]
 fn help_returned_by_long_flag() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output =
         pb_hook_test_helper::run_hook(&working_dir, "pb-prepare-commit-msg", vec!["--help"]);
-    assert!(&output.status.success());
-    let stderr = str::from_utf8(&output.stderr).unwrap();
-    assert!(stderr.is_empty());
-
-    let mut stdout = str::from_utf8(&output.stdout).unwrap().lines();
-
-    let expected = r#"Billie Thompson <billie+pb-prepare-commit-msg@billiecodes.com>
+    assert_output(
+        &output,
+        &format!(
+            r#"pb-prepare-commit-msg {}
+Billie Thompson <billie+pb-prepare-commit-msg@billiecodes.com>
 This hook is invoked by git-commit right after preparing the default log message, and before the editor is started.
 
 USAGE:
@@ -30,25 +25,24 @@ ARGS:
                                template (if a -t option was given or the configuration option commit.template is set
                                in git); merge (if the commit is a merge or a .git/MERGE_MSG file exists); squash (if
                                a .git/SQUASH_MSG file exists); or commit
-    <commit-sha>               Commit SHA-1 (if a -c, -C or --amend option was given to git)."#;
-
-    assert!(&stdout.next().unwrap().starts_with("pb-prepare-commit-msg "));
-
-    let actual_stdout = join(stdout, &'\n'.to_string());
-
-    assert_eq!(actual_stdout, expected);
+    <commit-sha>               Commit SHA-1 (if a -c, -C or --amend option was given to git).
+"#,
+            env!("CARGO_PKG_VERSION")
+        ),
+        "",
+        true,
+    )
 }
 
 #[test]
 fn help_returned_by_short_flag() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "pb-prepare-commit-msg", vec!["-h"]);
-    assert!(&output.status.success());
-    let stderr = str::from_utf8(&output.stderr).unwrap();
-    assert!(stderr.is_empty());
-
-    let mut stdout = str::from_utf8(&output.stdout).unwrap().lines();
-    let expected = r#"Billie Thompson <billie+pb-prepare-commit-msg@billiecodes.com>
+    assert_output(
+        &output,
+        &format!(
+            r#"pb-prepare-commit-msg {}
+Billie Thompson <billie+pb-prepare-commit-msg@billiecodes.com>
 This hook is invoked by git-commit right after preparing the default log message, and before the editor is started.
 
 USAGE:
@@ -64,13 +58,13 @@ ARGS:
                                template (if a -t option was given or the configuration option commit.template is set
                                in git); merge (if the commit is a merge or a .git/MERGE_MSG file exists); squash (if
                                a .git/SQUASH_MSG file exists); or commit
-    <commit-sha>               Commit SHA-1 (if a -c, -C or --amend option was given to git)."#;
-
-    assert!(&stdout.next().unwrap().starts_with("pb-prepare-commit-msg "));
-
-    let actual_stdout = join(stdout, &'\n'.to_string());
-
-    assert_eq!(actual_stdout, expected);
+    <commit-sha>               Commit SHA-1 (if a -c, -C or --amend option was given to git).
+"#,
+            env!("CARGO_PKG_VERSION")
+        ),
+        "",
+        true,
+    )
 }
 
 #[test]
@@ -78,11 +72,6 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output =
         pb_hook_test_helper::run_hook(&working_dir, "pb-prepare-commit-msg", vec!["--banana"]);
-    assert!(!&output.status.success());
-    let stdout = str::from_utf8(&output.stdout).unwrap();
-    assert!(stdout.is_empty());
-
-    let stderr = str::from_utf8(&output.stderr).unwrap();
     let expected = r#"error: Found argument '--banana' which wasn't expected, or isn't valid in this context
 
 USAGE:
@@ -91,5 +80,5 @@ USAGE:
 For more information try --help
 "#;
 
-    assert_eq!(stderr, expected);
+    assert_output(&output, "", expected, false)
 }

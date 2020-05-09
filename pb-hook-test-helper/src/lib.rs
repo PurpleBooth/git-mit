@@ -33,6 +33,25 @@ impl Display for PathError {
     }
 }
 
+pub fn set_co_author(working_dir: &PathBuf, author_name: &str, author_email: &str, index: i64) {
+    Command::new("git")
+        .current_dir(&working_dir)
+        .arg("config")
+        .arg("--local")
+        .arg(format!("pb.author.coauthors.{}.name", index))
+        .arg(author_name)
+        .output()
+        .expect("failed to execute process");
+    Command::new("git")
+        .current_dir(&working_dir)
+        .arg("config")
+        .arg("--local")
+        .arg(format!("pb.author.coauthors.{}.email", index))
+        .arg(author_email)
+        .output()
+        .expect("failed to execute process");
+}
+
 pub fn set_author_expires(expiration_time: Duration, working_dir: &PathBuf) {
     let now = format!("{}", expiration_time.as_secs());
     Command::new("git")

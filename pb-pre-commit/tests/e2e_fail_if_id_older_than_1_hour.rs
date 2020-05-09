@@ -1,24 +1,9 @@
 use std::{
-    fmt,
     ops::{Add, Sub},
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
 use pb_hook_test_helper::{assert_output, run_hook, setup_working_dir};
-
-use std::{
-    error::Error,
-    fmt::{Display, Formatter},
-};
-
-#[derive(Debug)]
-struct PathError;
-impl Error for PathError {}
-impl Display for PathError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "Path not found")
-    }
-}
 
 #[test]
 fn pre_commit_fails_if_expires_time_has_passed() {
