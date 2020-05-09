@@ -33,32 +33,30 @@ impl Author {
 }
 
 pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Author>> {
-    let time_error_to_false = |err: std::time::SystemTimeError| Box::from(err);
     let right_less_than_left = |pair: (Duration, Duration)| -> bool { pair.0.lt(&pair.1) };
-    let i64_into_u64 = |x| u64::try_from(x).map_err(Box::from);
+    let i64_into_u64 = |x| u64::try_from(x).map_err(Box::<dyn Error>::from);
+    let left_time_right_duration = |expires_after_time| {
+        SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)
+            .map_err(Box::from)
+            .map(|time_since_epoch| (time_since_epoch, expires_after_time))
+    };
+    let is_true = |x: &bool| true.eq(&x);
+    let replace_with_coauthors = |_| defined_coauthors(config);
 
-    let config_to_duration_pair =
-        |time_since_epoch| -> std::result::Result<(Duration, Duration), Box<dyn Error>> {
-            let pair_duration_with_duration =
-                |expires_after_time| (time_since_epoch, expires_after_time);
-            config
-                .get_i64("pb.author.expires")
-                .map_err(Box::from)
-                .and_then(i64_into_u64)
-                .map(Duration::from_secs)
-                .map(pair_duration_with_duration)
-        };
-
-    match SystemTime::now()
-        .duration_since(SystemTime::UNIX_EPOCH)
-        .map_err(time_error_to_false)
-        .and_then(config_to_duration_pair)
+    config
+        .get_i64("pb.author.expires")
+        .map_err(Box::from)
+        .and_then(i64_into_u64)
+        .map(Duration::from_secs)
+        .and_then(left_time_right_duration)
         .map(right_less_than_left)
-    {
-        Ok(true) => {}
-        _ => return None,
-    }
+        .ok()
+        .filter(is_true)
+        .map(replace_with_coauthors)
+}
 
+fn defined_coauthors(config: &Config) -> Vec<Author> {
     let mut authors: Vec<Author> = vec![];
 
     while let Ok(true) = config_defined(config, &format!("pb.author.coauthors.{}.*", authors.len()))
@@ -66,19 +64,19 @@ pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Auth
         let email = match config.get_str(&format!("pb.author.coauthors.{}.email", authors.len())) {
             Ok(email) => email,
             _ => {
-                return Some(authors);
+                return authors;
             }
         };
 
         let name = match config.get_str(&format!("pb.author.coauthors.{}.name", authors.len())) {
             Ok(name) => name,
-            _ => return Some(authors),
+            _ => return authors,
         };
 
         authors.push(Author::new(name, email))
     }
 
-    Some(authors)
+    authors
 }
 
 fn config_defined(config: &Config, config_key: &str) -> Result<bool> {
