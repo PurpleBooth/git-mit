@@ -6,10 +6,9 @@ use std::{
 };
 
 use pretty_assertions::assert_eq;
+use tempfile::NamedTempFile;
 
 use pb_hook_test_helper::{assert_output, set_co_author, setup_working_dir};
-
-use tempfile::NamedTempFile;
 
 #[test]
 fn co_author_trailer_should_be_appended() {

@@ -2,8 +2,8 @@ use std::{env, fs, fs::File, io::Write};
 
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
-
 use itertools::Itertools;
+
 use pb_commit_author::{get_author_configuration, Author};
 
 fn main() {

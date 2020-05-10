@@ -1,8 +1,8 @@
 use std::{io::Write, process::Command};
 
-use pb_hook_test_helper::{assert_output, setup_working_dir};
-
 use tempfile::NamedTempFile;
+
+use pb_hook_test_helper::{assert_output, setup_working_dir};
 
 #[test]
 fn the_pivotal_tracker_check_does_not_fail_for_a_valid_commit() {

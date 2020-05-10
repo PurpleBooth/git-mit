@@ -1,5 +1,3 @@
-use git2::{Config, Repository};
-use pretty_assertions::assert_eq;
 use std::{
     env,
     error::Error,
@@ -10,10 +8,13 @@ use std::{
     str,
     time::Duration,
 };
+
+use git2::{Config, Repository};
+use pretty_assertions::assert_eq;
 use tempfile::TempDir;
 
 pub fn run_hook(working_dir: &PathBuf, package: &str, arguments: Vec<&str>) -> Output {
-    let toml_path = calculate_cargo_toml_path(package).to_string();
+    let toml_path = calculate_cargo_toml_path(package);
     let mut cargo_arguments = vec!["run", "--quiet", "--manifest-path", &toml_path, "--"];
     cargo_arguments.extend(arguments);
 
@@ -26,7 +27,9 @@ pub fn run_hook(working_dir: &PathBuf, package: &str, arguments: Vec<&str>) -> O
 
 #[derive(Debug)]
 struct PathError;
+
 impl Error for PathError {}
+
 impl Display for PathError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "Path not found")
@@ -87,15 +90,14 @@ pub fn calculate_cargo_toml_path(package: &str) -> String {
 
 pub fn make_config() -> Config {
     let add_repository_to_path = |x: PathBuf| x.join("repository");
-    let config = TempDir::new()
+    TempDir::new()
         .map(TempDir::into_path)
         .map(add_repository_to_path)
         .map(Repository::init)
         .expect("Failed to initialise the repository")
         .expect("Failed create temporary directory")
         .config()
-        .expect("Failed to get configuration");
-    config
+        .expect("Failed to get configuration")
 }
 
 pub fn assert_output(

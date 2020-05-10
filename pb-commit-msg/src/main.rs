@@ -72,7 +72,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-fn exit_missing_pivotal_tracker_id(commit_message: &String) {
+fn exit_missing_pivotal_tracker_id(commit_message: &str) {
     eprintln!(
         r#"
 {}
@@ -94,7 +94,7 @@ This will address [#12345884]
     std::process::exit(ExitCode::PivotalTrackerIdMissing as i32);
 }
 
-fn exit_duplicated_trailers(commit_message: &String, trailers: Vec<String>) {
+fn exit_duplicated_trailers(commit_message: &str, trailers: Vec<String>) {
     let mut fields = FIELD_SINGULAR;
     if trailers.len() > 1 {
         fields = FIELD_PLURAL

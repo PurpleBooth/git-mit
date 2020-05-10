@@ -1,11 +1,11 @@
 use std::{
     convert::TryFrom,
     error,
+    error::Error,
     time::{Duration, SystemTime},
 };
 
 use git2::{Config, ConfigEntries};
-use std::error::Error;
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 

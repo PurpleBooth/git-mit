@@ -29,7 +29,7 @@ fn main() {
         .snapshot()
         .expect("Could not freeze git config");
 
-    if let None = get_author_configuration(&git_config) {
+    if get_author_configuration(&git_config).is_none() {
         eprintln!(
             r#"
 The details of the author of this commit are a bit stale. Can you confirm who's currently coding?
