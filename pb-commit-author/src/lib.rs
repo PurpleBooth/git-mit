@@ -16,6 +16,7 @@ pub struct Author {
 }
 
 impl Author {
+    #[must_use]
     pub fn new(name: &str, email: &str) -> Author {
         Author {
             name: name.to_string(),
@@ -23,15 +24,18 @@ impl Author {
         }
     }
 
+    #[must_use]
     pub fn name(&self) -> String {
         self.name.clone()
     }
 
+    #[must_use]
     pub fn email(&self) -> String {
         self.email.clone()
     }
 }
 
+#[must_use]
 pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Author>> {
     let right_less_than_left = |pair: (Duration, Duration)| -> bool { pair.0.lt(&pair.1) };
     let i64_into_u64 = |x| u64::try_from(x).map_err(Box::<dyn Error>::from);
@@ -61,11 +65,12 @@ fn defined_coauthors(config: &Config) -> Vec<Author> {
 
     while let Ok(true) = config_defined(config, &format!("pb.author.coauthors.{}.*", authors.len()))
     {
-        let email = match config.get_str(&format!("pb.author.coauthors.{}.email", authors.len())) {
-            Ok(email) => email,
-            _ => {
-                return authors;
-            }
+        let email = if let Ok(email) =
+            config.get_str(&format!("pb.author.coauthors.{}.email", authors.len()))
+        {
+            email
+        } else {
+            return authors;
         };
 
         let name = match config.get_str(&format!("pb.author.coauthors.{}.name", authors.len())) {

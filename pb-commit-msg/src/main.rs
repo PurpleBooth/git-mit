@@ -58,7 +58,7 @@ fn main() -> std::io::Result<()> {
         match check {
             Lints::DuplicatedTrailers => {
                 if let Some(trailers) = has_duplicated_trailers(&commit_message) {
-                    exit_duplicated_trailers(&commit_message, trailers);
+                    exit_duplicated_trailers(&commit_message, &trailers);
                 }
             }
             Lints::PivotalTrackerIdMissing => {
@@ -94,7 +94,7 @@ This will address [#12345884]
     std::process::exit(ExitCode::PivotalTrackerIdMissing as i32);
 }
 
-fn exit_duplicated_trailers(commit_message: &str, trailers: Vec<String>) {
+fn exit_duplicated_trailers(commit_message: &str, trailers: &[String]) {
     let mut fields = FIELD_SINGULAR;
     if trailers.len() > 1 {
         fields = FIELD_PLURAL

@@ -171,6 +171,7 @@ pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Option<Vec<Tra
 ///     None
 /// );
 /// ```
+#[must_use]
 pub fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> Option<()> {
     let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
     let to_empty_some = |_| Some(());
@@ -207,7 +208,7 @@ An example commit
 
 This is an example commit without any duplicate trailers
 "#,
-            None,
+            &None,
         );
         assert_has_duplicated_trailers(
             r#"
@@ -220,7 +221,7 @@ Signed-off-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 "#,
-            Some(vec![
+            &Some(vec![
                 "Signed-off-by".to_string(),
                 "Co-authored-by".to_string(),
             ]),
@@ -234,7 +235,7 @@ This is an example commit without any duplicate trailers
 Signed-off-by: Billie Thompson <email@example.com>
 Signed-off-by: Billie Thompson <email@example.com>
 "#,
-            Some(vec!["Signed-off-by".to_string()]),
+            &Some(vec!["Signed-off-by".to_string()]),
         );
         assert_has_duplicated_trailers(
             r#"
@@ -245,14 +246,14 @@ This is an example commit without any duplicate trailers
 Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 "#,
-            Some(vec!["Co-authored-by".to_string()]),
+            &Some(vec!["Co-authored-by".to_string()]),
         );
     }
 
-    fn assert_has_duplicated_trailers(message: &str, expected: Option<Vec<String>>) {
+    fn assert_has_duplicated_trailers(message: &str, expected: &Option<Vec<String>>) {
         let actual = has_duplicated_trailers(message);
         assert_eq!(
-            actual, expected,
+            actual, *expected,
             "Expected {:?}, found {:?}",
             expected, actual
         );
