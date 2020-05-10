@@ -29,7 +29,7 @@ build:
 ## Lint it
 lint:
 	cargo fmt --all -- --check
-	cargo clippy --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo
+	cargo clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
 	cargo check
 
 .PHONY: fmt
@@ -37,7 +37,7 @@ lint:
 fmt:
 	cargo fmt --all
 	cargo fix --allow-dirty
-	cargo clippy --allow-dirty --fix -Z unstable-options --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo
+	cargo clippy --allow-dirty --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
 
 .PHONY: clean
 ## Clean the build directory
