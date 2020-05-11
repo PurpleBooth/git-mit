@@ -128,6 +128,10 @@ jobs:
         with:
           name: pb-prepare-commit-msg-${{ matrix.target }}
           path: ./target/release/pb-prepare-commit-msg${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: git-author-${{ matrix.target }}
+          path: ./target/release/git-author${{ matrix.suffix }}
   release:
     needs:
       - build
@@ -225,4 +229,12 @@ jobs:
           upload_url: '${{ steps.create_release.outputs.upload_url }}'
           asset_path: ./pb-commit-msg-x86_64-apple-darwin/pb-commit-msg
           asset_name: pb-commit-msg-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./git-author-x86_64-apple-darwin/git-author
+          asset_name: git-author-x86_64-apple-darwin
           asset_content_type: application/octet-stream

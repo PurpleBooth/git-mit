@@ -129,3 +129,7 @@ jobs:
         with:
           name: pb-prepare-commit-msg-${{ matrix.target }}
           path: ./target/release/pb-prepare-commit-msg${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: git-author-${{ matrix.target }}
+          path: ./target/release/git-author${{ matrix.suffix }}
