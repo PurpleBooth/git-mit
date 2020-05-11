@@ -19,6 +19,7 @@ smoke-test:
 	cargo run --bin pb-prepare-commit-msg -- -h
 	cargo run --bin pb-pre-commit -- -h
 	cargo run --bin pb-commit-msg -- -h
+	cargo run --bin git-authors -- -h
 
 .PHONY: build
 ## Build release version
