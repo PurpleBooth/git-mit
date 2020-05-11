@@ -7,12 +7,12 @@ fn help_returned_by_long_flag() {
     assert_output(
         &output,
         &format!(
-            r#"git-author {}
+            r#"git-authors {}
 Billie Thompson <billie+git-author@billiecodes.com>
 Set author and Co-authored trailer.
 
 USAGE:
-    git-author
+    git-authors
 
 FLAGS:
     -h, --help       Prints help information
@@ -32,12 +32,12 @@ fn help_returned_by_short_flag() {
     assert_output(
         &output,
         &format!(
-            r#"git-author {}
+            r#"git-authors {}
 Billie Thompson <billie+git-author@billiecodes.com>
 Set author and Co-authored trailer.
 
 USAGE:
-    git-author
+    git-authors
 
 FLAGS:
     -h, --help       Prints help information
@@ -57,7 +57,7 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
     let expected = r#"error: Found argument '--banana' which wasn't expected, or isn't valid in this context
 
 USAGE:
-    git-author
+    git-authors
 
 For more information try --help
 "#;
