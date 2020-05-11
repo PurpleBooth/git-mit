@@ -7,5 +7,5 @@ members = [
     "pb-commit-message-lints",
     "pb-commit-author",
     "pb-hook-test-helper",
-    "git-author"
+    "git-authors"
 ]

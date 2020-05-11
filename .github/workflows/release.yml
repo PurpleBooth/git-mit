@@ -130,8 +130,8 @@ jobs:
           path: ./target/release/pb-prepare-commit-msg${{ matrix.suffix }}
       - uses: actions/upload-artifact@v2
         with:
-          name: git-author-${{ matrix.target }}
-          path: ./target/release/git-author${{ matrix.suffix }}
+          name: git-authors-${{ matrix.target }}
+          path: ./target/release/git-authors${{ matrix.suffix }}
   release:
     needs:
       - build
@@ -235,6 +235,6 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
           upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./git-author-x86_64-apple-darwin/git-author
-          asset_name: git-author-x86_64-apple-darwin
+          asset_path: ./git-authors-x86_64-apple-darwin/git-authors
+          asset_name: git-authors-x86_64-apple-darwin
           asset_content_type: application/octet-stream
