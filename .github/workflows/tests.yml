@@ -12,12 +12,6 @@ jobs:
           - os: macos-latest
           - os: ubuntu-latest
     steps:
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          components: 'rustfmt, clippy'
-          default: true
       - uses: actions/checkout@v2
       - name: Cache cargo registry
         uses: actions/cache@v1
@@ -34,16 +28,16 @@ jobs:
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          components: 'rustfmt, clippy'
+          default: true
       - run: make fmt test smoke-test
   lints:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          components: 'rustfmt, clippy'
-          default: true
       - uses: actions/checkout@v2
       - name: Cache cargo registry
         uses: actions/cache@v1
@@ -60,6 +54,12 @@ jobs:
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          components: 'rustfmt, clippy'
+          default: true
       - run: make fmt lint
   version:
     runs-on: ubuntu-latest
