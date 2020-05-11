@@ -14,7 +14,4 @@ repository = "https://github.com/PurpleBooth/pb-git-hooks"
 clap = "~2.33"
 
 [dev-dependencies]
-itertools = "0.9.0"
-pretty_assertions = "0.6.1"
-tempfile = "3"
 pb-hook-test-helper = { path = "../pb-hook-test-helper" }
