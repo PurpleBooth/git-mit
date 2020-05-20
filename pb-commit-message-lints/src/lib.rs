@@ -1,14 +1,13 @@
 use std::{collections::HashSet, error, iter::FromIterator};
 
-use git2::{Config, ConfigEntries};
+use git2::ConfigEntries;
 use regex::Regex;
 
 use crate::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing};
 
-const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&TrailerNameConfig; 2] =
-    ["Signed-off-by", "Co-authored-by"];
-const CONFIG_DUPLICATED_TRAILERS: &LintConfigName = "pb.lint.duplicated-trailers";
-const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &LintConfigName = "pb.lint.pivotal-tracker-id-missing";
+const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
+const CONFIG_DUPLICATED_TRAILERS: &str = "pb.lint.duplicated-trailers";
+const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pb.lint.pivotal-tracker-id-missing";
 const REGEX_PIVOTAL_TRACKER_ID: &str =
     r"\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
 
@@ -20,10 +19,40 @@ pub enum Lints {
 }
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
-type CommitMessage = str;
-type TrailerName = String;
-type TrailerNameConfig = str;
-type LintConfigName = str;
+
+pub trait VcsConfig {
+    fn get_bool(&self, name: &str) -> Option<bool>;
+}
+
+pub struct Git2VcsConfig {
+    git2_config: git2::Config,
+}
+
+impl Git2VcsConfig {
+    #[must_use]
+    pub fn new(git2_config: git2::Config) -> Git2VcsConfig {
+        Git2VcsConfig { git2_config }
+    }
+
+    fn config_defined(&self, lint_name: &str) -> Result<bool> {
+        let at_least_one = |x: ConfigEntries| x.count() > 0;
+        self.git2_config
+            .entries(Some(lint_name))
+            .map(at_least_one)
+            .map_err(Box::from)
+    }
+}
+
+impl VcsConfig for Git2VcsConfig {
+    fn get_bool(&self, name: &str) -> Option<bool> {
+        if let Ok(true) = self.config_defined(name) {
+        } else {
+            return None;
+        }
+
+        self.git2_config.get_bool(name).ok()
+    }
+}
 
 /// Look at a git config and work out what lints should be turned on and off
 ///
@@ -31,7 +60,11 @@ type LintConfigName = str;
 ///
 /// ```
 /// use git2::Repository;
-/// use pb_commit_message_lints::{get_lint_configuration, Lints::DuplicatedTrailers};
+/// use pb_commit_message_lints::{
+///     get_lint_configuration,
+///     Git2VcsConfig,
+///     Lints::DuplicatedTrailers,
+/// };
 /// use tempfile::TempDir;
 ///
 /// let config = TempDir::new()
@@ -41,6 +74,7 @@ type LintConfigName = str;
 ///     .expect("Failed to initialise the repository")
 ///     .expect("Failed create temporary directory")
 ///     .config()
+///     .map(Git2VcsConfig::new)
 ///     .expect("Failed to get configuration");
 ///
 /// assert_eq!(
@@ -52,30 +86,19 @@ type LintConfigName = str;
 /// # Errors
 ///
 /// Will return `Err` if we can't read the git configuration for some reason or it's not parsable
-pub fn get_lint_configuration(config: &Config) -> Result<Vec<Lints>> {
+pub fn get_lint_configuration(config: &dyn VcsConfig) -> Result<Vec<Lints>> {
     let mut result_vec: Vec<Lints> = vec![];
 
-    if !config_defined(config, CONFIG_DUPLICATED_TRAILERS)?
-        || config.get_bool(CONFIG_DUPLICATED_TRAILERS)?
-    {
-        result_vec.push(DuplicatedTrailers)
+    match config.get_bool(CONFIG_DUPLICATED_TRAILERS) {
+        Some(false) => {}
+        _ => result_vec.push(DuplicatedTrailers),
     }
 
-    if config_defined(config, CONFIG_PIVOTAL_TRACKER_ID_MISSING)?
-        && config.get_bool(CONFIG_PIVOTAL_TRACKER_ID_MISSING)?
-    {
+    if let Some(true) = config.get_bool(CONFIG_PIVOTAL_TRACKER_ID_MISSING) {
         result_vec.push(PivotalTrackerIdMissing)
     }
 
     Ok(result_vec)
-}
-
-fn config_defined(config: &Config, lint_name: &LintConfigName) -> Result<bool> {
-    let at_least_one = |x: ConfigEntries| x.count() > 0;
-    config
-        .entries(Some(lint_name))
-        .map(at_least_one)
-        .map_err(Box::from)
 }
 
 /// Check if a commit message message has duplicated trailers with names in
@@ -114,7 +137,7 @@ fn config_defined(config: &Config, lint_name: &LintConfigName) -> Result<bool> {
 /// );
 /// ```
 #[must_use]
-pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Option<Vec<TrailerName>> {
+pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
     let trailer_duplications = |x: &&str| {
         Some(*x)
             .map(String::from)
@@ -125,7 +148,7 @@ pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Option<Vec<Tra
         TRAILERS_TO_CHECK_FOR_DUPLICATES
             .iter()
             .filter_map(trailer_duplications)
-            .collect::<Vec<TrailerName>>(),
+            .collect::<Vec<String>>(),
     )
     .filter(is_not_empty)
 }
@@ -172,7 +195,7 @@ pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Option<Vec<Tra
 /// );
 /// ```
 #[must_use]
-pub fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> Option<()> {
+pub fn has_missing_pivotal_tracker_id(commit_message: &str) -> Option<()> {
     let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
     let to_empty_some = |_| Some(());
     let is_not_match = |x: &String| !re.is_match(x);
@@ -182,7 +205,7 @@ pub fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> Option<
         .and_then(to_empty_some)
 }
 
-fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &TrailerNameConfig) -> bool {
+fn has_duplicated_trailer(commit_message: &str, trailer: &str) -> bool {
     let starts_with_trailer = |x: &&str| x.starts_with(&format!("{}:", trailer));
     let trailers: Vec<&str> = commit_message.lines().filter(starts_with_trailer).collect();
 

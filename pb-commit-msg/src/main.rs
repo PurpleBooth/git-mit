@@ -9,6 +9,7 @@ use pb_commit_message_lints::{
     get_lint_configuration,
     has_duplicated_trailers,
     has_missing_pivotal_tracker_id,
+    Git2VcsConfig,
     Lints,
 };
 
@@ -49,6 +50,7 @@ fn main() -> std::io::Result<()> {
     let git_config = Repository::discover(current_dir)
         .and_then(get_repository_config)
         .or_else(get_default_config)
+        .map(Git2VcsConfig::new)
         .expect("Couldn't load any git config");
 
     let checks =
