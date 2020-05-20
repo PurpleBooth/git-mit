@@ -9,9 +9,10 @@ use pb_commit_message_lints::{
     get_lint_configuration,
     has_duplicated_trailers,
     has_missing_pivotal_tracker_id,
-    Git2VcsConfig,
     Lints,
 };
+
+use pb_commit_message_lints::Git2VcsConfig;
 
 #[repr(i32)]
 enum ExitCode {
