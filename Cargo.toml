@@ -5,7 +5,6 @@ members = [
     "pb-pre-commit",
     "pb-commit-msg",
     "pb-commit-message-lints",
-    "pb-commit-author",
     "pb-hook-test-helper",
     "git-authors"
 ]

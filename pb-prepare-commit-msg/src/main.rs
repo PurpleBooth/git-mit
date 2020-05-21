@@ -4,7 +4,7 @@ use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
 use itertools::Itertools;
 
-use pb_commit_author::{get_author_configuration, Author};
+use pb_commit_message_lints::{get_author_configuration, Author};
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))

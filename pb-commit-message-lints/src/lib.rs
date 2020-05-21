@@ -1,3 +1,4 @@
+mod author;
 mod config;
 mod lints;
 
@@ -13,3 +14,5 @@ pub use crate::lints::{
     has_missing_pivotal_tracker_id,
     Lints,
 };
+
+pub use crate::author::{get_author_configuration, Author };
