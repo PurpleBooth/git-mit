@@ -651,6 +651,8 @@ This is an example commit
 
 #[cfg(test)]
 mod tests_get_lint_configuration {
+    use pretty_assertions::assert_eq;
+
     use crate::{
         config::InMemoryVcs,
         lints::{
@@ -659,7 +661,6 @@ mod tests_get_lint_configuration {
             Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
         },
     };
-    use pretty_assertions::assert_eq;
     use std::collections::HashMap;
 
     #[test]

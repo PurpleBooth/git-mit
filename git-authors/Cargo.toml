@@ -12,6 +12,7 @@ repository = "https://github.com/PurpleBooth/pb-git-hooks"
 
 [dependencies]
 clap = "~2.33"
+xdg = "^2.1"
 
 [dev-dependencies]
 pb-hook-test-helper = { path = "../pb-hook-test-helper" }

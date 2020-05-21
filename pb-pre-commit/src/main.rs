@@ -21,12 +21,12 @@ fn main() {
 
     let get_config_from_repository = |x: Repository| x.config();
     let get_default_config = |_| Config::open_default();
+    let snapshot_config = |mut x: git2::Config| x.snapshot();
 
     let git_config = Repository::discover(current_dir)
         .and_then(get_config_from_repository)
         .or_else(get_default_config)
-        .expect("Couldn't load any git config")
-        .snapshot()
+        .and_then(snapshot_config)
         .map(Git2VcsConfig::new)
         .expect("Could not freeze git config");
 
