@@ -15,4 +15,4 @@ pub use crate::lints::{
     Lints,
 };
 
-pub use crate::author::{get_author_configuration, Author };
+pub use crate::author::{get_author_configuration, Author};

@@ -1,13 +1,10 @@
 use std::{
     convert::TryFrom,
-    error,
     error::Error,
     time::{Duration, SystemTime},
 };
 
-use git2::{Config, ConfigEntries};
-
-type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
+use crate::VcsConfig;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Author {
@@ -36,7 +33,7 @@ impl Author {
 }
 
 #[must_use]
-pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Author>> {
+pub fn get_author_configuration(config: &dyn VcsConfig) -> std::option::Option<Vec<Author>> {
     let right_less_than_left = |pair: (Duration, Duration)| -> bool { pair.0.lt(&pair.1) };
     let i64_into_u64 = |x| u64::try_from(x).map_err(Box::<dyn Error>::from);
     let left_time_right_duration = |expires_after_time| {
@@ -50,7 +47,7 @@ pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Auth
 
     config
         .get_i64("pb.author.expires")
-        .map_err(Box::from)
+        .ok_or_else(|| "No author expiry date".into())
         .and_then(i64_into_u64)
         .map(Duration::from_secs)
         .and_then(left_time_right_duration)
@@ -60,12 +57,14 @@ pub fn get_author_configuration(config: &Config) -> std::option::Option<Vec<Auth
         .map(replace_with_coauthors)
 }
 
-fn defined_coauthors(config: &Config) -> Vec<Author> {
+fn defined_coauthors(config: &dyn VcsConfig) -> Vec<Author> {
     let mut authors: Vec<Author> = vec![];
 
-    while let Ok(true) = config_defined(config, &format!("pb.author.coauthors.{}.*", authors.len()))
+    while config
+        .get_str(&format!("pb.author.coauthors.{}.email", authors.len()))
+        .is_some()
     {
-        let email = if let Ok(email) =
+        let email = if let Some(email) =
             config.get_str(&format!("pb.author.coauthors.{}.email", authors.len()))
         {
             email
@@ -74,7 +73,7 @@ fn defined_coauthors(config: &Config) -> Vec<Author> {
         };
 
         let name = match config.get_str(&format!("pb.author.coauthors.{}.name", authors.len())) {
-            Ok(name) => name,
+            Some(name) => name,
             _ => return authors,
         };
 
@@ -84,16 +83,8 @@ fn defined_coauthors(config: &Config) -> Vec<Author> {
     authors
 }
 
-fn config_defined(config: &Config, config_key: &str) -> Result<bool> {
-    let more_than_1_config_variable = |x: ConfigEntries| x.count() > 1;
-    config
-        .entries(Some(config_key))
-        .map(more_than_1_config_variable)
-        .map_err(Box::from)
-}
-
 #[cfg(test)]
-mod tests {
+mod tests_author {
     #![allow(clippy::wildcard_imports)]
 
     use pretty_assertions::assert_eq;
@@ -119,21 +110,21 @@ mod tests_able_to_load_config_from_git {
 
     use pretty_assertions::assert_eq;
 
-    use crate::author::{get_author_configuration, Author};
-    use pb_hook_test_helper::make_config;
+    use crate::{
+        author::{get_author_configuration, Author},
+        config::InMemoryVcs,
+    };
+    use std::collections::HashMap;
 
     #[test]
     fn there_is_no_author_config_if_it_has_expired() {
-        let mut config = make_config();
         let now_minus_10 = epoch_with_offset(subtract_10_seconds);
 
-        config
-            .set_i64("pb.author.expires", now_minus_10)
-            .expect("Failed to set config");
+        let mut i64_configs = HashMap::new();
+        i64_configs.insert("pb.author.expires".to_string(), now_minus_10);
+        let git2_config = InMemoryVcs::new(HashMap::new(), HashMap::new(), i64_configs);
 
-        let snapshot = config.snapshot().expect("Failed to snapshot config");
-
-        let actual = get_author_configuration(&snapshot);
+        let actual = get_author_configuration(&git2_config);
         let expected = None;
         assert_eq!(
             expected, actual,
@@ -144,16 +135,14 @@ mod tests_able_to_load_config_from_git {
 
     #[test]
     fn there_is_a_config_if_the_config_has_not_expired() {
-        let mut config = make_config();
         let now_plus_10_seconds = epoch_with_offset(add_10_seconds);
 
-        config
-            .set_i64("pb.author.expires", now_plus_10_seconds)
-            .expect("Failed to set config");
+        let mut i64_configs = HashMap::new();
+        i64_configs.insert("pb.author.expires".to_string(), now_plus_10_seconds);
+        let git2_config = InMemoryVcs::new(HashMap::new(), HashMap::new(), i64_configs);
 
-        let snapshot = config.snapshot().expect("Failed to snapshot config");
+        let actual = get_author_configuration(&git2_config);
 
-        let actual = get_author_configuration(&snapshot);
         let expected: Option<Vec<Author>> = Some(vec![]);
         assert_eq!(
             expected, actual,
@@ -164,23 +153,23 @@ mod tests_able_to_load_config_from_git {
 
     #[test]
     fn we_get_author_config_back_if_there_is_any() {
-        let mut config = make_config();
         let now_plus_10_seconds = epoch_with_offset(add_10_seconds);
-        config
-            .set_i64("pb.author.expires", now_plus_10_seconds)
-            .expect("Failed to set config");
 
-        config
-            .set_str("pb.author.coauthors.0.email", "annie@example.com")
-            .expect("Failed to set config");
+        let mut i64_configs = HashMap::new();
+        i64_configs.insert("pb.author.expires".to_string(), now_plus_10_seconds);
+        let mut str_configs = HashMap::new();
+        str_configs.insert(
+            "pb.author.coauthors.0.email".to_string(),
+            "annie@example.com".into(),
+        );
+        str_configs.insert(
+            "pb.author.coauthors.0.name".to_string(),
+            "Annie Example".into(),
+        );
+        let git2_config = InMemoryVcs::new(HashMap::new(), str_configs, i64_configs);
 
-        config
-            .set_str("pb.author.coauthors.0.name", "Annie Example")
-            .expect("Failed to set config");
+        let actual = get_author_configuration(&git2_config);
 
-        let snapshot = config.snapshot().expect("Failed to snapshot config");
-
-        let actual = get_author_configuration(&snapshot);
         let expected = Some(vec![Author::new("Annie Example", "annie@example.com")]);
         assert_eq!(
             expected, actual,
@@ -203,31 +192,29 @@ mod tests_able_to_load_config_from_git {
 
     #[test]
     fn we_get_multiple_authors_back_if_there_are_multiple() {
-        let mut config = make_config();
         let now_plus_10_seconds = epoch_with_offset(add_10_seconds);
-        config
-            .set_i64("pb.author.expires", now_plus_10_seconds)
-            .expect("Failed to set config");
+        let mut i64_configs = HashMap::new();
+        i64_configs.insert("pb.author.expires".to_string(), now_plus_10_seconds);
+        let mut str_configs = HashMap::new();
+        str_configs.insert(
+            "pb.author.coauthors.0.email".to_string(),
+            "annie@example.com".into(),
+        );
+        str_configs.insert(
+            "pb.author.coauthors.0.name".to_string(),
+            "Annie Example".into(),
+        );
+        str_configs.insert(
+            "pb.author.coauthors.1.email".to_string(),
+            "joe@example.com".into(),
+        );
+        str_configs.insert(
+            "pb.author.coauthors.1.name".to_string(),
+            "Joe Bloggs".into(),
+        );
+        let git2_config = InMemoryVcs::new(HashMap::new(), str_configs, i64_configs);
 
-        config
-            .set_str("pb.author.coauthors.0.email", "annie@example.com")
-            .expect("Failed to set config");
-
-        config
-            .set_str("pb.author.coauthors.0.name", "Annie Example")
-            .expect("Failed to set config");
-
-        config
-            .set_str("pb.author.coauthors.1.email", "joe@example.com")
-            .expect("Failed to set config");
-
-        config
-            .set_str("pb.author.coauthors.1.name", "Joe Bloggs")
-            .expect("Failed to set config");
-
-        let snapshot = config.snapshot().expect("Failed to snapshot config");
-
-        let actual = get_author_configuration(&snapshot);
+        let actual = get_author_configuration(&git2_config);
         let expected = Some(vec![
             Author::new("Annie Example", "annie@example.com"),
             Author::new("Joe Bloggs", "joe@example.com"),
