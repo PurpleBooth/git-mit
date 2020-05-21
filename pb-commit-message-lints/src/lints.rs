@@ -85,7 +85,7 @@ pub fn get_lint_configuration(config: &dyn VcsConfig) -> Result<Vec<Lints>, Box<
 /// Signed-off-by: Billie Thompson <email@example.com>
 /// "#
 ///     ),
-///     Some(vec!["Signed-off-by".to_string()])
+///     Some(vec!["Signed-off-by".into()])
 /// );
 ///
 /// assert_eq!(
@@ -99,7 +99,7 @@ pub fn get_lint_configuration(config: &dyn VcsConfig) -> Result<Vec<Lints>, Box<
 /// Co-authored-by: Billie Thompson <email@example.com>
 /// "#
 ///     ),
-///     Some(vec!["Co-authored-by".to_string()])
+///     Some(vec!["Co-authored-by".into()])
 /// );
 /// ```
 #[must_use]
@@ -176,7 +176,7 @@ fn has_duplicated_trailer(commit_message: &str, trailer: &str) -> bool {
     let trailers: Vec<&str> = commit_message.lines().filter(starts_with_trailer).collect();
 
     let unique_trailers: std::collections::HashSet<&str> =
-        HashSet::from_iter(trailers.to_owned().into_iter());
+        HashSet::from_iter(trailers.clone().into_iter());
 
     trailers.len() != unique_trailers.len()
 }
@@ -210,10 +210,7 @@ Signed-off-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 "#,
-            &Some(vec![
-                "Signed-off-by".to_string(),
-                "Co-authored-by".to_string(),
-            ]),
+            &Some(vec!["Signed-off-by".into(), "Co-authored-by".into()]),
         );
         assert_has_duplicated_trailers(
             r#"
@@ -224,7 +221,7 @@ This is an example commit without any duplicate trailers
 Signed-off-by: Billie Thompson <email@example.com>
 Signed-off-by: Billie Thompson <email@example.com>
 "#,
-            &Some(vec!["Signed-off-by".to_string()]),
+            &Some(vec!["Signed-off-by".into()]),
         );
         assert_has_duplicated_trailers(
             r#"
@@ -235,7 +232,7 @@ This is an example commit without any duplicate trailers
 Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 "#,
-            &Some(vec!["Co-authored-by".to_string()]),
+            &Some(vec!["Co-authored-by".into()]),
         );
     }
 
@@ -682,7 +679,7 @@ mod tests_get_lint_configuration {
     #[test]
     fn duplicate_trailer_detection_can_be_disabled() {
         let mut bool_configs = HashMap::new();
-        bool_configs.insert("pb.lint.duplicated-trailers".to_string(), false);
+        bool_configs.insert("pb.lint.duplicated-trailers".into(), false);
         let git2_config = InMemoryVcs::new(bool_configs, HashMap::new(), HashMap::new());
 
         let actual =
@@ -699,7 +696,7 @@ mod tests_get_lint_configuration {
     #[test]
     fn duplicate_trailer_detection_can_be_explicitly_enabled() {
         let mut bool_configs = HashMap::new();
-        bool_configs.insert("pb.lint.duplicated-trailers".to_string(), true);
+        bool_configs.insert("pb.lint.duplicated-trailers".into(), true);
         let git2_config = InMemoryVcs::new(bool_configs, HashMap::new(), HashMap::new());
 
         let actual =
@@ -716,7 +713,7 @@ mod tests_get_lint_configuration {
     #[test]
     fn pivotal_tracker_id_being_missing_can_be_explicitly_enabled() {
         let mut bool_configs = HashMap::new();
-        bool_configs.insert("pb.lint.pivotal-tracker-id-missing".to_string(), true);
+        bool_configs.insert("pb.lint.pivotal-tracker-id-missing".into(), true);
         let git2_config = InMemoryVcs::new(bool_configs, HashMap::new(), HashMap::new());
         let actual =
             get_lint_configuration(&git2_config).expect("To be able to get a configuration");

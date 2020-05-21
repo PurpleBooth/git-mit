@@ -16,8 +16,8 @@ impl Author {
     #[must_use]
     pub fn new(name: &str, email: &str) -> Author {
         Author {
-            name: name.to_string(),
-            email: email.to_string(),
+            name: name.into(),
+            email: email.into(),
         }
     }
 
@@ -121,7 +121,7 @@ mod tests_able_to_load_config_from_git {
         let now_minus_10 = epoch_with_offset(subtract_10_seconds);
 
         let mut i64_configs = HashMap::new();
-        i64_configs.insert("pb.author.expires".to_string(), now_minus_10);
+        i64_configs.insert("pb.author.expires".into(), now_minus_10);
         let git2_config = InMemoryVcs::new(HashMap::new(), HashMap::new(), i64_configs);
 
         let actual = get_author_configuration(&git2_config);
@@ -138,7 +138,7 @@ mod tests_able_to_load_config_from_git {
         let now_plus_10_seconds = epoch_with_offset(add_10_seconds);
 
         let mut i64_configs = HashMap::new();
-        i64_configs.insert("pb.author.expires".to_string(), now_plus_10_seconds);
+        i64_configs.insert("pb.author.expires".into(), now_plus_10_seconds);
         let git2_config = InMemoryVcs::new(HashMap::new(), HashMap::new(), i64_configs);
 
         let actual = get_author_configuration(&git2_config);
@@ -156,16 +156,13 @@ mod tests_able_to_load_config_from_git {
         let now_plus_10_seconds = epoch_with_offset(add_10_seconds);
 
         let mut i64_configs = HashMap::new();
-        i64_configs.insert("pb.author.expires".to_string(), now_plus_10_seconds);
+        i64_configs.insert("pb.author.expires".into(), now_plus_10_seconds);
         let mut str_configs = HashMap::new();
         str_configs.insert(
-            "pb.author.coauthors.0.email".to_string(),
+            "pb.author.coauthors.0.email".into(),
             "annie@example.com".into(),
         );
-        str_configs.insert(
-            "pb.author.coauthors.0.name".to_string(),
-            "Annie Example".into(),
-        );
+        str_configs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
         let git2_config = InMemoryVcs::new(HashMap::new(), str_configs, i64_configs);
 
         let actual = get_author_configuration(&git2_config);
@@ -194,24 +191,18 @@ mod tests_able_to_load_config_from_git {
     fn we_get_multiple_authors_back_if_there_are_multiple() {
         let now_plus_10_seconds = epoch_with_offset(add_10_seconds);
         let mut i64_configs = HashMap::new();
-        i64_configs.insert("pb.author.expires".to_string(), now_plus_10_seconds);
+        i64_configs.insert("pb.author.expires".into(), now_plus_10_seconds);
         let mut str_configs = HashMap::new();
         str_configs.insert(
-            "pb.author.coauthors.0.email".to_string(),
+            "pb.author.coauthors.0.email".into(),
             "annie@example.com".into(),
         );
+        str_configs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
         str_configs.insert(
-            "pb.author.coauthors.0.name".to_string(),
-            "Annie Example".into(),
-        );
-        str_configs.insert(
-            "pb.author.coauthors.1.email".to_string(),
+            "pb.author.coauthors.1.email".into(),
             "joe@example.com".into(),
         );
-        str_configs.insert(
-            "pb.author.coauthors.1.name".to_string(),
-            "Joe Bloggs".into(),
-        );
+        str_configs.insert("pb.author.coauthors.1.name".into(), "Joe Bloggs".into());
         let git2_config = InMemoryVcs::new(HashMap::new(), str_configs, i64_configs);
 
         let actual = get_author_configuration(&git2_config);
