@@ -2,6 +2,9 @@ mod author;
 mod config;
 mod lints;
 
+#[macro_use]
+extern crate partial_application;
+
 pub use crate::config::{
     Git2Vcs as Git2VcsConfig,
     InMemoryVcs as InMemoryVcsConfig,
@@ -15,4 +18,4 @@ pub use crate::lints::{
     Lints,
 };
 
-pub use crate::author::{get_author_configuration, Author};
+pub use crate::author::{get_coauthor_configuration, Author};

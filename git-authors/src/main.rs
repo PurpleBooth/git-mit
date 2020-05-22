@@ -1,7 +1,7 @@
 use std::env;
 
 use clap::{crate_authors, crate_version, App, Arg};
-
+use std::{error::Error, path::PathBuf};
 use xdg::BaseDirectories;
 
 const AUTHOR_INITIAL: &str = "author-initial";
@@ -43,12 +43,14 @@ fn main() {
 }
 
 fn config_file_path(cargo_package_name: &str) -> String {
-    let add_author_file =
-        |x: BaseDirectories| x.place_config_file("authors.yml").map_err(Box::from);
     xdg::BaseDirectories::with_prefix(cargo_package_name.to_string())
         .map_err(Box::<dyn std::error::Error>::from)
-        .and_then(add_author_file)
+        .and_then(|x| authors_config_file(&x))
         .unwrap()
         .to_string_lossy()
         .to_string()
+}
+
+fn authors_config_file(x: &BaseDirectories) -> Result<PathBuf, Box<dyn Error>> {
+    x.place_config_file("authors.yml").map_err(Box::from)
 }

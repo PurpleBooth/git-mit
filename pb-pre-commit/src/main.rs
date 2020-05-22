@@ -3,7 +3,7 @@ use std::{env, process};
 use clap::{crate_authors, crate_version, App};
 use git2::{Config, Repository};
 
-use pb_commit_message_lints::{get_author_configuration, Git2VcsConfig};
+use pb_commit_message_lints::{get_coauthor_configuration, Git2VcsConfig};
 
 #[repr(i32)]
 enum ExitCode {
@@ -30,7 +30,7 @@ fn main() {
         .map(Git2VcsConfig::new)
         .expect("Could not freeze git config");
 
-    if get_author_configuration(&git_config).is_none() {
+    if get_coauthor_configuration(&git_config).is_none() {
         eprintln!(
             r#"
 The details of the author of this commit are a bit stale. Can you confirm who's currently coding?

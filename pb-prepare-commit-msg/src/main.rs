@@ -4,7 +4,7 @@ use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
 use itertools::Itertools;
 
-use pb_commit_message_lints::{get_author_configuration, Author, Git2VcsConfig};
+use pb_commit_message_lints::{get_coauthor_configuration, Author, Git2VcsConfig};
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -52,7 +52,7 @@ fn main() {
         .map(Git2VcsConfig::new)
         .expect("Could not freeze git config");
 
-    if let Some(authors) = get_author_configuration(&git_config) {
+    if let Some(authors) = get_coauthor_configuration(&git_config) {
         let commit_message =
             fs::read_to_string(commit_message_path).expect("Could not read commit message");
         let write_co_author_trailer =
