@@ -1,7 +1,4 @@
-use crate::{
-    config::Vcs,
-    lints::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
-};
+use crate::lints::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing};
 
 use regex::Regex;
 use std::collections::HashSet;
@@ -19,6 +16,7 @@ pub enum Lints {
     PivotalTrackerIdMissing,
 }
 
+use crate::external::vcs::Vcs;
 use std::iter::FromIterator;
 
 /// Look at a git config and work out what lints should be turned on and off
@@ -28,7 +26,7 @@ use std::iter::FromIterator;
 /// ```
 /// use git2::Repository;
 /// use pb_commit_message_lints::{
-///     config::Git2Vcs,
+///     external::vcs::Git2,
 ///     lints::{get_lint_configuration, Lints::DuplicatedTrailers},
 /// };
 /// use tempfile::TempDir;
@@ -39,7 +37,7 @@ use std::iter::FromIterator;
 ///     .expect("Failed to initialise the repository")
 ///     .expect("Failed create temporary directory")
 ///     .config()
-///     .map(Git2Vcs::new)
+///     .map(Git2::new)
 ///     .expect("Failed to get configuration");
 ///
 /// assert_eq!(get_lint_configuration(&config), vec![DuplicatedTrailers],)
@@ -650,7 +648,7 @@ mod tests_get_lint_configuration {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        config::InMemoryVcs,
+        external::vcs::InMemory,
         lints::{
             get_lint_configuration,
             Lints,
@@ -661,7 +659,10 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn with_no_config_return_a_hash_map_default_lints() {
-        let git2_config = InMemoryVcs::new(HashMap::new(), HashMap::new(), HashMap::new());
+        let bools = HashMap::new();
+        let mut strings = HashMap::new();
+        let mut i64s = HashMap::new();
+        let git2_config = InMemory::new(&bools, &mut strings, &mut i64s);
         let actual = get_lint_configuration(&git2_config);
 
         let expected = vec![DuplicatedTrailers];
@@ -676,7 +677,9 @@ mod tests_get_lint_configuration {
     fn duplicate_trailer_detection_can_be_disabled() {
         let mut bool_configs = HashMap::new();
         bool_configs.insert("pb.lint.duplicated-trailers".into(), false);
-        let git2_config = InMemoryVcs::new(bool_configs, HashMap::new(), HashMap::new());
+        let mut strings = HashMap::new();
+        let mut i64s = HashMap::new();
+        let git2_config = InMemory::new(&bool_configs, &mut strings, &mut i64s);
 
         let actual = get_lint_configuration(&git2_config);
         let expected: Vec<Lints> = vec![];
@@ -692,7 +695,9 @@ mod tests_get_lint_configuration {
     fn duplicate_trailer_detection_can_be_explicitly_enabled() {
         let mut bool_configs = HashMap::new();
         bool_configs.insert("pb.lint.duplicated-trailers".into(), true);
-        let git2_config = InMemoryVcs::new(bool_configs, HashMap::new(), HashMap::new());
+        let mut strings = HashMap::new();
+        let mut i64s = HashMap::new();
+        let git2_config = InMemory::new(&bool_configs, &mut strings, &mut i64s);
 
         let actual = get_lint_configuration(&git2_config);
         let expected: Vec<Lints> = vec![DuplicatedTrailers];
@@ -708,7 +713,9 @@ mod tests_get_lint_configuration {
     fn pivotal_tracker_id_being_missing_can_be_explicitly_enabled() {
         let mut bool_configs = HashMap::new();
         bool_configs.insert("pb.lint.pivotal-tracker-id-missing".into(), true);
-        let git2_config = InMemoryVcs::new(bool_configs, HashMap::new(), HashMap::new());
+        let mut strings = HashMap::new();
+        let mut i64s = HashMap::new();
+        let git2_config = InMemory::new(&bool_configs, &mut strings, &mut i64s);
         let actual = get_lint_configuration(&git2_config);
         let expected: Vec<Lints> = vec![DuplicatedTrailers, PivotalTrackerIdMissing];
 

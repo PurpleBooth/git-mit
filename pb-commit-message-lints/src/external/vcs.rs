@@ -1,26 +1,30 @@
 use git2::ConfigEntries;
-use std::{collections::HashMap, error::Error};
+use std::{clone::Clone, collections::HashMap, error::Error};
 
 pub trait Vcs {
     fn get_bool(&self, name: &str) -> Option<bool>;
     fn get_str(&self, name: &str) -> Option<&str>;
     fn get_i64(&self, name: &str) -> Option<i64>;
+    /// # Errors
+    ///
+    /// If the config fails to write
+    fn set_str(&mut self, name: &str, value: &str) -> Result<(), Box<dyn Error>>;
 }
 
-pub struct InMemoryVcs {
-    bool_configs: HashMap<String, bool>,
-    str_configs: HashMap<String, String>,
-    i64_configs: HashMap<String, i64>,
+pub struct InMemory<'a> {
+    bool_configs: &'a HashMap<String, bool>,
+    str_configs: &'a mut HashMap<String, String>,
+    i64_configs: &'a mut HashMap<String, i64>,
 }
 
-impl InMemoryVcs {
+impl InMemory<'_> {
     #[must_use]
-    pub fn new(
-        bool_configs: HashMap<String, bool>,
-        str_configs: HashMap<String, String>,
-        i64_configs: HashMap<String, i64>,
-    ) -> InMemoryVcs {
-        InMemoryVcs {
+    pub fn new<'a>(
+        bool_configs: &'a HashMap<String, bool>,
+        str_configs: &'a mut HashMap<String, String>,
+        i64_configs: &'a mut HashMap<String, i64>,
+    ) -> InMemory<'a> {
+        InMemory {
             bool_configs,
             str_configs,
             i64_configs,
@@ -28,7 +32,7 @@ impl InMemoryVcs {
     }
 }
 
-impl Vcs for InMemoryVcs {
+impl Vcs for InMemory<'_> {
     fn get_bool(&self, name: &str) -> Option<bool> {
         self.bool_configs.get(name).map(bool::clone)
     }
@@ -40,16 +44,21 @@ impl Vcs for InMemoryVcs {
     fn get_i64(&self, name: &str) -> Option<i64> {
         self.i64_configs.get(name).map(i64::clone)
     }
+
+    fn set_str(&mut self, name: &str, value: &str) -> Result<(), Box<dyn Error>> {
+        self.str_configs.insert(name.into(), value.into());
+        Ok(())
+    }
 }
 
-pub struct Git2Vcs {
+pub struct Git2 {
     git2_config: git2::Config,
 }
 
-impl Git2Vcs {
+impl Git2 {
     #[must_use]
-    pub fn new(git2_config: git2::Config) -> Git2Vcs {
-        Git2Vcs { git2_config }
+    pub fn new(git2_config: git2::Config) -> Git2 {
+        Git2 { git2_config }
     }
 
     fn config_defined(&self, lint_name: &str) -> Result<bool, Box<dyn Error>> {
@@ -61,7 +70,7 @@ impl Git2Vcs {
     }
 }
 
-impl Vcs for Git2Vcs {
+impl Vcs for Git2 {
     fn get_bool(&self, name: &str) -> Option<bool> {
         self.config_defined(name)
             .ok()
@@ -81,5 +90,9 @@ impl Vcs for Git2Vcs {
             .ok()
             .filter(bool::clone)
             .and_then(|_| self.git2_config.get_i64(name).ok())
+    }
+
+    fn set_str(&mut self, name: &str, value: &str) -> Result<(), Box<dyn Error>> {
+        self.git2_config.set_str(name, value).map_err(Box::from)
     }
 }

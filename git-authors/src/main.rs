@@ -1,6 +1,16 @@
-use std::env;
+use std::{env, fs};
+
+use git2::{Config, Repository};
 
 use clap::{crate_authors, crate_version, App, Arg};
+use pb_commit_message_lints::{
+    author::{
+        entities::{Author, Authors},
+        vcs::set_authors,
+        yaml::get_authors_from_user_config,
+    },
+    external::vcs::Git2,
+};
 use std::{error::Error, path::PathBuf};
 use xdg::BaseDirectories;
 
@@ -13,7 +23,7 @@ fn main() {
     let cargo_package_name = env!("CARGO_PKG_NAME");
     let default_config_file = config_file_path(cargo_package_name);
 
-    App::new(cargo_package_name)
+    let matches = App::new(cargo_package_name)
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
@@ -40,6 +50,26 @@ fn main() {
                 .default_value("60"),
         )
         .get_matches();
+
+    let author_config_path = matches.value_of(AUTHOR_FILE_PATH).unwrap();
+    let author_config =
+        fs::read_to_string(author_config_path).expect("Something went wrong reading the file");
+
+    let author_initial: Vec<&str> = matches.values_of(AUTHOR_INITIAL).unwrap().take(1).collect();
+    let authors: Authors = get_authors_from_user_config(&author_config).unwrap();
+    let author: Vec<Option<&Author>> = authors.get(&author_initial);
+
+    let current_dir = env::current_dir().expect("Unable to retrieve current directory");
+    let get_repository_config = |x: Repository| x.config();
+    let get_default_config = |_| Config::open_default();
+    let mut git_config = Repository::discover(current_dir)
+        .and_then(get_repository_config)
+        .or_else(get_default_config)
+        .map(Git2::new)
+        .expect("Couldn't load any git config");
+
+    let authors = author.into_iter().flatten().collect::<Vec<_>>();
+    set_authors(&mut git_config, &authors).expect("Couldn't set author")
 }
 
 fn config_file_path(cargo_package_name: &str) -> String {

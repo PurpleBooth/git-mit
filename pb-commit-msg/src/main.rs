@@ -5,7 +5,7 @@ use std::{env, fs};
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
 use pb_commit_message_lints::{
-    config::Git2Vcs,
+    external::vcs::Git2,
     lints::{
         get_lint_configuration,
         has_duplicated_trailers,
@@ -51,7 +51,7 @@ fn main() -> std::io::Result<()> {
     let git_config = Repository::discover(current_dir)
         .and_then(get_repository_config)
         .or_else(get_default_config)
-        .map(Git2Vcs::new)
+        .map(Git2::new)
         .expect("Couldn't load any git config");
 
     get_lint_configuration(&git_config)

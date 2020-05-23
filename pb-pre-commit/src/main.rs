@@ -2,7 +2,7 @@ use std::{env, process};
 
 use clap::{crate_authors, crate_version, App};
 use git2::{Config, Repository};
-use pb_commit_message_lints::{author::get_coauthor_configuration, config::Git2Vcs};
+use pb_commit_message_lints::{author::vcs::get_coauthor_configuration, external::vcs::Git2};
 
 #[repr(i32)]
 enum ExitCode {
@@ -26,7 +26,7 @@ fn main() {
         .and_then(get_config_from_repository)
         .or_else(get_default_config)
         .and_then(snapshot_config)
-        .map(Git2Vcs::new)
+        .map(Git2::new)
         .expect("Could not freeze git config");
 
     if get_coauthor_configuration(&git_config).is_none() {
