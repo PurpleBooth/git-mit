@@ -99,8 +99,12 @@ fn get_config_emails(config: &dyn VcsConfig) -> Vec<Option<&str>> {
 fn get_config_values<'a>(config: &'a dyn VcsConfig, key: &str) -> Vec<Option<&'a str>> {
     (0..)
         .take_while(|x| config_id_exists(config, *x))
-        .map(|x| config.get_str(&format!("pb.author.coauthors.{}.{}", x, key)))
+        .map(partial!(get_from_config => config, key, _))
         .collect()
+}
+
+fn get_from_config<'a>(config: &'a dyn VcsConfig, key: &str, x: i32) -> Option<&'a str> {
+    config.get_str(&format!("pb.author.coauthors.{}.{}", x, key))
 }
 
 fn config_id_exists(config: &dyn VcsConfig, id: i32) -> bool {

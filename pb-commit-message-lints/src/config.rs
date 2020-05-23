@@ -63,29 +63,23 @@ impl Git2Vcs {
 
 impl Vcs for Git2Vcs {
     fn get_bool(&self, name: &str) -> Option<bool> {
-        if let Ok(true) = self.config_defined(name) {
-        } else {
-            return None;
-        }
-
-        self.git2_config.get_bool(name).ok()
+        self.config_defined(name)
+            .ok()
+            .filter(bool::clone)
+            .and_then(|_| self.git2_config.get_bool(name).ok())
     }
 
     fn get_str(&self, name: &str) -> Option<&str> {
-        if let Ok(true) = self.config_defined(name) {
-        } else {
-            return None;
-        }
-
-        self.git2_config.get_str(name).ok()
+        self.config_defined(name)
+            .ok()
+            .filter(bool::clone)
+            .and_then(|_| self.git2_config.get_str(name).ok())
     }
 
     fn get_i64(&self, name: &str) -> Option<i64> {
-        if let Ok(true) = self.config_defined(name) {
-        } else {
-            return None;
-        }
-
-        self.git2_config.get_i64(name).ok()
+        self.config_defined(name)
+            .ok()
+            .filter(bool::clone)
+            .and_then(|_| self.git2_config.get_i64(name).ok())
     }
 }

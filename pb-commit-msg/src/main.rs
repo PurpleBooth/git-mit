@@ -54,8 +54,7 @@ fn main() -> std::io::Result<()> {
         .map(Git2VcsConfig::new)
         .expect("Couldn't load any git config");
 
-    let checks =
-        get_lint_configuration(&git_config).expect("Couldn't parse the configuration in git");
+    let checks = get_lint_configuration(&git_config);
 
     for check in checks {
         match check {

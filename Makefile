@@ -36,9 +36,9 @@ lint:
 .PHONY: fmt
 ## Format what can be formatted
 fmt:
-	cargo fmt --all
 	cargo fix --allow-dirty
 	cargo clippy --allow-dirty --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
+	cargo fmt --all
 
 .PHONY: clean
 ## Clean the build directory

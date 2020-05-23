@@ -3,7 +3,7 @@ use crate::{
     VcsConfig,
 };
 use regex::Regex;
-use std::{collections::HashSet, error::Error};
+use std::collections::HashSet;
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const CONFIG_DUPLICATED_TRAILERS: &str = "pb.lint.duplicated-trailers";
@@ -43,28 +43,27 @@ use std::iter::FromIterator;
 ///     .map(Git2VcsConfig::new)
 ///     .expect("Failed to get configuration");
 ///
-/// assert_eq!(
-///     get_lint_configuration(&config).expect("To be able to get a configuration"),
-///     vec![DuplicatedTrailers],
-/// )
+/// assert_eq!(get_lint_configuration(&config), vec![DuplicatedTrailers],)
 /// ```
 ///
 /// # Errors
 ///
 /// Will return `Err` if we can't read the git configuration for some reason or it's not parsable
-pub fn get_lint_configuration(config: &dyn VcsConfig) -> Result<Vec<Lints>, Box<dyn Error>> {
-    let mut result_vec: Vec<Lints> = vec![];
-
-    match config.get_bool(CONFIG_DUPLICATED_TRAILERS) {
-        Some(false) => {}
-        _ => result_vec.push(DuplicatedTrailers),
-    }
-
-    if let Some(true) = config.get_bool(CONFIG_PIVOTAL_TRACKER_ID_MISSING) {
-        result_vec.push(PivotalTrackerIdMissing)
-    }
-
-    Ok(result_vec)
+pub fn get_lint_configuration(config: &dyn VcsConfig) -> Vec<Lints> {
+    vec![
+        config
+            .get_bool(CONFIG_DUPLICATED_TRAILERS)
+            .or(Some(true))
+            .filter(bool::clone)
+            .map(|_| DuplicatedTrailers),
+        config
+            .get_bool(CONFIG_PIVOTAL_TRACKER_ID_MISSING)
+            .filter(bool::clone)
+            .map(|_| PivotalTrackerIdMissing),
+    ]
+    .into_iter()
+    .flatten()
+    .collect()
 }
 
 /// Check if a commit message message has duplicated trailers with names in
@@ -666,8 +665,7 @@ mod tests_get_lint_configuration {
     #[test]
     fn with_no_config_return_a_hash_map_default_lints() {
         let git2_config = InMemoryVcs::new(HashMap::new(), HashMap::new(), HashMap::new());
-        let actual =
-            get_lint_configuration(&git2_config).expect("To be able to get a configuration");
+        let actual = get_lint_configuration(&git2_config);
 
         let expected = vec![DuplicatedTrailers];
         assert_eq!(
@@ -683,8 +681,7 @@ mod tests_get_lint_configuration {
         bool_configs.insert("pb.lint.duplicated-trailers".into(), false);
         let git2_config = InMemoryVcs::new(bool_configs, HashMap::new(), HashMap::new());
 
-        let actual =
-            get_lint_configuration(&git2_config).expect("To be able to get a configuration");
+        let actual = get_lint_configuration(&git2_config);
         let expected: Vec<Lints> = vec![];
 
         assert_eq!(
@@ -700,8 +697,7 @@ mod tests_get_lint_configuration {
         bool_configs.insert("pb.lint.duplicated-trailers".into(), true);
         let git2_config = InMemoryVcs::new(bool_configs, HashMap::new(), HashMap::new());
 
-        let actual =
-            get_lint_configuration(&git2_config).expect("To be able to get a configuration");
+        let actual = get_lint_configuration(&git2_config);
         let expected: Vec<Lints> = vec![DuplicatedTrailers];
 
         assert_eq!(
@@ -716,8 +712,7 @@ mod tests_get_lint_configuration {
         let mut bool_configs = HashMap::new();
         bool_configs.insert("pb.lint.pivotal-tracker-id-missing".into(), true);
         let git2_config = InMemoryVcs::new(bool_configs, HashMap::new(), HashMap::new());
-        let actual =
-            get_lint_configuration(&git2_config).expect("To be able to get a configuration");
+        let actual = get_lint_configuration(&git2_config);
         let expected: Vec<Lints> = vec![DuplicatedTrailers, PivotalTrackerIdMissing];
 
         assert_eq!(
