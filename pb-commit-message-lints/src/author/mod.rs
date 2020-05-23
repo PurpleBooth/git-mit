@@ -4,7 +4,7 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use crate::VcsConfig;
+use crate::config::Vcs;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Author {
@@ -32,8 +32,25 @@ impl Author {
     }
 }
 
+#[cfg(test)]
+mod tests_author {
+    #![allow(clippy::wildcard_imports)]
+
+    use pretty_assertions::assert_eq;
+
+    use super::*;
+
+    #[test]
+    fn has_an_author() {
+        let author = Author::new("The Name", "email@example.com");
+
+        assert_eq!(author.name(), "The Name");
+        assert_eq!(author.email(), "email@example.com");
+    }
+}
+
 #[must_use]
-pub fn get_coauthor_configuration(config: &dyn VcsConfig) -> std::option::Option<Vec<Author>> {
+pub fn get_coauthor_configuration(config: &dyn Vcs) -> std::option::Option<Vec<Author>> {
     config
         .get_i64("pb.author.expires")
         .ok_or_else(|| "No author expiry date".into())
@@ -60,7 +77,7 @@ fn duration_tuple(
     (time_since_epoch, expires_after_time)
 }
 
-fn replace_with_coauthors(_: bool, config: &dyn VcsConfig) -> Vec<Author> {
+fn replace_with_coauthors(_: bool, config: &dyn Vcs) -> Vec<Author> {
     defined_coauthors(config)
 }
 
@@ -72,7 +89,7 @@ fn is_after((point, comparison): (Duration, Duration)) -> bool {
     point.lt(&comparison)
 }
 
-fn defined_coauthors(config: &dyn VcsConfig) -> Vec<Author> {
+fn defined_coauthors(config: &dyn Vcs) -> Vec<Author> {
     get_config_names(config)
         .iter()
         .zip(get_config_emails(config))
@@ -87,49 +104,32 @@ fn tuple_to_author(a: (&Option<&str>, Option<&str>)) -> Option<Author> {
     }
 }
 
-fn get_config_names(config: &dyn VcsConfig) -> Vec<Option<&str>> {
+fn get_config_names(config: &dyn Vcs) -> Vec<Option<&str>> {
     get_config_values(config, "name")
 }
 
-fn get_config_emails(config: &dyn VcsConfig) -> Vec<Option<&str>> {
+fn get_config_emails(config: &dyn Vcs) -> Vec<Option<&str>> {
     get_config_values(config, "email")
 }
 
 #[allow(clippy::maybe_infinite_iter)]
-fn get_config_values<'a>(config: &'a dyn VcsConfig, key: &str) -> Vec<Option<&'a str>> {
+fn get_config_values<'a>(config: &'a dyn Vcs, key: &str) -> Vec<Option<&'a str>> {
     (0..)
         .take_while(|x| config_id_exists(config, *x))
         .map(partial!(get_from_config => config, key, _))
         .collect()
 }
 
-fn get_from_config<'a>(config: &'a dyn VcsConfig, key: &str, x: i32) -> Option<&'a str> {
+fn get_from_config<'a>(config: &'a dyn Vcs, key: &str, x: i32) -> Option<&'a str> {
     config.get_str(&format!("pb.author.coauthors.{}.{}", x, key))
 }
 
-fn config_id_exists(config: &dyn VcsConfig, id: i32) -> bool {
+fn config_id_exists(config: &dyn Vcs, id: i32) -> bool {
     read_email_from_config(config, id).is_some()
 }
 
-fn read_email_from_config(config: &'_ dyn VcsConfig, id: i32) -> Option<&'_ str> {
+fn read_email_from_config(config: &'_ dyn Vcs, id: i32) -> Option<&'_ str> {
     config.get_str(&format!("pb.author.coauthors.{}.email", id))
-}
-
-#[cfg(test)]
-mod tests_author {
-    #![allow(clippy::wildcard_imports)]
-
-    use pretty_assertions::assert_eq;
-
-    use super::*;
-
-    #[test]
-    fn has_an_author() {
-        let author = Author::new("The Name", "email@example.com");
-
-        assert_eq!(author.name(), "The Name");
-        assert_eq!(author.email(), "email@example.com");
-    }
 }
 
 #[cfg(test)]

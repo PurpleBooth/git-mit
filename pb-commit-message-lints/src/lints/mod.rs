@@ -1,7 +1,8 @@
 use crate::{
+    config::Vcs,
     lints::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
-    VcsConfig,
 };
+
 use regex::Regex;
 use std::collections::HashSet;
 
@@ -27,12 +28,10 @@ use std::iter::FromIterator;
 /// ```
 /// use git2::Repository;
 /// use pb_commit_message_lints::{
-///     get_lint_configuration,
-///     Git2VcsConfig,
-///     Lints::DuplicatedTrailers,
+///     config::Git2Vcs,
+///     lints::{get_lint_configuration, Lints::DuplicatedTrailers},
 /// };
 /// use tempfile::TempDir;
-///
 /// let config = TempDir::new()
 ///     .map(TempDir::into_path)
 ///     .map(|x| x.join("repository"))
@@ -40,7 +39,7 @@ use std::iter::FromIterator;
 ///     .expect("Failed to initialise the repository")
 ///     .expect("Failed create temporary directory")
 ///     .config()
-///     .map(Git2VcsConfig::new)
+///     .map(Git2Vcs::new)
 ///     .expect("Failed to get configuration");
 ///
 /// assert_eq!(get_lint_configuration(&config), vec![DuplicatedTrailers],)
@@ -49,7 +48,7 @@ use std::iter::FromIterator;
 /// # Errors
 ///
 /// Will return `Err` if we can't read the git configuration for some reason or it's not parsable
-pub fn get_lint_configuration(config: &dyn VcsConfig) -> Vec<Lints> {
+pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
     vec![
         config
             .get_bool(CONFIG_DUPLICATED_TRAILERS)
@@ -71,8 +70,7 @@ pub fn get_lint_configuration(config: &dyn VcsConfig) -> Vec<Lints> {
 /// # Example
 ///
 /// ```
-/// use pb_commit_message_lints::has_duplicated_trailers;
-///
+/// use pb_commit_message_lints::lints::has_duplicated_trailers;
 /// assert_eq!(
 ///     has_duplicated_trailers(
 ///         r#"
@@ -123,8 +121,7 @@ pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
 /// # Example
 ///
 /// ```
-/// use pb_commit_message_lints::has_missing_pivotal_tracker_id;
-///
+/// use pb_commit_message_lints::lints::has_missing_pivotal_tracker_id;
 /// assert_eq!(
 ///     has_missing_pivotal_tracker_id(
 ///         r#"

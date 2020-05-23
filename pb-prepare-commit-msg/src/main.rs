@@ -3,8 +3,10 @@ use std::{env, fs, fs::File, io::Write};
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
 use itertools::Itertools;
-
-use pb_commit_message_lints::{get_coauthor_configuration, Author, Git2VcsConfig};
+use pb_commit_message_lints::{
+    author::{get_coauthor_configuration, Author},
+    config::Git2Vcs,
+};
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -49,7 +51,7 @@ fn main() {
         .and_then(get_repository_config)
         .or_else(get_default_config)
         .and_then(snapshot_config)
-        .map(Git2VcsConfig::new)
+        .map(Git2Vcs::new)
         .expect("Could not freeze git config");
 
     if let Some(authors) = get_coauthor_configuration(&git_config) {

@@ -4,13 +4,14 @@ use std::{env, fs};
 
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
-
 use pb_commit_message_lints::{
-    get_lint_configuration,
-    has_duplicated_trailers,
-    has_missing_pivotal_tracker_id,
-    Git2VcsConfig,
-    Lints,
+    config::Git2Vcs,
+    lints::{
+        get_lint_configuration,
+        has_duplicated_trailers,
+        has_missing_pivotal_tracker_id,
+        Lints,
+    },
 };
 
 #[repr(i32)]
@@ -50,7 +51,7 @@ fn main() -> std::io::Result<()> {
     let git_config = Repository::discover(current_dir)
         .and_then(get_repository_config)
         .or_else(get_default_config)
-        .map(Git2VcsConfig::new)
+        .map(Git2Vcs::new)
         .expect("Couldn't load any git config");
 
     get_lint_configuration(&git_config)
