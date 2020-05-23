@@ -53,22 +53,27 @@ fn main() {
         .expect("Could not freeze git config");
 
     if let Some(authors) = get_coauthor_configuration(&git_config) {
-        let commit_message =
-            fs::read_to_string(commit_message_path).expect("Could not read commit message");
-        let write_co_author_trailer =
-            |x: &Author| format!("Co-authored-by: {} <{}>", x.name(), x.email());
-        File::create(commit_message_path)
-            .expect("Unable to open commit message file")
-            .write_all(
-                format!(
-                    r#"{}
+        append_coauthors_to_commit_message(commit_message_path, &authors)
+    }
+}
+
+fn append_coauthors_to_commit_message(commit_message_path: &str, authors: &[Author]) {
+    let commit_message =
+        fs::read_to_string(commit_message_path).expect("Could not read commit message");
+    let write_co_author_trailer =
+        |x: &Author| format!("Co-authored-by: {} <{}>", x.name(), x.email());
+
+    File::create(commit_message_path)
+        .expect("Unable to open commit message file")
+        .write_all(
+            format!(
+                r#"{}
 {}
 "#,
-                    commit_message,
-                    authors.iter().map(write_co_author_trailer).join("\n")
-                )
-                .as_bytes(),
+                commit_message,
+                authors.iter().map(write_co_author_trailer).join("\n")
             )
-            .expect("Failed to write an updated commit message");
-    }
+            .as_bytes(),
+        )
+        .expect("Failed to write an updated commit message");
 }

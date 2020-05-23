@@ -9,10 +9,9 @@ use pb_commit_message_lints::{
     get_lint_configuration,
     has_duplicated_trailers,
     has_missing_pivotal_tracker_id,
+    Git2VcsConfig,
     Lints,
 };
-
-use pb_commit_message_lints::Git2VcsConfig;
 
 #[repr(i32)]
 enum ExitCode {
@@ -54,24 +53,31 @@ fn main() -> std::io::Result<()> {
         .map(Git2VcsConfig::new)
         .expect("Couldn't load any git config");
 
-    let checks = get_lint_configuration(&git_config);
-
-    for check in checks {
-        match check {
+    get_lint_configuration(&git_config)
+        .into_iter()
+        .map(|x| match x {
             Lints::DuplicatedTrailers => {
-                if let Some(trailers) = has_duplicated_trailers(&commit_message) {
-                    exit_duplicated_trailers(&commit_message, &trailers);
-                }
+                lint_duplicated_trailers(&commit_message);
+                true
             }
             Lints::PivotalTrackerIdMissing => {
-                if let Some(()) = has_missing_pivotal_tracker_id(&commit_message) {
-                    exit_missing_pivotal_tracker_id(&commit_message);
-                }
+                lint_missing_id(&commit_message);
+                true
             }
-        }
-    }
+        })
+        .fold(Ok(()), |x, _| x)
+}
 
-    Ok(())
+fn lint_missing_id(commit_message: &str) {
+    if let Some(()) = has_missing_pivotal_tracker_id(commit_message) {
+        exit_missing_pivotal_tracker_id(commit_message);
+    }
+}
+
+fn lint_duplicated_trailers(commit_message: &str) {
+    if let Some(trailers) = has_duplicated_trailers(commit_message) {
+        exit_duplicated_trailers(commit_message, &trailers);
+    }
 }
 
 fn exit_missing_pivotal_tracker_id(commit_message: &str) {
