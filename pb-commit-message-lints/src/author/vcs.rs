@@ -16,84 +16,67 @@ pub fn get_coauthor_configuration(config: &dyn Vcs) -> std::option::Option<Vec<A
         .ok_or_else(|| "No author expiry date".into())
         .and_then(i64_into_u64)
         .map(Duration::from_secs)
-        .and_then(time_and_now)
-        .map(is_after)
+        .and_then(join_time_and_now)
+        .map(|(point, comparison)| point.lt(&comparison))
         .ok()
         .filter(bool::clone)
-        .map(partial!(replace_with_coauthors => _, config))
+        .map(|_| get_vcs_authors(config))
 }
 
-fn time_and_now(expires_after_time: Duration) -> Result<(Duration, Duration), Box<dyn Error>> {
+fn join_time_and_now(expires_after_time: Duration) -> Result<(Duration, Duration), Box<dyn Error>> {
     SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
         .map_err(Box::from)
-        .map(partial!(duration_tuple => expires_after_time, _))
+        .map(|time_since_epoch| (time_since_epoch, expires_after_time))
 }
 
-fn duration_tuple(
-    expires_after_time: Duration,
-    time_since_epoch: Duration,
-) -> (Duration, Duration) {
-    (time_since_epoch, expires_after_time)
+fn i64_into_u64(input: i64) -> Result<u64, Box<dyn Error>> {
+    u64::try_from(input).map_err(Box::<dyn Error>::from)
 }
 
-fn replace_with_coauthors(_: bool, config: &dyn Vcs) -> Vec<Author> {
-    defined_coauthors(config)
+fn u64_into_i64(input: u64) -> Result<i64, Box<dyn Error>> {
+    i64::try_from(input).map_err(Box::<dyn Error>::from)
 }
 
-fn i64_into_u64(x: i64) -> Result<u64, Box<dyn Error>> {
-    u64::try_from(x).map_err(Box::<dyn Error>::from)
-}
-
-fn u64_into_i64(x: u64) -> Result<i64, Box<dyn Error>> {
-    i64::try_from(x).map_err(Box::<dyn Error>::from)
-}
-
-fn is_after((point, comparison): (Duration, Duration)) -> bool {
-    point.lt(&comparison)
-}
-
-fn defined_coauthors(config: &dyn Vcs) -> Vec<Author> {
-    get_config_names(config)
+fn get_vcs_authors(config: &dyn Vcs) -> Vec<Author> {
+    get_vcs_coauthor_names(config)
         .iter()
-        .zip(get_config_emails(config))
-        .filter_map(tuple_to_author)
+        .zip(get_vcs_coauthor_emails(config))
+        .filter_map(new_author)
         .collect()
 }
 
-fn tuple_to_author(a: (&Option<&str>, Option<&str>)) -> Option<Author> {
-    match a {
+fn new_author(parameters: (&Option<&str>, Option<&str>)) -> Option<Author> {
+    match parameters {
         (Some(name), Some(email)) => Some(Author::new(name, email)),
         _ => None,
     }
 }
 
-fn get_config_names(config: &dyn Vcs) -> Vec<Option<&str>> {
-    get_config_values(config, "name")
+fn get_vcs_coauthor_names(config: &dyn Vcs) -> Vec<Option<&str>> {
+    get_vcs_coauthors_config(config, "name")
 }
 
-fn get_config_emails(config: &dyn Vcs) -> Vec<Option<&str>> {
-    get_config_values(config, "email")
+fn get_vcs_coauthor_emails(config: &dyn Vcs) -> Vec<Option<&str>> {
+    get_vcs_coauthors_config(config, "email")
 }
 
 #[allow(clippy::maybe_infinite_iter)]
-fn get_config_values<'a>(config: &'a dyn Vcs, key: &str) -> Vec<Option<&'a str>> {
+fn get_vcs_coauthors_config<'a>(config: &'a dyn Vcs, key: &str) -> Vec<Option<&'a str>> {
     (0..)
-        .take_while(|x| config_id_exists(config, *x))
-        .map(partial!(get_from_config => config, key, _))
+        .take_while(|index| has_vcs_coauthor(config, *index))
+        .map(|index| get_vcs_coauthor_config(config, key, index))
         .collect()
 }
 
-fn get_from_config<'a>(config: &'a dyn Vcs, key: &str, x: i32) -> Option<&'a str> {
-    config.get_str(&format!("pb.author.coauthors.{}.{}", x, key))
+fn get_vcs_coauthor_config<'a>(config: &'a dyn Vcs, key: &str, index: i32) -> Option<&'a str> {
+    config.get_str(&format!("pb.author.coauthors.{}.{}", index, key))
 }
 
-fn config_id_exists(config: &dyn Vcs, id: i32) -> bool {
-    read_email_from_config(config, id).is_some()
-}
-
-fn read_email_from_config(config: &'_ dyn Vcs, id: i32) -> Option<&'_ str> {
-    config.get_str(&format!("pb.author.coauthors.{}.email", id))
+fn has_vcs_coauthor(config: &dyn Vcs, index: i32) -> bool {
+    get_vcs_coauthor_config(config, "email", index)
+        .and_then(|_| get_vcs_coauthor_config(config, "name", index))
+        .is_some()
 }
 
 #[cfg(test)]
@@ -115,14 +98,13 @@ mod tests_able_to_load_config_from_git {
     #[test]
     fn there_is_no_author_config_if_it_has_expired() {
         let now_minus_10 = epoch_with_offset(subtract_10_seconds);
-
         let bools: HashMap<String, bool> = HashMap::new();
         let mut strings: HashMap<String, String> = HashMap::new();
-        let mut i64_configs = HashMap::new();
-        i64_configs.insert("pb.author.expires".into(), now_minus_10);
-        let git2_config = InMemory::new(&bools, &mut strings, &mut i64_configs);
+        let mut i64s = HashMap::new();
+        i64s.insert("pb.author.expires".into(), now_minus_10);
+        let vcs = InMemory::new(&bools, &mut strings, &mut i64s);
 
-        let actual = get_coauthor_configuration(&git2_config);
+        let actual = get_coauthor_configuration(&vcs);
         let expected = None;
         assert_eq!(
             expected, actual,
@@ -135,16 +117,15 @@ mod tests_able_to_load_config_from_git {
     fn there_is_a_config_if_the_config_has_not_expired() {
         let now_plus_10_seconds = epoch_with_offset(add_10_seconds);
 
-        let mut i64_configs = HashMap::new();
-        i64_configs.insert("pb.author.expires".into(), now_plus_10_seconds);
+        let mut i64s = HashMap::new();
+        i64s.insert("pb.author.expires".into(), now_plus_10_seconds);
         let bools = HashMap::new();
         let mut strings = HashMap::new();
-        let mut i64s = i64_configs;
-        let git2_config = InMemory::new(&bools, &mut strings, &mut i64s);
+        let vcs = InMemory::new(&bools, &mut strings, &mut i64s);
 
-        let actual = get_coauthor_configuration(&git2_config);
-
+        let actual = get_coauthor_configuration(&vcs);
         let expected: Option<Vec<Author>> = Some(vec![]);
+
         assert_eq!(
             expected, actual,
             "Expected the author config to be {:?}, instead got {:?}",
@@ -156,20 +137,20 @@ mod tests_able_to_load_config_from_git {
     fn we_get_author_config_back_if_there_is_any() {
         let now_plus_10_seconds = epoch_with_offset(add_10_seconds);
 
-        let mut i64_configs = HashMap::new();
-        i64_configs.insert("pb.author.expires".into(), now_plus_10_seconds);
-        let mut str_configs = HashMap::new();
-        str_configs.insert(
+        let mut i64s = HashMap::new();
+        i64s.insert("pb.author.expires".into(), now_plus_10_seconds);
+        let mut strs = HashMap::new();
+        strs.insert(
             "pb.author.coauthors.0.email".into(),
             "annie@example.com".into(),
         );
-        str_configs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
+        strs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
         let bools = HashMap::new();
-        let git2_config = InMemory::new(&bools, &mut str_configs, &mut i64_configs);
+        let vcs = InMemory::new(&bools, &mut strs, &mut i64s);
 
-        let actual = get_coauthor_configuration(&git2_config);
-
+        let actual = get_coauthor_configuration(&vcs);
         let expected = Some(vec![Author::new("Annie Example", "annie@example.com")]);
+
         assert_eq!(
             expected, actual,
             "Expected the author config to be {:?}, instead got {:?}",
@@ -192,27 +173,29 @@ mod tests_able_to_load_config_from_git {
     #[test]
     fn we_get_multiple_authors_back_if_there_are_multiple() {
         let now_plus_10_seconds = epoch_with_offset(add_10_seconds);
-        let mut i64_configs = HashMap::new();
-        i64_configs.insert("pb.author.expires".into(), now_plus_10_seconds);
-        let mut str_configs = HashMap::new();
-        str_configs.insert(
+
+        let mut i64s = HashMap::new();
+        i64s.insert("pb.author.expires".into(), now_plus_10_seconds);
+        let mut strs = HashMap::new();
+        strs.insert(
             "pb.author.coauthors.0.email".into(),
             "annie@example.com".into(),
         );
-        str_configs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
-        str_configs.insert(
+        strs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
+        strs.insert(
             "pb.author.coauthors.1.email".into(),
             "joe@example.com".into(),
         );
-        str_configs.insert("pb.author.coauthors.1.name".into(), "Joe Bloggs".into());
+        strs.insert("pb.author.coauthors.1.name".into(), "Joe Bloggs".into());
         let bools = HashMap::new();
-        let git2_config = InMemory::new(&bools, &mut str_configs, &mut i64_configs);
+        let vcs = InMemory::new(&bools, &mut strs, &mut i64s);
 
-        let actual = get_coauthor_configuration(&git2_config);
+        let actual = get_coauthor_configuration(&vcs);
         let expected = Some(vec![
             Author::new("Annie Example", "annie@example.com"),
             Author::new("Joe Bloggs", "joe@example.com"),
         ]);
+
         assert_eq!(
             expected, actual,
             "Expected the author config to be {:?}, instead got {:?}",
@@ -240,41 +223,70 @@ pub fn set_authors<'a>(
     authors: &[&Author],
     expires_in: Duration,
 ) -> Result<(), Box<dyn Error>> {
-    let author = authors
-        .first()
-        .ok_or_else(|| -> Box<dyn Error> { "You need at least one author".into() })?;
+    authors
+        .split_first()
+        .ok_or_else(|| "Needs at least one author".into())
+        .and_then(|(first, others)| set_vcs_user(config, first).map(|_| others))
+        .and_then(|authors| set_vcs_coauthors(config, authors))
+        .and_then(|_| set_vcs_expires_time(config, expires_in))
+}
 
-    config.set_str("user.name", &author.name())?;
-    config.set_str("user.email", &author.email())?;
+fn set_vcs_coauthors(config: &mut dyn Vcs, authors: &[&Author]) -> Result<(), Box<dyn Error>> {
+    authors
+        .iter()
+        .enumerate()
+        .try_for_each(|(index, author)| set_vcs_coauthor(config, index, author))
+}
 
-    let expire_time: i64 = SystemTime::now()
+fn set_vcs_coauthor(
+    config: &mut dyn Vcs,
+    index: usize,
+    author: &Author,
+) -> Result<(), Box<dyn Error>> {
+    set_vcs_coauthor_name(config, index, author)
+        .and_then(|_| set_vcs_coauthor_email(config, index, author))
+}
+
+fn set_vcs_coauthor_name(
+    config: &mut dyn Vcs,
+    index: usize,
+    author: &Author,
+) -> Result<(), Box<dyn Error>> {
+    config
+        .set_str(
+            &format!("pb.author.coauthors.{}.name", index),
+            &author.name(),
+        )
+        .map_err(Box::<dyn Error>::from)
+}
+
+fn set_vcs_coauthor_email(
+    config: &mut dyn Vcs,
+    index: usize,
+    author: &Author,
+) -> Result<(), Box<dyn Error>> {
+    config
+        .set_str(
+            &format!("pb.author.coauthors.{}.email", index),
+            &author.email(),
+        )
+        .map_err(Box::<dyn Error>::from)
+}
+
+fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), Box<dyn Error>> {
+    config
+        .set_str("user.name", &author.name())
+        .and_then(|_| config.set_str("user.email", &author.email()))
+}
+
+fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<(), Box<dyn Error>> {
+    SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map_err(Box::from)
-        .map(|x| x.add(expires_in))
-        .map(|x| x.as_secs())
+        .map(|now| now.add(expires_in))
+        .map(|expiry_time| expiry_time.as_secs())
         .and_then(u64_into_i64)
-        .unwrap();
-    config.set_i64(CONFIG_KEY_EXPIRES, expire_time)?;
-
-    authors.iter().skip(1).enumerate().try_for_each(
-        |(index, author)| -> Result<(), Box<dyn Error>> {
-            config
-                .set_str(
-                    &format!("pb.author.coauthors.{}.name", index),
-                    &author.name(),
-                )
-                .map_err(Box::<dyn Error>::from)?;
-            config
-                .set_str(
-                    &format!("pb.author.coauthors.{}.email", index),
-                    &author.email(),
-                )
-                .map_err(Box::<dyn Error>::from)?;
-            Ok(())
-        },
-    )?;
-
-    Ok(())
+        .and_then(|expires_time| config.set_i64(CONFIG_KEY_EXPIRES, expires_time))
 }
 
 #[cfg(test)]
@@ -326,8 +338,9 @@ mod tests_can_set_author_details {
         let author_1 = Author::new("Billie Thompson", "billie@example.com");
         let author_2 = Author::new("Somebody Else", "somebody@example.com");
         let author_3 = Author::new("Annie Example", "annie@example.com");
-        let input = vec![&author_1, &author_2, &author_3];
-        let actual = set_authors(&mut vcs_config, &input, Duration::from_secs(60 * 60));
+        let authors = vec![&author_1, &author_2, &author_3];
+
+        let actual = set_authors(&mut vcs_config, &authors, Duration::from_secs(60 * 60));
 
         assert_eq!(true, actual.is_ok());
         assert_eq!(

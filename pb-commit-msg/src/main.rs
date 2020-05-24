@@ -17,7 +17,7 @@ use pb_commit_message_lints::{
 
 #[repr(i32)]
 enum ExitCode {
-    DuplicatedTrailers = 1,
+    DuplicatedTrailers = 3,
     PivotalTrackerIdMissing,
 }
 

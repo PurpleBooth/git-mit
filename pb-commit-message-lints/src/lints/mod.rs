@@ -33,7 +33,7 @@ pub enum Lints {
 /// use tempfile::TempDir;
 /// let config = TempDir::new()
 ///     .map(TempDir::into_path)
-///     .map(|x| x.join("repository"))
+///     .map(|path| path.join("repository"))
 ///     .map(Repository::init)
 ///     .expect("Failed to initialise the repository")
 ///     .expect("Failed create temporary directory")
@@ -100,19 +100,19 @@ pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
 /// ```
 #[must_use]
 pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
-    let trailer_duplications = |x: &&str| {
-        Some(*x)
-            .map(String::from)
-            .filter(|x| has_duplicated_trailer(commit_message, x))
-    };
-    let is_not_empty = |x: &Vec<_>| !x.is_empty();
     Some(
         TRAILERS_TO_CHECK_FOR_DUPLICATES
             .iter()
-            .filter_map(trailer_duplications)
+            .filter_map(|trailer| filter_without_duplicates(commit_message, trailer))
             .collect::<Vec<String>>(),
     )
-    .filter(is_not_empty)
+    .filter(|duplicates: &Vec<_>| !duplicates.is_empty())
+}
+
+fn filter_without_duplicates(commit_message: &str, trailer: &str) -> Option<String> {
+    Some(trailer)
+        .map(String::from)
+        .filter(|trailer| has_duplicated_trailer(commit_message, trailer))
 }
 
 /// Check if a commit message message has a pivotal tracker id in it
@@ -157,23 +157,33 @@ pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
 /// ```
 #[must_use]
 pub fn has_missing_pivotal_tracker_id(commit_message: &str) -> Option<()> {
-    let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
-    let to_empty_some = |_| Some(());
-    let is_not_match = |x: &String| !re.is_match(x);
     Some(commit_message)
         .map(str::to_lowercase)
-        .filter(is_not_match)
-        .and_then(to_empty_some)
+        .filter(|message| has_no_pivotal_tracker_id(message))
+        .map(|_| ())
+}
+
+fn has_no_pivotal_tracker_id(text: &str) -> bool {
+    Regex::new(REGEX_PIVOTAL_TRACKER_ID)
+        .map(|re| !re.is_match(&text))
+        .unwrap()
 }
 
 fn has_duplicated_trailer(commit_message: &str, trailer: &str) -> bool {
-    let starts_with_trailer = |x: &&str| x.starts_with(&format!("{}:", trailer));
-    let trailers: Vec<&str> = commit_message.lines().filter(starts_with_trailer).collect();
+    Some(
+        commit_message
+            .lines()
+            .filter(|line: &&str| has_trailer(trailer, line))
+            .collect::<Vec<_>>(),
+    )
+    .map(|trailers| (trailers.clone(), trailers.clone()))
+    .map(|(commit, unique)| (commit, HashSet::<&str>::from_iter(unique)))
+    .map(|(commit, unique)| commit.len() != unique.len())
+    .unwrap()
+}
 
-    let unique_trailers: std::collections::HashSet<&str> =
-        HashSet::from_iter(trailers.clone().into_iter());
-
-    trailers.len() != unique_trailers.len()
+fn has_trailer(trailer: &str, line: &&str) -> bool {
+    line.starts_with(&format!("{}:", trailer))
 }
 
 #[cfg(test)]

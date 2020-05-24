@@ -57,8 +57,11 @@ impl Authors {
     }
 
     #[must_use]
-    pub fn get(&self, initials: &[&str]) -> Vec<Option<&Author>> {
-        initials.iter().map(|x| self.authors.get(*x)).collect()
+    pub fn get(&self, author_initials: &[&str]) -> Vec<Option<&Author>> {
+        author_initials
+            .iter()
+            .map(|initial| self.authors.get(*initial))
+            .collect()
     }
 }
 
@@ -70,12 +73,12 @@ mod tests_authors {
 
     #[test]
     fn it_can_get_an_author_in_it() {
-        let mut map: HashMap<String, Author> = HashMap::new();
-        map.insert(
+        let mut store = HashMap::new();
+        store.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com"),
         );
-        let actual_authors = Authors::new(map);
+        let actual_authors = Authors::new(store);
 
         assert_eq!(
             actual_authors.get(&["bt"]),
@@ -85,23 +88,23 @@ mod tests_authors {
 
     #[test]
     fn i_can_get_multiple_authors_out_at_the_same_time() {
-        let mut map: HashMap<String, Author> = HashMap::new();
-        map.insert(
+        let mut store: HashMap<String, Author> = HashMap::new();
+        store.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com"),
         );
-        map.insert(
+        store.insert(
             "se".into(),
             Author::new("Somebody Else", "somebody@example.com"),
         );
-        let actual_authors = Authors::new(map);
+        let actual = Authors::new(store);
 
         assert_eq!(
-            actual_authors.get(&["bt"]),
+            actual.get(&["bt"]),
             vec![Some(&Author::new("Billie Thompson", "billie@example.com"))]
         );
         assert_eq!(
-            actual_authors.get(&["se"]),
+            actual.get(&["se"]),
             vec![Some(&Author::new("Somebody Else", "somebody@example.com"))]
         )
     }

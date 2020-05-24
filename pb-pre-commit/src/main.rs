@@ -7,7 +7,7 @@ use pb_commit_message_lints::{author::vcs::get_coauthor_configuration, external:
 
 #[repr(i32)]
 enum ExitCode {
-    StaleAuthor = 1,
+    StaleAuthor = 3,
 }
 
 fn main() {

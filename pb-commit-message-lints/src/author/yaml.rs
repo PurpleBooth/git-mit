@@ -1,15 +1,14 @@
-use std::{collections::HashMap, error::Error};
+use std::error::Error;
 
-use crate::author::entities::{Author, Authors};
+use crate::author::entities::Authors;
 
 /// # Errors
 ///
 /// Errors if the YAML isn't valid, or isn't valid for a Author map.
 pub fn get_authors_from_user_config(yaml: &str) -> Result<Authors, Box<dyn Error>> {
-    let parsed_yaml: Result<HashMap<String, Author>, serde_yaml::Error> =
-        serde_yaml::from_str(yaml);
-
-    parsed_yaml.map_err(Box::from).map(Authors::new)
+    serde_yaml::from_str(yaml)
+        .map_err(Box::from)
+        .map(Authors::new)
 }
 
 #[cfg(test)]

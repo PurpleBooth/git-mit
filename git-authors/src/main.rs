@@ -1,6 +1,6 @@
 use std::{env, error::Error, fs, path::PathBuf, time::Duration};
 
-use clap::{crate_authors, crate_version, App, Arg};
+use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
 use git2::{Config, Repository};
 use xdg::BaseDirectories;
 
@@ -12,6 +12,13 @@ use pb_commit_message_lints::{
     },
     external::vcs::Git2,
 };
+
+use crate::ExitCode::InitialNotMatchedToAuthor;
+
+#[repr(i32)]
+enum ExitCode {
+    InitialNotMatchedToAuthor = 3,
+}
 
 const AUTHOR_INITIAL: &str = "author-initial";
 const AUTHOR_FILE_PATH: &str = "author-file-path";
@@ -50,27 +57,17 @@ fn main() {
         )
         .get_matches();
 
-    let expires_in = matches
-        .value_of(TIMEOUT)
-        .ok_or_else(|| -> Box<dyn Error> { "No timeout set".into() })
-        .and_then(|x| -> Result<u64, Box<dyn Error>> { x.parse::<u64>().map_err(Box::from) })
-        .unwrap();
-    let author_config_path = matches.value_of(AUTHOR_FILE_PATH).unwrap();
-    let author_config =
-        fs::read_to_string(author_config_path).expect("Something went wrong reading the file");
-
-    let authors_initials: Vec<&str> = matches.values_of(AUTHOR_INITIAL).unwrap().collect();
+    let expires_in = get_timeout(&matches);
+    let author_config = get_author_config(&matches);
+    let authors_initials = get_author_initials(&matches);
     let yaml_authors: Authors = get_authors_from_user_config(&author_config).unwrap();
     let selected_authors: Vec<Option<&Author>> = yaml_authors.get(&authors_initials);
     let failed_authors: Vec<_> = selected_authors
         .iter()
         .zip(authors_initials)
-        .filter_map(|(result, initial)| {
-            if result.is_none() {
-                Some(initial)
-            } else {
-                None
-            }
+        .filter_map(|(result, initial)| match result {
+            None => Some(initial),
+            Some(_) => None,
         })
         .collect();
 
@@ -84,7 +81,7 @@ You can fix this by checking the initials are in the configuration file.
             failed_authors.join(", "),
         );
 
-        std::process::exit(4);
+        std::process::exit(InitialNotMatchedToAuthor as i32);
     }
 
     let current_dir = env::current_dir().expect("Unable to retrieve current directory");
@@ -103,6 +100,27 @@ You can fix this by checking the initials are in the configuration file.
         Duration::from_secs(expires_in * 60),
     )
     .expect("Couldn't set author")
+}
+
+fn get_author_initials<'a>(matches: &'a ArgMatches) -> Vec<&'a str> {
+    matches.values_of(AUTHOR_INITIAL).unwrap().collect()
+}
+
+fn get_author_config(matches: &ArgMatches) -> String {
+    fs::read_to_string(get_author_file_path(&matches))
+        .expect("Something went wrong reading the file")
+}
+
+fn get_author_file_path<'a>(matches: &'a ArgMatches) -> &'a str {
+    matches.value_of(AUTHOR_FILE_PATH).unwrap()
+}
+
+fn get_timeout(matches: &ArgMatches) -> u64 {
+    matches
+        .value_of(TIMEOUT)
+        .ok_or_else(|| -> Box<dyn Error> { "No timeout set".into() })
+        .and_then(|x| -> Result<u64, Box<dyn Error>> { x.parse::<u64>().map_err(Box::from) })
+        .unwrap()
 }
 
 fn config_file_path(cargo_package_name: &str) -> String {
