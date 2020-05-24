@@ -37,9 +37,9 @@ The details of the author of this commit are a bit stale. Can you confirm who's 
 
 It's nice to get and give the right credit.
 
-You can fix this by running `git author` then the initials of whoever is coding for example:
-git author bt
-git author bt se"#,
+You can fix this by running `git authors` then the initials of whoever is coding for example:
+git authors bt
+git authors bt se"#,
         );
 
         process::exit(ExitCode::StaleAuthor as i32);

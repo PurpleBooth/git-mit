@@ -3,6 +3,7 @@ use std::{
     error::Error,
     ops::Add,
     time::{Duration, SystemTime, UNIX_EPOCH},
+    option::Option
 };
 
 use crate::{author::entities::Author, external::vcs::Vcs};
@@ -10,7 +11,7 @@ use crate::{author::entities::Author, external::vcs::Vcs};
 const CONFIG_KEY_EXPIRES: &str = "pb.author.expires";
 
 #[must_use]
-pub fn get_coauthor_configuration(config: &dyn Vcs) -> std::option::Option<Vec<Author>> {
+pub fn get_coauthor_configuration(config: &dyn Vcs) -> Option<Vec<Author>> {
     config
         .get_i64(CONFIG_KEY_EXPIRES)
         .ok_or_else(|| "No author expiry date".into())
