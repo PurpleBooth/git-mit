@@ -5,8 +5,7 @@ use std::{
 };
 
 use crate::{author::entities::Author, external::vcs::Vcs};
-use std::time::UNIX_EPOCH;
-use std::ops::Add;
+use std::{ops::Add, time::UNIX_EPOCH};
 
 const CONFIG_KEY_EXPIRES: &str = "pb.author.expires";
 
@@ -252,7 +251,7 @@ pub fn set_authors<'a>(
         .duration_since(UNIX_EPOCH)
         .map_err(Box::from)
         .map(|x| x.add(expires_in))
-        .map(|x|            x.as_secs())
+        .map(|x| x.as_secs())
         .and_then(u64_into_i64)
         .unwrap();
     config.set_i64(CONFIG_KEY_EXPIRES, expire_time)?;
