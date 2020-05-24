@@ -1,5 +1,6 @@
-use git2::ConfigEntries;
 use std::{clone::Clone, collections::HashMap, error::Error};
+
+use git2::ConfigEntries;
 
 pub trait Vcs {
     fn get_bool(&self, name: &str) -> Option<bool>;

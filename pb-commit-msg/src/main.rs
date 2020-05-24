@@ -4,6 +4,7 @@ use std::{env, fs};
 
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
+
 use pb_commit_message_lints::{
     external::vcs::Git2,
     lints::{

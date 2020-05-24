@@ -3,6 +3,7 @@ use std::{env, fs, fs::File, io::Write};
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
 use itertools::Itertools;
+
 use pb_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
     external::vcs::Git2,

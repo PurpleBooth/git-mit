@@ -1,8 +1,9 @@
-use std::{env, fs};
-
-use git2::{Config, Repository};
+use std::{env, error::Error, fs, path::PathBuf, time::Duration};
 
 use clap::{crate_authors, crate_version, App, Arg};
+use git2::{Config, Repository};
+use xdg::BaseDirectories;
+
 use pb_commit_message_lints::{
     author::{
         entities::{Author, Authors},
@@ -11,8 +12,6 @@ use pb_commit_message_lints::{
     },
     external::vcs::Git2,
 };
-use std::{error::Error, path::PathBuf, time::Duration};
-use xdg::BaseDirectories;
 
 const AUTHOR_INITIAL: &str = "author-initial";
 const AUTHOR_FILE_PATH: &str = "author-file-path";
@@ -60,9 +59,33 @@ fn main() {
     let author_config =
         fs::read_to_string(author_config_path).expect("Something went wrong reading the file");
 
-    let author_initial: Vec<&str> = matches.values_of(AUTHOR_INITIAL).unwrap().take(1).collect();
-    let authors: Authors = get_authors_from_user_config(&author_config).unwrap();
-    let author: Vec<Option<&Author>> = authors.get(&author_initial);
+    let authors_initials: Vec<&str> = matches.values_of(AUTHOR_INITIAL).unwrap().collect();
+    let yaml_authors: Authors = get_authors_from_user_config(&author_config).unwrap();
+    let selected_authors: Vec<Option<&Author>> = yaml_authors.get(&authors_initials);
+    let failed_authors: Vec<_> = selected_authors
+        .iter()
+        .zip(authors_initials)
+        .filter_map(|(result, initial)| {
+            if result.is_none() {
+                Some(initial)
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    if !failed_authors.is_empty() {
+        eprintln!(
+            r#"
+Could not find the initials {}.
+
+You can fix this by checking the initials are in the configuration file.
+"#,
+            failed_authors.join(", "),
+        );
+
+        std::process::exit(4);
+    }
 
     let current_dir = env::current_dir().expect("Unable to retrieve current directory");
     let get_repository_config = |x: Repository| x.config();
@@ -73,7 +96,7 @@ fn main() {
         .map(Git2::new)
         .expect("Couldn't load any git config");
 
-    let authors = author.into_iter().flatten().collect::<Vec<_>>();
+    let authors = selected_authors.into_iter().flatten().collect::<Vec<_>>();
     set_authors(
         &mut git_config,
         &authors,

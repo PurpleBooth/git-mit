@@ -1,7 +1,11 @@
-use crate::lints::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing};
+use std::{collections::HashSet, iter::FromIterator};
 
 use regex::Regex;
-use std::collections::HashSet;
+
+use crate::{
+    external::vcs::Vcs,
+    lints::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
+};
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const CONFIG_DUPLICATED_TRAILERS: &str = "pb.lint.duplicated-trailers";
@@ -15,9 +19,6 @@ pub enum Lints {
     DuplicatedTrailers,
     PivotalTrackerIdMissing,
 }
-
-use crate::external::vcs::Vcs;
-use std::iter::FromIterator;
 
 /// Look at a git config and work out what lints should be turned on and off
 ///
@@ -645,6 +646,8 @@ This is an example commit
 
 #[cfg(test)]
 mod tests_get_lint_configuration {
+    use std::collections::HashMap;
+
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -655,7 +658,6 @@ mod tests_get_lint_configuration {
             Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
         },
     };
-    use std::collections::HashMap;
 
     #[test]
     fn with_no_config_return_a_hash_map_default_lints() {

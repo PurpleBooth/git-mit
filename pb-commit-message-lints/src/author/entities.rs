@@ -82,6 +82,7 @@ mod tests_authors {
             vec![Some(&Author::new("Billie Thompson", "billie@example.com"))]
         )
     }
+
     #[test]
     fn i_can_get_multiple_authors_out_at_the_same_time() {
         let mut map: HashMap<String, Author> = HashMap::new();

@@ -1,5 +1,6 @@
-use pb_hook_test_helper::assert_output;
 use xdg::BaseDirectories;
+
+use pb_hook_test_helper::assert_output;
 
 #[test]
 fn help_returned_by_long_flag() {

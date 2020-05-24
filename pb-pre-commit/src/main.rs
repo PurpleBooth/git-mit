@@ -2,6 +2,7 @@ use std::{env, process};
 
 use clap::{crate_authors, crate_version, App};
 use git2::{Config, Repository};
+
 use pb_commit_message_lints::{author::vcs::get_coauthor_configuration, external::vcs::Git2};
 
 #[repr(i32)]
