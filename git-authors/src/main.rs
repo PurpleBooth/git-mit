@@ -11,7 +11,7 @@ use pb_commit_message_lints::{
     },
     external::vcs::Git2,
 };
-use std::{error::Error, path::PathBuf};
+use std::{error::Error, path::PathBuf, time::Duration};
 use xdg::BaseDirectories;
 
 const AUTHOR_INITIAL: &str = "author-initial";
@@ -51,6 +51,11 @@ fn main() {
         )
         .get_matches();
 
+    let expires_in = matches
+        .value_of(TIMEOUT)
+        .ok_or_else(|| -> Box<dyn Error> { "No timeout set".into() })
+        .and_then(|x| -> Result<u64, Box<dyn Error>> { x.parse::<u64>().map_err(Box::from) })
+        .unwrap();
     let author_config_path = matches.value_of(AUTHOR_FILE_PATH).unwrap();
     let author_config =
         fs::read_to_string(author_config_path).expect("Something went wrong reading the file");
@@ -69,7 +74,12 @@ fn main() {
         .expect("Couldn't load any git config");
 
     let authors = author.into_iter().flatten().collect::<Vec<_>>();
-    set_authors(&mut git_config, &authors).expect("Couldn't set author")
+    set_authors(
+        &mut git_config,
+        &authors,
+        Duration::from_secs(expires_in * 60),
+    )
+    .expect("Couldn't set author")
 }
 
 fn config_file_path(cargo_package_name: &str) -> String {

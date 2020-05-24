@@ -9,6 +9,10 @@ pub trait Vcs {
     ///
     /// If the config fails to write
     fn set_str(&mut self, name: &str, value: &str) -> Result<(), Box<dyn Error>>;
+    /// # Errors
+    ///
+    /// If the config fails to write
+    fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Box<dyn Error>>;
 }
 
 pub struct InMemory<'a> {
@@ -47,6 +51,11 @@ impl Vcs for InMemory<'_> {
 
     fn set_str(&mut self, name: &str, value: &str) -> Result<(), Box<dyn Error>> {
         self.str_configs.insert(name.into(), value.into());
+        Ok(())
+    }
+
+    fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Box<dyn Error>> {
+        self.i64_configs.insert(name.into(), value);
         Ok(())
     }
 }
@@ -94,5 +103,9 @@ impl Vcs for Git2 {
 
     fn set_str(&mut self, name: &str, value: &str) -> Result<(), Box<dyn Error>> {
         self.git2_config.set_str(name, value).map_err(Box::from)
+    }
+
+    fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Box<dyn Error>> {
+        self.git2_config.set_i64(name, value).map_err(Box::from)
     }
 }

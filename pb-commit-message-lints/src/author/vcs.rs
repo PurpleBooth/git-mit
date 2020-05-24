@@ -5,11 +5,15 @@ use std::{
 };
 
 use crate::{author::entities::Author, external::vcs::Vcs};
+use std::time::UNIX_EPOCH;
+use std::ops::Add;
+
+const CONFIG_KEY_EXPIRES: &str = "pb.author.expires";
 
 #[must_use]
 pub fn get_coauthor_configuration(config: &dyn Vcs) -> std::option::Option<Vec<Author>> {
     config
-        .get_i64("pb.author.expires")
+        .get_i64(CONFIG_KEY_EXPIRES)
         .ok_or_else(|| "No author expiry date".into())
         .and_then(i64_into_u64)
         .map(Duration::from_secs)
@@ -40,6 +44,10 @@ fn replace_with_coauthors(_: bool, config: &dyn Vcs) -> Vec<Author> {
 
 fn i64_into_u64(x: i64) -> Result<u64, Box<dyn Error>> {
     u64::try_from(x).map_err(Box::<dyn Error>::from)
+}
+
+fn u64_into_i64(x: u64) -> Result<i64, Box<dyn Error>> {
+    i64::try_from(x).map_err(Box::<dyn Error>::from)
 }
 
 fn is_after((point, comparison): (Duration, Duration)) -> bool {
@@ -228,13 +236,26 @@ mod tests_able_to_load_config_from_git {
 /// # Errors
 ///
 /// This errors if writing to the git authors file fails for some reason. Those reasons will be specific to VCS implementation
-pub fn set_authors<'a>(config: &'a mut dyn Vcs, authors: &[&Author]) -> Result<(), Box<dyn Error>> {
+pub fn set_authors<'a>(
+    config: &'a mut dyn Vcs,
+    authors: &[&Author],
+    expires_in: Duration,
+) -> Result<(), Box<dyn Error>> {
     let authors = authors
         .first()
         .ok_or_else(|| -> Box<dyn Error> { "You need at least one author".into() })?;
 
     config.set_str("user.name", &authors.name())?;
     config.set_str("user.email", &authors.email())?;
+
+    let expire_time: i64 = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(Box::from)
+        .map(|x| x.add(expires_in))
+        .map(|x|            x.as_secs())
+        .and_then(u64_into_i64)
+        .unwrap();
+    config.set_i64(CONFIG_KEY_EXPIRES, expire_time)?;
 
     Ok(())
 }
@@ -245,7 +266,13 @@ mod tests_can_set_author_details {
         author::{entities::Author, vcs::set_authors},
         external::vcs::InMemory,
     };
-    use std::collections::HashMap;
+    use std::{
+        collections::HashMap,
+        convert::TryFrom,
+        error::Error,
+        ops::Add,
+        time::{Duration, SystemTime, UNIX_EPOCH},
+    };
 
     #[test]
     fn we_get_author_config_back_if_there_is_any() {
@@ -257,7 +284,7 @@ mod tests_can_set_author_details {
 
         let author = Author::new("Billie Thompson", "billie@example.com");
         let input = vec![&author];
-        let actual = set_authors(&mut vcs_config, &input);
+        let actual = set_authors(&mut vcs_config, &input, Duration::from_secs(60 * 60));
 
         assert_eq!(true, actual.is_ok());
         assert_eq!(
@@ -268,5 +295,52 @@ mod tests_can_set_author_details {
             Some(&"billie@example.com".to_string()),
             str_map.get("user.email")
         )
+    }
+    #[test]
+    fn sets_the_expiry_time() {
+        let mut i64_map = HashMap::new();
+        let mut str_map = HashMap::new();
+
+        let bools = HashMap::new();
+        let mut vcs_config = InMemory::new(&bools, &mut str_map, &mut i64_map);
+
+        let author = Author::new("Billie Thompson", "billie@example.com");
+        let input = vec![&author];
+        let _actual = set_authors(&mut vcs_config, &input, Duration::from_secs(60 * 60));
+
+        let sec59min = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|x| x.add(Duration::from_secs(60 * 59)))
+            .map_err(|x| -> Box<dyn Error> { Box::from(x) })
+            .map(|x| x.as_secs())
+            .and_then(|x| i64::try_from(x).map_err(Box::from))
+            .unwrap();
+
+        let sec61min = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|x| x.add(Duration::from_secs(60 * 61)))
+            .map_err(|x| -> Box<dyn Error> { Box::from(x) })
+            .map(|x| x.as_secs())
+            .and_then(|x| i64::try_from(x).map_err(Box::from))
+            .unwrap();
+
+        let actual_expire_time = i64_map
+            .get("pb.author.expires")
+            .expect("Failed to read expire");
+
+        assert_eq!(
+            true,
+            actual_expire_time < &sec61min,
+            "Expected less than {}, found {}",
+            sec61min,
+            actual_expire_time
+        );
+        assert_eq!(
+            true,
+            actual_expire_time > &sec59min,
+            "Expected more than {}, found {}",
+            sec59min,
+            actual_expire_time
+        );
     }
 }
