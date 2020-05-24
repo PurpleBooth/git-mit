@@ -1,4 +1,11 @@
-use std::{env, error::Error, fs, path::PathBuf, time::Duration};
+use std::{
+    env,
+    error::Error,
+    fs,
+    path::PathBuf,
+    process::{Command, Stdio},
+    time::Duration,
+};
 
 use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
 use git2::{Config, Repository};
@@ -20,8 +27,9 @@ enum ExitCode {
     InitialNotMatchedToAuthor = 3,
 }
 
-const AUTHOR_INITIAL: &str = "author-initial";
-const AUTHOR_FILE_PATH: &str = "author-file-path";
+const AUTHOR_INITIAL: &str = "initials";
+const AUTHOR_FILE_PATH: &str = "file";
+const AUTHOR_FILE_COMMAND: &str = "command";
 
 const TIMEOUT: &str = "timeout";
 
@@ -43,9 +51,20 @@ fn main() {
             Arg::with_name(AUTHOR_FILE_PATH)
                 .short("c")
                 .long("config")
-                .help("Initials of the authors to put in the commit")
+                .help("Path to a file where authors initials, emails and names can be found")
                 .env("GIT_AUTHORS_AUTHOR_FILE_PATH")
                 .default_value(&default_config_file),
+        )
+        .arg(
+            Arg::with_name(AUTHOR_FILE_COMMAND)
+                .short("e")
+                .long("exec")
+                .help(
+                    "Execute a command to generate the author configuration, stdout will be \
+                     captured and used instead of the file, if both this and the file is present, \
+                     this takes precedence",
+                )
+                .env("GIT_AUTHORS_AUTHOR_FILE_COMMAND"),
         )
         .arg(
             Arg::with_name(TIMEOUT)
@@ -107,6 +126,26 @@ fn get_author_initials<'a>(matches: &'a ArgMatches) -> Vec<&'a str> {
 }
 
 fn get_author_config(matches: &ArgMatches) -> String {
+    match matches.value_of(AUTHOR_FILE_COMMAND) {
+        Some(command) => get_author_config_from_exec(command),
+        None => get_author_config_from_file(matches),
+    }
+}
+
+fn get_author_config_from_exec(command: &str) -> String {
+    String::from_utf8(
+        Command::new(env!("SHELL", "sh"))
+            .stderr(Stdio::inherit())
+            .arg("-c")
+            .arg(command)
+            .output()
+            .unwrap()
+            .stdout,
+    )
+    .unwrap()
+}
+
+fn get_author_config_from_file(matches: &ArgMatches) -> String {
     fs::read_to_string(get_author_file_path(&matches))
         .expect("Something went wrong reading the file")
 }

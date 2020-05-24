@@ -15,20 +15,23 @@ Billie Thompson <billie+git-author@billiecodes.com>
 Set author and Co-authored trailer.
 
 USAGE:
-    git-authors [OPTIONS] <author-initial>...
+    git-authors [OPTIONS] <initials>...
 
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
 
 OPTIONS:
-    -c, --config <author-file-path>    Initials of the authors to put in the commit [env: GIT_AUTHORS_AUTHOR_FILE_PATH=]
-                                       [default: {}]
-    -t, --timeout <timeout>            Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]
-                                       [default: 60]
+    -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
+                               instead of the file, if both this and the file is present, this takes precedence [env:
+                               GIT_AUTHORS_AUTHOR_FILE_COMMAND=]
+    -c, --config <file>        Path to a file where authors initials, emails and names can be found [env:
+                               GIT_AUTHORS_AUTHOR_FILE_PATH=]  [default: {}]
+    -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]  [default:
+                               60]
 
 ARGS:
-    <author-initial>...    Initials of the authors to put in the commit
+    <initials>...    Initials of the authors to put in the commit
 "#,
             env!("CARGO_PKG_VERSION"),
             default_config_file
@@ -51,20 +54,23 @@ Billie Thompson <billie+git-author@billiecodes.com>
 Set author and Co-authored trailer.
 
 USAGE:
-    git-authors [OPTIONS] <author-initial>...
+    git-authors [OPTIONS] <initials>...
 
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
 
 OPTIONS:
-    -c, --config <author-file-path>    Initials of the authors to put in the commit [env: GIT_AUTHORS_AUTHOR_FILE_PATH=]
-                                       [default: {}]
-    -t, --timeout <timeout>            Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]
-                                       [default: 60]
+    -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
+                               instead of the file, if both this and the file is present, this takes precedence [env:
+                               GIT_AUTHORS_AUTHOR_FILE_COMMAND=]
+    -c, --config <file>        Path to a file where authors initials, emails and names can be found [env:
+                               GIT_AUTHORS_AUTHOR_FILE_PATH=]  [default: {}]
+    -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]  [default:
+                               60]
 
 ARGS:
-    <author-initial>...    Initials of the authors to put in the commit
+    <initials>...    Initials of the authors to put in the commit
 "#,
             env!("CARGO_PKG_VERSION"),
             default_config_file
@@ -94,7 +100,7 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
     let expected = r#"error: Found argument '--banana' which wasn't expected, or isn't valid in this context
 
 USAGE:
-    git-authors [OPTIONS] <author-initial>...
+    git-authors [OPTIONS] <initials>...
 
 For more information try --help
 "#;

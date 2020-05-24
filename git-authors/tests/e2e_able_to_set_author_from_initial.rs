@@ -19,14 +19,9 @@ fn no_authors_fail() {
     assert_output(
         &output,
         "",
-        "error: The following required arguments were not provided:
-    <author-initial>...
-
-USAGE:
-    git-authors <author-initial>... --config <author-file-path> --timeout <timeout>
-
-For more information try --help
-",
+        "error: The following required arguments were not provided:\n    \
+         <initials>...\n\nUSAGE:\n    git-authors <initials>... --config <file> --timeout \
+         <timeout>\n\nFor more information try --help\n",
         false,
     )
 }
@@ -182,6 +177,33 @@ se:
         sec59min,
         actual_expire_time
     );
+
+    assert_output(&output, "", "", true);
+}
+
+#[test]
+fn the_file_can_be_generated_by_an_command_executed_in_the_users_shell() {
+    let config = r#"echo '
+---
+bt:
+    name: Billie Thompson
+    email: billie@example.com
+'"#;
+    let working_dir = pb_hook_test_helper::setup_working_dir();
+
+    println!("{}", working_dir.to_str().unwrap());
+
+    let output =
+        pb_hook_test_helper::run_hook(&working_dir, "git-authors", vec!["-e", config, "bt"]);
+
+    let config = open_config(working_dir);
+    let actual_author_name = config
+        .get_str("user.name")
+        .expect("Failed to read username");
+    let actual_author_email = config.get_str("user.email").expect("Failed to read email");
+
+    assert_eq!(actual_author_name, "Billie Thompson");
+    assert_eq!(actual_author_email, "billie@example.com");
 
     assert_output(&output, "", "", true);
 }
