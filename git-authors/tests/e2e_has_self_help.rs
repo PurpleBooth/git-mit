@@ -24,9 +24,9 @@ FLAGS:
 OPTIONS:
     -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
                                instead of the file, if both this and the file is present, this takes precedence [env:
-                               GIT_AUTHORS_AUTHOR_FILE_COMMAND=]
+                               GIT_AUTHORS_EXEC=]
     -c, --config <file>        Path to a file where authors initials, emails and names can be found [env:
-                               GIT_AUTHORS_AUTHOR_FILE_PATH=]  [default: {}]
+                               GIT_AUTHORS_CONFIG=]  [default: {}]
     -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]  [default:
                                60]
 
@@ -63,9 +63,9 @@ FLAGS:
 OPTIONS:
     -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
                                instead of the file, if both this and the file is present, this takes precedence [env:
-                               GIT_AUTHORS_AUTHOR_FILE_COMMAND=]
+                               GIT_AUTHORS_EXEC=]
     -c, --config <file>        Path to a file where authors initials, emails and names can be found [env:
-                               GIT_AUTHORS_AUTHOR_FILE_PATH=]  [default: {}]
+                               GIT_AUTHORS_CONFIG=]  [default: {}]
     -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]  [default:
                                60]
 

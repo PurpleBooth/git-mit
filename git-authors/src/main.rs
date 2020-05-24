@@ -52,7 +52,7 @@ fn main() {
                 .short("c")
                 .long("config")
                 .help("Path to a file where authors initials, emails and names can be found")
-                .env("GIT_AUTHORS_AUTHOR_FILE_PATH")
+                .env("GIT_AUTHORS_CONFIG")
                 .default_value(&default_config_file),
         )
         .arg(
@@ -64,7 +64,7 @@ fn main() {
                      captured and used instead of the file, if both this and the file is present, \
                      this takes precedence",
                 )
-                .env("GIT_AUTHORS_AUTHOR_FILE_COMMAND"),
+                .env("GIT_AUTHORS_EXEC"),
         )
         .arg(
             Arg::with_name(TIMEOUT)
