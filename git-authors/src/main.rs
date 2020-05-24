@@ -134,7 +134,7 @@ fn get_author_config(matches: &ArgMatches) -> String {
 
 fn get_author_config_from_exec(command: &str) -> String {
     String::from_utf8(
-        Command::new(env!("SHELL", "sh"))
+        Command::new(env::var("SHELL").unwrap_or_else(|_| String::from("sh")))
             .stderr(Stdio::inherit())
             .arg("-c")
             .arg(command)
