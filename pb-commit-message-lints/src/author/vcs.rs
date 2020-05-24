@@ -2,8 +2,8 @@ use std::{
     convert::TryFrom,
     error::Error,
     ops::Add,
+    option::Option,
     time::{Duration, SystemTime, UNIX_EPOCH},
-    option::Option
 };
 
 use crate::{author::entities::Author, external::vcs::Vcs};
