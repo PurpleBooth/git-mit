@@ -1,6 +1,6 @@
 [package]
 name = "pb-hook-test-helper"
-version = "2.46.0"
+version = "2.47.0"
 authors = ["Billie Thompson <billie+pb-commit-author@billiecodes.com>"]
 edition = "2018"
 license = "CC0 1.0 Universal"
