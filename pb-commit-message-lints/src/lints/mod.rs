@@ -1,23 +1,62 @@
 use std::{collections::HashSet, iter::FromIterator};
 
-use regex::Regex;
-
 use crate::{
     external::vcs::Vcs,
     lints::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
 };
+use enum_iterator::IntoEnumIterator;
+use regex::Regex;
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
-const CONFIG_DUPLICATED_TRAILERS: &str = "pb.lint.duplicated-trailers";
-const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pb.lint.pivotal-tracker-id-missing";
 const REGEX_PIVOTAL_TRACKER_ID: &str =
     r"\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
 
 /// The lints that are supported
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, IntoEnumIterator)]
 pub enum Lints {
     DuplicatedTrailers,
     PivotalTrackerIdMissing,
+}
+
+const CONFIG_DUPLICATED_TRAILERS: &str = "duplicated-trailers";
+const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pivotal-tracker-id-missing";
+
+impl std::fmt::Display for Lints {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", to_static_string(self))
+    }
+}
+
+impl std::convert::From<Lints> for &'static str {
+    fn from(from: Lints) -> Self {
+        to_static_string(&from)
+    }
+}
+
+impl std::convert::From<Lints> for String {
+    fn from(from: Lints) -> Self {
+        String::from(to_static_string(&from))
+    }
+}
+
+#[cfg(test)]
+mod tests_lints {
+    use crate::lints::Lints;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn it_is_convertible_to_string() {
+        let string: String = Lints::PivotalTrackerIdMissing.into();
+        assert_eq!("pivotal-tracker-id-missing".to_string(), string)
+    }
+
+    #[test]
+    fn it_is_printable() {
+        assert_eq!(
+            "pivotal-tracker-id-missing",
+            &format!("{}", Lints::PivotalTrackerIdMissing)
+        )
+    }
 }
 
 /// Look at a git config and work out what lints should be turned on and off
@@ -50,12 +89,12 @@ pub enum Lints {
 pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
     vec![
         config
-            .get_bool(CONFIG_DUPLICATED_TRAILERS)
+            .get_bool(&format!("pb.lint.{}", Lints::DuplicatedTrailers))
             .or(Some(true))
             .filter(bool::clone)
             .map(|_| DuplicatedTrailers),
         config
-            .get_bool(CONFIG_PIVOTAL_TRACKER_ID_MISSING)
+            .get_bool(&format!("pb.lint.{}", Lints::PivotalTrackerIdMissing))
             .filter(bool::clone)
             .map(|_| PivotalTrackerIdMissing),
     ]
@@ -738,5 +777,12 @@ mod tests_get_lint_configuration {
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
         )
+    }
+}
+
+fn to_static_string(lint: &Lints) -> &'static str {
+    match lint {
+        Lints::DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
+        Lints::PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
     }
 }

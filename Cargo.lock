@@ -100,6 +100,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bb1f6b1ce1c140482ea30ddd3335fc0024ac7ee112895426e0a629a6c20adfe3"
 
 [[package]]
+name = "enum-iterator"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c79a6321a1197d7730510c7e3f6cb80432dfefecb32426de8cea0aa19b4bb8d7"
+dependencies = [
+ "enum-iterator-derive",
+]
+
+[[package]]
+name = "enum-iterator-derive"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e94aa31f7c0dc764f57896dc615ddd76fc13b0d5dca7eb6cc5e018a5a09ec06"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "getrandom"
 version = "0.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -286,6 +306,7 @@ dependencies = [
 name = "pb-commit-message-lints"
 version = "2.50.0"
 dependencies = [
+ "enum-iterator",
  "git2",
  "itertools",
  "pb-hook-test-helper",
@@ -304,6 +325,19 @@ dependencies = [
  "clap",
  "git2",
  "itertools",
+ "pb-commit-message-lints",
+ "pb-hook-test-helper",
+ "pretty_assertions",
+ "tempfile",
+]
+
+[[package]]
+name = "pb-git-hooks"
+version = "2.49.0"
+dependencies = [
+ "clap",
+ "enum-iterator",
+ "git2",
  "pb-commit-message-lints",
  "pb-hook-test-helper",
  "pretty_assertions",

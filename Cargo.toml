@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "pb-git-hooks",
     "pb-prepare-commit-msg",
     "pb-pre-commit",
     "pb-commit-msg",

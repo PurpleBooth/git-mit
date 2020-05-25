@@ -1,0 +1,23 @@
+[package]
+name = "pb-git-hooks"
+version = "2.49.0"
+authors = ["Billie Thompson <billie+pb-git-hooks@billiecodes.com>"]
+edition = "2018"
+license = "CC0 1.0 Universal"
+categories = ["development-tools", "command-line-utilities"]
+keywords = ["git", "git-hooks"]
+readme = "../README.md"
+repository = "https://github.com/PurpleBooth/pb-git-hooks"
+description = "A command for enabling and disabling git lints"
+
+
+[dependencies]
+enum-iterator = "0.6.0"
+git2 = "0.13"
+clap = "~2.33"
+pb-commit-message-lints = { path = "../pb-commit-message-lints" }
+
+[dev-dependencies]
+tempfile = "3"
+pretty_assertions = "0.6.1"
+pb-hook-test-helper = { path = "../pb-hook-test-helper" }
