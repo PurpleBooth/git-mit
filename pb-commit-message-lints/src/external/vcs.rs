@@ -19,49 +19,51 @@ pub trait Vcs {
 }
 
 pub struct InMemory<'a> {
-    bools: &'a mut HashMap<String, bool>,
-    strs: &'a mut HashMap<String, String>,
-    i64s: &'a mut HashMap<String, i64>,
+    store: &'a mut HashMap<String, String>,
 }
 
 impl InMemory<'_> {
     #[must_use]
-    pub fn new<'a>(
-        bools: &'a mut HashMap<String, bool>,
-        strs: &'a mut HashMap<String, String>,
-        i64s: &'a mut HashMap<String, i64>,
-    ) -> InMemory<'a> {
-        InMemory { bools, strs, i64s }
+    pub fn new(store: &mut HashMap<String, String>) -> InMemory {
+        InMemory { store }
     }
 }
 
 impl Vcs for InMemory<'_> {
     fn get_bool(&self, name: &str) -> Option<bool> {
-        self.bools.get(name).map(bool::clone)
+        self.store
+            .get(name)
+            .cloned()
+            .ok_or_else(|| ())
+            .and_then(|x| x.parse().map_err(|_| ()))
+            .ok()
     }
 
     fn get_str(&self, name: &str) -> Option<&str> {
-        self.strs.get(name).map(std::string::String::as_str)
+        self.store.get(name).map(std::string::String::as_str)
     }
 
     fn get_i64(&self, name: &str) -> Option<i64> {
-        self.i64s.get(name).map(i64::clone)
+        self.store
+            .get(name)
+            .cloned()
+            .ok_or_else(|| ())
+            .and_then(|x| x.parse().map_err(|_| ()))
+            .ok()
     }
 
     fn set_str(&mut self, name: &str, value: &str) -> Result<(), Box<dyn Error>> {
-        self.strs.insert(name.into(), value.into());
+        self.store.insert(name.into(), value.into());
         Ok(())
     }
 
     fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Box<dyn Error>> {
-        self.i64s.insert(name.into(), value);
+        self.store.insert(name.into(), format!("{}", value));
         Ok(())
     }
 
     fn remove(&mut self, name: &str) -> Result<(), Box<dyn Error>> {
-        self.bools.remove(name);
-        self.strs.remove(name);
-        self.i64s.remove(name);
+        self.store.remove(name);
         Ok(())
     }
 }

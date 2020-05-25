@@ -45,7 +45,8 @@ fn main() {
             Arg::with_name(AUTHOR_INITIAL)
                 .help("Initials of the authors to put in the commit")
                 .multiple(true)
-                .required(true),
+                .required(true)
+                .min_values(1),
         )
         .arg(
             Arg::with_name(AUTHOR_FILE_PATH)
