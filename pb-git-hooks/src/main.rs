@@ -22,6 +22,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .help("The lint to enable")
         .required(true)
         .multiple(true)
+        .min_values(1)
         .possible_values(&possible_lints);
     let matches = App::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
@@ -66,13 +67,22 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), Box<dyn Error>> {
-    set_lint_status(
-        &args
-            .values_of(LINT_NAME_ARGUMENT)
-            .unwrap()
-            .map(|name| Lints::try_from(name).unwrap())
-            .collect::<Vec<Lints>>(),
-        config,
-        args.subcommand_matches(COMMAND_LINT_ENABLE).is_some(),
-    )
+    args.subcommand_matches(COMMAND_LINT_ENABLE)
+        .map(|enable_args| (enable_args, true))
+        .or_else(|| {
+            args.subcommand_matches(COMMAND_LINT_DISABLE)
+                .map(|disable_args| (disable_args, false))
+        })
+        .ok_or_else(|| Box::from("Unrecognised lint subcommand"))
+        .and_then(|(subcommand_args, enable)| {
+            set_lint_status(
+                &subcommand_args
+                    .values_of(LINT_NAME_ARGUMENT)
+                    .unwrap()
+                    .map(|name| Lints::try_from(name).unwrap())
+                    .collect::<Vec<Lints>>(),
+                config,
+                enable,
+            )
+        })
 }
