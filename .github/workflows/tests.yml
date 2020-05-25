@@ -189,3 +189,7 @@ jobs:
         with:
           name: git-authors-${{ matrix.target }}
           path: ./target/release/git-authors${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pb-git-hooks-${{ matrix.target }}
+          path: ./target/release/pb-git-hooks${{ matrix.suffix }}
