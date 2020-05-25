@@ -178,6 +178,10 @@ jobs:
           path: ./target/release/pb-commit-msg${{ matrix.suffix }}
       - uses: actions/upload-artifact@v2
         with:
+          name: pb-git-hooks-${{ matrix.target }}
+          path: ./target/release/pb-git-hooks${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
           name: pb-pre-commit-${{ matrix.target }}
           path: ./target/release/pb-pre-commit${{ matrix.suffix }}
       - uses: actions/upload-artifact@v2
@@ -280,6 +284,22 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
           upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-git-hooks-x86_64-unknown-linux-gnu/pb-git-hooks
+          asset_name: pb-git-hooks-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./git-authors-x86_64-unknown-linux-gnu/git-authors
+          asset_name: git-authors-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
           asset_path: ./pb-pre-commit-x86_64-apple-darwin/pb-pre-commit
           asset_name: pb-pre-commit-x86_64-apple-darwin
           asset_content_type: application/octet-stream
@@ -298,6 +318,14 @@ jobs:
           upload_url: '${{ steps.create_release.outputs.upload_url }}'
           asset_path: ./pb-commit-msg-x86_64-apple-darwin/pb-commit-msg
           asset_name: pb-commit-msg-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-git-hooks-x86_64-apple-darwin/pb-git-hooks
+          asset_name: pb-git-hooks-x86_64-apple-darwin
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.1
         env:

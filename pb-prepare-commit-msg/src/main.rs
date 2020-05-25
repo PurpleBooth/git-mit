@@ -73,8 +73,8 @@ fn append_coauthors_to_commit_message(commit_message_path: &str, authors: &[Auth
                 r#"{}
 {}
 "#,
-                commit_message,
-                authors.iter().map(write_co_author_trailer).join("\n")
+                authors.iter().map(write_co_author_trailer).join("\n"),
+                commit_message
             )
             .as_bytes(),
         )
