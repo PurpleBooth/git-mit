@@ -1,4 +1,4 @@
-use std::{env, error::Error};
+use std::{convert::TryFrom, env, error::Error};
 
 use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
 use enum_iterator::IntoEnumIterator;
@@ -6,7 +6,7 @@ use git2::{Config, Repository};
 
 use pb_commit_message_lints::{
     external::vcs::{Git2, Vcs},
-    lints::Lints,
+    lints::{set_lint_status, Lints},
 };
 
 const LOCAL_SCOPE: &str = "local";
@@ -66,14 +66,13 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), Box<dyn Error>> {
-    let value = match args.subcommand_matches(COMMAND_LINT_ENABLE) {
-        Some(_) => "true",
-        None => "false",
-    };
-
-    args.values_of(LINT_NAME_ARGUMENT)
-        .map(|mut values| {
-            values.try_for_each(|lint| config.set_str(&format!("pb.lint.{}", lint), value))
-        })
-        .unwrap()
+    set_lint_status(
+        &args
+            .values_of(LINT_NAME_ARGUMENT)
+            .unwrap()
+            .map(|name| Lints::try_from(name).unwrap())
+            .collect::<Vec<Lints>>(),
+        config,
+        args.subcommand_matches(COMMAND_LINT_ENABLE).is_some(),
+    )
 }

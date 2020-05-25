@@ -1,18 +1,19 @@
-use std::{collections::HashSet, iter::FromIterator};
+use std::{collections::HashSet, error::Error, iter::FromIterator};
+
+use enum_iterator::IntoEnumIterator;
+use regex::Regex;
 
 use crate::{
     external::vcs::Vcs,
     lints::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
 };
-use enum_iterator::IntoEnumIterator;
-use regex::Regex;
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const REGEX_PIVOTAL_TRACKER_ID: &str =
     r"\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
 
 /// The lints that are supported
-#[derive(Debug, Eq, PartialEq, IntoEnumIterator)]
+#[derive(Debug, Eq, PartialEq, IntoEnumIterator, Copy, Clone)]
 pub enum Lints {
     DuplicatedTrailers,
     PivotalTrackerIdMissing,
@@ -23,31 +24,56 @@ const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pivotal-tracker-id-missing";
 
 impl std::fmt::Display for Lints {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", to_static_string(self))
+        write!(f, "{}", to_static_string(*self))
+    }
+}
+
+impl std::convert::TryFrom<&str> for Lints {
+    type Error = Box<dyn Error>;
+
+    fn try_from(from: &str) -> Result<Self, Self::Error> {
+        Lints::into_enum_iter()
+            .zip(Lints::into_enum_iter().map(|lint| lint.into()))
+            .filter_map(|(lint, name): (Lints, &str)| if name == from { Some(lint) } else { None })
+            .collect::<Vec<Lints>>()
+            .first()
+            .copied()
+            .ok_or_else(|| -> Box<dyn Error> {
+                format!("Could not match {} to a lint", from).into()
+            })
     }
 }
 
 impl std::convert::From<Lints> for &'static str {
     fn from(from: Lints) -> Self {
-        to_static_string(&from)
+        to_static_string(from)
     }
 }
 
 impl std::convert::From<Lints> for String {
     fn from(from: Lints) -> Self {
-        String::from(to_static_string(&from))
+        String::from(to_static_string(from))
     }
 }
 
 #[cfg(test)]
 mod tests_lints {
-    use crate::lints::Lints;
+    use std::convert::TryInto;
+
     use pretty_assertions::assert_eq;
+
+    use crate::lints::{Lints, Lints::PivotalTrackerIdMissing};
 
     #[test]
     fn it_is_convertible_to_string() {
         let string: String = Lints::PivotalTrackerIdMissing.into();
         assert_eq!("pivotal-tracker-id-missing".to_string(), string)
+    }
+
+    #[test]
+    fn it_can_be_created_from_string() {
+        let lint: Lints = "pivotal-tracker-id-missing".try_into().unwrap();
+        assert_eq!(PivotalTrackerIdMissing, lint)
     }
 
     #[test]
@@ -780,9 +806,70 @@ mod tests_get_lint_configuration {
     }
 }
 
-fn to_static_string(lint: &Lints) -> &'static str {
+fn to_static_string(lint: Lints) -> &'static str {
     match lint {
         Lints::DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
         Lints::PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
     }
+}
+
+#[cfg(test)]
+mod tests_can_enable_lints_via_a_command {
+    use std::collections::HashMap;
+
+    use pretty_assertions::assert_eq;
+
+    use crate::{
+        external::vcs::InMemory,
+        lints::{set_lint_status, Lints::PivotalTrackerIdMissing},
+    };
+
+    #[test]
+    fn we_can_enable_lints() {
+        let mut bools = HashMap::new();
+        bools.insert("pb.lint.pivotal-tracker-id-missing".into(), false);
+        let mut strings = HashMap::new();
+        let mut i64s = HashMap::new();
+        let mut config = InMemory::new(&mut bools, &mut strings, &mut i64s);
+
+        set_lint_status(&[PivotalTrackerIdMissing], &mut config, true).unwrap();
+
+        let expected = "true".to_string();
+        let actual = strings
+            .get("pb.lint.pivotal-tracker-id-missing")
+            .unwrap()
+            .clone();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn we_can_disable_lints() {
+        let mut bools = HashMap::new();
+        bools.insert("pb.lint.pivotal-tracker-id-missing".into(), true);
+        let mut strings = HashMap::new();
+        let mut i64s = HashMap::new();
+        let mut config = InMemory::new(&mut bools, &mut strings, &mut i64s);
+
+        set_lint_status(&[PivotalTrackerIdMissing], &mut config, false).unwrap();
+
+        let expected = "false".to_string();
+        let actual = strings
+            .get("pb.lint.pivotal-tracker-id-missing")
+            .unwrap()
+            .clone();
+        assert_eq!(expected, actual);
+    }
+}
+
+/// # Errors
+///
+/// Errors if writing to the VCS config fails
+pub fn set_lint_status(
+    lints: &[Lints],
+    vcs: &mut dyn Vcs,
+    status: bool,
+) -> Result<(), Box<dyn Error>> {
+    lints
+        .iter()
+        .try_for_each(|lint| vcs.set_str(&format!("pb.lint.{}", lint), &status.to_string()))
 }

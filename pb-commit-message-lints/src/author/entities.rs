@@ -100,7 +100,7 @@ mod tests_authors {
             vec![Some(&Author::new(
                 "Billie Thompson",
                 "billie@example.com",
-                None
+                None,
             ))]
         )
     }
@@ -123,7 +123,7 @@ mod tests_authors {
             vec![Some(&Author::new(
                 "Billie Thompson",
                 "billie@example.com",
-                None
+                None,
             ))]
         );
         assert_eq!(
@@ -131,7 +131,7 @@ mod tests_authors {
             vec![Some(&Author::new(
                 "Somebody Else",
                 "somebody@example.com",
-                None
+                None,
             ))]
         )
     }
