@@ -12,7 +12,7 @@ use crate::{author::entities::Author, external::vcs::Vcs};
 const CONFIG_KEY_EXPIRES: &str = "pb.author.expires";
 
 #[must_use]
-pub fn get_coauthor_configuration(config: &dyn Vcs) -> Option<Vec<Author>> {
+pub fn get_coauthor_configuration(config: &mut dyn Vcs) -> Option<Vec<Author>> {
     config
         .get_i64(CONFIG_KEY_EXPIRES)
         .ok_or_else(|| "No author expiry date".into())
@@ -64,11 +64,11 @@ fn get_vcs_coauthor_emails(config: &dyn Vcs) -> Vec<Option<&str>> {
 }
 
 #[allow(clippy::maybe_infinite_iter)]
-fn get_vcs_coauthors_config<'a>(config: &'a dyn Vcs, key: &str) -> Vec<Option<&'a str>> {
+fn get_vcs_coauthors_config<'a>(config: &'a dyn Vcs, key: &'a str) -> Vec<Option<&'a str>> {
     (0..)
         .take_while(|index| has_vcs_coauthor(config, *index))
         .map(|index| get_vcs_coauthor_config(config, key, index))
-        .collect()
+        .collect::<Vec<Option<&'a str>>>()
 }
 
 fn get_vcs_coauthor_config<'a>(config: &'a dyn Vcs, key: &str, index: i32) -> Option<&'a str> {
@@ -102,9 +102,9 @@ mod tests_able_to_load_config_from_git {
         let now_minus_10 = epoch_with_offset(subtract_10_seconds);
         let mut strings: HashMap<String, String> = HashMap::new();
         strings.insert("pb.author.expires".into(), format!("{}", now_minus_10));
-        let vcs = InMemory::new(&mut strings);
+        let mut vcs = InMemory::new(&mut strings);
 
-        let actual = get_coauthor_configuration(&vcs);
+        let actual = get_coauthor_configuration(&mut vcs);
         let expected = None;
         assert_eq!(
             expected, actual,
@@ -121,9 +121,9 @@ mod tests_able_to_load_config_from_git {
             format!("{}", epoch_with_offset(add_10_seconds)),
         );
 
-        let vcs = InMemory::new(&mut strings);
+        let mut vcs = InMemory::new(&mut strings);
 
-        let actual = get_coauthor_configuration(&vcs);
+        let actual = get_coauthor_configuration(&mut vcs);
         let expected: Option<Vec<Author>> = Some(vec![]);
 
         assert_eq!(
@@ -145,9 +145,9 @@ mod tests_able_to_load_config_from_git {
             "annie@example.com".into(),
         );
         strs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
-        let vcs = InMemory::new(&mut strs);
+        let mut vcs = InMemory::new(&mut strs);
 
-        let actual = get_coauthor_configuration(&vcs);
+        let actual = get_coauthor_configuration(&mut vcs);
         let expected = Some(vec![Author::new(
             "Annie Example",
             "annie@example.com",
@@ -191,9 +191,9 @@ mod tests_able_to_load_config_from_git {
         );
         strs.insert("pb.author.coauthors.1.name".into(), "Joe Bloggs".into());
 
-        let vcs = InMemory::new(&mut strs);
+        let mut vcs = InMemory::new(&mut strs);
 
-        let actual = get_coauthor_configuration(&vcs);
+        let actual = get_coauthor_configuration(&mut vcs);
         let expected = Some(vec![
             Author::new("Annie Example", "annie@example.com", None),
             Author::new("Joe Bloggs", "joe@example.com", None),
@@ -221,8 +221,8 @@ mod tests_able_to_load_config_from_git {
 /// # Errors
 ///
 /// This errors if writing to the git authors file fails for some reason. Those reasons will be specific to VCS implementation
-pub fn set_authors<'a>(
-    config: &'a mut dyn Vcs,
+pub fn set_authors(
+    config: &mut dyn Vcs,
     authors: &[&Author],
     expires_in: Duration,
 ) -> Result<(), Box<dyn Error>> {

@@ -69,17 +69,21 @@ impl Vcs for InMemory<'_> {
 }
 
 pub struct Git2 {
-    config: git2::Config,
+    config_snapshot: git2::Config,
+    config_live: git2::Config,
 }
 
 impl Git2 {
     #[must_use]
-    pub fn new(config: git2::Config) -> Git2 {
-        Git2 { config }
+    pub fn new(mut config: git2::Config) -> Git2 {
+        Git2 {
+            config_snapshot: config.snapshot().unwrap(),
+            config_live: config,
+        }
     }
 
     fn config_defined(&self, lint_name: &str) -> Result<bool, Box<dyn Error>> {
-        self.config
+        self.config_snapshot
             .entries(Some(lint_name))
             .map(|entries| entries.count() > 0)
             .map_err(Box::from)
@@ -91,32 +95,56 @@ impl Vcs for Git2 {
         self.config_defined(name)
             .ok()
             .filter(bool::clone)
-            .and_then(|_| self.config.get_bool(name).ok())
+            .and_then(|_| self.config_snapshot.get_bool(name).ok())
     }
 
     fn get_str(&self, name: &str) -> Option<&str> {
         self.config_defined(name)
             .ok()
             .filter(bool::clone)
-            .and_then(|_| self.config.get_str(name).ok())
+            .and_then(|_| self.config_snapshot.get_str(name).ok())
     }
 
     fn get_i64(&self, name: &str) -> Option<i64> {
         self.config_defined(name)
             .ok()
             .filter(bool::clone)
-            .and_then(|_| self.config.get_i64(name).ok())
+            .and_then(|_| self.config_snapshot.get_i64(name).ok())
     }
 
     fn set_str(&mut self, name: &str, value: &str) -> Result<(), Box<dyn Error>> {
-        self.config.set_str(name, value).map_err(Box::from)
+        self.config_live
+            .set_str(name, value)
+            .map_err(Box::from)
+            .and_then(|_| {
+                self.config_live
+                    .snapshot()
+                    .map(|config| self.config_snapshot = config)
+                    .map_err(Box::from)
+            })
     }
 
     fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Box<dyn Error>> {
-        self.config.set_i64(name, value).map_err(Box::from)
+        self.config_live
+            .set_i64(name, value)
+            .map_err(Box::from)
+            .and_then(|_| {
+                self.config_live
+                    .snapshot()
+                    .map(|config| self.config_snapshot = config)
+                    .map_err(Box::from)
+            })
     }
 
     fn remove(&mut self, name: &str) -> Result<(), Box<dyn Error>> {
-        self.config.remove(name).map_err(Box::from)
+        self.config_live
+            .remove(name)
+            .map_err(Box::from)
+            .and_then(|_| {
+                self.config_live
+                    .snapshot()
+                    .map(|config| self.config_snapshot = config)
+                    .map_err(Box::from)
+            })
     }
 }

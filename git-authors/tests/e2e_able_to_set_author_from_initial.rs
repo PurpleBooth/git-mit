@@ -111,8 +111,6 @@ se:
     write_author_config(&mut author_config, config);
     let working_dir = pb_hook_test_helper::setup_working_dir();
 
-    println!("{}", working_dir.to_str().unwrap());
-
     let output = pb_hook_test_helper::run_hook(
         &working_dir,
         "git-authors",
@@ -199,15 +197,14 @@ bt:
         .expect("Failed to read username");
     let actual_author_email = config.get_str("user.email").expect("Failed to read email");
 
+    assert_output(&output, "", "", true);
     assert_eq!(actual_author_name, "Billie Thompson");
     assert_eq!(actual_author_email, "billie@example.com");
-
-    assert_output(&output, "", "", true);
 }
 
 fn open_config(working_dir: PathBuf) -> Config {
-    let repository = Repository::open(working_dir).expect("Failed to open repository");
-    repository
+    Repository::open(working_dir)
+        .expect("Failed to open repository")
         .config()
         .expect("Failed to open repository config")
         .snapshot()

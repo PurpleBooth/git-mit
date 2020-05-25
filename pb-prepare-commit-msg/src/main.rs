@@ -46,16 +46,14 @@ fn main() {
 
     let get_repository_config = |x: Repository| x.config();
     let get_default_config = |_| Config::open_default();
-    let snapshot_config = |mut x: git2::Config| x.snapshot();
 
-    let git_config = Repository::discover(current_dir)
+    let mut git_config = Repository::discover(current_dir)
         .and_then(get_repository_config)
         .or_else(get_default_config)
-        .and_then(snapshot_config)
         .map(Git2::new)
         .expect("Could not freeze git config");
 
-    if let Some(authors) = get_coauthor_configuration(&git_config) {
+    if let Some(authors) = get_coauthor_configuration(&mut git_config) {
         append_coauthors_to_commit_message(commit_message_path, &authors)
     }
 }

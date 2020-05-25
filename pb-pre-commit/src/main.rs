@@ -21,16 +21,14 @@ fn main() {
 
     let get_config_from_repository = |x: Repository| x.config();
     let get_default_config = |_| Config::open_default();
-    let snapshot_config = |mut x: git2::Config| x.snapshot();
 
-    let git_config = Repository::discover(current_dir)
+    let mut git_config = Repository::discover(current_dir)
         .and_then(get_config_from_repository)
         .or_else(get_default_config)
-        .and_then(snapshot_config)
         .map(Git2::new)
         .expect("Could not freeze git config");
 
-    if get_coauthor_configuration(&git_config).is_none() {
+    if get_coauthor_configuration(&mut git_config).is_none() {
         eprintln!(
             r#"
 The details of the author of this commit are a bit stale. Can you confirm who's currently coding?
