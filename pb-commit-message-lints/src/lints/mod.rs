@@ -196,7 +196,7 @@ mod tests_has_duplicated_trailers {
 
     #[test]
     fn has_duplicated_trailers_runs_both_co_authored_and_signed_off_by() {
-        assert_has_duplicated_trailers(
+        test_has_duplicated_trailers(
             r#"
 An example commit
 
@@ -204,7 +204,7 @@ This is an example commit without any duplicate trailers
 "#,
             &None,
         );
-        assert_has_duplicated_trailers(
+        test_has_duplicated_trailers(
             r#"
 An example commit
 
@@ -217,7 +217,7 @@ Co-authored-by: Billie Thompson <email@example.com>
 "#,
             &Some(vec!["Signed-off-by".into(), "Co-authored-by".into()]),
         );
-        assert_has_duplicated_trailers(
+        test_has_duplicated_trailers(
             r#"
 An example commit
 
@@ -228,7 +228,7 @@ Signed-off-by: Billie Thompson <email@example.com>
 "#,
             &Some(vec!["Signed-off-by".into()]),
         );
-        assert_has_duplicated_trailers(
+        test_has_duplicated_trailers(
             r#"
 An example commit
 
@@ -241,7 +241,7 @@ Co-authored-by: Billie Thompson <email@example.com>
         );
     }
 
-    fn assert_has_duplicated_trailers(message: &str, expected: &Option<Vec<String>>) {
+    fn test_has_duplicated_trailers(message: &str, expected: &Option<Vec<String>>) {
         let actual = has_duplicated_trailers(message);
         assert_eq!(
             actual, *expected,
@@ -250,7 +250,7 @@ Co-authored-by: Billie Thompson <email@example.com>
         );
     }
 
-    fn assert_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {
+    fn test_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {
         let actual = has_duplicated_trailer(message, trailer);
         assert_eq!(
             actual, expected,
@@ -261,7 +261,7 @@ Co-authored-by: Billie Thompson <email@example.com>
 
     #[test]
     fn has_duplicated_trailer_does_nothing_on_no_trailer() {
-        assert_has_duplicated_trailer(
+        test_has_duplicated_trailer(
             r#"
 An example commit
 
@@ -274,7 +274,7 @@ This is an example commit without any duplicate trailers
 
     #[test]
     fn has_duplicated_trailer_detects_duplicated_trailers() {
-        assert_has_duplicated_trailer(
+        test_has_duplicated_trailer(
             r#"
 An example commit
 
@@ -290,7 +290,7 @@ Signed-off-by: Billie Thompson <email@example.com>
 
     #[test]
     fn has_duplicated_trailer_two_trailers_with_different_names_is_fine() {
-        assert_has_duplicated_trailer(
+        test_has_duplicated_trailer(
             r#"
 An example commit
 
@@ -306,7 +306,7 @@ Signed-off-by: Ada Lovelace <ada@example.com>
 
     #[test]
     fn has_duplicated_trailer_one_trailer_is_fine() {
-        assert_has_duplicated_trailer(
+        test_has_duplicated_trailer(
             r#"
 An example commit
 
@@ -321,7 +321,7 @@ Signed-off-by: Billie Thompson <email@example.com>
 
     #[test]
     fn has_duplicated_trailer_the_trailer_has_to_have_a_colon_to_count() {
-        assert_has_duplicated_trailer(
+        test_has_duplicated_trailer(
             r#"
 An example commit
 
@@ -337,7 +337,7 @@ Signed-off-by Billie Thompson <email@example.com>
 
     #[test]
     fn has_duplicated_trailer_the_trailer_can_be_anything() {
-        assert_has_duplicated_trailer(
+        test_has_duplicated_trailer(
             r#"
 An example commit
 
@@ -362,7 +362,7 @@ mod tests_has_missing_pivotal_tracker_id {
 
     #[test]
     fn has_missing_pivotal_tracker_id_with_id_is_fine() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -374,7 +374,7 @@ This is an example commit
         );
     }
 
-    fn assert_has_missing_pivotal_tracker_id(message: &str, expected: Option<()>) {
+    fn test_has_missing_pivotal_tracker_id(message: &str, expected: Option<()>) {
         let actual = has_missing_pivotal_tracker_id(message);
         assert_eq!(
             actual, expected,
@@ -385,7 +385,7 @@ This is an example commit
 
     #[test]
     fn has_missing_pivotal_tracker_id_with_multiple_ids_is_fine() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -395,7 +395,7 @@ This is an example commit
     "#,
             None,
         );
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -405,7 +405,7 @@ This is an example commit
     "#,
             None,
         );
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -419,7 +419,7 @@ This is an example commit
 
     #[test]
     fn has_missing_pivotal_tracker_id_with_a_state_fix_change_is_fine() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -429,7 +429,7 @@ This is an example commit
     "#,
             None,
         );
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -439,7 +439,7 @@ This is an example commit
     "#,
             None,
         );
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -449,7 +449,7 @@ This is an example commit
     "#,
             None,
         );
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -459,7 +459,7 @@ This is an example commit
     "#,
             None,
         );
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -473,7 +473,7 @@ This is an example commit
 
     #[test]
     fn has_missing_pivotal_tracker_id_with_a_complete_state_change_is_fine() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -484,7 +484,7 @@ This is an example commit
             None,
         );
 
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -495,7 +495,7 @@ This is an example commit
             None,
         );
 
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -506,7 +506,7 @@ This is an example commit
             None,
         );
 
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -520,7 +520,7 @@ This is an example commit
 
     #[test]
     fn has_missing_pivotal_tracker_id_with_a_finish_state_change_is_fine() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -531,7 +531,7 @@ This is an example commit
             None,
         );
 
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -541,7 +541,7 @@ This is an example commit
     "#,
             None,
         );
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -555,7 +555,7 @@ This is an example commit
 
     #[test]
     fn has_missing_pivotal_tracker_id_with_a_deliver_state_change_is_fine() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -566,7 +566,7 @@ This is an example commit
             None,
         );
 
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -576,7 +576,7 @@ This is an example commit
     "#,
             None,
         );
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -590,7 +590,7 @@ This is an example commit
 
     #[test]
     fn has_missing_pivotal_tracker_id_with_a_state_change_and_multiple_ids_is_fine() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -604,7 +604,7 @@ This is an example commit
 
     #[test]
     fn has_missing_pivotal_tracker_id_with_prefixing_text_is_fine() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -618,7 +618,7 @@ Finally [fix #12345678 #12345678]
 
     #[test]
     fn has_missing_pivotal_tracker_with_a_fake_verb_does_not_work() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -632,7 +632,7 @@ This is an example commit
 
     #[test]
     fn has_missing_pivotal_tracker_without_an_id_is_bad() {
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -641,7 +641,7 @@ This is an example commit
             Some(()),
         );
 
-        assert_has_missing_pivotal_tracker_id(
+        test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
 
@@ -674,10 +674,11 @@ mod tests_get_lint_configuration {
         let mut bools = HashMap::new();
         let mut strings = HashMap::new();
         let mut i64s = HashMap::new();
-        let git2_config = InMemory::new(&mut bools, &mut strings, &mut i64s);
-        let actual = get_lint_configuration(&git2_config);
+        let config = InMemory::new(&mut bools, &mut strings, &mut i64s);
 
+        let actual = get_lint_configuration(&config);
         let expected = vec![DuplicatedTrailers];
+
         assert_eq!(
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
@@ -691,9 +692,9 @@ mod tests_get_lint_configuration {
         bools.insert("pb.lint.duplicated-trailers".into(), false);
         let mut strings = HashMap::new();
         let mut i64s = HashMap::new();
-        let git2_config = InMemory::new(&mut bools, &mut strings, &mut i64s);
+        let config = InMemory::new(&mut bools, &mut strings, &mut i64s);
 
-        let actual = get_lint_configuration(&git2_config);
+        let actual = get_lint_configuration(&config);
         let expected: Vec<Lints> = vec![];
 
         assert_eq!(
@@ -709,9 +710,9 @@ mod tests_get_lint_configuration {
         bools.insert("pb.lint.duplicated-trailers".into(), true);
         let mut strings = HashMap::new();
         let mut i64s = HashMap::new();
-        let git2_config = InMemory::new(&mut bools, &mut strings, &mut i64s);
+        let config = InMemory::new(&mut bools, &mut strings, &mut i64s);
 
-        let actual = get_lint_configuration(&git2_config);
+        let actual = get_lint_configuration(&config);
         let expected: Vec<Lints> = vec![DuplicatedTrailers];
 
         assert_eq!(
@@ -727,8 +728,9 @@ mod tests_get_lint_configuration {
         bools.insert("pb.lint.pivotal-tracker-id-missing".into(), true);
         let mut strings = HashMap::new();
         let mut i64s = HashMap::new();
-        let git2_config = InMemory::new(&mut bools, &mut strings, &mut i64s);
-        let actual = get_lint_configuration(&git2_config);
+        let config = InMemory::new(&mut bools, &mut strings, &mut i64s);
+
+        let actual = get_lint_configuration(&config);
         let expected: Vec<Lints> = vec![DuplicatedTrailers, PivotalTrackerIdMissing];
 
         assert_eq!(

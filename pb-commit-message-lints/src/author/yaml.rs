@@ -38,16 +38,15 @@ bt:
 "#,
         );
 
-        let mut expected_authors: HashMap<String, Author> = HashMap::new();
-        expected_authors.insert(
+        let mut input: HashMap<String, Author> = HashMap::new();
+        input.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", None),
         );
-        let expected = Authors::new(expected_authors);
+        let expected = Authors::new(input);
 
         assert_eq!(true, actual.is_ok());
-        let actual_authors = actual.unwrap();
-        assert_eq!(expected, actual_authors);
+        assert_eq!(expected, actual.unwrap());
     }
 
     #[test]
@@ -69,7 +68,6 @@ bt:
         let expected = Authors::new(expected_authors);
 
         assert_eq!(true, actual.is_ok());
-        let actual_authors = actual.unwrap();
-        assert_eq!(expected, actual_authors);
+        assert_eq!(expected, actual.unwrap());
     }
 }

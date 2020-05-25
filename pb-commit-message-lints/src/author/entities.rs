@@ -93,10 +93,10 @@ mod tests_authors {
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", None),
         );
-        let actual_authors = Authors::new(store);
+        let actual = Authors::new(store);
 
         assert_eq!(
-            actual_authors.get(&["bt"]),
+            actual.get(&["bt"]),
             vec![Some(&Author::new(
                 "Billie Thompson",
                 "billie@example.com",
