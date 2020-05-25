@@ -671,10 +671,10 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn with_no_config_return_a_hash_map_default_lints() {
-        let bools = HashMap::new();
+        let mut bools = HashMap::new();
         let mut strings = HashMap::new();
         let mut i64s = HashMap::new();
-        let git2_config = InMemory::new(&bools, &mut strings, &mut i64s);
+        let git2_config = InMemory::new(&mut bools, &mut strings, &mut i64s);
         let actual = get_lint_configuration(&git2_config);
 
         let expected = vec![DuplicatedTrailers];
@@ -687,11 +687,11 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn duplicate_trailer_detection_can_be_disabled() {
-        let mut bool_configs = HashMap::new();
-        bool_configs.insert("pb.lint.duplicated-trailers".into(), false);
+        let mut bools = HashMap::new();
+        bools.insert("pb.lint.duplicated-trailers".into(), false);
         let mut strings = HashMap::new();
         let mut i64s = HashMap::new();
-        let git2_config = InMemory::new(&bool_configs, &mut strings, &mut i64s);
+        let git2_config = InMemory::new(&mut bools, &mut strings, &mut i64s);
 
         let actual = get_lint_configuration(&git2_config);
         let expected: Vec<Lints> = vec![];
@@ -705,11 +705,11 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn duplicate_trailer_detection_can_be_explicitly_enabled() {
-        let mut bool_configs = HashMap::new();
-        bool_configs.insert("pb.lint.duplicated-trailers".into(), true);
+        let mut bools = HashMap::new();
+        bools.insert("pb.lint.duplicated-trailers".into(), true);
         let mut strings = HashMap::new();
         let mut i64s = HashMap::new();
-        let git2_config = InMemory::new(&bool_configs, &mut strings, &mut i64s);
+        let git2_config = InMemory::new(&mut bools, &mut strings, &mut i64s);
 
         let actual = get_lint_configuration(&git2_config);
         let expected: Vec<Lints> = vec![DuplicatedTrailers];
@@ -723,11 +723,11 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn pivotal_tracker_id_being_missing_can_be_explicitly_enabled() {
-        let mut bool_configs = HashMap::new();
-        bool_configs.insert("pb.lint.pivotal-tracker-id-missing".into(), true);
+        let mut bools = HashMap::new();
+        bools.insert("pb.lint.pivotal-tracker-id-missing".into(), true);
         let mut strings = HashMap::new();
         let mut i64s = HashMap::new();
-        let git2_config = InMemory::new(&bool_configs, &mut strings, &mut i64s);
+        let git2_config = InMemory::new(&mut bools, &mut strings, &mut i64s);
         let actual = get_lint_configuration(&git2_config);
         let expected: Vec<Lints> = vec![DuplicatedTrailers, PivotalTrackerIdMissing];
 

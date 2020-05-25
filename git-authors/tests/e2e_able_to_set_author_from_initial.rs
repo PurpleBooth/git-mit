@@ -190,9 +190,6 @@ bt:
     email: billie@example.com
 '"#;
     let working_dir = pb_hook_test_helper::setup_working_dir();
-
-    println!("{}", working_dir.to_str().unwrap());
-
     let output =
         pb_hook_test_helper::run_hook(&working_dir, "git-authors", vec!["-e", config, "bt"]);
 

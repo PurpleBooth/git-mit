@@ -3,6 +3,7 @@ use std::{
     error::Error,
     ops::Add,
     option::Option,
+    result::Result,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
@@ -49,7 +50,7 @@ fn get_vcs_authors(config: &dyn Vcs) -> Vec<Author> {
 
 fn new_author(parameters: (&Option<&str>, Option<&str>)) -> Option<Author> {
     match parameters {
-        (Some(name), Some(email)) => Some(Author::new(name, email)),
+        (Some(name), Some(email)) => Some(Author::new(name, email, None)),
         _ => None,
     }
 }
@@ -99,11 +100,11 @@ mod tests_able_to_load_config_from_git {
     #[test]
     fn there_is_no_author_config_if_it_has_expired() {
         let now_minus_10 = epoch_with_offset(subtract_10_seconds);
-        let bools: HashMap<String, bool> = HashMap::new();
+        let mut bools: HashMap<String, bool> = HashMap::new();
         let mut strings: HashMap<String, String> = HashMap::new();
         let mut i64s = HashMap::new();
         i64s.insert("pb.author.expires".into(), now_minus_10);
-        let vcs = InMemory::new(&bools, &mut strings, &mut i64s);
+        let vcs = InMemory::new(&mut bools, &mut strings, &mut i64s);
 
         let actual = get_coauthor_configuration(&vcs);
         let expected = None;
@@ -120,9 +121,9 @@ mod tests_able_to_load_config_from_git {
 
         let mut i64s = HashMap::new();
         i64s.insert("pb.author.expires".into(), now_plus_10_seconds);
-        let bools = HashMap::new();
+        let mut bools = HashMap::new();
         let mut strings = HashMap::new();
-        let vcs = InMemory::new(&bools, &mut strings, &mut i64s);
+        let vcs = InMemory::new(&mut bools, &mut strings, &mut i64s);
 
         let actual = get_coauthor_configuration(&vcs);
         let expected: Option<Vec<Author>> = Some(vec![]);
@@ -146,11 +147,15 @@ mod tests_able_to_load_config_from_git {
             "annie@example.com".into(),
         );
         strs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
-        let bools = HashMap::new();
-        let vcs = InMemory::new(&bools, &mut strs, &mut i64s);
+        let mut bools = HashMap::new();
+        let vcs = InMemory::new(&mut bools, &mut strs, &mut i64s);
 
         let actual = get_coauthor_configuration(&vcs);
-        let expected = Some(vec![Author::new("Annie Example", "annie@example.com")]);
+        let expected = Some(vec![Author::new(
+            "Annie Example",
+            "annie@example.com",
+            None,
+        )]);
 
         assert_eq!(
             expected, actual,
@@ -188,13 +193,13 @@ mod tests_able_to_load_config_from_git {
             "joe@example.com".into(),
         );
         strs.insert("pb.author.coauthors.1.name".into(), "Joe Bloggs".into());
-        let bools = HashMap::new();
-        let vcs = InMemory::new(&bools, &mut strs, &mut i64s);
+        let mut bools = HashMap::new();
+        let vcs = InMemory::new(&mut bools, &mut strs, &mut i64s);
 
         let actual = get_coauthor_configuration(&vcs);
         let expected = Some(vec![
-            Author::new("Annie Example", "annie@example.com"),
-            Author::new("Joe Bloggs", "joe@example.com"),
+            Author::new("Annie Example", "annie@example.com", None),
+            Author::new("Joe Bloggs", "joe@example.com", None),
         ]);
 
         assert_eq!(
@@ -278,6 +283,14 @@ fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), Box<dyn Err
     config
         .set_str("user.name", &author.name())
         .and_then(|_| config.set_str("user.email", &author.email()))
+        .and_then(|_| set_author_signing_key(config, author))
+}
+
+fn set_author_signing_key(config: &mut dyn Vcs, author: &Author) -> Result<(), Box<dyn Error>> {
+    match author.signingkey() {
+        Some(key) => config.set_str("user.signingkey", &key),
+        None => config.remove("user.signingkey").or_else(|_| Ok(())),
+    }
 }
 
 fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<(), Box<dyn Error>> {
@@ -310,10 +323,10 @@ mod tests_can_set_author_details {
         let mut i64 = HashMap::new();
         let mut str_map = HashMap::new();
 
-        let bools = HashMap::new();
-        let mut vcs_config = InMemory::new(&bools, &mut str_map, &mut i64);
+        let mut bools = HashMap::new();
+        let mut vcs_config = InMemory::new(&mut bools, &mut str_map, &mut i64);
 
-        let author = Author::new("Billie Thompson", "billie@example.com");
+        let author = Author::new("Billie Thompson", "billie@example.com", None);
         let input = vec![&author];
         let actual = set_authors(&mut vcs_config, &input, Duration::from_secs(60 * 60));
 
@@ -329,16 +342,52 @@ mod tests_can_set_author_details {
     }
 
     #[test]
+    fn the_first_initial_sets_signing_key_if_it_is_there() {
+        let mut i64 = HashMap::new();
+        let mut str_map = HashMap::new();
+
+        let mut bools = HashMap::new();
+        let mut vcs_config = InMemory::new(&mut bools, &mut str_map, &mut i64);
+
+        let author = Author::new("Billie Thompson", "billie@example.com", Some("0A46826A"));
+        let input = vec![&author];
+        let actual = set_authors(&mut vcs_config, &input, Duration::from_secs(60 * 60));
+
+        assert_eq!(true, actual.is_ok());
+        assert_eq!(
+            Some(&"0A46826A".to_string()),
+            str_map.get("user.signingkey")
+        );
+    }
+
+    #[test]
+    fn the_first_initial_removes_if_it_is_there_and_not_present() {
+        let mut i64 = HashMap::new();
+        let mut strs = HashMap::new();
+        strs.insert("user.signingkey".into(), "0A46826A".into());
+        let mut bools = HashMap::new();
+
+        let mut vcs_config = InMemory::new(&mut bools, &mut strs, &mut i64);
+
+        let author = Author::new("Billie Thompson", "billie@example.com", None);
+        let input = vec![&author];
+        let actual = set_authors(&mut vcs_config, &input, Duration::from_secs(60 * 60));
+
+        assert_eq!(true, actual.is_ok());
+        assert_eq!(None, strs.get("user.signingkey"))
+    }
+
+    #[test]
     fn multiple_authors_become_coauthors() {
         let mut i64 = HashMap::new();
         let mut str_map = HashMap::new();
 
-        let bools = HashMap::new();
-        let mut vcs_config = InMemory::new(&bools, &mut str_map, &mut i64);
+        let mut bools = HashMap::new();
+        let mut vcs_config = InMemory::new(&mut bools, &mut str_map, &mut i64);
 
-        let author_1 = Author::new("Billie Thompson", "billie@example.com");
-        let author_2 = Author::new("Somebody Else", "somebody@example.com");
-        let author_3 = Author::new("Annie Example", "annie@example.com");
+        let author_1 = Author::new("Billie Thompson", "billie@example.com", None);
+        let author_2 = Author::new("Somebody Else", "somebody@example.com", None);
+        let author_3 = Author::new("Annie Example", "annie@example.com", None);
         let authors = vec![&author_1, &author_2, &author_3];
 
         let actual = set_authors(&mut vcs_config, &authors, Duration::from_secs(60 * 60));
@@ -375,10 +424,10 @@ mod tests_can_set_author_details {
         let mut i64 = HashMap::new();
         let mut str_map = HashMap::new();
 
-        let bools = HashMap::new();
-        let mut vcs_config = InMemory::new(&bools, &mut str_map, &mut i64);
+        let mut bools = HashMap::new();
+        let mut vcs_config = InMemory::new(&mut bools, &mut str_map, &mut i64);
 
-        let author = Author::new("Billie Thompson", "billie@example.com");
+        let author = Author::new("Billie Thompson", "billie@example.com", None);
         let input = vec![&author];
         let _actual = set_authors(&mut vcs_config, &input, Duration::from_secs(60 * 60));
 

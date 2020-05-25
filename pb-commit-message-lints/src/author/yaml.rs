@@ -41,7 +41,30 @@ bt:
         let mut expected_authors: HashMap<String, Author> = HashMap::new();
         expected_authors.insert(
             "bt".into(),
-            Author::new("Billie Thompson", "billie@example.com"),
+            Author::new("Billie Thompson", "billie@example.com", None),
+        );
+        let expected = Authors::new(expected_authors);
+
+        assert_eq!(true, actual.is_ok());
+        let actual_authors = actual.unwrap();
+        assert_eq!(expected, actual_authors);
+    }
+
+    #[test]
+    fn yaml_files_can_contain_signing_keys() {
+        let actual = get_authors_from_user_config(
+            r#"---
+bt:
+    name: Billie Thompson
+    email: billie@example.com
+    signingkey: 0A46826A
+"#,
+        );
+
+        let mut expected_authors: HashMap<String, Author> = HashMap::new();
+        expected_authors.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
         );
         let expected = Authors::new(expected_authors);
 

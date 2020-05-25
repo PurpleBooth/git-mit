@@ -12,10 +12,14 @@ pub trait Vcs {
     ///
     /// If the config fails to write
     fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Box<dyn Error>>;
+    /// # Errors
+    ///
+    /// If the config fails to writ
+    fn remove(&mut self, name: &str) -> Result<(), Box<dyn Error>>;
 }
 
 pub struct InMemory<'a> {
-    bools: &'a HashMap<String, bool>,
+    bools: &'a mut HashMap<String, bool>,
     strs: &'a mut HashMap<String, String>,
     i64s: &'a mut HashMap<String, i64>,
 }
@@ -23,7 +27,7 @@ pub struct InMemory<'a> {
 impl InMemory<'_> {
     #[must_use]
     pub fn new<'a>(
-        bools: &'a HashMap<String, bool>,
+        bools: &'a mut HashMap<String, bool>,
         strs: &'a mut HashMap<String, String>,
         i64s: &'a mut HashMap<String, i64>,
     ) -> InMemory<'a> {
@@ -51,6 +55,13 @@ impl Vcs for InMemory<'_> {
 
     fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Box<dyn Error>> {
         self.i64s.insert(name.into(), value);
+        Ok(())
+    }
+
+    fn remove(&mut self, name: &str) -> Result<(), Box<dyn Error>> {
+        self.bools.remove(name);
+        self.strs.remove(name);
+        self.i64s.remove(name);
         Ok(())
     }
 }
@@ -101,5 +112,9 @@ impl Vcs for Git2 {
 
     fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Box<dyn Error>> {
         self.config.set_i64(name, value).map_err(Box::from)
+    }
+
+    fn remove(&mut self, name: &str) -> Result<(), Box<dyn Error>> {
+        self.config.remove(name).map_err(Box::from)
     }
 }
