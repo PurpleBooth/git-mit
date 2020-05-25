@@ -11,7 +11,7 @@ show-help:
 .PHONY: test
 ## Test it was built ok
 test:
-	RUST_BACKTRACE=1 cargo test
+	unset GIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test
 
 .PHONY: smoke-test
 ## Run a smoke test and see if the app runs
