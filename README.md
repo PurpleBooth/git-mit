@@ -41,9 +41,8 @@ se:
 ### Lint list
 
   - **duplicated-trailers** - Detect duplicated *Signed-off-by* and
-    *Co-authored-by* `git config pb.lint.duplicated-trailers true`
+    *Co-authored-by* 
   - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
-    `git config pb.lint.pivotal-tracker-id-missing true`
 
 ### Enabling Lints
 
