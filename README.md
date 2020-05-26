@@ -67,6 +67,7 @@ save it into a file
 bt:
     name: Billie Thompson
     email: billie@example.com
+    signingkey: 0A46826A
 se:
     name: Someone Else
     email: someone@example.com
