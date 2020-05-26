@@ -2,9 +2,53 @@
 
 My git commit hooks in binary form
 
+## Usage
+
+### Lint list
+
+  - **duplicated-trailers** - Detect duplicated `Signed-off-by` and
+    `Co-authored-by` Trailers. *Default: enabled*
+  - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id  *Default: disabled*
+
+### Enabling Lints
+
+``` shell
+pb-git-hooks lint enable duplicated-trailers
+```
+
+### Disabling Lints
+
+``` shell
+pb-git-hooks lint disable duplicated-trailers
+```
+
+### Setting Authors and Co-Authors
+
+``` shell
+git authors bt
+```
+
+## Installing
+
+First tap my homebrew repo
+
+``` shell
+brew tap PurpleBooth/repo
+```
+
+Next install the binary
+
+``` shell
+brew install PurpleBooth/repo/pb-git-hooks
+```
+
+You can also download the [latest
+release](https://github.com/PurpleBooth/pb-git-hooks/releases/latest)
+and run it.
+
 ## Configuration
 
-### Installing into a repository
+### Adding to a repository
 
 ``` shell
 ln -s "$(command -v pb-commit-msg)" .git/hooks/commit-msg
@@ -36,28 +80,3 @@ se:
   - **GIT\_AUTHORS\_TIMEOUT** How long to wait before you need to run
     git authors again *Default: 60*
 
-## Usage
-
-### Lint list
-
-  - **duplicated-trailers** - Detect duplicated `Signed-off-by` and
-    `Co-authored-by` Trailers. *Default: enabled*
-  - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id  *Default: disabled*
-
-### Enabling Lints
-
-``` shell
-pb-git-hooks lint enable duplicated-trailers
-```
-
-### Disabling Lints
-
-``` shell
-pb-git-hooks lint disable duplicated-trailers
-```
-
-### Setting Authors and Co-Authors
-
-``` shell
-git authors bt
-```
