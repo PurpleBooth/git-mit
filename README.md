@@ -79,4 +79,4 @@ se:
   - **GIT\_AUTHORS\_CONFIG** The location of a author file *Default:
     `$HOME/.config/git-authors/authors.yml`*
   - **GIT\_AUTHORS\_TIMEOUT** How long to wait before you need to run
-    git authors again *Default: 60*
+    git authors again *Default: `60`*
