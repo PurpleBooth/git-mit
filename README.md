@@ -53,7 +53,7 @@ pb-git-hooks lint enable duplicated-trailers
 ### Disabling Lints
 
 ``` shell
-pb-git-hooks lint enable duplicated-trailers
+pb-git-hooks lint disable duplicated-trailers
 ```
 
 ### Setting Authors and Co-Authors
