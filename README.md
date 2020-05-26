@@ -8,7 +8,8 @@ My git commit hooks in binary form
 
   - **duplicated-trailers** - Detect duplicated `Signed-off-by` and
     `Co-authored-by` Trailers. *Default: enabled*
-  - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id  *Default: disabled*
+  - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
+    *Default: disabled*
 
 ### Enabling Lints
 
@@ -79,4 +80,3 @@ se:
     `$HOME/.config/git-authors/authors.yml`*
   - **GIT\_AUTHORS\_TIMEOUT** How long to wait before you need to run
     git authors again *Default: 60*
-
