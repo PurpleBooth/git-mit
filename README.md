@@ -7,9 +7,9 @@ My git commit hooks in binary form
 ### Lint list
 
   - **duplicated-trailers** - Detect duplicated `Signed-off-by` and
-    `Co-authored-by` Trailers. *Default: enabled*
+    `Co-authored-by` Trailers. *Default: `enabled`*
   - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
-    *Default: disabled*
+    *Default: `disabled`*
 
 ### Enabling Lints
 
