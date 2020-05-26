@@ -40,9 +40,9 @@ se:
 
 ### Lint list
 
-  - **duplicated-trailers** - Detect duplicated *Signed-off-by* and
-    *Co-authored-by* 
-  - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
+  - **duplicated-trailers** - Detect duplicated `Signed-off-by` and
+    `Co-authored-by` Trailers. *Default: enabled*
+  - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id  *Default: disabled*
 
 ### Enabling Lints
 
