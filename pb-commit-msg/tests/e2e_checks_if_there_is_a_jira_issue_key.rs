@@ -8,16 +8,16 @@ use pb_hook_test_helper::{assert_output, setup_working_dir};
 fn valid_commit() {
     let input = r#"An example commit
 
-This is an example commit without the pivotal tracker id
+This is an example commit without the JIRA Issue Key
 
-[#12345678]
+JRA-123
 "#;
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.pivotal-tracker-id-missing")
+        .arg("pb.lint.jira-issue-key-missing")
         .arg("true")
         .output()
         .expect("failed to execute process");
@@ -35,17 +35,17 @@ This is an example commit without the pivotal tracker id
 }
 
 #[test]
-fn enabled() {
+fn explicitly_enabled() {
     let input = r#"An example commit
 
-This is an example commit without the pivotal tracker id
+This is an example commit without the JIRA Issue Key
 "#;
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.pivotal-tracker-id-missing")
+        .arg("pb.lint.jira-issue-key-missing")
         .arg("true")
         .output()
         .expect("failed to execute process");
@@ -62,19 +62,12 @@ This is an example commit without the pivotal tracker id
     let expected_stderr = r#"
 An example commit
 
-This is an example commit without the pivotal tracker id
+This is an example commit without the JIRA Issue Key
 
 
-Your commit is missing a Pivotal Tracker Id
+Your commit is missing a JIRA Issue Key
 
-You can fix this by adding the Id in one of the styles below to the commit message
-[Delivers #12345678]
-[fixes #12345678]
-[finishes #12345678]
-[#12345884 #12345678]
-[#12345884,#12345678]
-[#12345678],[#12345884]
-This will address [#12345884]
+You can fix this by adding a key like `JRA-123` to the commit message
 
 "#;
 
@@ -85,14 +78,14 @@ This will address [#12345884]
 fn disabled() {
     let input = r#"An example commit
 
-This is an example commit without the pivotal tracker id
+This is an example commit without the jira issue key
 "#;
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.pivotal-tracker-id-missing")
+        .arg("pb.lint.jira-issue-key-missing")
         .arg("false")
         .output()
         .expect("failed to execute process");

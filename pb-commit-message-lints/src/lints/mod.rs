@@ -5,22 +5,25 @@ use regex::Regex;
 
 use crate::{
     external::vcs::Vcs,
-    lints::Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
+    lints::Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
 };
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const REGEX_PIVOTAL_TRACKER_ID: &str =
     r"\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
+const REGEX_JIRA_ISSUE_KEY: &str = r"(?m)(^| )[A-Z]{2,}-[0-9]+( |$)";
 
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq, IntoEnumIterator, Copy, Clone)]
 pub enum Lints {
     DuplicatedTrailers,
     PivotalTrackerIdMissing,
+    JiraIssueKeyMissing,
 }
 
 const CONFIG_DUPLICATED_TRAILERS: &str = "duplicated-trailers";
 const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pivotal-tracker-id-missing";
+const CONFIG_JIRA_ISSUE_KEY_MISSING: &str = "jira-issue-key-missing";
 
 impl std::fmt::Display for Lints {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -123,6 +126,10 @@ pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
             .get_bool(&format!("pb.lint.{}", Lints::PivotalTrackerIdMissing))
             .filter(bool::clone)
             .map(|_| PivotalTrackerIdMissing),
+        config
+            .get_bool(&format!("pb.lint.{}", Lints::JiraIssueKeyMissing))
+            .filter(bool::clone)
+            .map(|_| JiraIssueKeyMissing),
     ]
     .into_iter()
     .flatten()
@@ -172,6 +179,15 @@ pub fn has_duplicated_trailers(commit_message: &str) -> Option<Vec<String>> {
             .collect::<Vec<String>>(),
     )
     .filter(|duplicates: &Vec<_>| !duplicates.is_empty())
+}
+
+#[must_use]
+pub fn has_missing_jira_issue_key(commit_message: &str) -> Option<()> {
+    Regex::new(REGEX_JIRA_ISSUE_KEY)
+        .map(|re| !re.is_match(commit_message))
+        .ok()
+        .filter(bool::clone)
+        .map(|_| ())
 }
 
 fn filter_without_duplicates(commit_message: &str, trailer: &str) -> Option<String> {
@@ -260,7 +276,7 @@ mod tests_has_duplicated_trailers {
     use super::*;
 
     #[test]
-    fn has_duplicated_trailers_runs_both_co_authored_and_signed_off_by() {
+    fn duplicated_trailers() {
         test_has_duplicated_trailers(
             r#"
 An example commit
@@ -314,6 +330,11 @@ Co-authored-by: Billie Thompson <email@example.com>
             expected, actual
         );
     }
+}
+
+#[cfg(test)]
+mod tests_has_duplicated_trailer {
+    use crate::lints::has_duplicated_trailer;
 
     fn test_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {
         let actual = has_duplicated_trailer(message, trailer);
@@ -325,7 +346,7 @@ Co-authored-by: Billie Thompson <email@example.com>
     }
 
     #[test]
-    fn has_duplicated_trailer_does_nothing_on_no_trailer() {
+    fn no_trailer() {
         test_has_duplicated_trailer(
             r#"
 An example commit
@@ -338,7 +359,7 @@ This is an example commit without any duplicate trailers
     }
 
     #[test]
-    fn has_duplicated_trailer_detects_duplicated_trailers() {
+    fn duplicated_trailer() {
         test_has_duplicated_trailer(
             r#"
 An example commit
@@ -354,7 +375,7 @@ Signed-off-by: Billie Thompson <email@example.com>
     }
 
     #[test]
-    fn has_duplicated_trailer_two_trailers_with_different_names_is_fine() {
+    fn two_trailers_but_no_duplicates() {
         test_has_duplicated_trailer(
             r#"
 An example commit
@@ -370,7 +391,7 @@ Signed-off-by: Ada Lovelace <ada@example.com>
     }
 
     #[test]
-    fn has_duplicated_trailer_one_trailer_is_fine() {
+    fn one_trailer() {
         test_has_duplicated_trailer(
             r#"
 An example commit
@@ -385,7 +406,7 @@ Signed-off-by: Billie Thompson <email@example.com>
     }
 
     #[test]
-    fn has_duplicated_trailer_the_trailer_has_to_have_a_colon_to_count() {
+    fn missing_colon_in_trailer() {
         test_has_duplicated_trailer(
             r#"
 An example commit
@@ -401,7 +422,7 @@ Signed-off-by Billie Thompson <email@example.com>
     }
 
     #[test]
-    fn has_duplicated_trailer_the_trailer_can_be_anything() {
+    fn customised_trailer() {
         test_has_duplicated_trailer(
             r#"
 An example commit
@@ -426,7 +447,7 @@ mod tests_has_missing_pivotal_tracker_id {
     use super::*;
 
     #[test]
-    fn has_missing_pivotal_tracker_id_with_id_is_fine() {
+    fn with_id() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -449,7 +470,7 @@ This is an example commit
     }
 
     #[test]
-    fn has_missing_pivotal_tracker_id_with_multiple_ids_is_fine() {
+    fn multiple_ids() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -483,7 +504,7 @@ This is an example commit
     }
 
     #[test]
-    fn has_missing_pivotal_tracker_id_with_a_state_fix_change_is_fine() {
+    fn id_with_fixed_state_change() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -537,7 +558,7 @@ This is an example commit
     }
 
     #[test]
-    fn has_missing_pivotal_tracker_id_with_a_complete_state_change_is_fine() {
+    fn id_with_complete_state_change() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -584,7 +605,7 @@ This is an example commit
     }
 
     #[test]
-    fn has_missing_pivotal_tracker_id_with_a_finish_state_change_is_fine() {
+    fn id_with_finished_state_change() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -619,7 +640,7 @@ This is an example commit
     }
 
     #[test]
-    fn has_missing_pivotal_tracker_id_with_a_deliver_state_change_is_fine() {
+    fn id_with_delivered_state_change() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -654,7 +675,7 @@ This is an example commit
     }
 
     #[test]
-    fn has_missing_pivotal_tracker_id_with_a_state_change_and_multiple_ids_is_fine() {
+    fn id_with_state_change_and_multiple_ids() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -668,7 +689,7 @@ This is an example commit
     }
 
     #[test]
-    fn has_missing_pivotal_tracker_id_with_prefixing_text_is_fine() {
+    fn id_with_prefixed_text() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -682,7 +703,7 @@ Finally [fix #12345678 #12345678]
     }
 
     #[test]
-    fn has_missing_pivotal_tracker_with_a_fake_verb_does_not_work() {
+    fn invalid_state_change() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -696,7 +717,7 @@ This is an example commit
     }
 
     #[test]
-    fn has_missing_pivotal_tracker_without_an_id_is_bad() {
+    fn missing_id_with_square_brackets() {
         test_has_missing_pivotal_tracker_id(
             r#"
 An example commit
@@ -730,12 +751,12 @@ mod tests_get_lint_configuration {
         lints::{
             get_lint_configuration,
             Lints,
-            Lints::{DuplicatedTrailers, PivotalTrackerIdMissing},
+            Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
         },
     };
 
     #[test]
-    fn with_no_config_return_a_hash_map_default_lints() {
+    fn defaults() {
         let mut strings = HashMap::new();
         let config = InMemory::new(&mut strings);
 
@@ -750,7 +771,7 @@ mod tests_get_lint_configuration {
     }
 
     #[test]
-    fn duplicate_trailer_detection_can_be_disabled() {
+    fn disabled_duplicated_trailers() {
         let mut strings = HashMap::new();
         strings.insert("pb.lint.duplicated-trailers".into(), "false".into());
         let config = InMemory::new(&mut strings);
@@ -766,7 +787,7 @@ mod tests_get_lint_configuration {
     }
 
     #[test]
-    fn duplicate_trailer_detection_can_be_explicitly_enabled() {
+    fn enabled_duplicated_trailers() {
         let mut strings = HashMap::new();
         strings.insert("pb.lint.duplicated-trailers".into(), "true".into());
         let config = InMemory::new(&mut strings);
@@ -782,7 +803,7 @@ mod tests_get_lint_configuration {
     }
 
     #[test]
-    fn pivotal_tracker_id_being_missing_can_be_explicitly_enabled() {
+    fn enabled_pivotal_tracker_id() {
         let mut strings = HashMap::new();
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
         let config = InMemory::new(&mut strings);
@@ -796,12 +817,44 @@ mod tests_get_lint_configuration {
             expected, actual
         )
     }
+
+    #[test]
+    fn enabled_jira_issue_key_missing() {
+        let mut strings = HashMap::new();
+        strings.insert("pb.lint.jira-issue-key-missing".into(), "true".into());
+        let config = InMemory::new(&mut strings);
+
+        let actual = get_lint_configuration(&config);
+        let expected: Vec<Lints> = vec![DuplicatedTrailers, JiraIssueKeyMissing];
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+    #[test]
+    fn disabled_jira_issue_key_missing() {
+        let mut strings = HashMap::new();
+        strings.insert("pb.lint.jira-issue-key-missing".into(), "false".into());
+        let config = InMemory::new(&mut strings);
+
+        let actual = get_lint_configuration(&config);
+        let expected: Vec<Lints> = vec![DuplicatedTrailers];
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
 }
 
 fn to_static_string(lint: Lints) -> &'static str {
     match lint {
         Lints::DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
         Lints::PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
+        Lints::JiraIssueKeyMissing => CONFIG_JIRA_ISSUE_KEY_MISSING,
     }
 }
 
@@ -860,4 +913,101 @@ pub fn set_lint_status(
     lints
         .iter()
         .try_for_each(|lint| vcs.set_str(&format!("pb.lint.{}", lint), &status.to_string()))
+}
+
+#[cfg(test)]
+mod tests_has_missing_jira_issue_key {
+    #![allow(clippy::wildcard_imports)]
+
+    use pretty_assertions::assert_eq;
+
+    use super::*;
+
+    #[test]
+    fn id_present() {
+        test_has_missing_jira_issue_key(
+            r#"JRA-123 An example commit
+
+This is an example commit
+"#,
+            None,
+        );
+        test_has_missing_jira_issue_key(
+            r#"An example commit
+
+This is an JRA-123 example commit
+"#,
+            None,
+        );
+        test_has_missing_jira_issue_key(
+            r#"An example commit
+
+JRA-123
+
+This is an example commit
+"#,
+            None,
+        );
+        test_has_missing_jira_issue_key(
+            r#"
+An example commit
+
+This is an example commit
+
+JRA-123
+    "#,
+            None,
+        );
+        test_has_missing_jira_issue_key(
+            r#"
+An example commit
+
+This is an example commit
+
+JR-123
+    "#,
+            None,
+        );
+    }
+
+    #[test]
+    fn id_missing() {
+        test_has_missing_jira_issue_key(
+            r#"
+An example commit
+
+This is an example commit
+    "#,
+            Some(()),
+        );
+        test_has_missing_jira_issue_key(
+            r#"
+An example commit
+
+This is an example commit
+
+A-123
+    "#,
+            Some(()),
+        );
+        test_has_missing_jira_issue_key(
+            r#"
+An example commit
+
+This is an example commit
+
+JRA-
+    "#,
+            Some(()),
+        );
+    }
+
+    fn test_has_missing_jira_issue_key(message: &str, expected: Option<()>) {
+        let actual = has_missing_jira_issue_key(message);
+        assert_eq!(
+            actual, expected,
+            "Message {:?} should have returned {:?}, found {:?}",
+            message, expected, actual
+        );
+    }
 }

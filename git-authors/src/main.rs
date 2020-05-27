@@ -30,7 +30,6 @@ enum ExitCode {
 const AUTHOR_INITIAL: &str = "initials";
 const AUTHOR_FILE_PATH: &str = "file";
 const AUTHOR_FILE_COMMAND: &str = "command";
-
 const TIMEOUT: &str = "timeout";
 
 fn main() {
@@ -172,6 +171,8 @@ fn config_file_path(cargo_package_name: &str) -> String {
         .to_string()
 }
 
-fn authors_config_file(x: &BaseDirectories) -> Result<PathBuf, Box<dyn Error>> {
-    x.place_config_file("authors.yml").map_err(Box::from)
+fn authors_config_file(config_directory: &BaseDirectories) -> Result<PathBuf, Box<dyn Error>> {
+    config_directory
+        .place_config_file("authors.yml")
+        .map_err(Box::from)
 }

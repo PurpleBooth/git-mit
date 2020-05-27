@@ -5,7 +5,7 @@ use tempfile::NamedTempFile;
 use pb_hook_test_helper::{assert_output, setup_working_dir};
 
 #[test]
-fn duplicated_trailers_cause_errors() {
+fn duplicated_trailer() {
     let input = r#"An example commit
 
 This is an example commit with duplicate trailers
@@ -47,7 +47,7 @@ You can fix this by removing the duplicated field when you commit again
 }
 
 #[test]
-fn a_valid_commit_is_fine() {
+fn valid_commit() {
     let input = r#"An example commit
 
 This is an example commit with duplicate trailers
@@ -70,7 +70,7 @@ Signed-off-by: Billie Thompson <email@example.com>
 }
 
 #[test]
-fn i_can_disable_the_check() {
+fn disabled() {
     let input = r#"An example commit
 
 This is an example commit with duplicate trailers

@@ -1,7 +1,7 @@
 use pb_hook_test_helper::assert_output;
 
 #[test]
-fn help_returned_by_long_flag() {
+fn long_flag() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "pb-commit-msg", vec!["--help"]);
     assert_output(
@@ -29,7 +29,7 @@ ARGS:
 }
 
 #[test]
-fn help_returned_by_short_flag() {
+fn short_flag() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "pb-commit-msg", vec!["-h"]);
     assert_output(
@@ -57,7 +57,7 @@ ARGS:
 }
 
 #[test]
-fn short_help_returned_when_a_wrong_message_commands_passed() {
+fn invalid_command() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "pb-commit-msg", vec!["--banana"]);
     let expected = r#"error: Found argument '--banana' which wasn't expected, or isn't valid in this context

@@ -10,6 +10,8 @@ My git commit hooks in binary form
     `Co-authored-by` Trailers. *Default: `enabled`*
   - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
     *Default: `disabled`*
+  - **jira-issue-key-missing** - Detect missing Jira Issue Key *Default:
+    `disabled`*
 
 ### Enabling Lints
 

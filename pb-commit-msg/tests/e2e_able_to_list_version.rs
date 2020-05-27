@@ -1,7 +1,7 @@
 use pb_hook_test_helper::assert_output;
 
 #[test]
-fn version_returned_by_long_flag() {
+fn long_flag() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "pb-commit-msg", vec!["--version"]);
     assert_output(
@@ -13,7 +13,7 @@ fn version_returned_by_long_flag() {
 }
 
 #[test]
-fn version_returned_by_short_flag() {
+fn short_flag() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "pb-commit-msg", vec!["-V"]);
     assert_output(

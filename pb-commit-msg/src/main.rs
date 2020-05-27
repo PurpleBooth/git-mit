@@ -10,6 +10,7 @@ use pb_commit_message_lints::{
     lints::{
         get_lint_configuration,
         has_duplicated_trailers,
+        has_missing_jira_issue_key,
         has_missing_pivotal_tracker_id,
         Lints,
     },
@@ -19,6 +20,7 @@ use pb_commit_message_lints::{
 enum ExitCode {
     DuplicatedTrailers = 3,
     PivotalTrackerIdMissing,
+    JiraIssueKeyMissing,
 }
 
 const COMMIT_FILE_PATH_NAME: &str = "commit-file-path";
@@ -63,14 +65,24 @@ fn main() -> std::io::Result<()> {
                 true
             }
             Lints::PivotalTrackerIdMissing => {
-                lint_missing_id(&commit_message);
+                lint_missing_pivotal_tracker_id(&commit_message);
+                true
+            }
+            Lints::JiraIssueKeyMissing => {
+                lint_missing_jira_issue_key(&commit_message);
                 true
             }
         })
         .fold(Ok(()), |x, _| x)
 }
 
-fn lint_missing_id(commit_message: &str) {
+fn lint_missing_jira_issue_key(commit_message: &str) {
+    if let Some(()) = has_missing_jira_issue_key(commit_message) {
+        exit_missing_jira_issue_key(commit_message);
+    }
+}
+
+fn lint_missing_pivotal_tracker_id(commit_message: &str) {
     if let Some(()) = has_missing_pivotal_tracker_id(commit_message) {
         exit_missing_pivotal_tracker_id(commit_message);
     }
@@ -102,6 +114,21 @@ This will address [#12345884]
     );
 
     std::process::exit(ExitCode::PivotalTrackerIdMissing as i32);
+}
+
+fn exit_missing_jira_issue_key(commit_message: &str) {
+    eprintln!(
+        r#"
+{}
+
+Your commit is missing a JIRA Issue Key
+
+You can fix this by adding a key like `JRA-123` to the commit message
+"#,
+        commit_message
+    );
+
+    std::process::exit(ExitCode::JiraIssueKeyMissing as i32);
 }
 
 fn exit_duplicated_trailers(commit_message: &str, trailers: &[String]) {
