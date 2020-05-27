@@ -74,7 +74,7 @@ ln -s "$(command -v pb-prepare-commit-msg)" .git/hooks/prepare-commit-msg
 You can make git link these for you automatically by adding them to your
 [init template](https://git-scm.com/docs/git-init#_template_directory).
 This is the template that git uses to create the `.git` directory when
-you run `git init`. You can also run this on an existing repository.
+you run `git init`.
 
 ``` shell
 mkdir -p "$HOME/.config/git/init-template/hooks"
@@ -84,8 +84,9 @@ ln -s "$(command -v pb-prepare-commit-msg)" "$HOME/.config/git/init-template/hoo
 git config --global init.templatedir "$HOME/.config/git/init-template"
 ```
 
-You can re-initialise all of your repositories, recursively from the
-home directory using this command.
+You can also run this on an existing repository, to set up an already
+checked out repository. You can re-initialise all of your repositories,
+recursively from the home directory using this command.
 
 ``` shell
 find "$HOME" -type d -name .git -exec sh -c 'git init "$1"/..' -- {} \;
