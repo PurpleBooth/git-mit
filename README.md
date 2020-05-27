@@ -25,8 +25,22 @@ pb-git-hooks lint disable duplicated-trailers
 
 ### Setting Authors and Co-Authors
 
+Just set the author
+
 ``` shell
 git authors bt
+```
+
+Set the author and co-author trailer
+
+``` shell
+git authors bt se
+```
+
+If you're mobbing
+
+``` shell
+git authors bt se ae
 ```
 
 ## Installing
@@ -57,6 +71,26 @@ ln -s "$(command -v pb-pre-commit)" .git/hooks/pre-commit
 ln -s "$(command -v pb-prepare-commit-msg)" .git/hooks/prepare-commit-msg
 ```
 
+You can make git link these for you automatically by adding them to your
+[init template](https://git-scm.com/docs/git-init#_template_directory).
+This is the template that git uses to create the `.git` directory when
+you run `git init`. You can also run this on an existing repository.
+
+``` shell
+mkdir -p "$HOME/.config/git/init-template/hooks"
+ln -s "$(command -v pb-commit-msg)" "$HOME/.config/git/init-template/hooks/commit-msg"
+ln -s "$(command -v pb-pre-commit)" "$HOME/.config/git/init-template/hooks/pre-commit"
+ln -s "$(command -v pb-prepare-commit-msg)" "$HOME/.config/git/init-template/hooks/prepare-commit-msg"
+git config --global init.templatedir "$HOME/.config/git/init-template"
+```
+
+You can re-initialise all of your repositories, recursively from the
+home directory using this command.
+
+``` shell
+find "$HOME" -type d -name .git -exec sh -c 'git init "$1"/..' -- {} \;
+```
+
 ### Authors Configuration
 
 If you want to use the author part create yourself a configuration and
@@ -71,6 +105,9 @@ bt:
 se:
     name: Someone Else
     email: someone@example.com
+ae:
+    name: Anyone Else
+    email: anyone@example.com
 ```
 
 ### Environment Variables
