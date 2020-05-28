@@ -1,6 +1,11 @@
 extern crate pb_commit_message_lints;
 
-use std::{env, fs};
+use std::{
+    env,
+    fmt,
+    fmt::{Display, Formatter},
+    fs,
+};
 
 use clap::{crate_authors, crate_version, App, Arg};
 use git2::{Config, Repository};
@@ -16,6 +21,8 @@ use pb_commit_message_lints::{
         Lints,
     },
 };
+
+use crate::ExitCode::JiraIssueKeyMissing;
 
 #[repr(i32)]
 enum ExitCode {
@@ -64,43 +71,94 @@ fn main() -> std::io::Result<()> {
             Lints::DuplicatedTrailers => {
                 lint_duplicated_trailers(&commit_message);
                 true
-            }
+            },
             Lints::PivotalTrackerIdMissing => {
                 lint_missing_pivotal_tracker_id(&commit_message);
                 true
-            }
+            },
             Lints::JiraIssueKeyMissing => {
                 lint_missing_jira_issue_key(&commit_message);
                 true
-            }
+            },
         })
         .fold(Ok(()), |x, _| x)
 }
 
-fn lint_missing_jira_issue_key(commit_message: &str) {
-    if has_missing_jira_issue_key(&CommitMessage::new(commit_message)) {
-        exit_missing_jira_issue_key(commit_message);
+struct LintProblem {
+    help: String,
+    code: ExitCode,
+}
+
+impl LintProblem {
+    pub fn new(help: String, code: ExitCode) -> LintProblem {
+        LintProblem { help, code }
+    }
+
+    pub fn code(self) -> ExitCode {
+        self.code
     }
 }
 
-fn lint_missing_pivotal_tracker_id(commit_message: &str) {
-    if has_missing_pivotal_tracker_id(&CommitMessage::new(commit_message)) {
-        exit_missing_pivotal_tracker_id(commit_message);
+impl Display for LintProblem {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "{}", self.help)
     }
 }
 
-fn lint_duplicated_trailers(commit_message: &str) {
+fn lint_missing_jira_issue_key(commit_message: &str) -> Option<()> {
+    let result = if has_missing_jira_issue_key(&CommitMessage::new(commit_message)) {
+        Some(LintProblem::new(
+            JIRA_HELP_MESSAGE.into(),
+            JiraIssueKeyMissing,
+        ))
+    } else {
+        None
+    };
+
+    result.map(|problem| exit(commit_message, problem))
+}
+
+fn lint_missing_pivotal_tracker_id(commit_message: &str) -> Option<()> {
+    let result = if has_missing_pivotal_tracker_id(&CommitMessage::new(commit_message)) {
+        Some(LintProblem::new(
+            PIVOTAL_TRACKER_HELP.into(),
+            ExitCode::PivotalTrackerIdMissing,
+        ))
+    } else {
+        None
+    };
+
+    result.map(|problem| exit(commit_message, problem))
+}
+
+fn lint_duplicated_trailers(commit_message: &str) -> Option<()> {
     let duplicated_trailers = has_duplicated_trailers(&CommitMessage::new(commit_message));
-    if !duplicated_trailers.is_empty() {
-        exit_duplicated_trailers(commit_message, &duplicated_trailers);
-    }
+    let result = if duplicated_trailers.is_empty() {
+        None
+    } else {
+        let mut fields = FIELD_SINGULAR;
+        if duplicated_trailers.len() > 1 {
+            fields = FIELD_PLURAL
+        }
+
+        Some(LintProblem::new(
+            format!(
+                r#"
+Your commit cannot have the same name duplicated in the "{}" {}
+
+You can fix this by removing the duplicated field when you commit again
+"#,
+                duplicated_trailers.join("\", \""),
+                fields
+            ),
+            ExitCode::DuplicatedTrailers,
+        ))
+    };
+
+    result.map(|problem| exit(commit_message, problem))
 }
 
-fn exit_missing_pivotal_tracker_id(commit_message: &str) {
-    eprintln!(
-        r#"
-{}
-
+const PIVOTAL_TRACKER_HELP: &str = r#"
 Your commit is missing a Pivotal Tracker Id
 
 You can fix this by adding the Id in one of the styles below to the commit message
@@ -111,46 +169,16 @@ You can fix this by adding the Id in one of the styles below to the commit messa
 [#12345884,#12345678]
 [#12345678],[#12345884]
 This will address [#12345884]
-"#,
-        commit_message
-    );
+"#;
 
-    std::process::exit(ExitCode::PivotalTrackerIdMissing as i32);
-}
-
-fn exit_missing_jira_issue_key(commit_message: &str) {
-    eprintln!(
-        r#"
-{}
-
+const JIRA_HELP_MESSAGE: &str = r#"
 Your commit is missing a JIRA Issue Key
 
 You can fix this by adding a key like `JRA-123` to the commit message
-"#,
-        commit_message
-    );
+"#;
 
-    std::process::exit(ExitCode::JiraIssueKeyMissing as i32);
-}
+fn exit(commit_message: &str, x: LintProblem) {
+    eprintln!("\n{}\n{}", commit_message, x);
 
-fn exit_duplicated_trailers(commit_message: &str, trailers: &[String]) {
-    let mut fields = FIELD_SINGULAR;
-    if trailers.len() > 1 {
-        fields = FIELD_PLURAL
-    }
-
-    eprintln!(
-        r#"
-{}
-
-Your commit cannot have the same name duplicated in the "{}" {}
-
-You can fix this by removing the duplicated field when you commit again
-"#,
-        commit_message,
-        trailers.join("\", \""),
-        fields
-    );
-
-    std::process::exit(ExitCode::DuplicatedTrailers as i32);
+    std::process::exit(x.code() as i32);
 }

@@ -217,10 +217,10 @@ mod tests_able_to_load_config_from_git {
     }
 }
 
-///
 /// # Errors
 ///
-/// This errors if writing to the git authors file fails for some reason. Those reasons will be specific to VCS implementation
+/// This errors if writing to the git authors file fails for some reason. Those
+/// reasons will be specific to VCS implementation
 pub fn set_authors(
     config: &mut dyn Vcs,
     authors: &[&Author],

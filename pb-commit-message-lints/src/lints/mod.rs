@@ -40,6 +40,52 @@ impl CommitMessage<'_> {
     }
 }
 
+#[cfg(test)]
+mod test_commit_message {
+    use crate::lints::CommitMessage;
+    use pretty_assertions::assert_eq;
+    use regex::Regex;
+
+    #[test]
+    fn with_trailers() {
+        let commit = CommitMessage::new(
+            r#"Some Commit Message
+
+Anything: Some Trailer
+Anything: Some Trailer
+Another: Trailer
+"#,
+        );
+
+        assert_eq!(vec!["Another: Trailer"], commit.get_trailer("Another"));
+        assert_eq!(
+            vec!["Anything: Some Trailer", "Anything: Some Trailer"],
+            commit.get_trailer("Anything")
+        )
+    }
+
+    #[test]
+    fn regex_matching() {
+        let commit = CommitMessage::new(
+            r#"Some Commit Message
+
+Anything: Some Trailer
+Anything: Some Trailer
+Another: Trailer
+"#,
+        );
+
+        assert_eq!(
+            true,
+            commit.matches_pattern(&Regex::new("[AB]nything:").unwrap())
+        );
+        assert_eq!(
+            false,
+            commit.matches_pattern(&Regex::new("N[oO]thing:").unwrap())
+        );
+    }
+}
+
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq, IntoEnumIterator, Copy, Clone)]
 pub enum Lints {
@@ -141,7 +187,8 @@ mod tests_lints {
 ///
 /// # Errors
 ///
-/// Will return `Err` if we can't read the git configuration for some reason or it's not parsable
+/// Will return `Err` if we can't read the git configuration for some reason or
+/// it's not parsable
 pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
     vec![
         config
@@ -841,6 +888,7 @@ mod tests_get_lint_configuration {
             expected, actual
         )
     }
+
     #[test]
     fn disabled_jira_issue_key_missing() {
         let mut strings = HashMap::new();
