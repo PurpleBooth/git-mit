@@ -12,6 +12,7 @@ use pb_commit_message_lints::{
         has_duplicated_trailers,
         has_missing_jira_issue_key,
         has_missing_pivotal_tracker_id,
+        CommitMessage,
         Lints,
     },
 };
@@ -77,20 +78,21 @@ fn main() -> std::io::Result<()> {
 }
 
 fn lint_missing_jira_issue_key(commit_message: &str) {
-    if let Some(()) = has_missing_jira_issue_key(commit_message) {
+    if has_missing_jira_issue_key(&CommitMessage::new(commit_message)) {
         exit_missing_jira_issue_key(commit_message);
     }
 }
 
 fn lint_missing_pivotal_tracker_id(commit_message: &str) {
-    if let Some(()) = has_missing_pivotal_tracker_id(commit_message) {
+    if has_missing_pivotal_tracker_id(&CommitMessage::new(commit_message)) {
         exit_missing_pivotal_tracker_id(commit_message);
     }
 }
 
 fn lint_duplicated_trailers(commit_message: &str) {
-    if let Some(trailers) = has_duplicated_trailers(commit_message) {
-        exit_duplicated_trailers(commit_message, &trailers);
+    let duplicated_trailers = has_duplicated_trailers(&CommitMessage::new(commit_message));
+    if !duplicated_trailers.is_empty() {
+        exit_duplicated_trailers(commit_message, &duplicated_trailers);
     }
 }
 
