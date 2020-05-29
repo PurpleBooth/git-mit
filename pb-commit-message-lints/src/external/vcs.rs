@@ -1,4 +1,4 @@
-use std::{clone::Clone, collections::HashMap, error::Error};
+use std::{clone::Clone, collections::HashMap, error::Error, string::String};
 
 pub trait Vcs {
     fn get_bool(&self, name: &str) -> Option<bool>;
@@ -40,13 +40,11 @@ impl Vcs for InMemory<'_> {
     }
 
     fn get_str(&self, name: &str) -> Option<&str> {
-        self.store.get(name).map(std::string::String::as_str)
+        self.store.get(name).map(String::as_str)
     }
 
     fn get_i64(&self, name: &str) -> Option<i64> {
-        self.store
-            .get(name)
-            .cloned()
+        self.get_string(name)
             .ok_or_else(|| ())
             .and_then(|x| x.parse().map_err(|_| ()))
             .ok()
@@ -65,6 +63,12 @@ impl Vcs for InMemory<'_> {
     fn remove(&mut self, name: &str) -> Result<(), Box<dyn Error>> {
         self.store.remove(name);
         Ok(())
+    }
+}
+
+impl InMemory<'_> {
+    fn get_string(&self, name: &str) -> Option<String> {
+        self.store.get(name).cloned()
     }
 }
 

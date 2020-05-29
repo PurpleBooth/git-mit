@@ -1,5 +1,6 @@
-use crate::lints::{CommitMessage, LintCode, LintProblem};
 use regex::Regex;
+
+use crate::lints::{CommitMessage, LintCode, LintProblem};
 
 const REGEX_PIVOTAL_TRACKER_ID: &str =
     r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
@@ -43,8 +44,9 @@ mod tests_has_missing_pivotal_tracker_id {
 
     use pretty_assertions::assert_eq;
 
-    use super::*;
     use crate::lints::CommitMessage;
+
+    use super::*;
 
     #[test]
     fn with_id() {

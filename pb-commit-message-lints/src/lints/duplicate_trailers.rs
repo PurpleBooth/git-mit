@@ -1,5 +1,6 @@
-use crate::lints::{CommitMessage, LintCode, LintProblem};
 use std::{collections::HashSet, iter::FromIterator};
+
+use crate::lints::{CommitMessage, LintCode, LintProblem};
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const FIELD_SINGULAR: &str = "field";

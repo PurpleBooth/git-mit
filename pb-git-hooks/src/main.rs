@@ -1,7 +1,6 @@
 use std::{convert::TryFrom, env, error::Error};
 
 use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
-
 use git2::{Config, Repository};
 
 use pb_commit_message_lints::{

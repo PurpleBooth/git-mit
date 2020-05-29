@@ -76,7 +76,6 @@ fn main() {
         )
         .get_matches();
 
-    let expires_in = get_timeout(&matches);
     let author_config = get_author_config(&matches);
     let authors_initials = get_author_initials(&matches);
     let yaml_authors: Authors = get_authors_from_user_config(&author_config).unwrap();
@@ -116,7 +115,7 @@ You can fix this by checking the initials are in the configuration file.
     set_authors(
         &mut git_config,
         &authors,
-        Duration::from_secs(expires_in * 60),
+        Duration::from_secs(get_timeout(&matches) * 60),
     )
     .expect("Couldn't set author")
 }

@@ -1,17 +1,17 @@
-use std::error::Error;
+use std::{error::Error, fmt::Display};
+
+use regex::Regex;
 
 use crate::{
     external::vcs::Vcs,
-    lints::Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
+    lints::{
+        duplicate_trailers::lint_duplicated_trailers,
+        missing_jira_issue_key::lint_missing_jira_issue_key,
+        missing_pivotal_tracker_id::lint_missing_pivotal_tracker_id,
+        Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
+    },
 };
-use regex::Regex;
-use std::fmt::Display;
 
-use crate::lints::{
-    duplicate_trailers::lint_duplicated_trailers,
-    missing_jira_issue_key::lint_missing_jira_issue_key,
-    missing_pivotal_tracker_id::lint_missing_pivotal_tracker_id,
-};
 pub struct CommitMessage<'a> {
     contents: &'a str,
 }
@@ -47,9 +47,10 @@ impl Display for CommitMessage<'_> {
 
 #[cfg(test)]
 mod test_commit_message {
-    use crate::lints::CommitMessage;
     use pretty_assertions::assert_eq;
     use regex::Regex;
+
+    use crate::lints::CommitMessage;
 
     #[test]
     fn with_trailers() {
@@ -169,23 +170,21 @@ impl std::convert::From<Lints> for String {
 
 pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
     vec![
-        config
-            .get_bool(&Lints::DuplicatedTrailers.config_key())
-            .or(Some(true))
-            .filter(bool::clone)
-            .map(|_| DuplicatedTrailers),
-        config
-            .get_bool(&Lints::PivotalTrackerIdMissing.config_key())
-            .filter(bool::clone)
-            .map(|_| PivotalTrackerIdMissing),
-        config
-            .get_bool(&Lints::JiraIssueKeyMissing.config_key())
-            .filter(bool::clone)
-            .map(|_| JiraIssueKeyMissing),
+        get_config_or_default(config, Lints::DuplicatedTrailers, true),
+        get_config_or_default(config, Lints::PivotalTrackerIdMissing, false),
+        get_config_or_default(config, Lints::JiraIssueKeyMissing, false),
     ]
     .into_iter()
     .flatten()
     .collect()
+}
+
+fn get_config_or_default(config: &dyn Vcs, lint: Lints, default: bool) -> Option<Lints> {
+    config
+        .get_bool(&lint.config_key())
+        .or(Some(default))
+        .filter(|lint_value| lint_value == &true)
+        .map(|_| lint)
 }
 
 #[cfg(test)]
@@ -395,15 +394,7 @@ pub fn set_lint_status(
 pub fn lint(commit_message: &CommitMessage, lints: Vec<Lints>) -> Vec<LintProblem> {
     lints
         .into_iter()
-        .flat_map(|lint| match lint {
-            Lints::DuplicatedTrailers => lint_duplicated_trailers(&format!("{}", commit_message)),
-            Lints::PivotalTrackerIdMissing => {
-                lint_missing_pivotal_tracker_id(&format!("{}", commit_message))
-            },
-            Lints::JiraIssueKeyMissing => {
-                lint_missing_jira_issue_key(&format!("{}", commit_message))
-            },
-        })
+        .flat_map(|lint| lint.lint(commit_message))
         .collect::<Vec<LintProblem>>()
 }
 

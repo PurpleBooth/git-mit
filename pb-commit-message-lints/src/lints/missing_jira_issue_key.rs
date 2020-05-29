@@ -1,5 +1,6 @@
-use crate::lints::{CommitMessage, LintCode, LintProblem};
 use regex::Regex;
+
+use crate::lints::{CommitMessage, LintCode, LintProblem};
 
 const JIRA_HELP_MESSAGE: &str = r#"
 Your commit is missing a JIRA Issue Key
