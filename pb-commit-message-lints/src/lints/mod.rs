@@ -1,20 +1,17 @@
-use std::{collections::HashSet, error::Error, iter::FromIterator};
+use std::error::Error;
 
-use enum_iterator::IntoEnumIterator;
-use regex::Regex;
-const FIELD_SINGULAR: &str = "field";
-const FIELD_PLURAL: &str = "fields";
 use crate::{
     external::vcs::Vcs,
     lints::Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
 };
+use regex::Regex;
 use std::fmt::Display;
 
-const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
-const REGEX_PIVOTAL_TRACKER_ID: &str =
-    r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
-const REGEX_JIRA_ISSUE_KEY: &str = r"(?m)(^| )[A-Z]{2,}-[0-9]+( |$)";
-
+use crate::lints::{
+    duplicate_trailers::lint_duplicated_trailers,
+    missing_jira_issue_key::lint_missing_jira_issue_key,
+    missing_pivotal_tracker_id::lint_missing_pivotal_tracker_id,
+};
 pub struct CommitMessage<'a> {
     contents: &'a str,
 }
@@ -95,7 +92,7 @@ Another: Trailer
 }
 
 /// The lints that are supported
-#[derive(Debug, Eq, PartialEq, IntoEnumIterator, Copy, Clone)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Lints {
     DuplicatedTrailers,
     PivotalTrackerIdMissing,
@@ -106,9 +103,43 @@ const CONFIG_DUPLICATED_TRAILERS: &str = "duplicated-trailers";
 const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pivotal-tracker-id-missing";
 const CONFIG_JIRA_ISSUE_KEY_MISSING: &str = "jira-issue-key-missing";
 
+impl Lints {
+    pub fn iterator() -> impl Iterator<Item = Lints> {
+        static LINTS: [Lints; 3] = [
+            DuplicatedTrailers,
+            PivotalTrackerIdMissing,
+            JiraIssueKeyMissing,
+        ];
+        LINTS.iter().copied()
+    }
+
+    #[must_use]
+    pub fn config_key(self) -> String {
+        format!("pb.lint.{}", self)
+    }
+
+    #[must_use]
+    pub fn lint(self, commit_message: &CommitMessage) -> Option<LintProblem> {
+        match self {
+            Lints::DuplicatedTrailers => lint_duplicated_trailers(&format!("{}", commit_message)),
+            Lints::PivotalTrackerIdMissing => {
+                lint_missing_pivotal_tracker_id(&format!("{}", commit_message))
+            },
+            Lints::JiraIssueKeyMissing => {
+                lint_missing_jira_issue_key(&format!("{}", commit_message))
+            },
+        }
+    }
+}
+
 impl std::fmt::Display for Lints {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", to_static_string(*self))
+        let config_key = match self {
+            DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
+            PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
+            JiraIssueKeyMissing => CONFIG_JIRA_ISSUE_KEY_MISSING,
+        };
+        write!(f, "{}", config_key)
     }
 }
 
@@ -116,9 +147,11 @@ impl std::convert::TryFrom<&str> for Lints {
     type Error = Box<dyn Error>;
 
     fn try_from(from: &str) -> Result<Self, Self::Error> {
-        Lints::into_enum_iter()
-            .zip(Lints::into_enum_iter().map(|lint| lint.into()))
-            .filter_map(|(lint, name): (Lints, &str)| if name == from { Some(lint) } else { None })
+        Lints::iterator()
+            .zip(Lints::iterator().map(|lint| format!("{}", lint)))
+            .filter_map(
+                |(lint, name): (Lints, String)| if name == from { Some(lint) } else { None },
+            )
             .collect::<Vec<Lints>>()
             .first()
             .copied()
@@ -128,16 +161,31 @@ impl std::convert::TryFrom<&str> for Lints {
     }
 }
 
-impl std::convert::From<Lints> for &'static str {
+impl std::convert::From<Lints> for String {
     fn from(from: Lints) -> Self {
-        to_static_string(from)
+        format!("{}", from)
     }
 }
 
-impl std::convert::From<Lints> for String {
-    fn from(from: Lints) -> Self {
-        String::from(to_static_string(from))
-    }
+pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
+    vec![
+        config
+            .get_bool(&Lints::DuplicatedTrailers.config_key())
+            .or(Some(true))
+            .filter(bool::clone)
+            .map(|_| DuplicatedTrailers),
+        config
+            .get_bool(&Lints::PivotalTrackerIdMissing.config_key())
+            .filter(bool::clone)
+            .map(|_| PivotalTrackerIdMissing),
+        config
+            .get_bool(&Lints::JiraIssueKeyMissing.config_key())
+            .filter(bool::clone)
+            .map(|_| JiraIssueKeyMissing),
+    ]
+    .into_iter()
+    .flatten()
+    .collect()
 }
 
 #[cfg(test)]
@@ -169,542 +217,11 @@ mod tests_lints {
     }
 }
 
-pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
-    vec![
-        config
-            .get_bool(&format!("pb.lint.{}", Lints::DuplicatedTrailers))
-            .or(Some(true))
-            .filter(bool::clone)
-            .map(|_| DuplicatedTrailers),
-        config
-            .get_bool(&format!("pb.lint.{}", Lints::PivotalTrackerIdMissing))
-            .filter(bool::clone)
-            .map(|_| PivotalTrackerIdMissing),
-        config
-            .get_bool(&format!("pb.lint.{}", Lints::JiraIssueKeyMissing))
-            .filter(bool::clone)
-            .map(|_| JiraIssueKeyMissing),
-    ]
-    .into_iter()
-    .flatten()
-    .collect()
-}
+mod missing_pivotal_tracker_id;
 
-fn has_duplicated_trailers(commit_message: &CommitMessage) -> Vec<String> {
-    TRAILERS_TO_CHECK_FOR_DUPLICATES
-        .iter()
-        .filter_map(|trailer| filter_without_duplicates(commit_message, trailer))
-        .collect::<Vec<String>>()
-}
+mod duplicate_trailers;
 
-fn has_missing_jira_issue_key(commit_message: &CommitMessage) -> bool {
-    let re = Regex::new(REGEX_JIRA_ISSUE_KEY).unwrap();
-    !commit_message.matches_pattern(&re)
-}
-
-fn filter_without_duplicates(commit_message: &CommitMessage, trailer: &str) -> Option<String> {
-    Some(trailer)
-        .map(String::from)
-        .filter(|trailer| has_duplicated_trailer(commit_message, trailer))
-}
-
-fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> bool {
-    has_no_pivotal_tracker_id(commit_message)
-}
-
-fn has_no_pivotal_tracker_id(text: &CommitMessage) -> bool {
-    let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
-    !text.matches_pattern(&re)
-}
-
-fn to_static_string(lint: Lints) -> &'static str {
-    match lint {
-        Lints::DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
-        Lints::PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
-        Lints::JiraIssueKeyMissing => CONFIG_JIRA_ISSUE_KEY_MISSING,
-    }
-}
-
-fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &str) -> bool {
-    Some(commit_message.get_trailer(trailer))
-        .map(|trailers| (trailers.clone(), trailers.clone()))
-        .map(|(commit, unique)| (commit, HashSet::<&str>::from_iter(unique)))
-        .map(|(commit, unique)| commit.len() != unique.len())
-        .unwrap()
-}
-
-#[cfg(test)]
-mod tests_has_duplicated_trailers {
-    #![allow(clippy::wildcard_imports)]
-
-    use pretty_assertions::assert_eq;
-
-    use super::*;
-
-    #[test]
-    fn duplicated_trailers() {
-        test_has_duplicated_trailers(
-            r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-"#,
-            &[],
-        );
-        test_has_duplicated_trailers(
-            r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-
-Signed-off-by: Billie Thompson <email@example.com>
-Signed-off-by: Billie Thompson <email@example.com>
-Co-authored-by: Billie Thompson <email@example.com>
-Co-authored-by: Billie Thompson <email@example.com>
-"#,
-            &["Signed-off-by".into(), "Co-authored-by".into()],
-        );
-        test_has_duplicated_trailers(
-            r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-
-Signed-off-by: Billie Thompson <email@example.com>
-Signed-off-by: Billie Thompson <email@example.com>
-"#,
-            &["Signed-off-by".into()],
-        );
-        test_has_duplicated_trailers(
-            r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-
-Co-authored-by: Billie Thompson <email@example.com>
-Co-authored-by: Billie Thompson <email@example.com>
-"#,
-            &["Co-authored-by".into()],
-        );
-    }
-
-    fn test_has_duplicated_trailers(message: &str, expected: &[String]) {
-        let actual = has_duplicated_trailers(&CommitMessage::new(message));
-        assert_eq!(
-            actual, expected,
-            "Expected {:?}, found {:?}",
-            expected, actual
-        );
-    }
-}
-
-#[cfg(test)]
-mod tests_has_duplicated_trailer {
-    use crate::lints::{has_duplicated_trailer, CommitMessage};
-
-    fn test_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {
-        let actual = has_duplicated_trailer(&CommitMessage::new(message), trailer);
-        assert_eq!(
-            actual, expected,
-            "Message {:?} with trailer {:?} should have returned {:?}, found {:?}",
-            message, trailer, expected, actual
-        );
-    }
-
-    #[test]
-    fn no_trailer() {
-        test_has_duplicated_trailer(
-            r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-"#,
-            "Signed-off-by",
-            false,
-        );
-    }
-
-    #[test]
-    fn duplicated_trailer() {
-        test_has_duplicated_trailer(
-            r#"
-An example commit
-
-This is an example commit with duplicate trailers
-
-Signed-off-by: Billie Thompson <email@example.com>
-Signed-off-by: Billie Thompson <email@example.com>
-"#,
-            "Signed-off-by",
-            true,
-        );
-    }
-
-    #[test]
-    fn two_trailers_but_no_duplicates() {
-        test_has_duplicated_trailer(
-            r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-
-Signed-off-by: Billie Thompson <billie@example.com>
-Signed-off-by: Ada Lovelace <ada@example.com>
-"#,
-            "Signed-off-by",
-            false,
-        );
-    }
-
-    #[test]
-    fn one_trailer() {
-        test_has_duplicated_trailer(
-            r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-
-Signed-off-by: Billie Thompson <email@example.com>
-"#,
-            "Signed-off-by",
-            false,
-        );
-    }
-
-    #[test]
-    fn missing_colon_in_trailer() {
-        test_has_duplicated_trailer(
-            r#"
-An example commit
-
-This is an example commit without any duplicate trailers
-
-Signed-off-by Billie Thompson <email@example.com>
-Signed-off-by Billie Thompson <email@example.com>
-"#,
-            "Signed-off-by",
-            false,
-        );
-    }
-
-    #[test]
-    fn customised_trailer() {
-        test_has_duplicated_trailer(
-            r#"
-An example commit
-
-This is an example commit with duplicate trailers
-
-Anything: Billie Thompson <email@example.com>
-Anything: Billie Thompson <email@example.com>
-"#,
-            "Anything",
-            true,
-        );
-    }
-}
-
-#[cfg(test)]
-mod tests_has_missing_pivotal_tracker_id {
-    #![allow(clippy::wildcard_imports)]
-
-    use pretty_assertions::assert_eq;
-
-    use super::*;
-
-    #[test]
-    fn with_id() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[#12345678]
-    "#,
-            false,
-        );
-    }
-
-    fn test_has_missing_pivotal_tracker_id(message: &str, expected: bool) {
-        let actual = has_missing_pivotal_tracker_id(&CommitMessage::new(message));
-        assert_eq!(
-            actual, expected,
-            "Message {:?} should have returned {:?}, found {:?}",
-            message, expected, actual
-        );
-    }
-
-    #[test]
-    fn multiple_ids() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[#12345678,#87654321]
-    "#,
-            false,
-        );
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[#12345678,#87654321,#11223344]
-    "#,
-            false,
-        );
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[#12345678 #87654321 #11223344]
-    "#,
-            false,
-        );
-    }
-
-    #[test]
-    fn id_with_fixed_state_change() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[fix #12345678]
-    "#,
-            false,
-        );
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[FIX #12345678]
-    "#,
-            false,
-        );
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[Fix #12345678]
-    "#,
-            false,
-        );
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[fixed #12345678]
-    "#,
-            false,
-        );
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[fixes #12345678]
-    "#,
-            false,
-        );
-    }
-
-    #[test]
-    fn id_with_complete_state_change() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[complete #12345678]
-    "#,
-            false,
-        );
-
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[completed #12345678]
-    "#,
-            false,
-        );
-
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[Completed #12345678]
-    "#,
-            false,
-        );
-
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[completes #12345678]
-    "#,
-            false,
-        );
-    }
-
-    #[test]
-    fn id_with_finished_state_change() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[finish #12345678]
-    "#,
-            false,
-        );
-
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[finished #12345678]
-    "#,
-            false,
-        );
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[finishes #12345678]
-    "#,
-            false,
-        );
-    }
-
-    #[test]
-    fn id_with_delivered_state_change() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[deliver #12345678]
-    "#,
-            false,
-        );
-
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[delivered #12345678]
-    "#,
-            false,
-        );
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[delivers #12345678]
-    "#,
-            false,
-        );
-    }
-
-    #[test]
-    fn id_with_state_change_and_multiple_ids() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[fix #12345678 #12345678]
-    "#,
-            false,
-        );
-    }
-
-    #[test]
-    fn id_with_prefixed_text() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-Finally [fix #12345678 #12345678]
-    "#,
-            false,
-        );
-    }
-
-    #[test]
-    fn invalid_state_change() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[fake #12345678]
-    "#,
-            true,
-        );
-    }
-
-    #[test]
-    fn missing_id_with_square_brackets() {
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-    "#,
-            true,
-        );
-
-        test_has_missing_pivotal_tracker_id(
-            r#"
-An example commit
-
-This is an example commit
-
-[#]
-    "#,
-            true,
-        );
-    }
-}
+mod missing_jira_issue_key;
 
 #[cfg(test)]
 mod tests_get_lint_configuration {
@@ -871,104 +388,7 @@ pub fn set_lint_status(
 ) -> Result<(), Box<dyn Error>> {
     lints
         .iter()
-        .try_for_each(|lint| vcs.set_str(&format!("pb.lint.{}", lint), &status.to_string()))
-}
-
-#[cfg(test)]
-mod tests_has_missing_jira_issue_key {
-    #![allow(clippy::wildcard_imports)]
-
-    use pretty_assertions::assert_eq;
-
-    use super::*;
-
-    #[test]
-    fn id_present() {
-        test_has_missing_jira_issue_key(
-            r#"JRA-123 An example commit
-
-This is an example commit
-"#,
-            false,
-        );
-        test_has_missing_jira_issue_key(
-            r#"An example commit
-
-This is an JRA-123 example commit
-"#,
-            false,
-        );
-        test_has_missing_jira_issue_key(
-            r#"An example commit
-
-JRA-123
-
-This is an example commit
-"#,
-            false,
-        );
-        test_has_missing_jira_issue_key(
-            r#"
-An example commit
-
-This is an example commit
-
-JRA-123
-    "#,
-            false,
-        );
-        test_has_missing_jira_issue_key(
-            r#"
-An example commit
-
-This is an example commit
-
-JR-123
-    "#,
-            false,
-        );
-    }
-
-    #[test]
-    fn id_missing() {
-        test_has_missing_jira_issue_key(
-            r#"
-An example commit
-
-This is an example commit
-    "#,
-            true,
-        );
-        test_has_missing_jira_issue_key(
-            r#"
-An example commit
-
-This is an example commit
-
-A-123
-    "#,
-            true,
-        );
-        test_has_missing_jira_issue_key(
-            r#"
-An example commit
-
-This is an example commit
-
-JRA-
-    "#,
-            true,
-        );
-    }
-
-    fn test_has_missing_jira_issue_key(message: &str, expected: bool) {
-        let actual = has_missing_jira_issue_key(&CommitMessage::new(message));
-        assert_eq!(
-            actual, expected,
-            "Message {:?} should have returned {:?}, found {:?}",
-            message, expected, actual
-        );
-    }
+        .try_for_each(|lint| vcs.set_str(&lint.config_key(), &status.to_string()))
 }
 
 #[must_use]
@@ -1011,17 +431,6 @@ impl Display for LintProblem {
     }
 }
 
-fn lint_missing_jira_issue_key(commit_message: &str) -> Option<LintProblem> {
-    if has_missing_jira_issue_key(&CommitMessage::new(commit_message)) {
-        Some(LintProblem::new(
-            JIRA_HELP_MESSAGE.into(),
-            LintCode::JiraIssueKeyMissing,
-        ))
-    } else {
-        None
-    }
-}
-
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 #[repr(i32)]
 pub enum LintCode {
@@ -1029,57 +438,3 @@ pub enum LintCode {
     PivotalTrackerIdMissing,
     JiraIssueKeyMissing,
 }
-
-fn lint_missing_pivotal_tracker_id(commit_message: &str) -> Option<LintProblem> {
-    if has_missing_pivotal_tracker_id(&CommitMessage::new(commit_message)) {
-        Some(LintProblem::new(
-            PIVOTAL_TRACKER_HELP.into(),
-            LintCode::PivotalTrackerIdMissing,
-        ))
-    } else {
-        None
-    }
-}
-
-fn lint_duplicated_trailers(commit_message: &str) -> Option<LintProblem> {
-    let duplicated_trailers = has_duplicated_trailers(&CommitMessage::new(commit_message));
-    if duplicated_trailers.is_empty() {
-        None
-    } else {
-        let mut fields = FIELD_SINGULAR;
-        if duplicated_trailers.len() > 1 {
-            fields = FIELD_PLURAL
-        }
-
-        Some(LintProblem::new(
-            format!(
-                r#"Your commit cannot have the same name duplicated in the "{}" {}
-
-You can fix this by removing the duplicated field when you commit again
-"#,
-                duplicated_trailers.join("\", \""),
-                fields
-            ),
-            LintCode::DuplicatedTrailers,
-        ))
-    }
-}
-
-const PIVOTAL_TRACKER_HELP: &str = r#"
-Your commit is missing a Pivotal Tracker Id
-
-You can fix this by adding the Id in one of the styles below to the commit message
-[Delivers #12345678]
-[fixes #12345678]
-[finishes #12345678]
-[#12345884 #12345678]
-[#12345884,#12345678]
-[#12345678],[#12345884]
-This will address [#12345884]
-"#;
-
-const JIRA_HELP_MESSAGE: &str = r#"
-Your commit is missing a JIRA Issue Key
-
-You can fix this by adding a key like `JRA-123` to the commit message
-"#;

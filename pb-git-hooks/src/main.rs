@@ -1,7 +1,7 @@
 use std::{convert::TryFrom, env, error::Error};
 
 use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
-use enum_iterator::IntoEnumIterator;
+
 use git2::{Config, Repository};
 
 use pb_commit_message_lints::{
@@ -17,13 +17,17 @@ const COMMAND_LINT_DISABLE: &str = "disable";
 const SCOPE_ARGUMENT: &str = "scope";
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let possible_lints: Vec<&str> = Lints::into_enum_iter().map(|lint| lint.into()).collect();
+    let lints: Vec<String> = Lints::iterator().map(|lint| format!("{}", lint)).collect();
+    let possible_values: Vec<&str> = lints
+        .iter()
+        .map(|lint_name| -> &str { lint_name })
+        .collect();
     let lint_argument = Arg::with_name(LINT_NAME_ARGUMENT)
         .help("The lint to enable")
         .required(true)
         .multiple(true)
         .min_values(1)
-        .possible_values(&possible_lints);
+        .possible_values(&possible_values);
     let matches = App::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
         .author(crate_authors!())
