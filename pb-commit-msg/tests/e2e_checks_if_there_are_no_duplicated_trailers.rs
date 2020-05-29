@@ -28,14 +28,15 @@ Signed-off-by: Billie Thompson <email@example.com>
     assert_output(
         &output,
         "",
-        r#"
-An example commit
+        r#"An example commit
 
 This is an example commit with duplicate trailers
 
 Signed-off-by: Billie Thompson <email@example.com>
 Signed-off-by: Billie Thompson <email@example.com>
 
+
+---
 
 Your commit cannot have the same name duplicated in the "Signed-off-by" field
 

@@ -338,6 +338,7 @@ dependencies = [
  "clap",
  "enum-iterator",
  "git2",
+ "itertools",
  "pb-commit-message-lints",
  "pb-hook-test-helper",
  "pretty_assertions",

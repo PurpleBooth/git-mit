@@ -59,10 +59,12 @@ This is an example commit without the JIRA Issue Key
         vec![commit_path.path().to_str().unwrap()],
     );
 
-    let expected_stderr = r#"
-An example commit
+    let expected_stderr = r#"An example commit
 
 This is an example commit without the JIRA Issue Key
+
+
+---
 
 
 Your commit is missing a JIRA Issue Key

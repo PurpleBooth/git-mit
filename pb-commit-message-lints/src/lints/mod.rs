@@ -2,11 +2,13 @@ use std::{collections::HashSet, error::Error, iter::FromIterator};
 
 use enum_iterator::IntoEnumIterator;
 use regex::Regex;
-
+const FIELD_SINGULAR: &str = "field";
+const FIELD_PLURAL: &str = "fields";
 use crate::{
     external::vcs::Vcs,
     lints::Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
 };
+use std::fmt::Display;
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const REGEX_PIVOTAL_TRACKER_ID: &str =
@@ -37,6 +39,12 @@ impl CommitMessage<'_> {
 
     fn line_has_trailer(trailer: &str, line: &str) -> bool {
         line.starts_with(&format!("{}:", trailer))
+    }
+}
+
+impl Display for CommitMessage<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.contents)
     }
 }
 
@@ -161,34 +169,6 @@ mod tests_lints {
     }
 }
 
-/// Look at a git config and work out what lints should be turned on and off
-///
-/// # Example
-///
-/// ```
-/// use git2::Repository;
-/// use pb_commit_message_lints::{
-///     external::vcs::Git2,
-///     lints::{get_lint_configuration, Lints::DuplicatedTrailers},
-/// };
-/// use tempfile::TempDir;
-/// let config = TempDir::new()
-///     .map(TempDir::into_path)
-///     .map(|path| path.join("repository"))
-///     .map(Repository::init)
-///     .expect("Failed to initialise the repository")
-///     .expect("Failed create temporary directory")
-///     .config()
-///     .map(Git2::new)
-///     .expect("Failed to get configuration");
-///
-/// assert_eq!(get_lint_configuration(&config), vec![DuplicatedTrailers],)
-/// ```
-///
-/// # Errors
-///
-/// Will return `Err` if we can't read the git configuration for some reason or
-/// it's not parsable
 pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
     vec![
         config
@@ -210,50 +190,14 @@ pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
     .collect()
 }
 
-/// Check if a commit message message has duplicated trailers with names in
-///
-/// # Example
-///
-/// ```
-/// use pb_commit_message_lints::lints::{has_duplicated_trailers, CommitMessage};
-/// assert_eq!(
-///     has_duplicated_trailers(&CommitMessage::new(
-///         r#"
-/// An example commit
-///
-/// This is an example commit without any duplicate trailers
-///
-/// Signed-off-by: Billie Thompson <email@example.com>
-/// Signed-off-by: Billie Thompson <email@example.com>
-/// "#
-///     )),
-///     vec![String::from("Signed-off-by")]
-/// );
-///
-/// assert_eq!(
-///     has_duplicated_trailers(&CommitMessage::new(
-///         r#"
-/// An example commit
-///
-/// This is an example commit without any duplicate trailers
-///
-/// Co-authored-by: Billie Thompson <email@example.com>
-/// Co-authored-by: Billie Thompson <email@example.com>
-/// "#
-///     )),
-///     vec![String::from("Co-authored-by")]
-/// );
-/// ```
-#[must_use]
-pub fn has_duplicated_trailers(commit_message: &CommitMessage) -> Vec<String> {
+fn has_duplicated_trailers(commit_message: &CommitMessage) -> Vec<String> {
     TRAILERS_TO_CHECK_FOR_DUPLICATES
         .iter()
         .filter_map(|trailer| filter_without_duplicates(commit_message, trailer))
         .collect::<Vec<String>>()
 }
 
-#[must_use]
-pub fn has_missing_jira_issue_key(commit_message: &CommitMessage) -> bool {
+fn has_missing_jira_issue_key(commit_message: &CommitMessage) -> bool {
     let re = Regex::new(REGEX_JIRA_ISSUE_KEY).unwrap();
     !commit_message.matches_pattern(&re)
 }
@@ -264,54 +208,21 @@ fn filter_without_duplicates(commit_message: &CommitMessage, trailer: &str) -> O
         .filter(|trailer| has_duplicated_trailer(commit_message, trailer))
 }
 
-/// Check if a commit message message has a pivotal tracker id in it
-///
-/// # Example
-///
-/// ```
-/// use pb_commit_message_lints::lints::{has_missing_pivotal_tracker_id, CommitMessage};
-/// assert_eq!(
-///     has_missing_pivotal_tracker_id(&CommitMessage::new(
-///         r#"
-/// [fix #12345678] correct bug the build
-/// "#,
-///     )),
-///     false
-/// );
-/// assert_eq!(
-///     has_missing_pivotal_tracker_id(&CommitMessage::new(
-///         r#"
-/// Add a new commit linter
-///
-/// This will add a new linter. This linter checks for the presence of a Pivotal Tracker Id. In this
-/// example I have forgotten my Id.
-/// "#,
-///     )),
-///     true
-/// );
-///
-/// assert_eq!(
-///     has_missing_pivotal_tracker_id(&CommitMessage::new(
-///         r#"
-/// Add a new commit linter
-///
-/// This will add a new linter. This linter checks for the presence of a Pivotal Tracker Id. In this
-/// example I have remembered my Id
-///
-/// [deliver #12345678,#88335556,#87654321]
-/// "#
-///     )),
-///     false
-/// );
-/// ```
-#[must_use]
-pub fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> bool {
+fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> bool {
     has_no_pivotal_tracker_id(commit_message)
 }
 
 fn has_no_pivotal_tracker_id(text: &CommitMessage) -> bool {
     let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
     !text.matches_pattern(&re)
+}
+
+fn to_static_string(lint: Lints) -> &'static str {
+    match lint {
+        Lints::DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
+        Lints::PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
+        Lints::JiraIssueKeyMissing => CONFIG_JIRA_ISSUE_KEY_MISSING,
+    }
 }
 
 fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &str) -> bool {
@@ -906,14 +817,6 @@ mod tests_get_lint_configuration {
     }
 }
 
-fn to_static_string(lint: Lints) -> &'static str {
-    match lint {
-        Lints::DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
-        Lints::PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
-        Lints::JiraIssueKeyMissing => CONFIG_JIRA_ISSUE_KEY_MISSING,
-    }
-}
-
 #[cfg(test)]
 mod tests_can_enable_lints_via_a_command {
     use std::collections::HashMap;
@@ -1067,3 +970,116 @@ JRA-
         );
     }
 }
+
+#[must_use]
+pub fn lint(commit_message: &CommitMessage, lints: Vec<Lints>) -> Vec<LintProblem> {
+    lints
+        .into_iter()
+        .flat_map(|lint| match lint {
+            Lints::DuplicatedTrailers => lint_duplicated_trailers(&format!("{}", commit_message)),
+            Lints::PivotalTrackerIdMissing => {
+                lint_missing_pivotal_tracker_id(&format!("{}", commit_message))
+            },
+            Lints::JiraIssueKeyMissing => {
+                lint_missing_jira_issue_key(&format!("{}", commit_message))
+            },
+        })
+        .collect::<Vec<LintProblem>>()
+}
+
+#[derive(Debug)]
+pub struct LintProblem {
+    help: String,
+    code: LintCode,
+}
+
+impl LintProblem {
+    #[must_use]
+    pub fn new(help: String, code: LintCode) -> LintProblem {
+        LintProblem { help, code }
+    }
+
+    #[must_use]
+    pub fn code(self) -> LintCode {
+        self.code
+    }
+}
+
+impl Display for LintProblem {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.help)
+    }
+}
+
+fn lint_missing_jira_issue_key(commit_message: &str) -> Option<LintProblem> {
+    if has_missing_jira_issue_key(&CommitMessage::new(commit_message)) {
+        Some(LintProblem::new(
+            JIRA_HELP_MESSAGE.into(),
+            LintCode::JiraIssueKeyMissing,
+        ))
+    } else {
+        None
+    }
+}
+
+#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+#[repr(i32)]
+pub enum LintCode {
+    DuplicatedTrailers = 3,
+    PivotalTrackerIdMissing,
+    JiraIssueKeyMissing,
+}
+
+fn lint_missing_pivotal_tracker_id(commit_message: &str) -> Option<LintProblem> {
+    if has_missing_pivotal_tracker_id(&CommitMessage::new(commit_message)) {
+        Some(LintProblem::new(
+            PIVOTAL_TRACKER_HELP.into(),
+            LintCode::PivotalTrackerIdMissing,
+        ))
+    } else {
+        None
+    }
+}
+
+fn lint_duplicated_trailers(commit_message: &str) -> Option<LintProblem> {
+    let duplicated_trailers = has_duplicated_trailers(&CommitMessage::new(commit_message));
+    if duplicated_trailers.is_empty() {
+        None
+    } else {
+        let mut fields = FIELD_SINGULAR;
+        if duplicated_trailers.len() > 1 {
+            fields = FIELD_PLURAL
+        }
+
+        Some(LintProblem::new(
+            format!(
+                r#"Your commit cannot have the same name duplicated in the "{}" {}
+
+You can fix this by removing the duplicated field when you commit again
+"#,
+                duplicated_trailers.join("\", \""),
+                fields
+            ),
+            LintCode::DuplicatedTrailers,
+        ))
+    }
+}
+
+const PIVOTAL_TRACKER_HELP: &str = r#"
+Your commit is missing a Pivotal Tracker Id
+
+You can fix this by adding the Id in one of the styles below to the commit message
+[Delivers #12345678]
+[fixes #12345678]
+[finishes #12345678]
+[#12345884 #12345678]
+[#12345884,#12345678]
+[#12345678],[#12345884]
+This will address [#12345884]
+"#;
+
+const JIRA_HELP_MESSAGE: &str = r#"
+Your commit is missing a JIRA Issue Key
+
+You can fix this by adding a key like `JRA-123` to the commit message
+"#;
