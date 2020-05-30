@@ -32,11 +32,6 @@ pub(crate) fn lint_duplicated_trailers(commit_message: &str) -> Option<LintProbl
     if duplicated_trailers.is_empty() {
         None
     } else {
-        let mut fields = FIELD_SINGULAR;
-        if duplicated_trailers.len() > 1 {
-            fields = FIELD_PLURAL
-        }
-
         Some(LintProblem::new(
             format!(
                 r#"Your commit cannot have the same name duplicated in the "{}" {}
@@ -44,7 +39,11 @@ pub(crate) fn lint_duplicated_trailers(commit_message: &str) -> Option<LintProbl
 You can fix this by removing the duplicated field when you commit again
 "#,
                 duplicated_trailers.join("\", \""),
-                fields
+                if duplicated_trailers.len() > 1 {
+                    FIELD_PLURAL
+                } else {
+                    FIELD_SINGULAR
+                }
             ),
             LintCode::DuplicatedTrailers,
         ))

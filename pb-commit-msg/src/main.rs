@@ -3,12 +3,12 @@ extern crate pb_commit_message_lints;
 use std::{env, fs};
 
 use clap::{crate_authors, crate_version, App, Arg};
-use git2::{Config, Repository};
 
 use pb_commit_message_lints::{
     external::vcs::Git2,
     lints::{get_lint_configuration, lint, CommitMessage, LintCode, LintProblem},
 };
+use std::convert::TryFrom;
 
 const COMMIT_FILE_PATH_NAME: &str = "commit-file-path";
 
@@ -32,15 +32,8 @@ fn main() {
     let commit_message =
         fs::read_to_string(commit_file_path).expect("Something went wrong reading the file");
 
-    let current_dir = env::current_dir().expect("Unable to retrieve current directory");
-
-    let get_repository_config = |x: Repository| x.config();
-    let get_default_config = |_| Config::open_default();
-    let git_config = Repository::discover(current_dir)
-        .and_then(get_repository_config)
-        .or_else(get_default_config)
-        .map(Git2::new)
-        .expect("Couldn't load any git config");
+    let current_dir = env::current_dir().unwrap();
+    let git_config = Git2::try_from(current_dir).unwrap();
 
     let (_, output) = create_output(
         commit_message.clone(),
@@ -59,14 +52,9 @@ fn create_output(
     commit_message: String,
     lint_problems: Vec<LintProblem>,
 ) -> (String, Option<(String, LintCode)>) {
-    lint_problems.into_iter().fold(
-        (commit_message, None),
-        |(commit_message, output): (
-            std::string::String,
-            std::option::Option<(std::string::String, LintCode)>,
-        ),
-         item: LintProblem|
-         -> (String, Option<(String, LintCode)>) {
+    lint_problems
+        .into_iter()
+        .fold((commit_message, None), |(commit_message, output), item| {
             (
                 commit_message.clone(),
                 match output {
@@ -80,8 +68,7 @@ fn create_output(
                     )),
                 },
             )
-        },
-    )
+        })
 }
 
 fn exit_error(commit_message: &str, exit_code: LintCode) {

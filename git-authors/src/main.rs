@@ -8,19 +8,16 @@ use std::{
 };
 
 use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
-use git2::{Config, Repository};
+
 use xdg::BaseDirectories;
 
 use pb_commit_message_lints::{
-    author::{
-        entities::{Author, Authors},
-        vcs::set_authors,
-        yaml::get_authors_from_user_config,
-    },
+    author::{vcs::set_authors, yaml::get_authors_from_user_config},
     external::vcs::Git2,
 };
 
 use crate::ExitCode::InitialNotMatchedToAuthor;
+use std::convert::TryFrom;
 
 #[repr(i32)]
 enum ExitCode {
@@ -78,16 +75,16 @@ fn main() {
 
     let author_config = get_author_config(&matches).unwrap();
     let authors_initials = get_author_initials(&matches).unwrap();
-    let yaml_authors: Authors = get_authors_from_user_config(&author_config).unwrap();
-    let selected_authors: Vec<Option<&Author>> = yaml_authors.get(&authors_initials);
-    let failed_authors: Vec<_> = selected_authors
+    let yaml_authors = get_authors_from_user_config(&author_config).unwrap();
+    let selected_authors = yaml_authors.get(&authors_initials);
+    let failed_authors = selected_authors
         .iter()
         .zip(authors_initials)
         .filter_map(|(result, initial)| match result {
             None => Some(initial),
             Some(_) => None,
         })
-        .collect();
+        .collect::<Vec<_>>();
 
     if !failed_authors.is_empty() {
         eprintln!(
@@ -103,11 +100,7 @@ You can fix this by checking the initials are in the configuration file.
     }
 
     let current_dir = env::current_dir().unwrap();
-    let mut git_config = Repository::discover(current_dir)
-        .and_then(|x: Repository| x.config())
-        .or_else(|_| Config::open_default())
-        .map(Git2::new)
-        .unwrap();
+    let mut git_config = Git2::try_from(current_dir).unwrap();
 
     let authors = selected_authors.into_iter().flatten().collect::<Vec<_>>();
     set_authors(
@@ -153,13 +146,13 @@ fn get_author_file_path<'a>(matches: &'a ArgMatches) -> Option<&'a str> {
 fn get_timeout(matches: &ArgMatches) -> Result<u64, Box<dyn Error>> {
     matches
         .value_of(TIMEOUT)
-        .ok_or_else(|| -> Box<dyn Error> { "No timeout set".into() })
+        .ok_or_else(|| "No timeout set".into())
         .and_then(|x| x.parse().map_err(Box::from))
 }
 
 fn config_file_path(cargo_package_name: &str) -> Result<String, Box<dyn Error>> {
     xdg::BaseDirectories::with_prefix(cargo_package_name.to_string())
-        .map_err(Box::<dyn std::error::Error>::from)
+        .map_err(Box::from)
         .and_then(|x| authors_config_file(&x))
         .map(|x| x.to_string_lossy().into())
 }

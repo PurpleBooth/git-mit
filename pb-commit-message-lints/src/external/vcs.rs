@@ -1,4 +1,6 @@
-use std::{clone::Clone, collections::HashMap, error::Error, string::String};
+use git2::{Config, Repository};
+use serde::export::TryFrom;
+use std::{clone::Clone, collections::HashMap, error::Error, path::PathBuf, string::String};
 
 pub trait Vcs {
     fn get_bool(&self, name: &str) -> Option<bool>;
@@ -150,5 +152,16 @@ impl Vcs for Git2 {
                     .map(|config| self.config_snapshot = config)
                     .map_err(Box::from)
             })
+    }
+}
+
+impl TryFrom<PathBuf> for Git2 {
+    type Error = git2::Error;
+
+    fn try_from(current_dir: PathBuf) -> Result<Self, Self::Error> {
+        Repository::discover(current_dir)
+            .and_then(|x| x.config())
+            .or_else(|_| Config::open_default())
+            .map(Git2::new)
     }
 }

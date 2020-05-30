@@ -1,9 +1,9 @@
 use std::{env, process};
 
 use clap::{crate_authors, crate_version, App};
-use git2::{Config, Repository};
 
 use pb_commit_message_lints::{author::vcs::get_coauthor_configuration, external::vcs::Git2};
+use std::convert::TryFrom;
 
 #[repr(i32)]
 enum ExitCode {
@@ -17,16 +17,9 @@ fn main() {
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .get_matches();
 
-    let current_dir = env::current_dir().expect("Unable to retrieve current directory");
+    let current_dir = env::current_dir().unwrap();
 
-    let get_config_from_repository = |x: Repository| x.config();
-    let get_default_config = |_| Config::open_default();
-
-    let mut git_config = Repository::discover(current_dir)
-        .and_then(get_config_from_repository)
-        .or_else(get_default_config)
-        .map(Git2::new)
-        .expect("Could not freeze git config");
+    let mut git_config = Git2::try_from(current_dir).unwrap();
 
     if get_coauthor_configuration(&mut git_config).is_none() {
         eprintln!(

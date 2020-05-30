@@ -1,13 +1,14 @@
 use std::{env, fs, fs::File, io::Write};
 
 use clap::{crate_authors, crate_version, App, Arg};
-use git2::{Config, Repository};
+
 use itertools::Itertools;
 
 use pb_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
     external::vcs::Git2,
 };
+use std::{convert::TryFrom, io::Error};
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -41,40 +42,33 @@ fn main() {
         .get_matches();
 
     let commit_message_path = matches.value_of("commit-message-path").unwrap();
-
-    let current_dir = env::current_dir().expect("Unable to retrieve current directory");
-
-    let get_repository_config = |x: Repository| x.config();
-    let get_default_config = |_| Config::open_default();
-
-    let mut git_config = Repository::discover(current_dir)
-        .and_then(get_repository_config)
-        .or_else(get_default_config)
-        .map(Git2::new)
-        .expect("Could not freeze git config");
+    let current_dir = env::current_dir().unwrap();
+    let mut git_config = Git2::try_from(current_dir).unwrap();
 
     if let Some(authors) = get_coauthor_configuration(&mut git_config) {
-        append_coauthors_to_commit_message(commit_message_path, &authors)
+        append_coauthors_to_commit_message(commit_message_path, &authors).unwrap()
     }
 }
 
-fn append_coauthors_to_commit_message(commit_message_path: &str, authors: &[Author]) {
-    let commit_message =
-        fs::read_to_string(commit_message_path).expect("Could not read commit message");
-    let write_co_author_trailer =
-        |x: &Author| format!("Co-authored-by: {} <{}>", x.name(), x.email());
-
-    File::create(commit_message_path)
-        .expect("Unable to open commit message file")
-        .write_all(
-            format!(
-                r#"{}
+fn append_coauthors_to_commit_message(
+    commit_message_path: &str,
+    authors: &[Author],
+) -> Result<(), Error> {
+    fs::read_to_string(commit_message_path).and_then(|commit_message| {
+        File::create(commit_message_path).and_then(|mut file| {
+            file.write_all(
+                format!(
+                    r#"{}
 {}
 "#,
-                authors.iter().map(write_co_author_trailer).join("\n"),
-                commit_message
+                    authors
+                        .iter()
+                        .map(|x| format!("Co-authored-by: {} <{}>", x.name(), x.email()))
+                        .join("\n"),
+                    commit_message
+                )
+                .as_bytes(),
             )
-            .as_bytes(),
-        )
-        .expect("Failed to write an updated commit message");
+        })
+    })
 }

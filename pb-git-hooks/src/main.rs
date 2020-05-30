@@ -83,7 +83,7 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), Box<dyn E
                     .values_of(LINT_NAME_ARGUMENT)
                     .unwrap()
                     .map(|name| Lints::try_from(name).unwrap())
-                    .collect::<Vec<Lints>>(),
+                    .collect::<Vec<_>>(),
                 config,
                 enable,
             )
