@@ -12,13 +12,13 @@ use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
 use xdg::BaseDirectories;
 
 use pb_commit_message_lints::{
-    author::{vcs::set_authors, yaml::get_authors_from_yaml},
+    author::{entities::Authors, vcs::set_authors},
     external::vcs::Git2,
 };
 
 use crate::ExitCode::InitialNotMatchedToAuthor;
-use std::convert::TryFrom;
 use pb_commit_message_lints::author::entities::Author;
+use std::convert::TryFrom;
 
 #[repr(i32)]
 enum ExitCode {
@@ -37,12 +37,12 @@ fn main() {
 
     let users_config = get_users_config(&matches).unwrap();
     let authors_initials = get_author_initials(&matches).unwrap();
-    let all_authors = get_authors_from_yaml(&users_config).unwrap();
+    let all_authors = Authors::try_from(users_config.as_str()).unwrap();
     let selected_authors = all_authors.get(&authors_initials);
     let initials_without_authors = find_initials_missing(authors_initials, &selected_authors);
 
     if !initials_without_authors.is_empty() {
-        exit_initial_not_matched_to_author(initials_without_authors);
+        exit_initial_not_matched_to_author(&initials_without_authors);
     }
 
     let current_dir = env::current_dir().unwrap();
@@ -57,7 +57,7 @@ fn main() {
     .unwrap()
 }
 
-fn exit_initial_not_matched_to_author(initials_without_authors: Vec<&str>) {
+fn exit_initial_not_matched_to_author(initials_without_authors: &[&str]) {
     eprintln!(
         r#"
 Could not find the initials {}.
@@ -70,45 +70,60 @@ You can fix this by checking the initials are in the configuration file.
     std::process::exit(InitialNotMatchedToAuthor as i32);
 }
 
-fn find_initials_missing<'a>(authors_initials: Vec<&'a str>, selected_authors: &Vec<Option<&Author>>) -> Vec<&'a str> {
+fn find_initials_missing<'a>(
+    authors_initials: Vec<&'a str>,
+    selected_authors: &[Option<&Author>],
+) -> Vec<&'a str> {
     selected_authors
         .iter()
         .zip(authors_initials)
         .filter_map(|(result, initial)| match result {
-        None => Some(initial),
-        Some(_) => None,
-    })
+            None => Some(initial),
+            Some(_) => None,
+        })
         .collect()
 }
 
 fn app(config_file_path: &str) -> App {
     let cargo_package_name = String::from(env!("CARGO_PKG_NAME"));
-            App::new(cargo_package_name)
-            .version(crate_version!())
-            .author(crate_authors!())
-                .about(env!("CARGO_PKG_DESCRIPTION")
-                )
-                .arg(
-        Arg::with_name(AUTHOR_INITIAL)
-            .help("Initials of the authors to put in the commit")
-            .multiple(true)
-            .required(true)
-            .min_values(1),
-    ).arg(
-        Arg::with_name(AUTHOR_FILE_PATH)
-            .short("c")
-            .long("config")
-            .help("Path to a file where authors initials, emails and names can be found").env("GIT_AUTHORS_CONFIG")
-            .default_value(config_file_path),
-    ).arg(
-        Arg::with_name(AUTHOR_FILE_COMMAND).short("e").long("exec").help(
-            "Execute a command to generate the author configuration, stdout will be \
+    App::new(cargo_package_name)
+        .version(crate_version!())
+        .author(crate_authors!())
+        .about(env!("CARGO_PKG_DESCRIPTION"))
+        .arg(
+            Arg::with_name(AUTHOR_INITIAL)
+                .help("Initials of the authors to put in the commit")
+                .multiple(true)
+                .required(true)
+                .min_values(1),
+        )
+        .arg(
+            Arg::with_name(AUTHOR_FILE_PATH)
+                .short("c")
+                .long("config")
+                .help("Path to a file where authors initials, emails and names can be found")
+                .env("GIT_AUTHORS_CONFIG")
+                .default_value(config_file_path),
+        )
+        .arg(
+            Arg::with_name(AUTHOR_FILE_COMMAND)
+                .short("e")
+                .long("exec")
+                .help(
+                    "Execute a command to generate the author configuration, stdout will be \
                      captured and used instead of the file, if both this and the file is present, \
                      this takes precedence",
-        ).env("GIT_AUTHORS_EXEC"),
-    ).arg(
-        Arg::with_name(TIMEOUT).short("t").long("timeout").help("Number of minutes to expire the configuration in").env("GIT_AUTHORS_TIMEOUT").default_value("60"),
-    )
+                )
+                .env("GIT_AUTHORS_EXEC"),
+        )
+        .arg(
+            Arg::with_name(TIMEOUT)
+                .short("t")
+                .long("timeout")
+                .help("Number of minutes to expire the configuration in")
+                .env("GIT_AUTHORS_TIMEOUT")
+                .default_value("60"),
+        )
 }
 
 fn get_author_initials<'a>(matches: &'a ArgMatches) -> Option<Vec<&'a str>> {
