@@ -27,7 +27,7 @@ fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &str) -> bool
         .unwrap()
 }
 
-pub(crate) fn lint_duplicated_trailers(commit_message: &str) -> Option<LintProblem> {
+pub(crate) fn lint_duplicated_trailers(commit_message: String) -> Option<LintProblem> {
     let duplicated_trailers = has_duplicated_trailers(&CommitMessage::new(commit_message));
     if duplicated_trailers.is_empty() {
         None
@@ -65,7 +65,8 @@ mod tests_has_duplicated_trailers {
 An example commit
 
 This is an example commit without any duplicate trailers
-"#,
+"#
+            .into(),
             &[],
         );
         test_has_duplicated_trailers(
@@ -78,7 +79,8 @@ Signed-off-by: Billie Thompson <email@example.com>
 Signed-off-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
-"#,
+"#
+            .into(),
             &["Signed-off-by".into(), "Co-authored-by".into()],
         );
         test_has_duplicated_trailers(
@@ -89,7 +91,8 @@ This is an example commit without any duplicate trailers
 
 Signed-off-by: Billie Thompson <email@example.com>
 Signed-off-by: Billie Thompson <email@example.com>
-"#,
+"#
+            .into(),
             &["Signed-off-by".into()],
         );
         test_has_duplicated_trailers(
@@ -100,12 +103,13 @@ This is an example commit without any duplicate trailers
 
 Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
-"#,
+"#
+            .into(),
             &["Co-authored-by".into()],
         );
     }
 
-    fn test_has_duplicated_trailers(message: &str, expected: &[String]) {
+    fn test_has_duplicated_trailers(message: String, expected: &[String]) {
         let actual = has_duplicated_trailers(&CommitMessage::new(message));
         assert_eq!(
             actual, expected,
@@ -119,7 +123,7 @@ Co-authored-by: Billie Thompson <email@example.com>
         use crate::lints::{duplicate_trailers::has_duplicated_trailer, CommitMessage};
 
         fn test_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {
-            let actual = has_duplicated_trailer(&CommitMessage::new(message), trailer);
+            let actual = has_duplicated_trailer(&CommitMessage::new(message.into()), trailer);
             assert_eq!(
                 actual, expected,
                 "Message {:?} with trailer {:?} should have returned {:?}, found {:?}",

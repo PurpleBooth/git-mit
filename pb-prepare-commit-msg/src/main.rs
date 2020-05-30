@@ -1,4 +1,4 @@
-use std::{env, fs, fs::File, io::Write};
+use std::{env, fs::File, io::Write};
 
 use clap::{crate_authors, crate_version, App, Arg};
 
@@ -7,8 +7,9 @@ use itertools::Itertools;
 use pb_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
     external::vcs::Git2,
+    lints::CommitMessage,
 };
-use std::{convert::TryFrom, io::Error};
+use std::{convert::TryFrom, path::PathBuf};
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -41,7 +42,10 @@ fn main() {
         )
         .get_matches();
 
-    let commit_message_path = matches.value_of("commit-message-path").unwrap();
+    let commit_message_path = matches
+        .value_of("commit-message-path")
+        .map(PathBuf::from)
+        .unwrap();
     let current_dir = env::current_dir().unwrap();
     let mut git_config = Git2::try_from(current_dir).unwrap();
 
@@ -51,24 +55,23 @@ fn main() {
 }
 
 fn append_coauthors_to_commit_message(
-    commit_message_path: &str,
+    commit_message_path: PathBuf,
     authors: &[Author],
-) -> Result<(), Error> {
-    fs::read_to_string(commit_message_path).and_then(|commit_message| {
-        File::create(commit_message_path).and_then(|mut file| {
-            file.write_all(
-                format!(
-                    r#"{}
+) -> Result<(), Box<dyn std::error::Error>> {
+    let commit_message = CommitMessage::try_from(commit_message_path.clone())?;
+    let mut file = File::create(commit_message_path)?;
+    file.write_all(
+        format!(
+            r#"{}
 {}
 "#,
-                    authors
-                        .iter()
-                        .map(|x| format!("Co-authored-by: {} <{}>", x.name(), x.email()))
-                        .join("\n"),
-                    commit_message
-                )
-                .as_bytes(),
-            )
-        })
-    })
+            authors
+                .iter()
+                .map(|x| format!("Co-authored-by: {} <{}>", x.name(), x.email()))
+                .join("\n"),
+            commit_message
+        )
+        .as_bytes(),
+    )
+    .map_err(Box::from)
 }

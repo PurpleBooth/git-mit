@@ -11,19 +11,20 @@ use crate::{
         Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
     },
 };
+use std::{convert::TryFrom, fs::File, io::Read, path::PathBuf};
 
-pub struct CommitMessage<'a> {
-    contents: &'a str,
+pub struct CommitMessage {
+    contents: String,
 }
 
-impl CommitMessage<'_> {
+impl CommitMessage {
     #[must_use]
-    pub fn new(contents: &str) -> CommitMessage {
+    pub fn new(contents: String) -> CommitMessage {
         CommitMessage { contents }
     }
 
     pub fn matches_pattern(&self, re: &Regex) -> bool {
-        re.is_match(self.contents)
+        re.is_match(&self.contents)
     }
 
     #[must_use]
@@ -39,7 +40,20 @@ impl CommitMessage<'_> {
     }
 }
 
-impl Display for CommitMessage<'_> {
+impl TryFrom<PathBuf> for CommitMessage {
+    type Error = Box<dyn Error>;
+
+    fn try_from(value: PathBuf) -> Result<Self, Self::Error> {
+        let mut file = File::open(value)?;
+        let mut buffer = String::new();
+
+        file.read_to_string(&mut buffer)
+            .map_err(Box::from)
+            .map(move |_| CommitMessage::new(buffer))
+    }
+}
+
+impl Display for CommitMessage {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.contents)
     }
@@ -60,7 +74,8 @@ mod test_commit_message {
 Anything: Some Trailer
 Anything: Some Trailer
 Another: Trailer
-"#,
+"#
+            .into(),
         );
 
         assert_eq!(vec!["Another: Trailer"], commit.get_trailer("Another"));
@@ -78,7 +93,8 @@ Another: Trailer
 Anything: Some Trailer
 Anything: Some Trailer
 Another: Trailer
-"#,
+"#
+            .into(),
         );
 
         assert_eq!(
@@ -122,12 +138,12 @@ impl Lints {
     #[must_use]
     pub fn lint(self, commit_message: &CommitMessage) -> Option<LintProblem> {
         match self {
-            Lints::DuplicatedTrailers => lint_duplicated_trailers(&format!("{}", commit_message)),
+            Lints::DuplicatedTrailers => lint_duplicated_trailers(format!("{}", commit_message)),
             Lints::PivotalTrackerIdMissing => {
-                lint_missing_pivotal_tracker_id(&format!("{}", commit_message))
+                lint_missing_pivotal_tracker_id(format!("{}", commit_message))
             },
             Lints::JiraIssueKeyMissing => {
-                lint_missing_jira_issue_key(&format!("{}", commit_message))
+                lint_missing_jira_issue_key(format!("{}", commit_message))
             },
         }
     }

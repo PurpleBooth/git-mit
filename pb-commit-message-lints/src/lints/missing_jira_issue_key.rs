@@ -15,7 +15,7 @@ fn has_missing_jira_issue_key(commit_message: &CommitMessage) -> bool {
     !commit_message.matches_pattern(&re)
 }
 
-pub(crate) fn lint_missing_jira_issue_key(commit_message: &str) -> Option<LintProblem> {
+pub(crate) fn lint_missing_jira_issue_key(commit_message: String) -> Option<LintProblem> {
     if has_missing_jira_issue_key(&CommitMessage::new(commit_message)) {
         Some(LintProblem::new(
             JIRA_HELP_MESSAGE.into(),
@@ -114,7 +114,7 @@ JRA-
     }
 
     fn test_has_missing_jira_issue_key(message: &str, expected: bool) {
-        let actual = has_missing_jira_issue_key(&CommitMessage::new(message));
+        let actual = has_missing_jira_issue_key(&CommitMessage::new(message.into()));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",

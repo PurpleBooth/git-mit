@@ -14,7 +14,7 @@ fn has_no_pivotal_tracker_id(text: &CommitMessage) -> bool {
     !text.matches_pattern(&re)
 }
 
-pub(crate) fn lint_missing_pivotal_tracker_id(commit_message: &str) -> Option<LintProblem> {
+pub(crate) fn lint_missing_pivotal_tracker_id(commit_message: String) -> Option<LintProblem> {
     if has_missing_pivotal_tracker_id(&CommitMessage::new(commit_message)) {
         Some(LintProblem::new(
             PIVOTAL_TRACKER_HELP.into(),
@@ -63,7 +63,7 @@ This is an example commit
     }
 
     fn test_has_missing_pivotal_tracker_id(message: &str, expected: bool) {
-        let actual = has_missing_pivotal_tracker_id(&CommitMessage::new(message));
+        let actual = has_missing_pivotal_tracker_id(&CommitMessage::new(message.into()));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",
