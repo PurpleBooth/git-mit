@@ -12,12 +12,13 @@ use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
 use xdg::BaseDirectories;
 
 use pb_commit_message_lints::{
-    author::{vcs::set_authors, yaml::get_authors_from_user_config},
+    author::{vcs::set_authors, yaml::get_authors_from_yaml},
     external::vcs::Git2,
 };
 
 use crate::ExitCode::InitialNotMatchedToAuthor;
 use std::convert::TryFrom;
+use pb_commit_message_lints::author::entities::Author;
 
 #[repr(i32)]
 enum ExitCode {
@@ -30,73 +31,18 @@ const AUTHOR_FILE_COMMAND: &str = "command";
 const TIMEOUT: &str = "timeout";
 
 fn main() {
-    let cargo_package_name = env!("CARGO_PKG_NAME");
-    let default_config_file = config_file_path(cargo_package_name).unwrap();
+    let config_path: String = config_file_path(env!("CARGO_PKG_NAME")).unwrap();
+    let app = app(&config_path);
+    let matches = app.get_matches();
 
-    let matches = App::new(cargo_package_name)
-        .version(crate_version!())
-        .author(crate_authors!())
-        .about(env!("CARGO_PKG_DESCRIPTION"))
-        .arg(
-            Arg::with_name(AUTHOR_INITIAL)
-                .help("Initials of the authors to put in the commit")
-                .multiple(true)
-                .required(true)
-                .min_values(1),
-        )
-        .arg(
-            Arg::with_name(AUTHOR_FILE_PATH)
-                .short("c")
-                .long("config")
-                .help("Path to a file where authors initials, emails and names can be found")
-                .env("GIT_AUTHORS_CONFIG")
-                .default_value(&default_config_file),
-        )
-        .arg(
-            Arg::with_name(AUTHOR_FILE_COMMAND)
-                .short("e")
-                .long("exec")
-                .help(
-                    "Execute a command to generate the author configuration, stdout will be \
-                     captured and used instead of the file, if both this and the file is present, \
-                     this takes precedence",
-                )
-                .env("GIT_AUTHORS_EXEC"),
-        )
-        .arg(
-            Arg::with_name(TIMEOUT)
-                .short("t")
-                .long("timeout")
-                .help("Number of minutes to expire the configuration in")
-                .env("GIT_AUTHORS_TIMEOUT")
-                .default_value("60"),
-        )
-        .get_matches();
-
-    let author_config = get_author_config(&matches).unwrap();
+    let users_config = get_users_config(&matches).unwrap();
     let authors_initials = get_author_initials(&matches).unwrap();
-    let yaml_authors = get_authors_from_user_config(&author_config).unwrap();
-    let selected_authors = yaml_authors.get(&authors_initials);
-    let failed_authors = selected_authors
-        .iter()
-        .zip(authors_initials)
-        .filter_map(|(result, initial)| match result {
-            None => Some(initial),
-            Some(_) => None,
-        })
-        .collect::<Vec<_>>();
+    let all_authors = get_authors_from_yaml(&users_config).unwrap();
+    let selected_authors = all_authors.get(&authors_initials);
+    let initials_without_authors = find_initials_missing(authors_initials, &selected_authors);
 
-    if !failed_authors.is_empty() {
-        eprintln!(
-            r#"
-Could not find the initials {}.
-
-You can fix this by checking the initials are in the configuration file.
-"#,
-            failed_authors.join(", "),
-        );
-
-        std::process::exit(InitialNotMatchedToAuthor as i32);
+    if !initials_without_authors.is_empty() {
+        exit_initial_not_matched_to_author(initials_without_authors);
     }
 
     let current_dir = env::current_dir().unwrap();
@@ -111,11 +57,65 @@ You can fix this by checking the initials are in the configuration file.
     .unwrap()
 }
 
+fn exit_initial_not_matched_to_author(initials_without_authors: Vec<&str>) {
+    eprintln!(
+        r#"
+Could not find the initials {}.
+
+You can fix this by checking the initials are in the configuration file.
+"#,
+        initials_without_authors.join(", "),
+    );
+
+    std::process::exit(InitialNotMatchedToAuthor as i32);
+}
+
+fn find_initials_missing<'a>(authors_initials: Vec<&'a str>, selected_authors: &Vec<Option<&Author>>) -> Vec<&'a str> {
+    selected_authors
+        .iter()
+        .zip(authors_initials)
+        .filter_map(|(result, initial)| match result {
+        None => Some(initial),
+        Some(_) => None,
+    })
+        .collect()
+}
+
+fn app(config_file_path: &str) -> App {
+    let cargo_package_name = String::from(env!("CARGO_PKG_NAME"));
+            App::new(cargo_package_name)
+            .version(crate_version!())
+            .author(crate_authors!())
+                .about(env!("CARGO_PKG_DESCRIPTION")
+                )
+                .arg(
+        Arg::with_name(AUTHOR_INITIAL)
+            .help("Initials of the authors to put in the commit")
+            .multiple(true)
+            .required(true)
+            .min_values(1),
+    ).arg(
+        Arg::with_name(AUTHOR_FILE_PATH)
+            .short("c")
+            .long("config")
+            .help("Path to a file where authors initials, emails and names can be found").env("GIT_AUTHORS_CONFIG")
+            .default_value(config_file_path),
+    ).arg(
+        Arg::with_name(AUTHOR_FILE_COMMAND).short("e").long("exec").help(
+            "Execute a command to generate the author configuration, stdout will be \
+                     captured and used instead of the file, if both this and the file is present, \
+                     this takes precedence",
+        ).env("GIT_AUTHORS_EXEC"),
+    ).arg(
+        Arg::with_name(TIMEOUT).short("t").long("timeout").help("Number of minutes to expire the configuration in").env("GIT_AUTHORS_TIMEOUT").default_value("60"),
+    )
+}
+
 fn get_author_initials<'a>(matches: &'a ArgMatches) -> Option<Vec<&'a str>> {
     matches.values_of(AUTHOR_INITIAL).map(Iterator::collect)
 }
 
-fn get_author_config(matches: &ArgMatches) -> Result<String, Box<dyn Error>> {
+fn get_users_config(matches: &ArgMatches) -> Result<String, Box<dyn Error>> {
     match matches.value_of(AUTHOR_FILE_COMMAND) {
         Some(command) => get_author_config_from_exec(command),
         None => get_author_config_from_file(matches),
