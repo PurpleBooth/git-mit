@@ -15,35 +15,39 @@ pub enum PbCommitMessageLintsError {
     SystemTimeError(String),
     FromIntegerError(std::num::TryFromIntError),
     NoAuthorsToSetError,
+    YamlParseError(String),
 }
 
 impl Display for PbCommitMessageLintsError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
-            crate::errors::PbCommitMessageLintsError::ConfigIoGit2Error(error) => {
+            PbCommitMessageLintsError::ConfigIoGit2Error(error) => {
                 write!(f, "Couldn't interact with git config: {}", error)
             },
-            crate::errors::PbCommitMessageLintsError::ConfigIoInMemoryError => {
+            PbCommitMessageLintsError::ConfigIoInMemoryError => {
                 write!(f, "Couldn't interact with in memory config")
             },
-            crate::errors::PbCommitMessageLintsError::ParseBoolError(error) => {
+            PbCommitMessageLintsError::ParseBoolError(error) => {
                 write!(f, "Couldn't convert value to bool: {} ({:?})", error, error)
             },
-            crate::errors::PbCommitMessageLintsError::ParseIntError(error) => {
+            PbCommitMessageLintsError::ParseIntError(error) => {
                 write!(f, "Couldn't convert value to int: {} ({:?})", error, error)
             },
-            crate::errors::PbCommitMessageLintsError::SystemTimeError(error) => {
+            PbCommitMessageLintsError::SystemTimeError(error) => {
                 write!(f, "Invalid time: {}", error)
             },
-            crate::errors::PbCommitMessageLintsError::FromIntegerError(error) => write!(
+            PbCommitMessageLintsError::FromIntegerError(error) => write!(
                 f,
                 "Failed to convert between integer types: {} ({:?})",
                 error, error
             ),
-            crate::errors::PbCommitMessageLintsError::NoAuthorsToSetError => write!(
+            PbCommitMessageLintsError::NoAuthorsToSetError => write!(
                 f,
                 "In order to set authors, you must provide at least one author to set"
             ),
+            PbCommitMessageLintsError::YamlParseError(error) => {
+                write!(f, "Couldn't parse the Author YAML: {}", error)
+            },
         }
     }
 }
@@ -75,6 +79,12 @@ impl From<std::time::SystemTimeError> for PbCommitMessageLintsError {
 impl From<std::num::TryFromIntError> for PbCommitMessageLintsError {
     fn from(error: std::num::TryFromIntError) -> Self {
         PbCommitMessageLintsError::FromIntegerError(error)
+    }
+}
+
+impl From<serde_yaml::Error> for PbCommitMessageLintsError {
+    fn from(error: serde_yaml::Error) -> Self {
+        PbCommitMessageLintsError::YamlParseError(format!("{} ({:?})", error, error))
     }
 }
 

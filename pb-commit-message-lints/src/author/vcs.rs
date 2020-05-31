@@ -38,75 +38,6 @@ pub fn get_coauthor_configuration(
     }
 }
 
-fn now() -> Result<Duration, SystemTimeError> {
-    SystemTime::now().duration_since(UNIX_EPOCH)
-}
-
-fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>, PbCommitMessageLintsError> {
-    let co_author_names = get_vcs_coauthor_names(config)?;
-    let co_author_emails = get_vcs_coauthor_emails(config)?;
-
-    Ok(co_author_names
-        .iter()
-        .zip(co_author_emails)
-        .filter_map(new_author)
-        .collect())
-}
-
-fn new_author(parameters: (&Option<&str>, Option<&str>)) -> Option<Author> {
-    match parameters {
-        (Some(name), Some(email)) => Some(Author::new(name, email, None)),
-        _ => None,
-    }
-}
-
-fn get_vcs_coauthor_names(
-    config: &dyn Vcs,
-) -> Result<Vec<Option<&str>>, PbCommitMessageLintsError> {
-    get_vcs_coauthors_config(config, "name")
-}
-
-fn get_vcs_coauthor_emails(
-    config: &dyn Vcs,
-) -> Result<Vec<Option<&str>>, PbCommitMessageLintsError> {
-    get_vcs_coauthors_config(config, "email")
-}
-
-#[allow(clippy::maybe_infinite_iter)]
-fn get_vcs_coauthors_config<'a>(
-    config: &'a dyn Vcs,
-    key: &'a str,
-) -> Result<Vec<Option<&'a str>>, PbCommitMessageLintsError> {
-    (0..)
-        .take_while(|index| has_vcs_coauthor(config, *index))
-        .map(|index| get_vcs_coauthor_config(config, key, index))
-        .fold(Ok(Vec::<Option<&'a str>>::new()), |acc, item| {
-            match (acc, item) {
-                (Ok(list), Ok(item)) => Ok(vec![list, vec![item]].concat()),
-                (Err(error), Ok(_)) | (Ok(_), Err(error)) | (Err(error), Err(_)) => Err(error),
-            }
-        })
-}
-
-fn get_vcs_coauthor_config<'a>(
-    config: &'a dyn Vcs,
-    key: &str,
-    index: i32,
-) -> Result<Option<&'a str>, PbCommitMessageLintsError> {
-    config.get_str(&format!("pb.author.coauthors.{}.{}", index, key))
-}
-
-fn has_vcs_coauthor(config: &dyn Vcs, index: i32) -> bool {
-    let email = get_vcs_coauthor_config(config, "email", index);
-    let name = get_vcs_coauthor_config(config, "name", index);
-
-    if let (Ok(Some(_)), Ok(Some(_))) = (name, email) {
-        true
-    } else {
-        false
-    }
-}
-
 #[cfg(test)]
 mod tests_able_to_load_config_from_git {
     use std::{
@@ -243,6 +174,75 @@ mod tests_able_to_load_config_from_git {
     }
 }
 
+fn now() -> Result<Duration, SystemTimeError> {
+    SystemTime::now().duration_since(UNIX_EPOCH)
+}
+
+fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>, PbCommitMessageLintsError> {
+    let co_author_names = get_vcs_coauthor_names(config)?;
+    let co_author_emails = get_vcs_coauthor_emails(config)?;
+
+    Ok(co_author_names
+        .iter()
+        .zip(co_author_emails)
+        .filter_map(new_author)
+        .collect())
+}
+
+fn new_author(parameters: (&Option<&str>, Option<&str>)) -> Option<Author> {
+    match parameters {
+        (Some(name), Some(email)) => Some(Author::new(name, email, None)),
+        _ => None,
+    }
+}
+
+fn get_vcs_coauthor_names(
+    config: &dyn Vcs,
+) -> Result<Vec<Option<&str>>, PbCommitMessageLintsError> {
+    get_vcs_coauthors_config(config, "name")
+}
+
+fn get_vcs_coauthor_emails(
+    config: &dyn Vcs,
+) -> Result<Vec<Option<&str>>, PbCommitMessageLintsError> {
+    get_vcs_coauthors_config(config, "email")
+}
+
+#[allow(clippy::maybe_infinite_iter)]
+fn get_vcs_coauthors_config<'a>(
+    config: &'a dyn Vcs,
+    key: &'a str,
+) -> Result<Vec<Option<&'a str>>, PbCommitMessageLintsError> {
+    (0..)
+        .take_while(|index| has_vcs_coauthor(config, *index))
+        .map(|index| get_vcs_coauthor_config(config, key, index))
+        .fold(Ok(Vec::<Option<&'a str>>::new()), |acc, item| {
+            match (acc, item) {
+                (Ok(list), Ok(item)) => Ok(vec![list, vec![item]].concat()),
+                (Err(error), Ok(_)) | (Ok(_), Err(error)) | (Err(error), Err(_)) => Err(error),
+            }
+        })
+}
+
+fn get_vcs_coauthor_config<'a>(
+    config: &'a dyn Vcs,
+    key: &str,
+    index: i32,
+) -> Result<Option<&'a str>, PbCommitMessageLintsError> {
+    config.get_str(&format!("pb.author.coauthors.{}.{}", index, key))
+}
+
+fn has_vcs_coauthor(config: &dyn Vcs, index: i32) -> bool {
+    let email = get_vcs_coauthor_config(config, "email", index);
+    let name = get_vcs_coauthor_config(config, "name", index);
+
+    if let (Ok(Some(_)), Ok(Some(_))) = (name, email) {
+        true
+    } else {
+        false
+    }
+}
+
 /// # Errors
 ///
 /// This errors if writing to the git authors file fails for some reason. Those
@@ -260,96 +260,6 @@ pub fn set_authors(
     set_vcs_expires_time(config, expires_in)?;
 
     Ok(())
-}
-
-fn remove_coauthors(config: &mut dyn Vcs) -> Result<(), PbCommitMessageLintsError> {
-    get_defined_vcs_coauthor_keys(config)
-        .into_iter()
-        .try_for_each(|key| config.remove(&key))
-}
-
-#[allow(clippy::maybe_infinite_iter)]
-fn get_defined_vcs_coauthor_keys(config: &mut dyn Vcs) -> Vec<String> {
-    (0..)
-        .take_while(|index| has_vcs_coauthor(config, *index))
-        .flat_map(|index| {
-            vec![
-                format!("pb.author.coauthors.{}.name", index),
-                format!("pb.author.coauthors.{}.email", index),
-            ]
-            .into_iter()
-        })
-        .map(String::from)
-        .collect()
-}
-
-fn set_vcs_coauthors(
-    config: &mut dyn Vcs,
-    authors: &[&Author],
-) -> Result<(), PbCommitMessageLintsError> {
-    authors
-        .iter()
-        .enumerate()
-        .try_for_each(|(index, author)| set_vcs_coauthor(config, index, author))
-}
-
-fn set_vcs_coauthor(
-    config: &mut dyn Vcs,
-    index: usize,
-    author: &Author,
-) -> Result<(), PbCommitMessageLintsError> {
-    set_vcs_coauthor_name(config, index, author)
-        .and_then(|_| set_vcs_coauthor_email(config, index, author))
-}
-
-fn set_vcs_coauthor_name(
-    config: &mut dyn Vcs,
-    index: usize,
-    author: &Author,
-) -> Result<(), PbCommitMessageLintsError> {
-    config.set_str(
-        &format!("pb.author.coauthors.{}.name", index),
-        &author.name(),
-    )?;
-    Ok(())
-}
-
-fn set_vcs_coauthor_email(
-    config: &mut dyn Vcs,
-    index: usize,
-    author: &Author,
-) -> Result<(), PbCommitMessageLintsError> {
-    config.set_str(
-        &format!("pb.author.coauthors.{}.email", index),
-        &author.email(),
-    )?;
-    Ok(())
-}
-
-fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), PbCommitMessageLintsError> {
-    config
-        .set_str("user.name", &author.name())
-        .and_then(|_| config.set_str("user.email", &author.email()))
-        .and_then(|_| set_author_signing_key(config, author))
-}
-
-fn set_author_signing_key(
-    config: &mut dyn Vcs,
-    author: &Author,
-) -> Result<(), PbCommitMessageLintsError> {
-    match author.signingkey() {
-        Some(key) => config.set_str("user.signingkey", &key),
-        None => config.remove("user.signingkey").or_else(|_| Ok(())),
-    }
-}
-
-fn set_vcs_expires_time(
-    config: &mut dyn Vcs,
-    expires_in: Duration,
-) -> Result<(), PbCommitMessageLintsError> {
-    let now = SystemTime::now().duration_since(UNIX_EPOCH)?;
-    let expiry_time = now.add(expires_in).as_secs().try_into()?;
-    config.set_i64(CONFIG_KEY_EXPIRES, expiry_time)
 }
 
 #[cfg(test)]
@@ -531,4 +441,94 @@ mod tests_can_set_author_details {
             actual_expire_time
         );
     }
+}
+
+fn remove_coauthors(config: &mut dyn Vcs) -> Result<(), PbCommitMessageLintsError> {
+    get_defined_vcs_coauthor_keys(config)
+        .into_iter()
+        .try_for_each(|key| config.remove(&key))
+}
+
+#[allow(clippy::maybe_infinite_iter)]
+fn get_defined_vcs_coauthor_keys(config: &mut dyn Vcs) -> Vec<String> {
+    (0..)
+        .take_while(|index| has_vcs_coauthor(config, *index))
+        .flat_map(|index| {
+            vec![
+                format!("pb.author.coauthors.{}.name", index),
+                format!("pb.author.coauthors.{}.email", index),
+            ]
+            .into_iter()
+        })
+        .map(String::from)
+        .collect()
+}
+
+fn set_vcs_coauthors(
+    config: &mut dyn Vcs,
+    authors: &[&Author],
+) -> Result<(), PbCommitMessageLintsError> {
+    authors
+        .iter()
+        .enumerate()
+        .try_for_each(|(index, author)| set_vcs_coauthor(config, index, author))
+}
+
+fn set_vcs_coauthor(
+    config: &mut dyn Vcs,
+    index: usize,
+    author: &Author,
+) -> Result<(), PbCommitMessageLintsError> {
+    set_vcs_coauthor_name(config, index, author)
+        .and_then(|_| set_vcs_coauthor_email(config, index, author))
+}
+
+fn set_vcs_coauthor_name(
+    config: &mut dyn Vcs,
+    index: usize,
+    author: &Author,
+) -> Result<(), PbCommitMessageLintsError> {
+    config.set_str(
+        &format!("pb.author.coauthors.{}.name", index),
+        &author.name(),
+    )?;
+    Ok(())
+}
+
+fn set_vcs_coauthor_email(
+    config: &mut dyn Vcs,
+    index: usize,
+    author: &Author,
+) -> Result<(), PbCommitMessageLintsError> {
+    config.set_str(
+        &format!("pb.author.coauthors.{}.email", index),
+        &author.email(),
+    )?;
+    Ok(())
+}
+
+fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), PbCommitMessageLintsError> {
+    config
+        .set_str("user.name", &author.name())
+        .and_then(|_| config.set_str("user.email", &author.email()))
+        .and_then(|_| set_author_signing_key(config, author))
+}
+
+fn set_author_signing_key(
+    config: &mut dyn Vcs,
+    author: &Author,
+) -> Result<(), PbCommitMessageLintsError> {
+    match author.signingkey() {
+        Some(key) => config.set_str("user.signingkey", &key),
+        None => config.remove("user.signingkey").or_else(|_| Ok(())),
+    }
+}
+
+fn set_vcs_expires_time(
+    config: &mut dyn Vcs,
+    expires_in: Duration,
+) -> Result<(), PbCommitMessageLintsError> {
+    let now = SystemTime::now().duration_since(UNIX_EPOCH)?;
+    let expiry_time = now.add(expires_in).as_secs().try_into()?;
+    config.set_i64(CONFIG_KEY_EXPIRES, expiry_time)
 }

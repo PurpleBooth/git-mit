@@ -1,14 +1,12 @@
-use std::error::Error;
-
-use crate::author::entities::Authors;
+use crate::{author::entities::Authors, errors::PbCommitMessageLintsError};
 use std::convert::TryFrom;
 
 impl TryFrom<&str> for Authors {
-    type Error = Box<dyn Error>;
+    type Error = PbCommitMessageLintsError;
 
     fn try_from(yaml: &str) -> Result<Self, Self::Error> {
         serde_yaml::from_str(yaml)
-            .map_err(Box::from)
+            .map_err(PbCommitMessageLintsError::from)
             .map(Authors::new)
     }
 }
@@ -43,10 +41,9 @@ bt:
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", None),
         );
-        let expected = Authors::new(input);
+        let expected = Ok(Authors::new(input));
 
-        assert_eq!(true, actual.is_ok());
-        assert_eq!(expected, actual.unwrap());
+        assert_eq!(expected, actual);
     }
 
     #[test]
@@ -65,9 +62,8 @@ bt:
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
         );
-        let expected = Authors::new(expected_authors);
+        let expected = Ok(Authors::new(expected_authors));
 
-        assert_eq!(true, actual.is_ok());
-        assert_eq!(expected, actual.unwrap());
+        assert_eq!(expected, actual);
     }
 }
