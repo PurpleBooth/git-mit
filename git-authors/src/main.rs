@@ -36,7 +36,10 @@ const AUTHOR_FILE_COMMAND: &str = "command";
 const TIMEOUT: &str = "timeout";
 
 fn main() {
-    let config_path: String = config_file_path(env!("CARGO_PKG_NAME")).unwrap();
+    let config_path: String = config_file_path(env!("CARGO_PKG_NAME")).unwrap_or_else(|err| {
+        eprintln!("{}", err);
+        process::exit(ExitCode::GenericError as i32);
+    });
     let app = app(&config_path);
     let matches = app.get_matches();
 
