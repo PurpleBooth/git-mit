@@ -4,9 +4,11 @@ use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
 use git2::{Config, Repository};
 
 use pb_commit_message_lints::{
+    errors::PbCommitMessageLintsError,
     external::vcs::{Git2, Vcs},
     lints::{set_lint_status, Lints},
 };
+use std::fmt::{Display, Formatter};
 
 const LOCAL_SCOPE: &str = "local";
 const LINT_NAME_ARGUMENT: &str = "lint";
@@ -15,7 +17,7 @@ const COMMAND_LINT_ENABLE: &str = "enable";
 const COMMAND_LINT_DISABLE: &str = "disable";
 const SCOPE_ARGUMENT: &str = "scope";
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() {
     let lints: Vec<String> = Lints::iterator().map(|lint| format!("{}", lint)).collect();
     let possible_values: Vec<&str> = lints
         .iter()
@@ -63,20 +65,18 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut vcs = Git2::new(git_config);
 
     if let Some(value) = matches.subcommand_matches(COMMAND_LINT) {
-        return manage_lints(value, &mut vcs);
+        manage_lints(value, &mut vcs).unwrap();
     }
-
-    Ok(())
 }
 
-fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), Box<dyn Error>> {
+fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHooksError> {
     args.subcommand_matches(COMMAND_LINT_ENABLE)
         .map(|enable_args| (enable_args, true))
         .or_else(|| {
             args.subcommand_matches(COMMAND_LINT_DISABLE)
                 .map(|disable_args| (disable_args, false))
         })
-        .ok_or_else(|| Box::from("Unrecognised lint subcommand"))
+        .ok_or_else(|| PbGitHooksError::UnrecognisedLintCommand)
         .and_then(|(subcommand_args, enable)| {
             set_lint_status(
                 &subcommand_args
@@ -87,5 +87,32 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), Box<dyn E
                 config,
                 enable,
             )
+            .map_err(PbGitHooksError::from)
         })
 }
+
+#[derive(Debug)]
+enum PbGitHooksError {
+    UnrecognisedLintCommand,
+    PbCommitMessageLintsError(PbCommitMessageLintsError),
+}
+
+impl Display for PbGitHooksError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PbGitHooksError::UnrecognisedLintCommand => write!(
+                f,
+                "Unrecognised Lint command, only you may only enable or disable"
+            ),
+            PbGitHooksError::PbCommitMessageLintsError(error) => write!(f, "{}", error),
+        }
+    }
+}
+
+impl From<PbCommitMessageLintsError> for PbGitHooksError {
+    fn from(from: PbCommitMessageLintsError) -> Self {
+        PbGitHooksError::PbCommitMessageLintsError(from)
+    }
+}
+
+impl Error for PbGitHooksError {}

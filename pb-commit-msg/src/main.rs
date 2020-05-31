@@ -26,7 +26,10 @@ fn main() {
 
     let output = format_lint_problems(
         &commit_message,
-        lint(&commit_message, get_lint_configuration(&git_config)),
+        lint(
+            &commit_message,
+            get_lint_configuration(&git_config).unwrap(),
+        ),
     );
 
     if let Some((message, exit_code)) = output {

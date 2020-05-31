@@ -3,6 +3,7 @@ use std::{error::Error, fmt::Display};
 use regex::Regex;
 
 use crate::{
+    errors::PbCommitMessageLintsError,
     external::vcs::Vcs,
     lints::{
         duplicate_trailers::lint_duplicated_trailers,
@@ -184,23 +185,32 @@ impl std::convert::From<Lints> for String {
     }
 }
 
-pub fn get_lint_configuration(config: &dyn Vcs) -> Vec<Lints> {
-    vec![
-        get_config_or_default(config, Lints::DuplicatedTrailers, true),
-        get_config_or_default(config, Lints::PivotalTrackerIdMissing, false),
-        get_config_or_default(config, Lints::JiraIssueKeyMissing, false),
+/// Get the lints that are currently enabled
+///
+/// # Errors
+///
+/// If there's an error reading from the configuration source
+pub fn get_lint_configuration(config: &dyn Vcs) -> Result<Vec<Lints>, PbCommitMessageLintsError> {
+    Ok(vec![
+        get_config_or_default(config, Lints::DuplicatedTrailers, true)?,
+        get_config_or_default(config, Lints::PivotalTrackerIdMissing, false)?,
+        get_config_or_default(config, Lints::JiraIssueKeyMissing, false)?,
     ]
     .into_iter()
     .flatten()
-    .collect()
+    .collect())
 }
 
-fn get_config_or_default(config: &dyn Vcs, lint: Lints, default: bool) -> Option<Lints> {
-    config
-        .get_bool(&lint.config_key())
+fn get_config_or_default(
+    config: &dyn Vcs,
+    lint: Lints,
+    default: bool,
+) -> Result<Option<Lints>, PbCommitMessageLintsError> {
+    Ok(config
+        .get_bool(&lint.config_key())?
         .or(Some(default))
         .filter(|lint_value| lint_value == &true)
-        .map(|_| lint)
+        .map(|_| lint))
 }
 
 #[cfg(test)]
@@ -245,6 +255,7 @@ mod tests_get_lint_configuration {
     use pretty_assertions::assert_eq;
 
     use crate::{
+        errors::PbCommitMessageLintsError,
         external::vcs::InMemory,
         lints::{
             get_lint_configuration,
@@ -259,7 +270,7 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected = vec![DuplicatedTrailers];
+        let expected = Ok(vec![DuplicatedTrailers]);
 
         assert_eq!(
             expected, actual,
@@ -275,7 +286,7 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected: Vec<Lints> = vec![];
+        let expected: Result<Vec<Lints>, PbCommitMessageLintsError> = Ok(vec![]);
 
         assert_eq!(
             expected, actual,
@@ -291,7 +302,7 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected: Vec<Lints> = vec![DuplicatedTrailers];
+        let expected: Result<Vec<Lints>, PbCommitMessageLintsError> = Ok(vec![DuplicatedTrailers]);
 
         assert_eq!(
             expected, actual,
@@ -307,7 +318,8 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected: Vec<Lints> = vec![DuplicatedTrailers, PivotalTrackerIdMissing];
+        let expected: Result<Vec<Lints>, PbCommitMessageLintsError> =
+            Ok(vec![DuplicatedTrailers, PivotalTrackerIdMissing]);
 
         assert_eq!(
             expected, actual,
@@ -323,7 +335,8 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected: Vec<Lints> = vec![DuplicatedTrailers, JiraIssueKeyMissing];
+        let expected: Result<Vec<Lints>, PbCommitMessageLintsError> =
+            Ok(vec![DuplicatedTrailers, JiraIssueKeyMissing]);
 
         assert_eq!(
             expected, actual,
@@ -339,7 +352,7 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected: Vec<Lints> = vec![DuplicatedTrailers];
+        let expected = Ok(vec![DuplicatedTrailers]);
 
         assert_eq!(
             expected, actual,
@@ -400,10 +413,11 @@ pub fn set_lint_status(
     lints: &[Lints],
     vcs: &mut dyn Vcs,
     status: bool,
-) -> Result<(), Box<dyn Error>> {
+) -> Result<(), PbCommitMessageLintsError> {
     lints
         .iter()
-        .try_for_each(|lint| vcs.set_str(&lint.config_key(), &status.to_string()))
+        .try_for_each(|lint| vcs.set_str(&lint.config_key(), &status.to_string()))?;
+    Ok(())
 }
 
 #[must_use]

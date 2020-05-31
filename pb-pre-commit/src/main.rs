@@ -21,7 +21,10 @@ fn main() {
 
     let mut git_config = Git2::try_from(current_dir).unwrap();
 
-    if get_coauthor_configuration(&mut git_config).is_none() {
+    if get_coauthor_configuration(&mut git_config)
+        .unwrap()
+        .is_none()
+    {
         eprintln!(
             r#"
 The details of the author of this commit are a bit stale. Can you confirm who's currently coding?

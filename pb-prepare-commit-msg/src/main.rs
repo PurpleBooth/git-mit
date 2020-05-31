@@ -49,7 +49,7 @@ fn main() {
     let current_dir = env::current_dir().unwrap();
     let mut git_config = Git2::try_from(current_dir).unwrap();
 
-    if let Some(authors) = get_coauthor_configuration(&mut git_config) {
+    if let Some(authors) = get_coauthor_configuration(&mut git_config).unwrap() {
         append_coauthors_to_commit_message(commit_message_path, &authors).unwrap()
     }
 }

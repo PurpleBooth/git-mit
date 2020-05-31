@@ -1,51 +1,56 @@
 use std::{
-    convert::TryFrom,
-    error::Error,
     ops::Add,
     option::Option,
     result::Result,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use crate::{author::entities::Author, external::vcs::Vcs};
+use crate::errors::PbCommitMessageLintsError;
+
+use crate::{
+    author::entities::Author,
+    errors::PbCommitMessageLintsError::NoAuthorsToSetError,
+    external::vcs::Vcs,
+};
+use std::{convert::TryInto, time::SystemTimeError};
 
 const CONFIG_KEY_EXPIRES: &str = "pb.author.expires";
 
-#[must_use]
-pub fn get_coauthor_configuration(config: &mut dyn Vcs) -> Option<Vec<Author>> {
-    config
-        .get_i64(CONFIG_KEY_EXPIRES)
-        .ok_or_else(|| "No author expiry date".into())
-        .and_then(i64_into_u64)
-        .map(Duration::from_secs)
-        .and_then(join_time_and_now)
-        .map(|(point, comparison)| point.lt(&comparison))
-        .ok()
-        .filter(bool::clone)
-        .map(|_| get_vcs_authors(config))
+/// Get the co-authors that are currently defined for this vcs config source
+///
+/// # Errors
+///
+/// Will fail if reading or writing from the VCS config fails, or it contains
+/// data in an incorrect format
+pub fn get_coauthor_configuration(
+    config: &mut dyn Vcs,
+) -> Result<Option<Vec<Author>>, PbCommitMessageLintsError> {
+    match config.get_i64(CONFIG_KEY_EXPIRES) {
+        Ok(Some(config_value)) => {
+            if now()? < Duration::from_secs(config_value.try_into()?) {
+                Ok(Some(get_vcs_authors(config)?))
+            } else {
+                Ok(None)
+            }
+        },
+        Ok(None) => Ok(None),
+        Err(error) => Err(error),
+    }
 }
 
-fn join_time_and_now(expires_after_time: Duration) -> Result<(Duration, Duration), Box<dyn Error>> {
-    SystemTime::now()
-        .duration_since(SystemTime::UNIX_EPOCH)
-        .map_err(Box::from)
-        .map(|time_since_epoch| (time_since_epoch, expires_after_time))
+fn now() -> Result<Duration, SystemTimeError> {
+    SystemTime::now().duration_since(UNIX_EPOCH)
 }
 
-fn i64_into_u64(input: i64) -> Result<u64, Box<dyn Error>> {
-    u64::try_from(input).map_err(Box::<dyn Error>::from)
-}
+fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>, PbCommitMessageLintsError> {
+    let co_author_names = get_vcs_coauthor_names(config)?;
+    let co_author_emails = get_vcs_coauthor_emails(config)?;
 
-fn u64_into_i64(input: u64) -> Result<i64, Box<dyn Error>> {
-    i64::try_from(input).map_err(Box::<dyn Error>::from)
-}
-
-fn get_vcs_authors(config: &dyn Vcs) -> Vec<Author> {
-    get_vcs_coauthor_names(config)
+    Ok(co_author_names
         .iter()
-        .zip(get_vcs_coauthor_emails(config))
+        .zip(co_author_emails)
         .filter_map(new_author)
-        .collect()
+        .collect())
 }
 
 fn new_author(parameters: (&Option<&str>, Option<&str>)) -> Option<Author> {
@@ -55,30 +60,51 @@ fn new_author(parameters: (&Option<&str>, Option<&str>)) -> Option<Author> {
     }
 }
 
-fn get_vcs_coauthor_names(config: &dyn Vcs) -> Vec<Option<&str>> {
+fn get_vcs_coauthor_names(
+    config: &dyn Vcs,
+) -> Result<Vec<Option<&str>>, PbCommitMessageLintsError> {
     get_vcs_coauthors_config(config, "name")
 }
 
-fn get_vcs_coauthor_emails(config: &dyn Vcs) -> Vec<Option<&str>> {
+fn get_vcs_coauthor_emails(
+    config: &dyn Vcs,
+) -> Result<Vec<Option<&str>>, PbCommitMessageLintsError> {
     get_vcs_coauthors_config(config, "email")
 }
 
 #[allow(clippy::maybe_infinite_iter)]
-fn get_vcs_coauthors_config<'a>(config: &'a dyn Vcs, key: &'a str) -> Vec<Option<&'a str>> {
+fn get_vcs_coauthors_config<'a>(
+    config: &'a dyn Vcs,
+    key: &'a str,
+) -> Result<Vec<Option<&'a str>>, PbCommitMessageLintsError> {
     (0..)
         .take_while(|index| has_vcs_coauthor(config, *index))
         .map(|index| get_vcs_coauthor_config(config, key, index))
-        .collect::<Vec<Option<&'a str>>>()
+        .fold(Ok(Vec::<Option<&'a str>>::new()), |acc, item| {
+            match (acc, item) {
+                (Ok(list), Ok(item)) => Ok(vec![list, vec![item]].concat()),
+                (Err(error), Ok(_)) | (Ok(_), Err(error)) | (Err(error), Err(_)) => Err(error),
+            }
+        })
 }
 
-fn get_vcs_coauthor_config<'a>(config: &'a dyn Vcs, key: &str, index: i32) -> Option<&'a str> {
+fn get_vcs_coauthor_config<'a>(
+    config: &'a dyn Vcs,
+    key: &str,
+    index: i32,
+) -> Result<Option<&'a str>, PbCommitMessageLintsError> {
     config.get_str(&format!("pb.author.coauthors.{}.{}", index, key))
 }
 
 fn has_vcs_coauthor(config: &dyn Vcs, index: i32) -> bool {
-    get_vcs_coauthor_config(config, "email", index)
-        .and_then(|_| get_vcs_coauthor_config(config, "name", index))
-        .is_some()
+    let email = get_vcs_coauthor_config(config, "email", index);
+    let name = get_vcs_coauthor_config(config, "name", index);
+
+    if let (Ok(Some(_)), Ok(Some(_))) = (name, email) {
+        true
+    } else {
+        false
+    }
 }
 
 #[cfg(test)]
@@ -105,7 +131,7 @@ mod tests_able_to_load_config_from_git {
         let mut vcs = InMemory::new(&mut strings);
 
         let actual = get_coauthor_configuration(&mut vcs);
-        let expected = None;
+        let expected = Ok(None);
         assert_eq!(
             expected, actual,
             "Expected the author config to be {:?}, instead got {:?}",
@@ -124,7 +150,7 @@ mod tests_able_to_load_config_from_git {
         let mut vcs = InMemory::new(&mut strings);
 
         let actual = get_coauthor_configuration(&mut vcs);
-        let expected: Option<Vec<Author>> = Some(vec![]);
+        let expected: Result<Option<Vec<Author>>, _> = Ok(Some(vec![]));
 
         assert_eq!(
             expected, actual,
@@ -148,11 +174,11 @@ mod tests_able_to_load_config_from_git {
         let mut vcs = InMemory::new(&mut strs);
 
         let actual = get_coauthor_configuration(&mut vcs);
-        let expected = Some(vec![Author::new(
+        let expected = Ok(Some(vec![Author::new(
             "Annie Example",
             "annie@example.com",
             None,
-        )]);
+        )]));
 
         assert_eq!(
             expected, actual,
@@ -194,10 +220,10 @@ mod tests_able_to_load_config_from_git {
         let mut vcs = InMemory::new(&mut strs);
 
         let actual = get_coauthor_configuration(&mut vcs);
-        let expected = Some(vec![
+        let expected = Ok(Some(vec![
             Author::new("Annie Example", "annie@example.com", None),
             Author::new("Joe Bloggs", "joe@example.com", None),
-        ]);
+        ]));
 
         assert_eq!(
             expected, actual,
@@ -225,17 +251,18 @@ pub fn set_authors(
     config: &mut dyn Vcs,
     authors: &[&Author],
     expires_in: Duration,
-) -> Result<(), Box<dyn Error>> {
-    authors
-        .split_first()
-        .ok_or_else(|| "Needs at least one author".into())
-        .and_then(|input| remove_coauthors(config).map(|_| input))
-        .and_then(|(first, others)| set_vcs_user(config, first).map(|_| others))
-        .and_then(|authors| set_vcs_coauthors(config, authors))
-        .and_then(|_| set_vcs_expires_time(config, expires_in))
+) -> Result<(), PbCommitMessageLintsError> {
+    let (first_author, others) = authors.split_first().ok_or_else(|| NoAuthorsToSetError)?;
+
+    remove_coauthors(config)?;
+    set_vcs_user(config, first_author)?;
+    set_vcs_coauthors(config, others)?;
+    set_vcs_expires_time(config, expires_in)?;
+
+    Ok(())
 }
 
-fn remove_coauthors(config: &mut dyn Vcs) -> Result<(), Box<dyn Error>> {
+fn remove_coauthors(config: &mut dyn Vcs) -> Result<(), PbCommitMessageLintsError> {
     get_defined_vcs_coauthor_keys(config)
         .into_iter()
         .try_for_each(|key| config.remove(&key))
@@ -256,7 +283,10 @@ fn get_defined_vcs_coauthor_keys(config: &mut dyn Vcs) -> Vec<String> {
         .collect()
 }
 
-fn set_vcs_coauthors(config: &mut dyn Vcs, authors: &[&Author]) -> Result<(), Box<dyn Error>> {
+fn set_vcs_coauthors(
+    config: &mut dyn Vcs,
+    authors: &[&Author],
+) -> Result<(), PbCommitMessageLintsError> {
     authors
         .iter()
         .enumerate()
@@ -267,7 +297,7 @@ fn set_vcs_coauthor(
     config: &mut dyn Vcs,
     index: usize,
     author: &Author,
-) -> Result<(), Box<dyn Error>> {
+) -> Result<(), PbCommitMessageLintsError> {
     set_vcs_coauthor_name(config, index, author)
         .and_then(|_| set_vcs_coauthor_email(config, index, author))
 }
@@ -276,50 +306,50 @@ fn set_vcs_coauthor_name(
     config: &mut dyn Vcs,
     index: usize,
     author: &Author,
-) -> Result<(), Box<dyn Error>> {
-    config
-        .set_str(
-            &format!("pb.author.coauthors.{}.name", index),
-            &author.name(),
-        )
-        .map_err(Box::<dyn Error>::from)
+) -> Result<(), PbCommitMessageLintsError> {
+    config.set_str(
+        &format!("pb.author.coauthors.{}.name", index),
+        &author.name(),
+    )?;
+    Ok(())
 }
 
 fn set_vcs_coauthor_email(
     config: &mut dyn Vcs,
     index: usize,
     author: &Author,
-) -> Result<(), Box<dyn Error>> {
-    config
-        .set_str(
-            &format!("pb.author.coauthors.{}.email", index),
-            &author.email(),
-        )
-        .map_err(Box::<dyn Error>::from)
+) -> Result<(), PbCommitMessageLintsError> {
+    config.set_str(
+        &format!("pb.author.coauthors.{}.email", index),
+        &author.email(),
+    )?;
+    Ok(())
 }
 
-fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), Box<dyn Error>> {
+fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), PbCommitMessageLintsError> {
     config
         .set_str("user.name", &author.name())
         .and_then(|_| config.set_str("user.email", &author.email()))
         .and_then(|_| set_author_signing_key(config, author))
 }
 
-fn set_author_signing_key(config: &mut dyn Vcs, author: &Author) -> Result<(), Box<dyn Error>> {
+fn set_author_signing_key(
+    config: &mut dyn Vcs,
+    author: &Author,
+) -> Result<(), PbCommitMessageLintsError> {
     match author.signingkey() {
         Some(key) => config.set_str("user.signingkey", &key),
         None => config.remove("user.signingkey").or_else(|_| Ok(())),
     }
 }
 
-fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<(), Box<dyn Error>> {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map_err(Box::from)
-        .map(|now| now.add(expires_in))
-        .map(|expiry_time| expiry_time.as_secs())
-        .and_then(u64_into_i64)
-        .and_then(|expires_time| config.set_i64(CONFIG_KEY_EXPIRES, expires_time))
+fn set_vcs_expires_time(
+    config: &mut dyn Vcs,
+    expires_in: Duration,
+) -> Result<(), PbCommitMessageLintsError> {
+    let now = SystemTime::now().duration_since(UNIX_EPOCH)?;
+    let expiry_time = now.add(expires_in).as_secs().try_into()?;
+    config.set_i64(CONFIG_KEY_EXPIRES, expiry_time)
 }
 
 #[cfg(test)]
