@@ -1,4 +1,4 @@
-use std::{env, fs::File, io::Write};
+use std::{env, fs::File, io::Write, process};
 
 use clap::{crate_authors, crate_version, App, Arg};
 
@@ -45,12 +45,25 @@ fn main() {
     let commit_message_path = matches
         .value_of("commit-message-path")
         .map(PathBuf::from)
-        .unwrap();
-    let current_dir = env::current_dir().unwrap();
-    let mut git_config = Git2::try_from(current_dir).unwrap();
+        .expect("Expected commit file path");
+    let current_dir = env::current_dir().unwrap_or_else(|err| {
+        eprintln!("Failed to get current working directory:\n{}", err);
+        process::exit(1);
+    });
 
-    if let Some(authors) = get_coauthor_configuration(&mut git_config).unwrap() {
-        append_coauthors_to_commit_message(commit_message_path, &authors).unwrap()
+    let mut git_config = Git2::try_from(current_dir).unwrap_or_else(|err| {
+        eprintln!("{}", err);
+        process::exit(1);
+    });
+
+    if let Some(authors) = get_coauthor_configuration(&mut git_config).unwrap_or_else(|err| {
+        eprintln!("{}", err);
+        process::exit(1);
+    }) {
+        append_coauthors_to_commit_message(commit_message_path, &authors).unwrap_or_else(|err| {
+            eprintln!("{}", err);
+            process::exit(1);
+        })
     }
 }
 

@@ -17,14 +17,23 @@ fn main() {
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .get_matches();
 
-    let current_dir = env::current_dir().unwrap();
+    let current_dir = env::current_dir().unwrap_or_else(|err| {
+        eprintln!("Failed to get current working directory:\n{}", err);
+        process::exit(1);
+    });
 
-    let mut git_config = Git2::try_from(current_dir).unwrap();
+    let mut git_config = Git2::try_from(current_dir).unwrap_or_else(|err| {
+        eprintln!("{}", err);
+        process::exit(1);
+    });
 
-    if get_coauthor_configuration(&mut git_config)
-        .unwrap()
-        .is_none()
-    {
+    let co_author_configuration =
+        get_coauthor_configuration(&mut git_config).unwrap_or_else(|err| {
+            eprintln!("{}", err);
+            process::exit(1);
+        });
+
+    if co_author_configuration.is_none() {
         eprintln!(
             r#"
 The details of the author of this commit are a bit stale. Can you confirm who's currently coding?

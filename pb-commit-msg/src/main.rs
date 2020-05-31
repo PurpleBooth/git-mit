@@ -1,6 +1,6 @@
 extern crate pb_commit_message_lints;
 
-use std::env;
+use std::{env, process};
 
 use clap::{crate_authors, crate_version, App, Arg};
 
@@ -19,16 +19,30 @@ fn main() {
         .value_of(COMMIT_FILE_PATH_NAME)
         .map(PathBuf::from)
         .expect("Expected file path name");
-    let commit_message = CommitMessage::try_from(commit_file_path).unwrap();
 
-    let current_dir = env::current_dir().unwrap();
-    let git_config = Git2::try_from(current_dir).unwrap();
+    let commit_message = CommitMessage::try_from(commit_file_path).unwrap_or_else(|err| {
+        eprintln!("{}", err);
+        process::exit(1);
+    });
+
+    let current_dir = env::current_dir().unwrap_or_else(|err| {
+        eprintln!("Failed to get current working directory:\n{}", err);
+        process::exit(1);
+    });
+
+    let git_config = Git2::try_from(current_dir).unwrap_or_else(|err| {
+        eprintln!("{}", err);
+        process::exit(1);
+    });
 
     let output = format_lint_problems(
         &commit_message,
         lint(
             &commit_message,
-            get_lint_configuration(&git_config).unwrap(),
+            get_lint_configuration(&git_config).unwrap_or_else(|err| {
+                eprintln!("{}", err);
+                process::exit(1);
+            }),
         ),
     );
 
