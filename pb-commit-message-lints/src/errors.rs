@@ -23,19 +23,19 @@ impl Display for PbCommitMessageLintsError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
             PbCommitMessageLintsError::ConfigIoGit2Error(error) => {
-                write!(f, "Couldn't interact with git config: \n{}", error)
+                write!(f, "Couldn't interact with git config:\n{}", error)
             },
             PbCommitMessageLintsError::ParseBoolError(error) => {
                 write!(f, "Couldn't convert value to bool:\n{}", error)
             },
             PbCommitMessageLintsError::ParseIntError(error) => {
-                write!(f, "Couldn't convert value to int: \n{}", error)
+                write!(f, "Couldn't convert value to int:\n{}", error)
             },
             PbCommitMessageLintsError::SystemTimeError(error) => {
-                write!(f, "Invalid time: {}", error)
+                write!(f, "Invalid time:\n{}", error)
             },
             PbCommitMessageLintsError::FromIntegerError(error) => {
-                write!(f, "Failed to convert between integer types: \n{}", error)
+                write!(f, "Failed to convert between integer types:\n{}", error)
             },
             PbCommitMessageLintsError::NoAuthorsToSetError => write!(
                 f,
@@ -45,10 +45,10 @@ impl Display for PbCommitMessageLintsError {
                 write!(f, "Lint \"{}\" not found", error)
             },
             PbCommitMessageLintsError::YamlParseError(error) => {
-                write!(f, "Couldn't parse the Author YAML: \n{}", error)
+                write!(f, "Couldn't parse the Author YAML:\n{}", error)
             },
             PbCommitMessageLintsError::IoError(error) => {
-                write!(f, "Failed to read file: \n{}", error)
+                write!(f, "Failed to read file:\n{}", error)
             },
         }
     }

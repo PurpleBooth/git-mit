@@ -227,13 +227,13 @@ impl Display for GitAuthorsError {
             GitAuthorsError::NoTimeoutSet => write!(f, "No timeout set"),
             GitAuthorsError::TimeoutNotNumber(error) => write!(
                 f,
-                "The timeout needs to be the number of minutes: \n{}",
+                "The timeout needs to be the number of minutes:\n{}",
                 error
             ),
             GitAuthorsError::PbCommitMessageLints(error) => write!(f, "{}", error),
             GitAuthorsError::Io(file_source, error) => write!(
                 f,
-                "Failed to read author config from `{}`: \n{}",
+                "Failed to read author config from `{}`:\n{}",
                 file_source, error
             ),
             GitAuthorsError::Xdg(error) => write!(f, "Failed to find config directory: {}", error),
@@ -243,7 +243,7 @@ impl Display for GitAuthorsError {
             GitAuthorsError::Utf8(error) => write!(
                 f,
                 "Failed to convert the output from the author file generation command to a UTF-8 \
-                 String: \n{}",
+                 String:\n{}",
                 error
             ),
         }
