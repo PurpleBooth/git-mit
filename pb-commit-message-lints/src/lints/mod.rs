@@ -1,4 +1,4 @@
-use std::{error::Error, fmt::Display};
+use std::fmt::Display;
 
 use regex::Regex;
 
@@ -42,14 +42,14 @@ impl CommitMessage {
 }
 
 impl TryFrom<PathBuf> for CommitMessage {
-    type Error = Box<dyn Error>;
+    type Error = PbCommitMessageLintsError;
 
     fn try_from(value: PathBuf) -> Result<Self, Self::Error> {
         let mut file = File::open(value)?;
         let mut buffer = String::new();
 
         file.read_to_string(&mut buffer)
-            .map_err(Box::from)
+            .map_err(PbCommitMessageLintsError::from)
             .map(move |_| CommitMessage::new(buffer))
     }
 }
@@ -162,7 +162,7 @@ impl std::fmt::Display for Lints {
 }
 
 impl std::convert::TryFrom<&str> for Lints {
-    type Error = Box<dyn Error>;
+    type Error = PbCommitMessageLintsError;
 
     fn try_from(from: &str) -> Result<Self, Self::Error> {
         Lints::iterator()
@@ -173,9 +173,7 @@ impl std::convert::TryFrom<&str> for Lints {
             .collect::<Vec<Lints>>()
             .first()
             .copied()
-            .ok_or_else(|| -> Box<dyn Error> {
-                format!("Could not match {} to a lint", from).into()
-            })
+            .ok_or_else(|| PbCommitMessageLintsError::LintNotFoundError(from.into()))
     }
 }
 
