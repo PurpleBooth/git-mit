@@ -27,8 +27,8 @@ fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &str) -> bool
         .unwrap()
 }
 
-pub(crate) fn lint_duplicated_trailers(commit_message: String) -> Option<LintProblem> {
-    let duplicated_trailers = has_duplicated_trailers(&CommitMessage::new(commit_message));
+pub(crate) fn lint_duplicated_trailers(commit_message: &CommitMessage) -> Option<LintProblem> {
+    let duplicated_trailers = has_duplicated_trailers(commit_message);
     if duplicated_trailers.is_empty() {
         None
     } else {
@@ -60,16 +60,16 @@ mod tests_has_duplicated_trailers {
 
     #[test]
     fn duplicated_trailers() {
-        test_has_duplicated_trailers(
+        test_lint_duplicated_trailers(
             r#"
 An example commit
 
 This is an example commit without any duplicate trailers
 "#
             .into(),
-            &[],
+            &None,
         );
-        test_has_duplicated_trailers(
+        test_lint_duplicated_trailers(
             r#"
 An example commit
 
@@ -81,9 +81,15 @@ Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 "#
             .into(),
-            &["Signed-off-by".into(), "Co-authored-by".into()],
+            &Some(LintProblem::new(
+                "Your commit cannot have the same name duplicated in the \"Signed-off-by\", \
+                 \"Co-authored-by\" fields\n\nYou can fix this by removing the duplicated field \
+                 when you commit again\n"
+                    .into(),
+                LintCode::DuplicatedTrailers,
+            )),
         );
-        test_has_duplicated_trailers(
+        test_lint_duplicated_trailers(
             r#"
 An example commit
 
@@ -93,9 +99,15 @@ Signed-off-by: Billie Thompson <email@example.com>
 Signed-off-by: Billie Thompson <email@example.com>
 "#
             .into(),
-            &["Signed-off-by".into()],
+            &Some(LintProblem::new(
+                "Your commit cannot have the same name duplicated in the \"Signed-off-by\" \
+                 field\n\nYou can fix this by removing the duplicated field when you commit \
+                 again\n"
+                    .into(),
+                LintCode::DuplicatedTrailers,
+            )),
         );
-        test_has_duplicated_trailers(
+        test_lint_duplicated_trailers(
             r#"
 An example commit
 
@@ -105,49 +117,56 @@ Co-authored-by: Billie Thompson <email@example.com>
 Co-authored-by: Billie Thompson <email@example.com>
 "#
             .into(),
-            &["Co-authored-by".into()],
+            &Some(LintProblem::new(
+                "Your commit cannot have the same name duplicated in the \"Co-authored-by\" \
+                 field\n\nYou can fix this by removing the duplicated field when you commit \
+                 again\n"
+                    .into(),
+                LintCode::DuplicatedTrailers,
+            )),
         );
     }
 
-    fn test_has_duplicated_trailers(message: String, expected: &[String]) {
-        let actual = has_duplicated_trailers(&CommitMessage::new(message));
+    fn test_lint_duplicated_trailers(message: String, expected: &Option<LintProblem>) {
+        let actual = &lint_duplicated_trailers(&CommitMessage::new(message));
         assert_eq!(
             actual, expected,
             "Expected {:?}, found {:?}",
             expected, actual
         );
     }
+}
 
-    #[cfg(test)]
-    mod tests_has_duplicated_trailer {
-        use crate::lints::{duplicate_trailers::has_duplicated_trailer, CommitMessage};
+#[cfg(test)]
+mod tests_has_duplicated_trailer {
+    use crate::lints::{duplicate_trailers::has_duplicated_trailer, CommitMessage};
 
-        fn test_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {
-            let actual = has_duplicated_trailer(&CommitMessage::new(message.into()), trailer);
-            assert_eq!(
-                actual, expected,
-                "Message {:?} with trailer {:?} should have returned {:?}, found {:?}",
-                message, trailer, expected, actual
-            );
-        }
+    fn test_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {
+        let actual = has_duplicated_trailer(&CommitMessage::new(message.into()), trailer);
+        assert_eq!(
+            actual, expected,
+            "Message {:?} with trailer {:?} should have returned {:?}, found {:?}",
+            message, trailer, expected, actual
+        );
+    }
 
-        #[test]
-        fn no_trailer() {
-            test_has_duplicated_trailer(
-                r#"
+    #[test]
+    fn no_trailer() {
+        test_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit without any duplicate trailers
 "#,
-                "Signed-off-by",
-                false,
-            );
-        }
+            "Signed-off-by",
+            false,
+        );
+    }
 
-        #[test]
-        fn duplicated_trailer() {
-            test_has_duplicated_trailer(
-                r#"
+    #[test]
+    fn duplicated_trailer() {
+        test_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit with duplicate trailers
@@ -155,15 +174,15 @@ This is an example commit with duplicate trailers
 Signed-off-by: Billie Thompson <email@example.com>
 Signed-off-by: Billie Thompson <email@example.com>
 "#,
-                "Signed-off-by",
-                true,
-            );
-        }
+            "Signed-off-by",
+            true,
+        );
+    }
 
-        #[test]
-        fn two_trailers_but_no_duplicates() {
-            test_has_duplicated_trailer(
-                r#"
+    #[test]
+    fn two_trailers_but_no_duplicates() {
+        test_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit without any duplicate trailers
@@ -171,30 +190,30 @@ This is an example commit without any duplicate trailers
 Signed-off-by: Billie Thompson <billie@example.com>
 Signed-off-by: Ada Lovelace <ada@example.com>
 "#,
-                "Signed-off-by",
-                false,
-            );
-        }
+            "Signed-off-by",
+            false,
+        );
+    }
 
-        #[test]
-        fn one_trailer() {
-            test_has_duplicated_trailer(
-                r#"
+    #[test]
+    fn one_trailer() {
+        test_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit without any duplicate trailers
 
 Signed-off-by: Billie Thompson <email@example.com>
 "#,
-                "Signed-off-by",
-                false,
-            );
-        }
+            "Signed-off-by",
+            false,
+        );
+    }
 
-        #[test]
-        fn missing_colon_in_trailer() {
-            test_has_duplicated_trailer(
-                r#"
+    #[test]
+    fn missing_colon_in_trailer() {
+        test_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit without any duplicate trailers
@@ -202,15 +221,15 @@ This is an example commit without any duplicate trailers
 Signed-off-by Billie Thompson <email@example.com>
 Signed-off-by Billie Thompson <email@example.com>
 "#,
-                "Signed-off-by",
-                false,
-            );
-        }
+            "Signed-off-by",
+            false,
+        );
+    }
 
-        #[test]
-        fn customised_trailer() {
-            test_has_duplicated_trailer(
-                r#"
+    #[test]
+    fn customised_trailer() {
+        test_has_duplicated_trailer(
+            r#"
 An example commit
 
 This is an example commit with duplicate trailers
@@ -218,9 +237,8 @@ This is an example commit with duplicate trailers
 Anything: Billie Thompson <email@example.com>
 Anything: Billie Thompson <email@example.com>
 "#,
-                "Anything",
-                true,
-            );
-        }
+            "Anything",
+            true,
+        );
     }
 }

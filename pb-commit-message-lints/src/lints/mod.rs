@@ -139,13 +139,9 @@ impl Lints {
     #[must_use]
     pub fn lint(self, commit_message: &CommitMessage) -> Option<LintProblem> {
         match self {
-            Lints::DuplicatedTrailers => lint_duplicated_trailers(format!("{}", commit_message)),
-            Lints::PivotalTrackerIdMissing => {
-                lint_missing_pivotal_tracker_id(format!("{}", commit_message))
-            },
-            Lints::JiraIssueKeyMissing => {
-                lint_missing_jira_issue_key(format!("{}", commit_message))
-            },
+            Lints::DuplicatedTrailers => lint_duplicated_trailers(commit_message),
+            Lints::PivotalTrackerIdMissing => lint_missing_pivotal_tracker_id(commit_message),
+            Lints::JiraIssueKeyMissing => lint_missing_jira_issue_key(commit_message),
         }
     }
 }
@@ -426,7 +422,7 @@ pub fn lint(commit_message: &CommitMessage, lints: Vec<Lints>) -> Vec<LintProble
         .collect::<Vec<LintProblem>>()
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct LintProblem {
     help: String,
     code: LintCode,

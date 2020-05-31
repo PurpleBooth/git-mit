@@ -14,8 +14,10 @@ fn has_no_pivotal_tracker_id(text: &CommitMessage) -> bool {
     !text.matches_pattern(&re)
 }
 
-pub(crate) fn lint_missing_pivotal_tracker_id(commit_message: String) -> Option<LintProblem> {
-    if has_missing_pivotal_tracker_id(&CommitMessage::new(commit_message)) {
+pub(crate) fn lint_missing_pivotal_tracker_id(
+    commit_message: &CommitMessage,
+) -> Option<LintProblem> {
+    if has_missing_pivotal_tracker_id(commit_message) {
         Some(LintProblem::new(
             PIVOTAL_TRACKER_HELP.into(),
             LintCode::PivotalTrackerIdMissing,
@@ -58,12 +60,12 @@ This is an example commit
 
 [#12345678]
 "#,
-            false,
+            &None,
         );
     }
 
-    fn test_has_missing_pivotal_tracker_id(message: &str, expected: bool) {
-        let actual = has_missing_pivotal_tracker_id(&CommitMessage::new(message.into()));
+    fn test_has_missing_pivotal_tracker_id(message: &str, expected: &Option<LintProblem>) {
+        let actual = &lint_missing_pivotal_tracker_id(&CommitMessage::new(message.into()));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",
@@ -81,7 +83,7 @@ This is an example commit
 
 [#12345678,#87654321]
 "#,
-            false,
+            &None,
         );
         test_has_missing_pivotal_tracker_id(
             r#"
@@ -91,7 +93,7 @@ This is an example commit
 
 [#12345678,#87654321,#11223344]
 "#,
-            false,
+            &None,
         );
         test_has_missing_pivotal_tracker_id(
             r#"
@@ -101,7 +103,7 @@ This is an example commit
 
 [#12345678 #87654321 #11223344]
 "#,
-            false,
+            &None,
         );
     }
 
@@ -115,7 +117,7 @@ This is an example commit
 
 [fix #12345678]
 "#,
-            false,
+            &None,
         );
         test_has_missing_pivotal_tracker_id(
             r#"
@@ -125,7 +127,7 @@ This is an example commit
 
 [FIX #12345678]
 "#,
-            false,
+            &None,
         );
         test_has_missing_pivotal_tracker_id(
             r#"
@@ -135,7 +137,7 @@ This is an example commit
 
 [Fix #12345678]
 "#,
-            false,
+            &None,
         );
         test_has_missing_pivotal_tracker_id(
             r#"
@@ -145,7 +147,7 @@ This is an example commit
 
 [fixed #12345678]
 "#,
-            false,
+            &None,
         );
         test_has_missing_pivotal_tracker_id(
             r#"
@@ -155,7 +157,7 @@ This is an example commit
 
 [fixes #12345678]
 "#,
-            false,
+            &None,
         );
     }
 
@@ -169,7 +171,7 @@ This is an example commit
 
 [complete #12345678]
 "#,
-            false,
+            &None,
         );
 
         test_has_missing_pivotal_tracker_id(
@@ -180,7 +182,7 @@ This is an example commit
 
 [completed #12345678]
 "#,
-            false,
+            &None,
         );
 
         test_has_missing_pivotal_tracker_id(
@@ -191,7 +193,7 @@ This is an example commit
 
 [Completed #12345678]
 "#,
-            false,
+            &None,
         );
 
         test_has_missing_pivotal_tracker_id(
@@ -202,7 +204,7 @@ This is an example commit
 
 [completes #12345678]
 "#,
-            false,
+            &None,
         );
     }
 
@@ -216,7 +218,7 @@ This is an example commit
 
 [finish #12345678]
 "#,
-            false,
+            &None,
         );
 
         test_has_missing_pivotal_tracker_id(
@@ -227,7 +229,7 @@ This is an example commit
 
 [finished #12345678]
 "#,
-            false,
+            &None,
         );
         test_has_missing_pivotal_tracker_id(
             r#"
@@ -237,7 +239,7 @@ This is an example commit
 
 [finishes #12345678]
 "#,
-            false,
+            &None,
         );
     }
 
@@ -251,7 +253,7 @@ This is an example commit
 
 [deliver #12345678]
 "#,
-            false,
+            &None,
         );
 
         test_has_missing_pivotal_tracker_id(
@@ -262,7 +264,7 @@ This is an example commit
 
 [delivered #12345678]
 "#,
-            false,
+            &None,
         );
         test_has_missing_pivotal_tracker_id(
             r#"
@@ -272,7 +274,7 @@ This is an example commit
 
 [delivers #12345678]
 "#,
-            false,
+            &None,
         );
     }
 
@@ -286,7 +288,7 @@ This is an example commit
 
 [fix #12345678 #12345678]
 "#,
-            false,
+            &None,
         );
     }
 
@@ -300,7 +302,7 @@ This is an example commit
 
 Finally [fix #12345678 #12345678]
 "#,
-            false,
+            &None,
         );
     }
 
@@ -314,7 +316,15 @@ This is an example commit
 
 [fake #12345678]
 "#,
-            true,
+            &Some(LintProblem::new(
+                "\nYour commit is missing a Pivotal Tracker Id\n\nYou can fix this by adding the \
+                 Id in one of the styles below to the commit message\n[Delivers \
+                 #12345678]\n[fixes #12345678]\n[finishes #12345678]\n[#12345884 \
+                 #12345678]\n[#12345884,#12345678]\n[#12345678],[#12345884]\nThis will address \
+                 [#12345884]\n"
+                    .into(),
+                LintCode::PivotalTrackerIdMissing,
+            )),
         );
     }
 
@@ -326,7 +336,15 @@ An example commit
 
 This is an example commit
 "#,
-            true,
+            &Some(LintProblem::new(
+                "\nYour commit is missing a Pivotal Tracker Id\n\nYou can fix this by adding the \
+                 Id in one of the styles below to the commit message\n[Delivers \
+                 #12345678]\n[fixes #12345678]\n[finishes #12345678]\n[#12345884 \
+                 #12345678]\n[#12345884,#12345678]\n[#12345678],[#12345884]\nThis will address \
+                 [#12345884]\n"
+                    .into(),
+                LintCode::PivotalTrackerIdMissing,
+            )),
         );
 
         test_has_missing_pivotal_tracker_id(
@@ -337,7 +355,15 @@ This is an example commit
 
 [#]
 "#,
-            true,
+            &Some(LintProblem::new(
+                "\nYour commit is missing a Pivotal Tracker Id\n\nYou can fix this by adding the \
+                 Id in one of the styles below to the commit message\n[Delivers \
+                 #12345678]\n[fixes #12345678]\n[finishes #12345678]\n[#12345884 \
+                 #12345678]\n[#12345884,#12345678]\n[#12345678],[#12345884]\nThis will address \
+                 [#12345884]\n"
+                    .into(),
+                LintCode::PivotalTrackerIdMissing,
+            )),
         );
     }
 }
