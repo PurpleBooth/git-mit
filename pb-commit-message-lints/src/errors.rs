@@ -23,22 +23,20 @@ impl Display for PbCommitMessageLintsError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
             PbCommitMessageLintsError::ConfigIoGit2Error(error) => {
-                write!(f, "Couldn't interact with git config: {}", error)
+                write!(f, "Couldn't interact with git config: \n{}", error)
             },
             PbCommitMessageLintsError::ParseBoolError(error) => {
-                write!(f, "Couldn't convert value to bool: {} ({:?})", error, error)
+                write!(f, "Couldn't convert value to bool:\n{}", error)
             },
             PbCommitMessageLintsError::ParseIntError(error) => {
-                write!(f, "Couldn't convert value to int: {} ({:?})", error, error)
+                write!(f, "Couldn't convert value to int: \n{}", error)
             },
             PbCommitMessageLintsError::SystemTimeError(error) => {
                 write!(f, "Invalid time: {}", error)
             },
-            PbCommitMessageLintsError::FromIntegerError(error) => write!(
-                f,
-                "Failed to convert between integer types: {} ({:?})",
-                error, error
-            ),
+            PbCommitMessageLintsError::FromIntegerError(error) => {
+                write!(f, "Failed to convert between integer types: \n{}", error)
+            },
             PbCommitMessageLintsError::NoAuthorsToSetError => write!(
                 f,
                 "In order to set authors, you must provide at least one author to set"
@@ -47,10 +45,10 @@ impl Display for PbCommitMessageLintsError {
                 write!(f, "Lint \"{}\" not found", error)
             },
             PbCommitMessageLintsError::YamlParseError(error) => {
-                write!(f, "Couldn't parse the Author YAML: {}", error)
+                write!(f, "Couldn't parse the Author YAML: \n{}", error)
             },
             PbCommitMessageLintsError::IoError(error) => {
-                write!(f, "Failed to read file: {}", error)
+                write!(f, "Failed to read file: \n{}", error)
             },
         }
     }
@@ -58,7 +56,7 @@ impl Display for PbCommitMessageLintsError {
 
 impl From<git2::Error> for PbCommitMessageLintsError {
     fn from(error: git2::Error) -> Self {
-        PbCommitMessageLintsError::ConfigIoGit2Error(format!("{} ({:?})", error, error))
+        PbCommitMessageLintsError::ConfigIoGit2Error(format!("{}", error))
     }
 }
 
@@ -76,7 +74,7 @@ impl From<std::num::ParseIntError> for PbCommitMessageLintsError {
 
 impl From<std::time::SystemTimeError> for PbCommitMessageLintsError {
     fn from(error: std::time::SystemTimeError) -> Self {
-        PbCommitMessageLintsError::SystemTimeError(format!("{} ({:?})", error, error))
+        PbCommitMessageLintsError::SystemTimeError(format!("{}", error))
     }
 }
 
@@ -88,13 +86,13 @@ impl From<std::num::TryFromIntError> for PbCommitMessageLintsError {
 
 impl From<serde_yaml::Error> for PbCommitMessageLintsError {
     fn from(error: serde_yaml::Error) -> Self {
-        PbCommitMessageLintsError::YamlParseError(format!("{} ({:?})", error, error))
+        PbCommitMessageLintsError::YamlParseError(format!("{}", error))
     }
 }
 
 impl From<std::io::Error> for PbCommitMessageLintsError {
     fn from(error: std::io::Error) -> Self {
-        PbCommitMessageLintsError::IoError(format!("{} ({:?})", error, error))
+        PbCommitMessageLintsError::IoError(format!("{}", error))
     }
 }
 

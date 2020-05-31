@@ -18,7 +18,7 @@ fn main() {
     let commit_file_path = matches
         .value_of(COMMIT_FILE_PATH_NAME)
         .map(PathBuf::from)
-        .unwrap();
+        .expect("Expected file path name");
     let commit_message = CommitMessage::try_from(commit_file_path).unwrap();
 
     let current_dir = env::current_dir().unwrap();

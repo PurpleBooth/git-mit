@@ -1,4 +1,4 @@
-use std::{convert::TryFrom, env, error::Error};
+use std::{convert::TryFrom, env, error::Error, process};
 
 use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
 use git2::{Config, Repository};
@@ -56,7 +56,10 @@ fn main() {
         )
         .get_matches();
 
-    let current_dir = env::current_dir().unwrap();
+    let current_dir = env::current_dir().unwrap_or_else(|err| {
+        eprintln!("Failed to get current directory: {}", err);
+        process::exit(1);
+    });
     let git_config = match matches.value_of(SCOPE_ARGUMENT) {
         Some(LOCAL_SCOPE) => Repository::discover(current_dir).and_then(|x: Repository| x.config()),
         _ => Config::open_default(),
@@ -65,7 +68,10 @@ fn main() {
     let mut vcs = Git2::new(git_config);
 
     if let Some(value) = matches.subcommand_matches(COMMAND_LINT) {
-        manage_lints(value, &mut vcs).unwrap();
+        manage_lints(value, &mut vcs).unwrap_or_else(|err| {
+            eprintln!("Failed to change lint settings: {}", err);
+            process::exit(1);
+        });
     }
 }
 
@@ -81,8 +87,13 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHook
             set_lint_status(
                 &subcommand_args
                     .values_of(LINT_NAME_ARGUMENT)
-                    .unwrap()
-                    .map(|name| Lints::try_from(name).unwrap())
+                    .expect("Lint name not given")
+                    .map(|name| {
+                        Lints::try_from(name).unwrap_or_else(|err| {
+                            eprintln!("Invalid lint: {}", err);
+                            process::exit(1);
+                        })
+                    })
                     .collect::<Vec<_>>(),
                 config,
                 enable,
