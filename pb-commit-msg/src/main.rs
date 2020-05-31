@@ -4,13 +4,25 @@ use std::{env, process};
 
 use clap::{crate_authors, crate_version, App, Arg};
 
+use crate::PbCommitMessageError::PbCommitMessageLints;
 use pb_commit_message_lints::{
+    errors::PbCommitMessageLintsError,
     external::vcs::Git2,
     lints::{get_lint_configuration, lint, CommitMessage, LintCode, LintProblem},
 };
-use std::{convert::TryFrom, path::PathBuf};
+use std::{
+    convert::TryFrom,
+    error::Error,
+    fmt::{Display, Formatter},
+    path::PathBuf,
+};
 
 const COMMIT_FILE_PATH_NAME: &str = "commit-file-path";
+
+fn display_err_and_exit<T>(error: &PbCommitMessageError) -> T {
+    eprintln!("{}", error);
+    process::exit(1);
+}
 
 fn main() {
     let matches = app().get_matches();
@@ -20,34 +32,30 @@ fn main() {
         .map(PathBuf::from)
         .expect("Expected file path name");
 
-    let commit_message = CommitMessage::try_from(commit_file_path).unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        process::exit(1);
-    });
+    let commit_message = CommitMessage::try_from(commit_file_path)
+        .map_err(PbCommitMessageError::from)
+        .unwrap_or_else(|err| display_err_and_exit(&err));
 
-    let current_dir = env::current_dir().unwrap_or_else(|err| {
-        eprintln!("Failed to get current working directory:\n{}", err);
-        process::exit(1);
-    });
+    let current_dir = env::current_dir()
+        .map_err(|err| PbCommitMessageError::new_io("$PWD".into(), &err))
+        .unwrap_or_else(|err| display_err_and_exit(&err));
 
-    let git_config = Git2::try_from(current_dir).unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        process::exit(1);
-    });
+    let git_config = Git2::try_from(current_dir)
+        .map_err(PbCommitMessageError::from)
+        .unwrap_or_else(|err| display_err_and_exit(&err));
 
     let output = format_lint_problems(
         &commit_message,
         lint(
             &commit_message,
-            get_lint_configuration(&git_config).unwrap_or_else(|err| {
-                eprintln!("{}", err);
-                process::exit(1);
-            }),
+            get_lint_configuration(&git_config)
+                .map_err(PbCommitMessageError::from)
+                .unwrap_or_else(|err| display_err_and_exit(&err)),
         ),
     );
 
     if let Some((message, exit_code)) = output {
-        exit_error(&message, exit_code)
+        display_lint_err_and_exit(&message, exit_code)
     }
 }
 
@@ -92,8 +100,41 @@ fn format_lint_problems(
     message_and_code
 }
 
-fn exit_error(commit_message: &str, exit_code: LintCode) {
+fn display_lint_err_and_exit(commit_message: &str, exit_code: LintCode) {
     eprintln!("{}", commit_message);
 
     std::process::exit(exit_code as i32);
 }
+
+#[derive(Debug)]
+enum PbCommitMessageError {
+    PbCommitMessageLints(PbCommitMessageLintsError),
+    Io(String, String),
+}
+
+impl PbCommitMessageError {
+    fn new_io(location: String, error: &std::io::Error) -> PbCommitMessageError {
+        PbCommitMessageError::Io(location, format!("{}", error))
+    }
+}
+
+impl Display for PbCommitMessageError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PbCommitMessageLints(error) => write!(f, "{}", error),
+            PbCommitMessageError::Io(file_source, error) => write!(
+                f,
+                "Failed to read git config from `{}`:\n{}",
+                file_source, error
+            ),
+        }
+    }
+}
+
+impl From<PbCommitMessageLintsError> for PbCommitMessageError {
+    fn from(err: PbCommitMessageLintsError) -> Self {
+        PbCommitMessageLints(err)
+    }
+}
+
+impl Error for PbCommitMessageError {}

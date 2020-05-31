@@ -148,12 +148,13 @@ impl Lints {
 
 impl std::fmt::Display for Lints {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let config_key = match self {
-            DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
-            PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
-            JiraIssueKeyMissing => CONFIG_JIRA_ISSUE_KEY_MISSING,
-        };
-        write!(f, "{}", config_key)
+        write!(f, "{}", self.name())
+    }
+}
+
+impl Into<&str> for Lints {
+    fn into(self) -> &'static str {
+        self.name()
     }
 }
 
@@ -452,4 +453,15 @@ pub enum LintCode {
     DuplicatedTrailers = 3,
     PivotalTrackerIdMissing,
     JiraIssueKeyMissing,
+}
+
+impl Lints {
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
+            PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
+            JiraIssueKeyMissing => CONFIG_JIRA_ISSUE_KEY_MISSING,
+        }
+    }
 }

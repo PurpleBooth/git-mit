@@ -35,26 +35,22 @@ const AUTHOR_FILE_PATH: &str = "file";
 const AUTHOR_FILE_COMMAND: &str = "command";
 const TIMEOUT: &str = "timeout";
 
-fn main() {
-    let config_path: String = config_file_path(env!("CARGO_PKG_NAME")).unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        process::exit(ExitCode::GenericError as i32);
-    });
-    let app = app(&config_path);
-    let matches = app.get_matches();
+fn display_err_and_exit<T>(error: &GitAuthorsError) -> T {
+    eprintln!("{}", error);
+    process::exit(ExitCode::GenericError as i32);
+}
 
-    let users_config = get_users_config(&matches).unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        process::exit(ExitCode::GenericError as i32);
-    });
-    let authors_initials = get_author_initials(&matches).unwrap_or_else(|| {
-        eprintln!("No author initials provided");
-        process::exit(ExitCode::GenericError as i32);
-    });
-    let all_authors = Authors::try_from(users_config.as_str()).unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        process::exit(ExitCode::GenericError as i32);
-    });
+fn main() {
+    let config_path =
+        config_file_path(env!("CARGO_PKG_NAME")).unwrap_or_else(|err| display_err_and_exit(&err));
+    let matches = app(&config_path).get_matches();
+
+    let users_config = get_users_config(&matches).unwrap_or_else(|err| display_err_and_exit(&err));
+
+    let authors_initials = get_author_initials(&matches).expect("No author initials provided");
+    let all_authors = Authors::try_from(users_config.as_str())
+        .map_err(GitAuthorsError::from)
+        .unwrap_or_else(|err| display_err_and_exit(&err));
     let selected_authors = all_authors.get(&authors_initials);
     let initials_without_authors = find_initials_missing(authors_initials, &selected_authors);
 
@@ -62,14 +58,13 @@ fn main() {
         exit_initial_not_matched_to_author(&initials_without_authors);
     }
 
-    let current_dir = env::current_dir().unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        process::exit(ExitCode::GenericError as i32);
-    });
-    let mut git_config = Git2::try_from(current_dir).unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        process::exit(ExitCode::GenericError as i32);
-    });
+    let current_dir = env::current_dir()
+        .map_err(|error| GitAuthorsError::new_io("$PWD".into(), &error))
+        .unwrap_or_else(|err| display_err_and_exit(&err));
+
+    let mut git_config = Git2::try_from(current_dir)
+        .map_err(GitAuthorsError::from)
+        .unwrap_or_else(|err| display_err_and_exit(&err));
 
     let authors = selected_authors.into_iter().flatten().collect::<Vec<_>>();
     set_authors(
@@ -82,10 +77,8 @@ fn main() {
             }) * 60,
         ),
     )
-    .unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        process::exit(ExitCode::GenericError as i32);
-    })
+    .map_err(GitAuthorsError::from)
+    .unwrap_or_else(|err| display_err_and_exit(&err));
 }
 
 fn exit_initial_not_matched_to_author(initials_without_authors: &[&str]) {
@@ -116,8 +109,7 @@ fn find_initials_missing<'a>(
 }
 
 fn app(config_file_path: &str) -> App {
-    let cargo_package_name = String::from(env!("CARGO_PKG_NAME"));
-    App::new(cargo_package_name)
+    App::new(String::from(env!("CARGO_PKG_NAME")))
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
@@ -174,7 +166,7 @@ fn get_author_config_from_exec(command: &str) -> Result<String, GitAuthorsError>
         .arg("-c")
         .arg(command)
         .output()
-        .map_err(|error| GitAuthorsError::Io(command.into(), format!("{}", error)))
+        .map_err(|error| GitAuthorsError::new_io(command.into(), &error))
         .and_then(|x| String::from_utf8(x.stdout).map_err(GitAuthorsError::from))
 }
 
@@ -182,8 +174,7 @@ fn get_author_config_from_file(matches: &ArgMatches) -> Result<String, GitAuthor
     get_author_file_path(&matches)
         .ok_or_else(|| GitAuthorsError::AuthorFileNotSet)
         .and_then(|path| {
-            fs::read_to_string(path)
-                .map_err(|error| GitAuthorsError::Io(path.into(), format!("{}", error)))
+            fs::read_to_string(path).map_err(|error| GitAuthorsError::new_io(path.into(), &error))
         })
 }
 
@@ -208,9 +199,7 @@ fn config_file_path(cargo_package_name: &str) -> Result<String, GitAuthorsError>
 fn authors_config_file(config_directory: &BaseDirectories) -> Result<PathBuf, GitAuthorsError> {
     config_directory
         .place_config_file("authors.yml")
-        .map_err(|error| {
-            GitAuthorsError::Io("<config_dir>/author.yml".into(), format!("{}", error))
-        })
+        .map_err(|error| GitAuthorsError::new_io("<config_dir>/author.yml".into(), &error))
 }
 
 #[derive(Debug)]
@@ -224,6 +213,12 @@ enum GitAuthorsError {
     AuthorFileNotSet,
 }
 
+impl GitAuthorsError {
+    fn new_io(source: String, error: &std::io::Error) -> GitAuthorsError {
+        GitAuthorsError::Io(source, format!("{}", error))
+    }
+}
+
 impl Display for GitAuthorsError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -234,11 +229,9 @@ impl Display for GitAuthorsError {
                 error
             ),
             GitAuthorsError::PbCommitMessageLints(error) => write!(f, "{}", error),
-            GitAuthorsError::Io(file_source, error) => write!(
-                f,
-                "Failed to read author config from `{}`:\n{}",
-                file_source, error
-            ),
+            GitAuthorsError::Io(file_source, error) => {
+                write!(f, "Failed to read from `{}`:\n{}", file_source, error)
+            },
             GitAuthorsError::Xdg(error) => write!(f, "Failed to find config directory: {}", error),
             GitAuthorsError::AuthorFileNotSet => {
                 write!(f, "Expected a author file path, didn't find one")

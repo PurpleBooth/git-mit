@@ -1,4 +1,10 @@
-use std::{convert::TryFrom, env, error::Error, process};
+use std::{
+    convert::TryFrom,
+    env,
+    error::Error,
+    fmt::{Display, Formatter},
+    process,
+};
 
 use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
 use git2::{Config, Repository};
@@ -8,7 +14,6 @@ use pb_commit_message_lints::{
     external::vcs::{Git2, Vcs},
     lints::{set_lint_status, Lints},
 };
-use std::fmt::{Display, Formatter};
 
 const LOCAL_SCOPE: &str = "local";
 const LINT_NAME_ARGUMENT: &str = "lint";
@@ -17,19 +22,44 @@ const COMMAND_LINT_ENABLE: &str = "enable";
 const COMMAND_LINT_DISABLE: &str = "disable";
 const SCOPE_ARGUMENT: &str = "scope";
 
+fn display_err_and_exit<T>(error: &PbGitHooksError) -> T {
+    eprintln!("{}", error);
+    process::exit(1);
+}
+
 fn main() {
-    let lints: Vec<String> = Lints::iterator().map(|lint| format!("{}", lint)).collect();
-    let possible_values: Vec<&str> = lints
-        .iter()
-        .map(|lint_name| -> &str { lint_name })
-        .collect();
+    let matches = app().get_matches();
+
+    let current_dir = env::current_dir()
+        .map_err(|error| PbGitHooksError::new_io("$PWD".into(), &error))
+        .unwrap_or_else(|err| display_err_and_exit(&err));
+    let git_config = match matches.value_of(SCOPE_ARGUMENT) {
+        Some(LOCAL_SCOPE) => {
+            Repository::discover(current_dir).and_then(|repo: Repository| repo.config())
+        },
+        _ => Config::open_default(),
+    }
+    .expect("Couldn't load any git config");
+    let mut vcs = Git2::new(git_config);
+
+    if let Some(value) = matches.subcommand_matches(COMMAND_LINT) {
+        manage_lints(value, &mut vcs).unwrap_or_else(|err| display_err_and_exit(&err));
+    }
+}
+
+fn app() -> App<'static, 'static> {
     let lint_argument = Arg::with_name(LINT_NAME_ARGUMENT)
         .help("The lint to enable")
         .required(true)
         .multiple(true)
         .min_values(1)
-        .possible_values(&possible_values);
-    let matches = App::new(env!("CARGO_PKG_NAME"))
+        .possible_values(
+            Lints::iterator()
+                .map(pb_commit_message_lints::lints::Lints::name)
+                .collect::<Vec<_>>()
+                .as_slice(),
+        );
+    App::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
@@ -54,25 +84,6 @@ fn main() {
                         .arg(lint_argument.clone()),
                 ),
         )
-        .get_matches();
-
-    let current_dir = env::current_dir().unwrap_or_else(|err| {
-        eprintln!("Failed to get current directory: {}", err);
-        process::exit(1);
-    });
-    let git_config = match matches.value_of(SCOPE_ARGUMENT) {
-        Some(LOCAL_SCOPE) => Repository::discover(current_dir).and_then(|x: Repository| x.config()),
-        _ => Config::open_default(),
-    }
-    .expect("Couldn't load any git config");
-    let mut vcs = Git2::new(git_config);
-
-    if let Some(value) = matches.subcommand_matches(COMMAND_LINT) {
-        manage_lints(value, &mut vcs).unwrap_or_else(|err| {
-            eprintln!("Failed to change lint settings: {}", err);
-            process::exit(1);
-        });
-    }
 }
 
 fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHooksError> {
@@ -89,10 +100,9 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHook
                     .values_of(LINT_NAME_ARGUMENT)
                     .expect("Lint name not given")
                     .map(|name| {
-                        Lints::try_from(name).unwrap_or_else(|err| {
-                            eprintln!("Invalid lint: {}", err);
-                            process::exit(1);
-                        })
+                        Lints::try_from(name)
+                            .map_err(PbGitHooksError::from)
+                            .unwrap_or_else(|err| display_err_and_exit(&err))
                     })
                     .collect::<Vec<_>>(),
                 config,
@@ -106,6 +116,7 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHook
 enum PbGitHooksError {
     UnrecognisedLintCommand,
     PbCommitMessageLintsError(PbCommitMessageLintsError),
+    Io(String, String),
 }
 
 impl Display for PbGitHooksError {
@@ -116,6 +127,11 @@ impl Display for PbGitHooksError {
                 "Unrecognised Lint command, only you may only enable or disable"
             ),
             PbGitHooksError::PbCommitMessageLintsError(error) => write!(f, "{}", error),
+            PbGitHooksError::Io(file_source, error) => write!(
+                f,
+                "Failed to read git config from `{}`:\n{}",
+                file_source, error
+            ),
         }
     }
 }
@@ -127,3 +143,9 @@ impl From<PbCommitMessageLintsError> for PbGitHooksError {
 }
 
 impl Error for PbGitHooksError {}
+
+impl PbGitHooksError {
+    fn new_io(source: String, error: &std::io::Error) -> PbGitHooksError {
+        PbGitHooksError::Io(source, format!("{}", error))
+    }
+}
