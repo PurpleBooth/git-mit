@@ -66,10 +66,6 @@ jobs:
             os: ubuntu-latest
             suffix: ""
             target: x86_64-unknown-linux-gnu
-          -
-            os: windows-latest
-            suffix: ".exe"
-            target: x86_64-pc-windows-msvc
   release:
     needs:
       - build
@@ -197,44 +193,4 @@ jobs:
           upload_url: '${{ steps.create_release.outputs.upload_url }}'
           asset_path: ./git-authors-x86_64-apple-darwin/git-authors
           asset_name: git-authors-x86_64-apple-darwin
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-        with:
-          upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./pb-pre-commit-x86_64-pc-windows-msvc/pb-pre-commit.exe
-          asset_name: pb-pre-commit--x86_64-pc-windows-msvc.exe
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-        with:
-          upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./pb-prepare-commit-msg--x86_64-pc-windows-msvc/pb-prepare-commit-msg.exe
-          asset_name: pb-prepare-commit-msg--x86_64-pc-windows-msvc.exe
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-        with:
-          upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./pb-commit-msg--x86_64-pc-windows-msvc/pb-commit-msg.exe
-          asset_name: pb-commit-msg--x86_64-pc-windows-msvc.exe
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-        with:
-          upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./pb-git-hooks--x86_64-pc-windows-msvc/pb-git-hooks.exe
-          asset_name: pb-git-hooks--x86_64-pc-windows-msvc.exe
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-        with:
-          upload_url: '${{ steps.create_release.outputs.upload_url }}'
-          asset_path: ./git-authors--x86_64-pc-windows-msvc/git-authors.exe
-          asset_name: git-authors--x86_64-pc-windows-msvc.exe
           asset_content_type: application/octet-stream
