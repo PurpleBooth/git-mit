@@ -247,7 +247,7 @@ jobs:
           VERSION: '${{ steps.get_version.outputs.VERSION }}'
       - uses: actions/download-artifact@v2
       - id: create_release
-        uses: actions/create-release@v1.0.0
+        uses: actions/create-release@v1.1.0
         env:
           GITHUB_TOKEN: '${{ secrets.COMMITTER_TOKEN }}'
         with:
