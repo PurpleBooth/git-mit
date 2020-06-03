@@ -114,7 +114,7 @@ jobs:
           prerelease: false
           release_name: "Release ${{ steps.get_version.outputs.VERSION }}"
           tag_name: "${{ steps.get_version.outputs.VERSION }}"
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -122,7 +122,7 @@ jobs:
           asset_path: ./pb-pre-commit-x86_64-unknown-linux-gnu/pb-pre-commit
           asset_name: pb-pre-commit-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -130,7 +130,7 @@ jobs:
           asset_path: ./pb-prepare-commit-msg-x86_64-unknown-linux-gnu/pb-prepare-commit-msg
           asset_name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -138,7 +138,7 @@ jobs:
           asset_path: ./pb-commit-msg-x86_64-unknown-linux-gnu/pb-commit-msg
           asset_name: pb-commit-msg-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -146,7 +146,7 @@ jobs:
           asset_path: ./pb-git-hooks-x86_64-unknown-linux-gnu/pb-git-hooks
           asset_name: pb-git-hooks-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -154,7 +154,7 @@ jobs:
           asset_path: ./git-authors-x86_64-unknown-linux-gnu/git-authors
           asset_name: git-authors-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -162,7 +162,7 @@ jobs:
           asset_path: ./pb-pre-commit-x86_64-apple-darwin/pb-pre-commit
           asset_name: pb-pre-commit-x86_64-apple-darwin
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -170,7 +170,7 @@ jobs:
           asset_path: ./pb-prepare-commit-msg-x86_64-apple-darwin/pb-prepare-commit-msg
           asset_name: pb-prepare-commit-msg-x86_64-apple-darwin
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -178,7 +178,7 @@ jobs:
           asset_path: ./pb-commit-msg-x86_64-apple-darwin/pb-commit-msg
           asset_name: pb-commit-msg-x86_64-apple-darwin
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
@@ -186,7 +186,7 @@ jobs:
           asset_path: ./pb-git-hooks-x86_64-apple-darwin/pb-git-hooks
           asset_name: pb-git-hooks-x86_64-apple-darwin
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         with:
