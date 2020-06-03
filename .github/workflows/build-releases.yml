@@ -103,7 +103,7 @@ jobs:
         shell: bash
       -
         id: get_version
-        run: "echo ::set-output name=VERSION::v$(toml get Cargo.toml package.version | tail -c +2 | head -c -2)"
+        run: "echo ::set-output name=VERSION::v$(toml get git-authors/Cargo.toml package.version | tail -c +2 | head -c -2)"
         shell: bash
       - env:
           GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
