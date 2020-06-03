@@ -133,7 +133,7 @@ jobs:
         run: |
           for I in ./*/Cargo.toml ; do
             TEMP_FILE="$(mktemp)"
-            toml set "$I" package.version "$(cat ./version/version)" > "$TEMP_FILE"
+            toml set "$I" package.version "$(cat ./version/version | tail -c +2)" > "$TEMP_FILE"
             mv "$TEMP_FILE" "$I"
           done
       - uses: actions-rs/cargo@v1
