@@ -122,8 +122,8 @@ jobs:
         if: "contains(github.event.head_commit.message, 'BC BREAK')"
       - shell: bash
         run: |
-          sed -i'.bak' "s/version = \"[0-9.]\\{5,\\}\"/version = \"$(cat ./version/version | tail -c +2)\"/1" Cargo.toml
-          rm Cargo.toml.bak
+          find . -name "Cargo.toml" -exec sed -i'.bak' "s/version = \"[0-9.]\\{5,\\}\"/version = \"$(cat ./version/version | tail -c +2)\"/1" {} \;
+          find . -name "Cargo.toml.bak" -delete
       - uses: actions-rs/cargo@v1
         with:
           command: generate-lockfile
