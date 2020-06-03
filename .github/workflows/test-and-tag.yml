@@ -119,11 +119,6 @@ jobs:
       - run: echo "$VERSION" > ./version/version
         env:
           VERSION: ${{ steps.semvers.outputs.v_major }}
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          default: true
       - uses: actions-rs/cargo@v1
         with:
           command: install
