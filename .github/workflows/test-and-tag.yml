@@ -8,8 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: actions/cache@v2
         with:
           path: |
@@ -93,6 +91,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           token: '${{ secrets.COMMITTER_TOKEN }}'
+          fetch-depth: 0
       - uses: actions/cache@v2
         with:
           path: |
