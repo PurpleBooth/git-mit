@@ -1,0 +1,148 @@
+'on':
+  push:
+    branches:
+      - '*'
+  pull_request: null
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          default: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
+  test:
+    runs-on: '${{ matrix.os }}'
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+          - os: ubuntu-latest
+          - os: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          default: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+  lints:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          default: true
+          components: 'rustfmt, clippy'
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: '--all -- --check'
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: '--all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo'
+  merge-and-push:
+    if: contains( github.event.pull_request.labels.*.name, 'dependencies') || ( github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, 'Release v') )
+    needs:
+      - test
+      - lints
+      - check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          default: true
+      - uses: actions/checkout@v2
+        with:
+          token: '${{ secrets.COMMITTER_TOKEN }}'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - id: get_previous_version
+        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag --sort=-creatordate | head -n 1)
+        shell: bash
+      - id: semvers
+        uses: WyriHaximus/github-action-next-semvers@master
+        with:
+          version: '${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}'
+      - run: mkdir -p ./version
+      - if: "!contains(github.event.head_commit.message, 'BC BREAK') && !contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
+        run: echo "$VERSION" >./version/version
+        env:
+          VERSION: ${{ steps.semvers.outputs.v_minor }}
+      - if: "contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
+        run: echo "$VERSION" >./version/version
+        env:
+          VERSION: ${{ steps.semvers.outputs.v_patch }}
+      - run: echo "$VERSION" > ./version/version
+        env:
+          VERSION: ${{ steps.semvers.outputs.v_major }}
+        if: "contains(github.event.head_commit.message, 'BC BREAK')"
+      - shell: bash
+        run: |
+          sed -i'.bak' "s/version = \"[0-9.]\\{5,\\}\"/version = \"$(cat ./version/version | tail -c +2)\"/1" Cargo.toml
+          rm Cargo.toml.bak
+      - uses: actions-rs/cargo@v1
+        with:
+          command: generate-lockfile
+      - shell: bash
+        run: |
+          git config user.name "GitHub"
+          git config user.email "noreply@github.com"
+
+          git fetch
+      - shell: bash
+        if: contains( github.event.pull_request.labels.*.name, 'dependencies')
+        run: |
+          git checkout master
+          git merge --ff-only -
+      - shell: bash
+        run: |
+          git commit -am "Release $(cat ./version/version)"
+          git pull --rebase
+          git tag -a -m "Release $(cat ./version/version)" "$(cat ./version/version)"
+          git push
+          git push --tags

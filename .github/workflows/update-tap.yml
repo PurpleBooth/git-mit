@@ -9,7 +9,7 @@ jobs:
       - id: get_repository_name
         run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
         shell: bash
-      - uses: mislav/bump-homebrew-formula-action@v1.4
+      - uses: mislav/bump-homebrew-formula-action@v1.6
         if: '!contains(github.ref, ''-'')'
         with:
           formula-name: '${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}'

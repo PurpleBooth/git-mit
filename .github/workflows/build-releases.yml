@@ -1,0 +1,250 @@
+'on':
+  push:
+    tags:
+      - '*'
+jobs:
+  build:
+    runs-on: "${{ matrix.os }}"
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      -
+        uses: actions/cache@v2
+        with:
+          key: "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+      -
+        uses: actions-rs/toolchain@v1
+        with:
+          default: true
+          profile: minimal
+          toolchain: nightly
+      -
+        uses: actions-rs/cargo@v1
+        with:
+          args: "--release"
+          command: build
+      -
+        id: get_repository_name
+        run: "echo ::set-output name=REPOSITORY_NAME::$(echo \"$GITHUB_REPOSITORY\" | awk -F / '{print $2}' | sed -e \"s/:refs//\")"
+        shell: bash
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pb-commit-msg-${{ matrix.target }}
+          path: ./target/release/pb-commit-msg${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pb-git-hooks-${{ matrix.target }}
+          path: ./target/release/pb-git-hooks${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pb-pre-commit-${{ matrix.target }}
+          path: ./target/release/pb-pre-commit${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pb-prepare-commit-msg-${{ matrix.target }}
+          path: ./target/release/pb-prepare-commit-msg${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: git-authors-${{ matrix.target }}
+          path: ./target/release/git-authors${{ matrix.suffix }}
+
+    strategy:
+      matrix:
+        include:
+          -
+            os: macos-latest
+            suffix: ""
+            target: x86_64-apple-darwin
+          -
+            os: ubuntu-latest
+            suffix: ""
+            target: x86_64-unknown-linux-gnu
+          -
+            os: windows-latest
+            suffix: ".exe"
+            target: x86_64-pc-windows-msvc
+  release:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      -
+        uses: actions/cache@v2
+        with:
+          key: "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+      -
+        uses: actions/download-artifact@v2
+      -
+        uses: actions-rs/toolchain@v1
+        with:
+          default: true
+          profile: minimal
+          toolchain: nightly
+      -
+        uses: actions-rs/cargo@v1
+        with:
+          args: toml-cli
+          command: install
+      -
+        id: get_repository_name
+        run: "echo ::set-output name=REPOSITORY_NAME::$(echo \"$GITHUB_REPOSITORY\" | awk -F / '{print $2}' | sed -e \"s/:refs//\")"
+        shell: bash
+      -
+        id: get_version
+        run: "echo ::set-output name=VERSION::v$(toml get Cargo.toml package.version | tail -c +2 | head -c -2)"
+        shell: bash
+      -
+        env:
+          GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
+        id: create_release
+        uses: actions/create-release@v1.1.0
+        with:
+          draft: false
+          prerelease: false
+          release_name: "Release ${{ steps.get_version.outputs.VERSION }}"
+          tag_name: "${{ steps.get_version.outputs.VERSION }}"
+      - id: create_release
+          uses: actions/create-release@v1.0.0
+          env:
+            GITHUB_TOKEN: '${{ secrets.COMMITTER_TOKEN }}'
+          with:
+            tag_name: '${{ steps.get_version.outputs.VERSION }}'
+            release_name: 'Release ${{ steps.get_version.outputs.VERSION }}'
+            draft: false
+            prerelease: false
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-pre-commit-x86_64-unknown-linux-gnu/pb-pre-commit
+          asset_name: pb-pre-commit-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-prepare-commit-msg-x86_64-unknown-linux-gnu/pb-prepare-commit-msg
+          asset_name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-commit-msg-x86_64-unknown-linux-gnu/pb-commit-msg
+          asset_name: pb-commit-msg-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-git-hooks-x86_64-unknown-linux-gnu/pb-git-hooks
+          asset_name: pb-git-hooks-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./git-authors-x86_64-unknown-linux-gnu/git-authors
+          asset_name: git-authors-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-pre-commit-x86_64-apple-darwin/pb-pre-commit
+          asset_name: pb-pre-commit-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-prepare-commit-msg-x86_64-apple-darwin/pb-prepare-commit-msg
+          asset_name: pb-prepare-commit-msg-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-commit-msg-x86_64-apple-darwin/pb-commit-msg
+          asset_name: pb-commit-msg-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-git-hooks-x86_64-apple-darwin/pb-git-hooks
+          asset_name: pb-git-hooks-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./git-authors-x86_64-apple-darwin/git-authors
+          asset_name: git-authors-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-pre-commit-x86_64-pc-windows-msvc/pb-pre-commit.exe
+          asset_name: pb-pre-commit--x86_64-pc-windows-msvc.exe
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-prepare-commit-msg--x86_64-pc-windows-msvc/pb-prepare-commit-msg.exe
+          asset_name: pb-prepare-commit-msg--x86_64-pc-windows-msvc.exe
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-commit-msg--x86_64-pc-windows-msvc/pb-commit-msg.exe
+          asset_name: pb-commit-msg--x86_64-pc-windows-msvc.exe
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./pb-git-hooks--x86_64-pc-windows-msvc/pb-git-hooks.exe
+          asset_name: pb-git-hooks--x86_64-pc-windows-msvc.exe
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          upload_url: '${{ steps.create_release.outputs.upload_url }}'
+          asset_path: ./git-authors--x86_64-pc-windows-msvc/git-authors.exe
+          asset_name: git-authors--x86_64-pc-windows-msvc.exe
+          asset_content_type: application/octet-stream
