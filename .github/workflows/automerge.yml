@@ -30,4 +30,5 @@ jobs:
           MERGE_LABELS: ""
           MERGE_DELETE_BRANCH: true
           UPDATE_METHOD: "rebase"
+          UPDATE_LABELS: ""
 
