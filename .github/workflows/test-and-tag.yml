@@ -119,11 +119,23 @@ jobs:
       - run: echo "$VERSION" > ./version/version
         env:
           VERSION: ${{ steps.semvers.outputs.v_major }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          default: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: 'toml-cli'
         if: "contains(github.event.head_commit.message, 'BC BREAK')"
       - shell: bash
         run: |
-          find . -name "Cargo.toml" -exec sed -i'.bak' "s/version = \"[0-9.]\\{5,\\}\"/version = \"$(cat ./version/version | tail -c +2)\"/1" {} \;
-          find . -name "Cargo.toml.bak" -delete
+          for I in ./*/Cargo.toml ; do
+            TEMP_FILE="$(mktemp)"
+            toml set "$I" package.version "$(cat ./version/version)" > "$TEMP_FILE"
+            mv "$TEMP_FILE" "$I"
+          done
       - uses: actions-rs/cargo@v1
         with:
           command: generate-lockfile
