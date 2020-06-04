@@ -142,7 +142,7 @@ jobs:
 
           git fetch
       - shell: bash
-        if: contains( github.event.pull_request.labels.*.name, 'dependencies')
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         run: |
           git checkout master
           git merge --ff-only -
