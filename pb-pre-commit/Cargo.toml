@@ -1,6 +1,6 @@
 [package]
 name = "pb-pre-commit"
-version = "2.81.0"
+version = "2.82.0"
 authors = ["Billie Thompson <billie+pb-pre-commit@billiecodes.com>"]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
