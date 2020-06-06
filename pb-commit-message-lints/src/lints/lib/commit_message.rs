@@ -1,6 +1,5 @@
 use regex::Regex;
-use std::fmt::Display;
-use std::{convert::TryFrom, fs::File, io::Read, path::PathBuf};
+use std::{convert::TryFrom, fmt::Display, fs::File, io::Read, path::PathBuf};
 
 use crate::errors::PbCommitMessageLintsError;
 
@@ -14,7 +13,10 @@ impl CommitMessage {
     #[must_use]
     pub fn new(contents: String) -> CommitMessage {
         let comment_char = "#".into();
-        CommitMessage { contents, comment_char }
+        CommitMessage {
+            contents,
+            comment_char,
+        }
     }
 
     pub fn matches_pattern(&self, re: &Regex) -> bool {
@@ -29,6 +31,7 @@ impl CommitMessage {
             .collect::<Vec<_>>()
     }
 
+    #[must_use]
     pub fn add_trailer(&self, trailer: &str) -> Self {
         let (body, trailing_comment) = self.message_parts();
 
@@ -104,7 +107,7 @@ mod test_commit_message {
                 Another: Trailer
                 "
             )
-            .into()
+            .into(),
         );
 
         assert_eq!(vec!["Another: Trailer"], commit.get_trailer("Another"));
@@ -158,7 +161,7 @@ mod test_commit_message {
                     Anything: Some Trailer
                     "
                 )
-                .into()
+                .into(),
             ),
             CommitMessage::new(
                 indoc!(
@@ -167,8 +170,9 @@ mod test_commit_message {
                     With a description.
                     "
                 )
-                .into()
-            ).add_trailer("Anything: Some Trailer")
+                .into(),
+            )
+            .add_trailer("Anything: Some Trailer")
         );
     }
 
@@ -184,11 +188,10 @@ mod test_commit_message {
                     # Comments about writing a commit message
                     "
                 )
-                .into()
+                .into(),
             ),
-            CommitMessage::new(
-                "# Comments about writing a commit message\n".into()
-            ).add_trailer("Trailer: Title")
+            CommitMessage::new("# Comments about writing a commit message\n".into())
+                .add_trailer("Trailer: Title")
         );
     }
 
@@ -204,7 +207,7 @@ mod test_commit_message {
                     # Comment about committing
                     "
                 )
-                .into()
+                .into(),
             ),
             CommitMessage::new(
                 indoc!(
@@ -212,8 +215,9 @@ mod test_commit_message {
 
                     # Comment about committing"
                 )
-                .into()
-            ).add_trailer("Trailer: Title")
+                .into(),
+            )
+            .add_trailer("Trailer: Title")
         );
     }
 
@@ -234,7 +238,7 @@ mod test_commit_message {
                     # Trailing comment line 2
                     "
                 )
-                .into()
+                .into(),
             ),
             CommitMessage::new(
                 indoc!(
@@ -247,8 +251,9 @@ mod test_commit_message {
                     # Trailing comment line 1
                     # Trailing comment line 2"
                 )
-                .into()
-            ).add_trailer("Trailer: Title")
+                .into(),
+            )
+            .add_trailer("Trailer: Title")
         );
     }
 }
