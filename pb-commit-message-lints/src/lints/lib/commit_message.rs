@@ -7,12 +7,14 @@ use crate::errors::PbCommitMessageLintsError;
 #[derive(Debug, PartialEq)]
 pub struct CommitMessage {
     contents: String,
+    comment_char: String,
 }
 
 impl CommitMessage {
     #[must_use]
     pub fn new(contents: String) -> CommitMessage {
-        CommitMessage { contents }
+        let comment_char = "#".into();
+        CommitMessage { contents, comment_char }
     }
 
     pub fn matches_pattern(&self, re: &Regex) -> bool {
@@ -28,21 +30,31 @@ impl CommitMessage {
     }
 
     pub fn add_trailer(&self, trailer: &str) -> Self {
-        let mut message = String::from(&self.contents);
+        let (body, trailing_comment) = self.message_parts();
 
-        if !message.is_empty() {
-            message.push_str("\n");
+        if body.is_empty() && trailing_comment.is_empty() {
+            Self::new(format!("\n{}\n", trailer))
+        } else if body.is_empty() {
+            Self::new(format!("\n{}\n\n{}\n", trailer, trailing_comment))
+        } else if trailing_comment.is_empty() {
+            Self::new(format!("{}\n\n{}\n", body, trailer))
+        } else {
+            Self::new(format!("{}\n{}\n\n{}\n", body, trailer, trailing_comment))
         }
-
-        message.push_str(trailer);
-
-        message.push_str("\n");
-
-        Self::new(message)
     }
 
     fn line_has_trailer(trailer: &str, line: &str) -> bool {
         line.starts_with(&format!("{}:", trailer))
+    }
+
+    fn message_parts(&self) -> (String, String) {
+        let lines = self.contents.lines();
+        let body: Vec<&str> = lines
+            .clone()
+            .take_while(|line| !line.starts_with(&self.comment_char))
+            .collect();
+        let trailing_comment: Vec<&str> = lines.skip(body.len()).collect();
+        (body.join("\n"), trailing_comment.join("\n"))
     }
 }
 
@@ -122,7 +134,7 @@ mod test_commit_message {
     #[test]
     fn adding_trailer_to_empty_message() {
         assert_eq!(
-            CommitMessage::new("Anything: Some Trailer\n".into()),
+            CommitMessage::new("\nAnything: Some Trailer\n".into()),
             CommitMessage::new("".into()).add_trailer("Anything: Some Trailer")
         );
     }
@@ -150,6 +162,51 @@ mod test_commit_message {
                 )
                 .into()
             ).add_trailer("Anything: Some Trailer")
+        );
+    }
+
+    #[test]
+    fn adding_trailer_when_message_contains_only_comments() {
+        assert_eq!(
+            CommitMessage::new(
+                indoc!(
+                    "
+
+                    Trailer: Title
+
+                    # Comments about writing a commit message
+                    "
+                )
+                .into()
+            ),
+            CommitMessage::new(
+                "# Comments about writing a commit message\n".into()
+            ).add_trailer("Trailer: Title")
+        );
+    }
+
+    #[test]
+    fn adding_trailer_when_message_contains_content_with_trailing_comments() {
+        assert_eq!(
+            CommitMessage::new(
+                indoc!(
+                    "Message title
+
+                    Trailer: Title
+
+                    # Comment about committing
+                    "
+                )
+                .into()
+            ),
+            CommitMessage::new(
+                indoc!(
+                    "Message title
+
+                    # Comment about committing"
+                )
+                .into()
+            ).add_trailer("Trailer: Title")
         );
     }
 }
