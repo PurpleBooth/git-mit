@@ -49,11 +49,18 @@ impl CommitMessage {
 
     fn message_parts(&self) -> (String, String) {
         let lines = self.contents.lines();
-        let body: Vec<&str> = lines
+
+        let contents_length = lines.clone().count();
+        let trailing_comment_length = lines
             .clone()
-            .take_while(|line| !line.starts_with(&self.comment_char))
-            .collect();
-        let trailing_comment: Vec<&str> = lines.skip(body.len()).collect();
+            .rev()
+            .take_while(|line| line.starts_with(&self.comment_char))
+            .count();
+        let body_length = contents_length - trailing_comment_length;
+
+        let body: Vec<&str> = lines.clone().take(body_length).collect();
+        let trailing_comment: Vec<&str> = lines.skip(body_length).collect();
+
         (body.join("\n"), trailing_comment.join("\n"))
     }
 }
@@ -204,6 +211,41 @@ mod test_commit_message {
                     "Message title
 
                     # Comment about committing"
+                )
+                .into()
+            ).add_trailer("Trailer: Title")
+        );
+    }
+
+    #[test]
+    fn adding_trailer_when_there_are_additional_comments() {
+        assert_eq!(
+            CommitMessage::new(
+                indoc!(
+                    "Message title
+
+                    # Random Comment
+
+                    Message content
+
+                    Trailer: Title
+
+                    # Trailing comment line 1
+                    # Trailing comment line 2
+                    "
+                )
+                .into()
+            ),
+            CommitMessage::new(
+                indoc!(
+                    "Message title
+
+                    # Random Comment
+
+                    Message content
+
+                    # Trailing comment line 1
+                    # Trailing comment line 2"
                 )
                 .into()
             ).add_trailer("Trailer: Title")
