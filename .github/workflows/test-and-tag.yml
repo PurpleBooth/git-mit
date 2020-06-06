@@ -149,7 +149,7 @@ jobs:
       - shell: bash
         run: |
           git commit -am "Release $(cat ./version/version)"
-          git pull --rebase
           git tag -a -m "Release $(cat ./version/version)" "$(cat ./version/version)"
+          git pull --rebase
           git push
           git push --tags
