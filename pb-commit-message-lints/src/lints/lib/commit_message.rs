@@ -1,5 +1,5 @@
 use regex::Regex;
-use std::{convert::TryFrom, fmt::Display, fs::File, io::Read, path::PathBuf};
+use std::{convert::TryFrom, fmt::Display, fs::File, io::Read, path::PathBuf, str::Lines};
 
 use crate::errors::PbCommitMessageLintsError;
 
@@ -33,16 +33,16 @@ impl CommitMessage {
 
     #[must_use]
     pub fn add_trailer(&self, trailer: &str) -> Self {
-        let (body, trailing_comment) = self.message_parts();
+        let (body, tail) = self.message_parts();
 
-        if body.is_empty() && trailing_comment.is_empty() {
+        if body.is_empty() && tail.is_empty() {
             Self::new(format!("\n{}\n", trailer))
         } else if body.is_empty() {
-            Self::new(format!("\n{}\n\n{}\n", trailer, trailing_comment))
-        } else if trailing_comment.is_empty() {
+            Self::new(format!("\n{}\n\n{}\n", trailer, tail))
+        } else if tail.is_empty() {
             Self::new(format!("{}\n\n{}\n", body, trailer))
         } else {
-            Self::new(format!("{}\n{}\n\n{}\n", body, trailer, trailing_comment))
+            Self::new(format!("{}\n{}\n\n{}\n", body, trailer, tail))
         }
     }
 
@@ -51,20 +51,46 @@ impl CommitMessage {
     }
 
     fn message_parts(&self) -> (String, String) {
-        let lines = self.contents.lines();
+        let contents_length = self.lines().count();
+        let tail_length = self.tail_length();
+        let body_length = contents_length - tail_length;
 
-        let contents_length = lines.clone().count();
-        let trailing_comment_length = lines
-            .clone()
-            .rev()
-            .take_while(|line| line.starts_with(&self.comment_char))
-            .count();
-        let body_length = contents_length - trailing_comment_length;
+        let body: Vec<&str> = self.lines().take(body_length).collect();
+        let tail: Vec<&str> = self.lines().skip(body_length).collect();
 
-        let body: Vec<&str> = lines.clone().take(body_length).collect();
-        let trailing_comment: Vec<&str> = lines.skip(body_length).collect();
+        (body.join("\n"), tail.join("\n"))
+    }
 
-        (body.join("\n"), trailing_comment.join("\n"))
+    fn tail_length(&self) -> usize {
+        let scissors_section_length = self.scissors_section_length();
+
+        scissors_section_length
+            + self
+                .lines()
+                .rev()
+                .skip(scissors_section_length)
+                .take_while(|line| line.starts_with(&self.comment_char))
+                .count()
+    }
+
+    fn scissors_section_length(&self) -> usize {
+        let scissors_line = format!(
+            "{} ------------------------ >8 ------------------------",
+            self.comment_char
+        );
+
+        if let Some(_) = self.lines().find(|line| *line == scissors_line) {
+            self.lines()
+                .rev()
+                .take_while(|line| *line != scissors_line)
+                .count()
+        } else {
+            0
+        }
+    }
+
+    fn lines(&self) -> Lines {
+        self.contents.lines()
     }
 }
 
@@ -254,6 +280,79 @@ mod test_commit_message {
                 .into(),
             )
             .add_trailer("Trailer: Title")
+        );
+    }
+
+    #[test]
+    fn adding_trailer_when_is_a_scissors_line() {
+        assert_eq!(
+            CommitMessage::new(
+                indoc!(
+                    "
+                    Message title
+
+                    Trailer: Content
+
+                    # On branch master
+                    # Your branch is ahead of 'origin/master' by 18 commits.
+                    #   (use \"git push\" to publish your local commits)
+                    #
+                    # Changes to be committed:
+                    #	modified:   pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    #
+                    # ------------------------ >8 ------------------------
+                    # Do not modify or remove the line above.
+                    # Everything below it will be ignored.
+                    diff --git a/pb-commit-message-lints/src/lints/lib/commit_message.rs b/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    index 3a62793..99aeff1 100644
+                    --- a/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    +++ b/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    @@ -47,7 +47,7 @@ impl CommitMessage {
+                        }
+
+                        fn line_has_trailer(trailer: &str, line: &str) -> bool {
+                    -        line.starts_with(&format!(\"{}:\", trailer))
+                    +        changed
+                        }
+
+                        fn message_parts(&self) -> (String, String) {
+                    "
+                )
+                .into(),
+            ),
+            CommitMessage::new(
+                indoc!(
+                    "
+                    Message title
+
+                    # On branch master
+                    # Your branch is ahead of 'origin/master' by 18 commits.
+                    #   (use \"git push\" to publish your local commits)
+                    #
+                    # Changes to be committed:
+                    #	modified:   pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    #
+                    # ------------------------ >8 ------------------------
+                    # Do not modify or remove the line above.
+                    # Everything below it will be ignored.
+                    diff --git a/pb-commit-message-lints/src/lints/lib/commit_message.rs b/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    index 3a62793..99aeff1 100644
+                    --- a/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    +++ b/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    @@ -47,7 +47,7 @@ impl CommitMessage {
+                        }
+
+                        fn line_has_trailer(trailer: &str, line: &str) -> bool {
+                    -        line.starts_with(&format!(\"{}:\", trailer))
+                    +        changed
+                        }
+
+                        fn message_parts(&self) -> (String, String) {
+                    "
+                )
+                .into(),
+            )
+            .add_trailer("Trailer: Content")
         );
     }
 }
