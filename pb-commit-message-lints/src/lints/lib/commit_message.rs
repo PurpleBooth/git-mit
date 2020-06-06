@@ -1,6 +1,5 @@
 use regex::Regex;
 use std::fmt::Display;
-
 use std::{convert::TryFrom, fs::File, io::Read, path::PathBuf};
 
 use crate::errors::PbCommitMessageLintsError;
@@ -56,18 +55,22 @@ mod test_commit_message {
     use pretty_assertions::assert_eq;
     use regex::Regex;
 
-    use crate::lints::CommitMessage;
+    use indoc::indoc;
+
+    use super::CommitMessage;
 
     #[test]
     fn with_trailers() {
         let commit = CommitMessage::new(
-            r#"Some Commit Message
+            indoc!(
+                "Some Commit Message
 
-Anything: Some Trailer
-Anything: Some Trailer
-Another: Trailer
-"#
-            .into(),
+                Anything: Some Trailer
+                Anything: Some Trailer
+                Another: Trailer
+                "
+            )
+            .into()
         );
 
         assert_eq!(vec!["Another: Trailer"], commit.get_trailer("Another"));
@@ -80,12 +83,14 @@ Another: Trailer
     #[test]
     fn regex_matching() {
         let commit = CommitMessage::new(
-            r#"Some Commit Message
+            indoc!(
+                "Some Commit Message
 
-Anything: Some Trailer
-Anything: Some Trailer
-Another: Trailer
-"#
+                Anything: Some Trailer
+                Anything: Some Trailer
+                Another: Trailer
+                "
+            )
             .into(),
         );
 
