@@ -4,6 +4,7 @@ use std::{convert::TryFrom, fs::File, io::Read, path::PathBuf};
 
 use crate::errors::PbCommitMessageLintsError;
 
+#[derive(Debug, PartialEq)]
 pub struct CommitMessage {
     contents: String,
 }
@@ -24,6 +25,20 @@ impl CommitMessage {
             .lines()
             .filter(|line: &&str| CommitMessage::line_has_trailer(trailer, line))
             .collect::<Vec<_>>()
+    }
+
+    pub fn add_trailer(&self, trailer: &str) -> Self {
+        let mut message = String::from(&self.contents);
+
+        if !message.is_empty() {
+            message.push_str("\n");
+        }
+
+        message.push_str(trailer);
+
+        message.push_str("\n");
+
+        Self::new(message)
     }
 
     fn line_has_trailer(trailer: &str, line: &str) -> bool {
@@ -101,6 +116,40 @@ mod test_commit_message {
         assert_eq!(
             false,
             commit.matches_pattern(&Regex::new("N[oO]thing:").unwrap())
+        );
+    }
+
+    #[test]
+    fn adding_trailer_to_empty_message() {
+        assert_eq!(
+            CommitMessage::new("Anything: Some Trailer\n".into()),
+            CommitMessage::new("".into()).add_trailer("Anything: Some Trailer")
+        );
+    }
+
+    #[test]
+    fn adding_trailer_simple_message() {
+        assert_eq!(
+            CommitMessage::new(
+                indoc!(
+                    "Simple commit message
+
+                    With a description.
+
+                    Anything: Some Trailer
+                    "
+                )
+                .into()
+            ),
+            CommitMessage::new(
+                indoc!(
+                    "Simple commit message
+
+                    With a description.
+                    "
+                )
+                .into()
+            ).add_trailer("Anything: Some Trailer")
         );
     }
 }

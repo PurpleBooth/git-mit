@@ -42,11 +42,11 @@ In this commit message I have put a witty message"#
     let expected_stdout = "";
     let expected_stderr = r#""#;
     let expect_success = true;
-    let expected_commit_message = r#"Co-authored-by: Annie Example <test@example.com>
-Lorem Ipsum
+    let expected_commit_message = r#"Lorem Ipsum
 
 In this commit message I have put a witty message
 
+Co-authored-by: Annie Example <test@example.com>
 "#;
 
     assert_output(
@@ -93,11 +93,11 @@ In this commit message I have put a witty message"#
     let expected_stdout = "";
     let expected_stderr = r#""#;
     let expect_success = true;
-    let expected_commit_message = r#"Co-authored-by: Annie Example <test@example.com>
-A different mesage
+    let expected_commit_message = r#"A different mesage
 
 In this commit message I have put a witty message
 
+Co-authored-by: Annie Example <test@example.com>
 "#;
 
     assert_output(
@@ -145,12 +145,13 @@ In this commit message I have put a witty message"#
     let expected_stdout = "";
     let expected_stderr = r#""#;
     let expect_success = true;
-    let expected_commit_message = r#"Co-authored-by: Joseph Bloggs <joe@example.com>
-Co-authored-by: Annie Example <annie@example.com>
-A different mesage
+    let expected_commit_message = r#"A different mesage
 
 In this commit message I have put a witty message
 
+Co-authored-by: Joseph Bloggs <joe@example.com>
+
+Co-authored-by: Annie Example <annie@example.com>
 "#;
 
     assert_output(
