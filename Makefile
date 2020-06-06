@@ -11,20 +11,20 @@ show-help:
 .PHONY: test
 ## Test it was built ok
 test:
-	unset GIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test
+	unset GIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test --locked
 
 .PHONY: smoke-test
 ## Run a smoke test and see if the app runs
 smoke-test:
-	cargo run --bin pb-prepare-commit-msg -- -h
-	cargo run --bin pb-pre-commit -- -h
-	cargo run --bin pb-commit-msg -- -h
-	cargo run --bin git-authors -- -h
+	cargo run --locked --bin pb-prepare-commit-msg -- -h
+	cargo run --locked --bin pb-pre-commit -- -h
+	cargo run --locked --bin pb-commit-msg -- -h
+	cargo run --locked --bin git-authors -- -h
 
 .PHONY: build
 ## Build release version
 build:
-	cargo build --release
+	cargo build --locked --release
 
 .PHONY: lint
 ## Lint it

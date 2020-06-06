@@ -28,7 +28,7 @@ jobs:
       -
         uses: actions-rs/cargo@v1
         with:
-          args: "--release"
+          args: "--release --locked"
           command: build
       -
         id: get_repository_name

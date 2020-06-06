@@ -16,7 +16,14 @@ use tempfile::TempDir;
 #[must_use]
 pub fn run_hook(working_dir: &PathBuf, package: &str, arguments: Vec<&str>) -> Output {
     let toml_path = calculate_cargo_toml_path(package);
-    let mut cargo_arguments = vec!["run", "--quiet", "--manifest-path", &toml_path, "--"];
+    let mut cargo_arguments = vec![
+        "run",
+        "--locked",
+        "--quiet",
+        "--manifest-path",
+        &toml_path,
+        "--",
+    ];
     cargo_arguments.extend(arguments);
 
     Command::new("cargo")
