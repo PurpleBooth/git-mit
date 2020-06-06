@@ -8,7 +8,7 @@ use pb_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
     errors::PbCommitMessageLintsError,
     external::vcs::Git2,
-    lints::CommitMessage,
+    lints::lib::CommitMessage,
 };
 use std::{
     convert::TryFrom,
