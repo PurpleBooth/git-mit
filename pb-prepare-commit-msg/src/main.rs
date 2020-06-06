@@ -2,8 +2,6 @@ use std::{env, fs::File, io::Write, process};
 
 use clap::{crate_authors, crate_version, App, Arg};
 
-use itertools::Itertools;
-
 use pb_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
     errors::PbCommitMessageLintsError,
@@ -84,22 +82,19 @@ fn append_coauthors_to_commit_message(
 ) -> Result<(), PbPrepareCommitMessageError> {
     let path = String::from(commit_message_path.to_string_lossy());
     let commit_message = CommitMessage::try_from(commit_message_path.clone())?;
+
+
+    let message = format!(
+        "{}",
+        authors
+            .iter()
+            .map(|x| format!("Co-authored-by: {} <{}>", x.name(), x.email()))
+            .fold(commit_message, |message, trailer| message
+                .add_trailer(&trailer))
+    );
+
     File::create(commit_message_path)
-        .and_then(|mut file| {
-            file.write_all(
-                format!(
-                    r#"{}
-{}
-"#,
-                    authors
-                        .iter()
-                        .map(|x| format!("Co-authored-by: {} <{}>", x.name(), x.email()))
-                        .join("\n"),
-                    commit_message
-                )
-                .as_bytes(),
-            )
-        })
+        .and_then(|mut file| file.write_all(message.as_bytes()))
         .map_err(|err| PbPrepareCommitMessageError::new_io(path, &err))
 }
 
