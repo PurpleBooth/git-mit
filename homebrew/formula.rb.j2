@@ -4,6 +4,7 @@ class PbGitHooks < Formula
   url "https://github.com/{{ github_repo }}/archive/{{ git_tag }}.tar.gz"
   sha256 "{{ file_sha }}"
   depends_on "rust" => :build
+  depends_on "openssl"
 
   def install
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./pb-commit-msg/"
