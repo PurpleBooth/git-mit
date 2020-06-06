@@ -132,7 +132,7 @@ dependencies = [
 
 [[package]]
 name = "git-authors"
-version = "2.83.0"
+version = "2.84.0"
 dependencies = [
  "clap",
  "git2",
@@ -282,9 +282,9 @@ checksum = "77af24da69f9d9341038eba93a073b1fdaaa1b788221b00a69bce9e762cb32de"
 
 [[package]]
 name = "openssl-sys"
-version = "0.9.57"
+version = "0.9.58"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7410fef80af8ac071d4f63755c0ab89ac3df0fd1ea91f1d1f37cf5cec4395990"
+checksum = "a842db4709b604f0fe5d1170ae3565899be2ad3d9cbc72dedc789ac0511f78de"
 dependencies = [
  "autocfg",
  "cc",
@@ -304,7 +304,7 @@ dependencies = [
 
 [[package]]
 name = "pb-commit-message-lints"
-version = "2.83.0"
+version = "2.84.0"
 dependencies = [
  "enum-iterator",
  "git2",
@@ -320,7 +320,7 @@ dependencies = [
 
 [[package]]
 name = "pb-commit-msg"
-version = "2.83.0"
+version = "2.84.0"
 dependencies = [
  "clap",
  "git2",
@@ -333,7 +333,7 @@ dependencies = [
 
 [[package]]
 name = "pb-git-hooks"
-version = "2.83.0"
+version = "2.84.0"
 dependencies = [
  "clap",
  "enum-iterator",
@@ -347,7 +347,7 @@ dependencies = [
 
 [[package]]
 name = "pb-hook-test-helper"
-version = "2.83.0"
+version = "2.84.0"
 dependencies = [
  "git2",
  "pretty_assertions",
@@ -356,7 +356,7 @@ dependencies = [
 
 [[package]]
 name = "pb-pre-commit"
-version = "2.83.0"
+version = "2.84.0"
 dependencies = [
  "clap",
  "git2",
@@ -369,7 +369,7 @@ dependencies = [
 
 [[package]]
 name = "pb-prepare-commit-msg"
-version = "2.83.0"
+version = "2.84.0"
 dependencies = [
  "clap",
  "git2",
