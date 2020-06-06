@@ -83,7 +83,6 @@ fn append_coauthors_to_commit_message(
     let path = String::from(commit_message_path.to_string_lossy());
     let commit_message = CommitMessage::try_from(commit_message_path.clone())?;
 
-
     let message = format!(
         "{}",
         authors
