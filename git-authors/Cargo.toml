@@ -1,12 +1,12 @@
 [package]
 name = "git-authors"
-version = "2.97.0"
-authors = ["Billie Thompson <billie+git-author@billiecodes.com>"]
+version = "2.98.0"
+authors = [ "Billie Thompson <billie+git-author@billiecodes.com>" ]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
 description = "Set author and Co-authored trailer."
-categories = ["development-tools", "command-line-utilities"]
-keywords = ["git", "git-hooks"]
+categories = [ "development-tools", "command-line-utilities" ]
+keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
 repository = "https://github.com/PurpleBooth/pb-git-hooks"
 
@@ -14,9 +14,12 @@ repository = "https://github.com/PurpleBooth/pb-git-hooks"
 clap = "~2.33"
 xdg = "^2.1"
 git2 = "0.13"
-pb-commit-message-lints = { path = "../pb-commit-message-lints" }
 
+  [dependencies.pb-commit-message-lints]
+  path = "../pb-commit-message-lints"
 
 [dev-dependencies]
-pb-hook-test-helper = { path = "../pb-hook-test-helper" }
 tempfile = "3"
+
+  [dev-dependencies.pb-hook-test-helper]
+  path = "../pb-hook-test-helper"

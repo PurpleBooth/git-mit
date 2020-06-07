@@ -1,26 +1,27 @@
 [package]
 name = "pb-commit-msg"
-version = "2.97.0"
-authors = ["Billie Thompson <billie+pb-commit-msg@billiecodes.com>"]
+version = "2.98.0"
+authors = [ "Billie Thompson <billie+pb-commit-msg@billiecodes.com>" ]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
 description = "Validate the commit message that a user has input"
-categories = ["development-tools", "command-line-utilities"]
-keywords = ["git", "git-hooks"]
+categories = [ "development-tools", "command-line-utilities" ]
+keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
 repository = "https://github.com/PurpleBooth/pb-git-hooks"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 clap = "~2.33"
-pb-commit-message-lints = { path = "../pb-commit-message-lints" }
 git2 = "0.13"
 itertools = "0.9.0"
 
+  [dependencies.pb-commit-message-lints]
+  path = "../pb-commit-message-lints"
 
 [dev-dependencies]
 itertools = "0.9.0"
 tempfile = "3"
 pretty_assertions = "0.6.1"
-pb-hook-test-helper = { path = "../pb-hook-test-helper" }
+
+  [dev-dependencies.pb-hook-test-helper]
+  path = "../pb-hook-test-helper"

@@ -1,16 +1,16 @@
 [package]
 name = "pb-commit-message-lints"
-version = "2.97.0"
-authors = ["Billie Thompson <billie+pb-commit-message-lints@billiecodes.com>"]
+version = "2.98.0"
+authors = [
+  "Billie Thompson <billie+pb-commit-message-lints@billiecodes.com>"
+]
 edition = "2018"
 license = "CC0 1.0 Universal"
-categories = ["development-tools", "command-line-utilities"]
-keywords = ["git", "git-hooks"]
+categories = [ "development-tools", "command-line-utilities" ]
+keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
 repository = "https://github.com/PurpleBooth/pb-git-hooks"
 description = "Check the correctness of a specific commit message. Designed to be used in tools providing commit-msg style hooks"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 enum-iterator = "0.6.0"
@@ -18,11 +18,16 @@ git2 = "0.13"
 regex = "1"
 itertools = "0.9.0"
 serde_yaml = "0.8.12"
-serde = { version = "1.0.110" , features = ["derive"] }
 serde_derive = "1.0.110"
+
+  [dependencies.serde]
+  version = "1.0.110"
+  features = [ "derive" ]
 
 [dev-dependencies]
 tempfile = "3"
 pretty_assertions = "0.6.1"
-pb-hook-test-helper = { path = "../pb-hook-test-helper" }
 indoc = "0.3"
+
+  [dev-dependencies.pb-hook-test-helper]
+  path = "../pb-hook-test-helper"
