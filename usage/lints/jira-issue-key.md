@@ -1,4 +1,4 @@
-# Pivotal Tracker Lints
+# Jira Issue Key Lints
 
 ## Setup
 
