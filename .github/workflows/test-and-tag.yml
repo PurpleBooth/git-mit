@@ -169,17 +169,44 @@ jobs:
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions/download-artifact@v2
-      - uses: actions-rs/cargo@v1
+      - id: get_current_version
+        run: echo ::set-output name=VERSION::$(cat ./version/version)
+        shell: bash
+      - uses: ciiiii/toml-editor@1.0.0
         with:
-          command: install
-          args: 'toml-cli'
-      - shell: bash
-        run: |
-          for I in ./*/Cargo.toml ; do
-            TEMP_FILE="$(mktemp)"
-            toml set "$I" package.version "$(cat ./version/version | tail -c +2)" > "$TEMP_FILE"
-            mv "$TEMP_FILE" "$I"
-          done
+          file: "git-authors/Cargo.toml"
+          key: "package.version"
+          value: ${{ steps.get_current_version.outputs.VERSION }}
+      - uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "pb-commit-message-lints/Cargo.toml"
+          key: "package.version"
+          value: ${{ steps.get_current_version.outputs.VERSION }}
+      - uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "pb-commit-msg/Cargo.toml"
+          key: "package.version"
+          value: ${{ steps.get_current_version.outputs.VERSION }}
+      - uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "pb-git-hooks/Cargo.toml"
+          key: "package.version"
+          value: ${{ steps.get_current_version.outputs.VERSION }}
+      - uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "pb-hook-test-helper/Cargo.toml"
+          key: "package.version"
+          value: ${{ steps.get_current_version.outputs.VERSION }}
+      - uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "pb-pre-commit/Cargo.toml"
+          key: "package.version"
+          value: ${{ steps.get_current_version.outputs.VERSION }}
+      - uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "pb-prepare-commit-msg/Cargo.toml"
+          key: "package.version"
+          value: ${{ steps.get_current_version.outputs.VERSION }}
       - uses: actions-rs/cargo@v1
         with:
           args: "--offline"
