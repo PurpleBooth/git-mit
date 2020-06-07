@@ -219,6 +219,7 @@ jobs:
           git config user.email "noreply@github.com"
 
           git fetch
+          git commit -am "Release $(cat ./version/version)"
       - shell: bash
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         run: |
@@ -226,7 +227,6 @@ jobs:
           git merge --ff-only -
       - shell: bash
         run: |
-          git commit -am "Release $(cat ./version/version)"
           git tag -a -m "Release $(cat ./version/version)" "$(cat ./version/version)"
           git pull --rebase
           git push
