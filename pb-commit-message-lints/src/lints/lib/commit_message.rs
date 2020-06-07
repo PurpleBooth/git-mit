@@ -1,7 +1,9 @@
-use regex::Regex;
+use regex::{Regex, RegexBuilder};
 use std::{convert::TryFrom, fmt::Display, fs::File, io::Read, path::PathBuf, str::Lines};
 
 use crate::errors::PbCommitMessageLintsError;
+
+const SCISSORS_LINE: &str = "------------------------ >8 ------------------------";
 
 #[derive(Debug, PartialEq)]
 pub struct CommitMessage {
@@ -12,7 +14,7 @@ pub struct CommitMessage {
 impl CommitMessage {
     #[must_use]
     pub fn new(contents: String) -> CommitMessage {
-        let comment_char = "#".into();
+        let comment_char = detect_comment_char(&contents).into();
         CommitMessage {
             contents,
             comment_char,
@@ -74,10 +76,7 @@ impl CommitMessage {
     }
 
     fn scissors_section_length(&self) -> usize {
-        let scissors_line = format!(
-            "{} ------------------------ >8 ------------------------",
-            self.comment_char
-        );
+        let scissors_line = format!("{} {}", self.comment_char, SCISSORS_LINE);
 
         if let Some(_) = self.lines().find(|line| *line == scissors_line) {
             self.lines()
@@ -92,6 +91,20 @@ impl CommitMessage {
     fn lines(&self) -> Lines {
         self.contents.lines()
     }
+}
+
+fn detect_comment_char(contents: &str) -> &str {
+    let pattern = RegexBuilder::new(&format!("^(?P<char>[^\\s]+) {}$", SCISSORS_LINE))
+        .multi_line(true)
+        .build()
+        .unwrap();
+
+    pattern
+        .captures(contents)
+        .and_then(|caps| caps.name("char"))
+        .map(|m| m.as_str())
+        .unwrap_or("#")
+        
 }
 
 impl TryFrom<PathBuf> for CommitMessage {
@@ -298,15 +311,15 @@ mod test_commit_message {
                     #   (use \"git push\" to publish your local commits)
                     #
                     # Changes to be committed:
-                    #	modified:   pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    #	modified:   commit_message.rs
                     #
                     # ------------------------ >8 ------------------------
                     # Do not modify or remove the line above.
                     # Everything below it will be ignored.
-                    diff --git a/pb-commit-message-lints/src/lints/lib/commit_message.rs b/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    diff --git a/commit_message.rs b/commit_message.rs
                     index 3a62793..99aeff1 100644
-                    --- a/pb-commit-message-lints/src/lints/lib/commit_message.rs
-                    +++ b/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    --- a/commit_message.rs
+                    +++ b/commit_message.rs
                     @@ -47,7 +47,7 @@ impl CommitMessage {
                         }
 
@@ -330,15 +343,15 @@ mod test_commit_message {
                     #   (use \"git push\" to publish your local commits)
                     #
                     # Changes to be committed:
-                    #	modified:   pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    #	modified:   commit_message.rs
                     #
                     # ------------------------ >8 ------------------------
                     # Do not modify or remove the line above.
                     # Everything below it will be ignored.
-                    diff --git a/pb-commit-message-lints/src/lints/lib/commit_message.rs b/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    diff --git a/commit_message.rs b/commit_message.rs
                     index 3a62793..99aeff1 100644
-                    --- a/pb-commit-message-lints/src/lints/lib/commit_message.rs
-                    +++ b/pb-commit-message-lints/src/lints/lib/commit_message.rs
+                    --- a/commit_message.rs
+                    +++ b/commit_message.rs
                     @@ -47,7 +47,7 @@ impl CommitMessage {
                         }
 
@@ -348,6 +361,55 @@ mod test_commit_message {
                         }
 
                         fn message_parts(&self) -> (String, String) {
+                    "
+                )
+                .into(),
+            )
+            .add_trailer("Trailer: Content")
+        );
+    }
+
+    #[test]
+    fn adding_trailer_with_different_comment_character() {
+        assert_eq!(
+            CommitMessage::new(
+                indoc!(
+                    "
+                    Message title
+
+                    Trailer: Content
+
+                    % On branch master
+                    % Your branch is ahead of 'origin/master' by 18 commits.
+                    %   (use \"git push\" to publish your local commits)
+                    %
+                    % Changes to be committed:
+                    %	modified:   commit_message.rs
+                    %
+                    % ------------------------ >8 ------------------------
+                    % Do not modify or remove the line above.
+                    % Everything below it will be ignored.
+                    diff --git a/commit_message.rs b/commit_message.rs
+                    "
+                )
+                .into(),
+            ),
+            CommitMessage::new(
+                indoc!(
+                    "
+                    Message title
+
+                    % On branch master
+                    % Your branch is ahead of 'origin/master' by 18 commits.
+                    %   (use \"git push\" to publish your local commits)
+                    %
+                    % Changes to be committed:
+                    %	modified:   commit_message.rs
+                    %
+                    % ------------------------ >8 ------------------------
+                    % Do not modify or remove the line above.
+                    % Everything below it will be ignored.
+                    diff --git a/commit_message.rs b/commit_message.rs
                     "
                 )
                 .into(),
