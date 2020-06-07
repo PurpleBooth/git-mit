@@ -4,26 +4,58 @@
       - '*'
   pull_request: null
 jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - id: get_previous_version
+        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag --sort=-creatordate | head -n 1)
+        shell: bash
+      - id: semvers
+        uses: WyriHaximus/github-action-next-semvers@master
+        with:
+          version: '${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}'
+      - run: mkdir -p ./version
+      - if: "!contains(github.event.head_commit.message, 'BC BREAK') && !contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
+        run: echo "$VERSION" >./version/version
+        env:
+          VERSION: ${{ steps.semvers.outputs.v_minor }}
+      - if: "contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
+        run: echo "$VERSION" >./version/version
+        env:
+          VERSION: ${{ steps.semvers.outputs.v_patch }}
+      - run: echo "$VERSION" > ./version/version
+        env:
+          VERSION: ${{ steps.semvers.outputs.v_major }}
+        if: "contains(github.event.head_commit.message, 'BC BREAK')"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: version
+          path: ./version/version
   generate-formula:
+    needs:
+      - version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
       - run: |
           curl -Lo file.tar.gz "https://github.com/$GIT_REPO/archive/$GIT_TAG.tar.gz"
           sha256sum -b file.tar.gz | awk '{ print $1 }' > hash
           echo ::set-output "name=SHA256::$( cat hash )"
+          echo ::set-output "name=NEXT_VERSION::$( cat ./version/version )"
         id: hash
         shell: bash
         env:
           GIT_REPO: ${{ github.repository }}
-          GIT_TAG: v0.1.0
+          GIT_TAG: ${{ steps.hash.outputs.NEXT_VERSION }}
       - uses: cuchi/jinja2-action@v1.1.0
         with:
           template: homebrew/formula.rb.j2
           output_file: formula.rb
           variables: |
             github_repo=${{ github.repository }}
-            git_tag=v0.1.0
+            git_tag=${{ steps.hash.outputs.NEXT_VERSION }}
             file_sha=${{ steps.hash.outputs.SHA256 }}
       - uses: actions/upload-artifact@v2
         with:
@@ -185,6 +217,7 @@ jobs:
       - lints
       - check
       - test-formula
+      - version
     runs-on: ubuntu-latest
     steps:
       - uses: actions-rs/toolchain@v1
@@ -204,27 +237,7 @@ jobs:
             ~/.cargo/bin
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-      - id: get_previous_version
-        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag --sort=-creatordate | head -n 1)
-        shell: bash
-      - id: semvers
-        uses: WyriHaximus/github-action-next-semvers@master
-        with:
-          version: '${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}'
-      - run: mkdir -p ./version
-      - if: "!contains(github.event.head_commit.message, 'BC BREAK') && !contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
-        run: echo "$VERSION" >./version/version
-        env:
-          VERSION: ${{ steps.semvers.outputs.v_minor }}
-      - if: "contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
-        run: echo "$VERSION" >./version/version
-        env:
-          VERSION: ${{ steps.semvers.outputs.v_patch }}
-      - run: echo "$VERSION" > ./version/version
-        env:
-          VERSION: ${{ steps.semvers.outputs.v_major }}
-        if: "contains(github.event.head_commit.message, 'BC BREAK')"
+      - uses: actions/download-artifact@v2
       - uses: actions-rs/cargo@v1
         with:
           command: install
