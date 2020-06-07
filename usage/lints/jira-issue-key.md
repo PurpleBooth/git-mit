@@ -44,7 +44,7 @@ git commit -m "Add a git ignore"
 Without enabling the lint can make commits without an key
 
 ``` bash
-echo "Hello, world!" > demo.txt
+echo "$(mktemp)" > demo.txt
 git add .
 git commit -m "Enabling a lint"
 ```
@@ -60,7 +60,7 @@ pb-git-hooks lint enable jira-issue-key-missing
 After enabling the lint you can't commit without a issue key
 
 ``` bash
-echo "Hello, world!" > demo.txt
+echo "$(mktemp)" > demo.txt
 git add demo.txt
 
 if git commit -m "I am not made" ; then
@@ -72,7 +72,7 @@ fi
 But you can with one
 
 ``` bash
-echo "Goodbye, world!" > demo.txt
+echo "$(mktemp)" > demo.txt
 git add demo.txt
 
 git commit -m "Enabled the lint
@@ -92,7 +92,7 @@ pb-git-hooks lint disable jira-issue-key-missing
 You'll be able to commit without an key
 
 ``` bash
-echo "Hello again, world!" > demo.txt
+echo "$(mktemp)" > demo.txt
 git add demo.txt
 git commit -m "Disabling the lint"
 ```

@@ -35,14 +35,17 @@ ae:
 git-authors -c authors.yml ae se
 echo "git-authors.yml" > .gitignore
 git add .
-git commit -m "Add a git ignore"
 ```
 
 You can use whatever editor you want, but you do need to use an editor.
 
+
+
 ``` bash
-export EDITOR="bash -c \"cat message \$1 > appended && mv appended \\\"\\\$1\\\"\" -- "
+export EDITOR="bash -c \"cat message \\\"\\\$1\\\" > appended && mv appended \\\"\\\$1\\\" && rm message\" -- "
 echo "message" >> .gitignore
+git add .
+git commit -m "Duplicated Trailer Lints: Setup"
 ```
 
 ## Default setting
@@ -54,10 +57,12 @@ trailers. The two trailers we check for `Co-authored-by` and
 ### `Co-authored-by`
 
 ``` bash
-echo "Hello, world!" > demo.txt
+echo "$(mktemp)" > demo.txt
 git add demo.txt
 
-echo "I am not made
+echo "Duplicated Trailer Lints
+
+Default setting - Co-Author
 
 Co-authored-by: Someone Else <someone@example.com>
 " > message
@@ -71,10 +76,14 @@ fi
 ### `Signed-of-by`
 
 ``` bash
-echo "Hello, world!" > demo.txt
+echo "$(mktemp)" > demo.txt
 git add demo.txt
 
 echo "I am not made
+
+Duplicated Trailer Lints
+
+Default setting - Signed-off
 
 Signed-off-by: Anyone Else <anyone@example.com>
 " > message
@@ -96,16 +105,22 @@ pb-git-hooks lint disable duplicated-trailers
 You'll be able to commit without an ID
 
 ``` bash
-echo "Hello, universe!" > demo.txt
+echo "$(mktemp)" > demo.txt
 git add demo.txt
 
 echo "Another example
+
+Disabling this specific lint - Signed-off
 
 Signed-off-by: Anyone Else <anyone@example.com>
 " > message
 git commit -s
 
+echo "$(mktemp)" > demo.txt
+git add demo.txt
 echo "Another example
+
+Disabling this specific lint - Co-authored
 
 Co-authored-by: Someone Else <someone@example.com>
 " > message
@@ -123,7 +138,7 @@ pb-git-hooks lint enable duplicated-trailers
 Then the lints are enabled again
 
 ``` bash
-echo "Goodbye, universe!" > demo.txt
+echo "$(mktemp)" > demo.txt
 git add demo.txt
 
 echo "I am not made
