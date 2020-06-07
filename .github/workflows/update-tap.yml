@@ -32,7 +32,7 @@ jobs:
         with:
           name: hash
           path: ./hash
-  build:
+  update-formula:
     needs:
       - generate-formula
     runs-on: macos-latest
@@ -79,6 +79,21 @@ jobs:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           GIT_TAG: ${{ github.ref }}
           FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
+  build-bottles:
+    runs-on: ${{ matrix.os }}
+    needs:
+      - update-formula
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+          - os: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: PurpleBooth/homebrew-repo
+          token: ${{ secrets.COMMITTER_TOKEN }}
+          path: homebrew-repo
       - shell: bash
         run: |
           brew test-bot \
@@ -90,6 +105,27 @@ jobs:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           BINTRAY_DL_URL: https://dl.bintray.com/purplebooth/bottles-repo
           BINTRAY_ORG: purplebooth
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bottles
+          path: ./*.json
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bottles
+          path: ./*.bottle.tar.gz
+  upload:
+    runs-on: macos-latest
+    needs:
+      - build-bottles
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: PurpleBooth/homebrew-repo
+          token: ${{ secrets.COMMITTER_TOKEN }}
+          path: homebrew-repo
+      - uses: actions/download-artifact@v2
+      - shell: bash
+        run: mv bottles/* .
       - shell: bash
         run: |
           curl \
