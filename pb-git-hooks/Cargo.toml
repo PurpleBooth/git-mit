@@ -1,6 +1,6 @@
 [package]
 name = "pb-git-hooks"
-version = "2.112.0"
+version = "2.112.1"
 authors = [ "Billie Thompson <billie+pb-git-hooks@billiecodes.com>" ]
 edition = "2018"
 license = "CC0 1.0 Universal"
