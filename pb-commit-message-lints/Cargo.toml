@@ -21,7 +21,7 @@ serde_yaml = "0.8.12"
 serde_derive = "1.0.110"
 
   [dependencies.serde]
-  version = "1.0.110"
+  version = "1.0.111"
   features = [ "derive" ]
 
 [dev-dependencies]
