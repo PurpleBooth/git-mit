@@ -1,7 +1,7 @@
-'on':
+"on":
   push:
     branches:
-      - '*'
+      - "*"
   pull_request: null
 jobs:
   version:
@@ -28,7 +28,7 @@ jobs:
       - id: semvers
         uses: WyriHaximus/github-action-next-semvers@master
         with:
-          version: '${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}'
+          version: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
       - run: mkdir -p ./version
       - if: "!contains(github.event.head_commit.message, 'BC BREAK') && !contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
         run: echo "$VERSION" >./version/version
@@ -67,7 +67,7 @@ jobs:
         with:
           command: check
   test:
-    runs-on: '${{ matrix.os }}'
+    runs-on: "${{ matrix.os }}"
     strategy:
       matrix:
         include:
@@ -93,7 +93,7 @@ jobs:
           args: " --locked"
           command: test
   mdtest:
-    runs-on: '${{ matrix.os }}'
+    runs-on: "${{ matrix.os }}"
     strategy:
       matrix:
         include:
@@ -132,15 +132,20 @@ jobs:
           profile: minimal
           toolchain: nightly
           default: true
-          components: 'rustfmt, clippy'
+          components: "rustfmt, clippy"
       - uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: '--all -- --check'
+          args: "--all -- --check"
       - uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: '--all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo'
+          args: "--all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo"
+      - name: Prettify code
+        uses: creyD/prettier_action@v2.2
+        with:
+          # This part is also where you can pass other options, for example:
+          prettier_options: --check **/*.{yml,yaml}
   merge-and-push:
     if: contains( github.event.pull_request.labels.*.name, 'dependencies') || ( github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, 'Release v') )
     needs:
@@ -153,7 +158,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: '${{ secrets.COMMITTER_TOKEN }}'
+          token: "${{ secrets.COMMITTER_TOKEN }}"
           fetch-depth: 0
       - uses: actions/cache@v2
         with:

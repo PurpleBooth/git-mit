@@ -1,7 +1,7 @@
-'on':
+"on":
   push:
     tags:
-      - '*'
+      - "*"
 jobs:
   generate-formula:
     runs-on: ubuntu-latest
@@ -101,7 +101,7 @@ jobs:
             echo "Package probably already exists..."
         env:
           HOMEBREW_BINTRAY_USER: purplebooth
-          HOMEBREW_BINTRAY_KEY: '${{ secrets.HOMEBREW_BINTRAY_KEY }}'
+          HOMEBREW_BINTRAY_KEY: "${{ secrets.HOMEBREW_BINTRAY_KEY }}"
           BINTRAY_API_URL: https://api.bintray.com
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           BINTRAY_ORG: purplebooth
@@ -115,7 +115,7 @@ jobs:
             --publish
         env:
           HOMEBREW_BINTRAY_USER: purplebooth
-          HOMEBREW_BINTRAY_KEY: '${{ secrets.HOMEBREW_BINTRAY_KEY }}'
+          HOMEBREW_BINTRAY_KEY: "${{ secrets.HOMEBREW_BINTRAY_KEY }}"
           BINTRAY_DL_URL: https://dl.bintray.com/purplebooth/bottles-repo
           BINTRAY_ORG: purplebooth
       - shell: bash

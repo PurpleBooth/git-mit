@@ -37,6 +37,8 @@ lint:
 	cargo fmt --all -- --check
 	cargo clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
 	cargo check
+	cargo audit check
+	find . \( -iname "*.yml" -o -iname "*.yaml" \) -exec npx prettier --check --write {} \;
 
 .PHONY: fmt
 ## Format what can be formatted
@@ -44,6 +46,7 @@ fmt:
 	cargo fix --allow-dirty
 	cargo clippy --allow-dirty --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
 	cargo fmt --all
+	find . \( -iname "*.yml" -o -iname "*.yaml" \) -exec npx prettier --write {} \;
 
 .PHONY: clean
 ## Clean the build directory
