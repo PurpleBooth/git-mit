@@ -39,8 +39,6 @@ git add .
 
 You can use whatever editor you want, but you do need to use an editor.
 
-
-
 ``` bash
 export EDITOR="bash -c \"cat message \\\"\\\$1\\\" > appended && mv appended \\\"\\\$1\\\" && rm message\" -- "
 echo "message" >> .gitignore

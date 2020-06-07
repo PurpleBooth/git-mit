@@ -5,7 +5,10 @@ set -euo pipefail
 # markdown bash execute
 function mbe() {
     if [ -f "$1" ]; then
-        MARKDOWN_PATH="$(cd "$(dirname "$1")"; pwd -P)/$(basename "$1")"
+        MARKDOWN_PATH="$(
+            cd "$(dirname "$1")"
+            pwd -P
+        )/$(basename "$1")"
 
         (
             unset EDITOR
@@ -17,10 +20,10 @@ function mbe() {
             cd "$(mktemp -d)"
             # shellcheck disable=SC2016
             sed -n '/``` bash/,/```/p' <"$MARKDOWN_PATH" | # get the bash code blocks
-                sed 's/``` bash//g' |          #  remove the ```bash
-                sed 's/```//g' |               # remove the trailing ```
-                sed '/^$/d' |                  # remove empty lines
-                /usr/bin/env bash              # execute the command
+                sed 's/``` bash//g' |                      #  remove the ```bash
+                sed 's/```//g' |                           # remove the trailing ```
+                sed '/^$/d' |                              # remove empty lines
+                /usr/bin/env bash                          # execute the command
         )
     else
         echo "$1 is not valid"
