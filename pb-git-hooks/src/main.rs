@@ -91,11 +91,11 @@ fn app() -> App<'static, 'static> {
 }
 
 fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHooksError> {
-    if let Some(mut subcommand_args) = args.subcommand_matches(COMMAND_LINT_ENABLE) {
-        set_lint_status(config, &mut subcommand_args, true)
-    } else if let Some(mut subcommand_args) = args.subcommand_matches(COMMAND_LINT_DISABLE) {
-        set_lint_status(config, &mut subcommand_args, false)
-    } else if let Some(_matches) = args.subcommand_matches(COMMAND_LINT_AVAILABLE) {
+    if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_ENABLE) {
+        set_lint_status(config, &subcommand_args, true)
+    } else if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_DISABLE) {
+        set_lint_status(config, &subcommand_args, false)
+    } else if args.subcommand_matches(COMMAND_LINT_AVAILABLE).is_some() {
         println!(
             "{}",
             Lints::iterator()
@@ -110,7 +110,7 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHook
 
 fn set_lint_status(
     config: &mut dyn Vcs,
-    subcommand_args: &&ArgMatches,
+    subcommand_args: &ArgMatches,
     status: bool,
 ) -> Result<(), PbGitHooksError> {
     pb_commit_message_lints::lints::set_lint_status(
