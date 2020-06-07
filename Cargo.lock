@@ -132,7 +132,7 @@ dependencies = [
 
 [[package]]
 name = "git-authors"
-version = "2.110.0"
+version = "2.110.1"
 dependencies = [
  "clap",
  "git2",
@@ -144,9 +144,9 @@ dependencies = [
 
 [[package]]
 name = "git2"
-version = "0.13.6"
+version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "11e4b2082980e751c4bf4273e9cbb4a02c655729c8ee8a79f66cad03c8f4d31e"
+checksum = "e1e02a51cd90229028c9bd8be0a0364f85b6b3199cccaa0ef39005ddbd5ac165"
 dependencies = [
  "bitflags",
  "libc",
@@ -232,9 +232,9 @@ checksum = "3baa92041a6fec78c687fa0cc2b3fae8884f743d672cf551bed1d6dac6988d0f"
 
 [[package]]
 name = "libgit2-sys"
-version = "0.12.7+1.0.0"
+version = "0.12.5+1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bcd07968649bcb7b9351ecfde53ca4d27673cccfdf57c84255ec18710f3153e0"
+checksum = "3eadeec65514971355bf7134967a543f71372f35b53ac6c7143e7bd157f07535"
 dependencies = [
  "cc",
  "libc",
@@ -327,7 +327,7 @@ dependencies = [
 
 [[package]]
 name = "pb-commit-message-lints"
-version = "2.110.0"
+version = "2.110.1"
 dependencies = [
  "enum-iterator",
  "git2",
@@ -344,7 +344,7 @@ dependencies = [
 
 [[package]]
 name = "pb-commit-msg"
-version = "2.110.0"
+version = "2.110.1"
 dependencies = [
  "clap",
  "git2",
@@ -357,7 +357,7 @@ dependencies = [
 
 [[package]]
 name = "pb-git-hooks"
-version = "2.110.0"
+version = "2.110.1"
 dependencies = [
  "clap",
  "enum-iterator",
@@ -371,7 +371,7 @@ dependencies = [
 
 [[package]]
 name = "pb-hook-test-helper"
-version = "2.110.0"
+version = "2.110.1"
 dependencies = [
  "git2",
  "pretty_assertions",
@@ -380,7 +380,7 @@ dependencies = [
 
 [[package]]
 name = "pb-pre-commit"
-version = "2.110.0"
+version = "2.110.1"
 dependencies = [
  "clap",
  "git2",
@@ -393,7 +393,7 @@ dependencies = [
 
 [[package]]
 name = "pb-prepare-commit-msg"
-version = "2.110.0"
+version = "2.110.1"
 dependencies = [
  "clap",
  "git2",
