@@ -30,9 +30,9 @@ se:
     email: someone@example.com
 ae:
     name: Anyone Else
-    email: anyone@example.com" > authors.yml
+    email: anyone@example.com" > git-authors.yml
 
-git-authors -c authors.yml ae se
+git-authors -c git-authors.yml ae se
 echo "git-authors.yml" > .gitignore
 git add .
 ```
@@ -55,7 +55,7 @@ trailers. The two trailers we check for `Co-authored-by` and
 ### `Co-authored-by`
 
 ``` bash
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 
 echo "Duplicated Trailer Lints
@@ -74,7 +74,7 @@ fi
 ### `Signed-of-by`
 
 ``` bash
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 
 echo "I am not made
@@ -103,7 +103,7 @@ pb-git-hooks lint disable duplicated-trailers
 You'll be able to commit without an ID
 
 ``` bash
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 
 echo "Another example
@@ -114,7 +114,7 @@ Signed-off-by: Anyone Else <anyone@example.com>
 " > message
 git commit -s
 
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 echo "Another example
 
@@ -136,7 +136,7 @@ pb-git-hooks lint enable duplicated-trailers
 Then the lints are enabled again
 
 ``` bash
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 
 echo "I am not made
