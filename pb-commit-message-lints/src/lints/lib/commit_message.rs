@@ -104,7 +104,6 @@ fn detect_comment_char(contents: &str) -> &str {
         .and_then(|caps| caps.name("char"))
         .map(|m| m.as_str())
         .unwrap_or("#")
-        
 }
 
 impl TryFrom<PathBuf> for CommitMessage {
@@ -193,7 +192,8 @@ mod test_commit_message {
         assert_eq!(
             CommitMessage::new(
                 indoc!(
-                    "Simple commit message
+                    "
+                    Simple commit message
 
                     With a description.
 
@@ -204,7 +204,8 @@ mod test_commit_message {
             ),
             CommitMessage::new(
                 indoc!(
-                    "Simple commit message
+                    "
+                    Simple commit message
 
                     With a description.
                     "
@@ -239,7 +240,8 @@ mod test_commit_message {
         assert_eq!(
             CommitMessage::new(
                 indoc!(
-                    "Message title
+                    "
+                    Message title
 
                     Trailer: Title
 
@@ -250,9 +252,11 @@ mod test_commit_message {
             ),
             CommitMessage::new(
                 indoc!(
-                    "Message title
+                    "
+                    Message title
 
-                    # Comment about committing"
+                    # Comment about committing
+                    "
                 )
                 .into(),
             )
@@ -265,7 +269,8 @@ mod test_commit_message {
         assert_eq!(
             CommitMessage::new(
                 indoc!(
-                    "Message title
+                    "
+                    Message title
 
                     # Random Comment
 
@@ -281,14 +286,16 @@ mod test_commit_message {
             ),
             CommitMessage::new(
                 indoc!(
-                    "Message title
+                    "
+                    Message title
 
                     # Random Comment
 
                     Message content
 
                     # Trailing comment line 1
-                    # Trailing comment line 2"
+                    # Trailing comment line 2
+                    "
                 )
                 .into(),
             )
@@ -317,18 +324,7 @@ mod test_commit_message {
                     # Do not modify or remove the line above.
                     # Everything below it will be ignored.
                     diff --git a/commit_message.rs b/commit_message.rs
-                    index 3a62793..99aeff1 100644
-                    --- a/commit_message.rs
-                    +++ b/commit_message.rs
-                    @@ -47,7 +47,7 @@ impl CommitMessage {
-                        }
-
-                        fn line_has_trailer(trailer: &str, line: &str) -> bool {
-                    -        line.starts_with(&format!(\"{}:\", trailer))
-                    +        changed
-                        }
-
-                        fn message_parts(&self) -> (String, String) {
+                    ...
                     "
                 )
                 .into(),
@@ -349,18 +345,7 @@ mod test_commit_message {
                     # Do not modify or remove the line above.
                     # Everything below it will be ignored.
                     diff --git a/commit_message.rs b/commit_message.rs
-                    index 3a62793..99aeff1 100644
-                    --- a/commit_message.rs
-                    +++ b/commit_message.rs
-                    @@ -47,7 +47,7 @@ impl CommitMessage {
-                        }
-
-                        fn line_has_trailer(trailer: &str, line: &str) -> bool {
-                    -        line.starts_with(&format!(\"{}:\", trailer))
-                    +        changed
-                        }
-
-                        fn message_parts(&self) -> (String, String) {
+                    ...
                     "
                 )
                 .into(),
