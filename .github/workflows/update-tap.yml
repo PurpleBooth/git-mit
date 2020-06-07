@@ -94,6 +94,16 @@ jobs:
           repository: PurpleBooth/homebrew-repo
           token: ${{ secrets.COMMITTER_TOKEN }}
           path: homebrew-repo
+      - id: get-brew-cache
+        run: |
+          echo "::set-output name=dir::$(brew --cache)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.get-brew-cache.outputs.dir }}
+          key: ${{ runner.os }}-brew-${{ hashFiles('**/formula.rb.j2') }}
+      - id: get_repository_name
+        run: echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
+        shell: bash
       - shell: bash
         run: |
           brew test-bot \
@@ -123,6 +133,16 @@ jobs:
           repository: PurpleBooth/homebrew-repo
           token: ${{ secrets.COMMITTER_TOKEN }}
           path: homebrew-repo
+      - id: get-brew-cache
+        run: |
+          echo "::set-output name=dir::$(brew --cache)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.get-brew-cache.outputs.dir }}
+          key: ${{ runner.os }}-brew-${{ hashFiles('**/formula.rb.j2') }}
+      - id: get_repository_name
+        run: echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
+        shell: bash
       - uses: actions/download-artifact@v2
       - shell: bash
         run: mv bottles/* .
