@@ -6,7 +6,7 @@ use std::{
     process,
 };
 
-use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
+use clap::{crate_authors, crate_version, App, AppSettings, Arg, ArgMatches};
 use git2::{Config, Repository};
 
 use pb_commit_message_lints::{
@@ -84,6 +84,7 @@ fn app() -> App<'static, 'static> {
                         .arg(lint_argument.clone()),
                 ),
         )
+        .setting(AppSettings::SubcommandRequiredElseHelp)
 }
 
 fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHooksError> {
