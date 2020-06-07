@@ -13,6 +13,11 @@ show-help:
 test:
 	unset GIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test --locked
 
+.PHONY: mdtest
+## Test the markdown in the usage directory
+mdtest: build
+	./bin/mdtest ./usage/**/*.md
+
 .PHONY: smoke-test
 ## Run a smoke test and see if the app runs
 smoke-test:

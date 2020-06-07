@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# markdown bash execute
+function mbe() {
+    if [ -f "$1" ]; then
+        # shellcheck disable=SC2016
+        sed -n '/``` bash/,/```/p' <"$1" | # get the bash code blocks
+            sed 's/``` bash//g' |          #  remove the ```bash
+            sed 's/```//g' |               # remove the trailing ```
+            sed '/^$/d' |                  # remove empty lines
+            /usr/bin/env bash              # execute the command
+    else
+        echo "$1 is not valid"
+        exit 1
+    fi
+}
+### Credit: https://gist.github.com/gmolveau/67d10dfaea1fdd729865b2f8d46f7488
+for ARG in "${@:1}"; do
+    echo "Trying: $ARG"
+    echo
+    mbe "$ARG"
+done
