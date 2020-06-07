@@ -32,7 +32,7 @@ jobs:
         with:
           name: hash
           path: ./hash
-  update-formula:
+  build:
     needs:
       - generate-formula
     runs-on: macos-latest
@@ -70,40 +70,15 @@ jobs:
           cp -r ./homebrew-repo/. "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
       - shell: bash
         run: |
-            cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo" && \
-            git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION" && \
-            git commit -m "Update $REPOSITORY_NAME to $GIT_TAG"
-            git pull --rebase
-            git push
+          cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo" && \
+          git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION" && \
+          git commit -m "Update $REPOSITORY_NAME to $GIT_TAG"
+          git pull --rebase
+          git push
         env:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           GIT_TAG: ${{ github.ref }}
           FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
-  build-bottles:
-    runs-on: ${{ matrix.os }}
-    needs:
-      - update-formula
-    strategy:
-      matrix:
-        include:
-          - os: macos-latest
-          - os: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          repository: PurpleBooth/homebrew-repo
-          token: ${{ secrets.COMMITTER_TOKEN }}
-          path: homebrew-repo
-      - id: get-brew-cache
-        run: |
-          echo "::set-output name=dir::$(brew --cache)"
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.get-brew-cache.outputs.dir }}
-          key: ${{ runner.os }}-brew-${{ hashFiles('**/formula.rb.j2') }}
-      - id: get_repository_name
-        run: echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
-        shell: bash
       - shell: bash
         run: |
           brew test-bot \
@@ -115,37 +90,6 @@ jobs:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           BINTRAY_DL_URL: https://dl.bintray.com/purplebooth/bottles-repo
           BINTRAY_ORG: purplebooth
-      - uses: actions/upload-artifact@v2
-        with:
-          name: bottles
-          path: ./*.json
-      - uses: actions/upload-artifact@v2
-        with:
-          name: bottles
-          path: ./*.bottle.tar.gz
-  upload:
-    runs-on: macos-latest
-    needs:
-      - build-bottles
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          repository: PurpleBooth/homebrew-repo
-          token: ${{ secrets.COMMITTER_TOKEN }}
-          path: homebrew-repo
-      - id: get-brew-cache
-        run: |
-          echo "::set-output name=dir::$(brew --cache)"
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.get-brew-cache.outputs.dir }}
-          key: ${{ runner.os }}-brew-${{ hashFiles('**/formula.rb.j2') }}
-      - id: get_repository_name
-        run: echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
-        shell: bash
-      - uses: actions/download-artifact@v2
-      - shell: bash
-        run: mv bottles/* .
       - shell: bash
         run: |
           curl \
