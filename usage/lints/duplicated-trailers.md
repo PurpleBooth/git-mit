@@ -47,14 +47,16 @@ git commit -m "Add a git ignore"
 
 You can use whatever editor you want, but you do need to use an editor.
 
-```bash
-export EDITOR="bash -c \"cat message $1 > appended && mv appended \\\"\\\$1\\\"\""
+``` bash
+export EDITOR="bash -c \"cat message \$1 > appended && mv appended \\\"\\\$1\\\"\" -- "
 echo "message" >> .gitignore
 ```
 
 ## Default setting
 
-This lint is enabled by default, with it on you can't commit duplicated trailers. The two trailers we check for `Co-authored-by` and `Signed-of-by` 
+This lint is enabled by default, with it on you can't commit duplicated
+trailers. The two trailers we check for `Co-authored-by` and
+`Signed-of-by`
 
 ### `Co-authored-by`
 
@@ -117,18 +119,17 @@ Co-authored-by: Someone Else <someone@example.com>
 git commit
 ```
 
-                  
 ## Enabling this lint again
 
 To enable it run
 
 ``` bash
 pb-git-hooks lint enable duplicated-trailers
-``` 
+```
 
 Then the lints are enabled again
 
-```bash
+``` bash
 echo "Hello, world!" > demo.txt
 git add demo.txt
 
