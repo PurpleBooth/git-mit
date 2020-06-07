@@ -34,7 +34,7 @@ jobs:
         run: echo "$VERSION" >./version/version
         env:
           VERSION: ${{ steps.semvers.outputs.v_minor }}
-      - if: "contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
+      - if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         run: echo "$VERSION" >./version/version
         env:
           VERSION: ${{ steps.semvers.outputs.v_patch }}
@@ -147,7 +147,7 @@ jobs:
           # This part is also where you can pass other options, for example:
           prettier_options: --check **/*.{yml,yaml}
   merge-and-push:
-    if: contains( github.event.pull_request.labels.*.name, 'dependencies') || ( github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, 'Release v') )
+    if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' || ( github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, 'Release v') )
     needs:
       - version
       - mdtest
