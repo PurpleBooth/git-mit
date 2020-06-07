@@ -115,7 +115,8 @@ ae:
 
 ### More examples
 
-You can see more examples in the [usage directory](https://github.com/PurpleBooth/pb-git-hooks/tree/master/usage)
+You can see more examples in the [usage
+directory](https://github.com/PurpleBooth/pb-git-hooks/tree/master/usage)
 
 ### Environment Variables
 

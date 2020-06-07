@@ -9,15 +9,17 @@ use std::{
 use clap::{crate_authors, crate_version, App, AppSettings, Arg, ArgMatches};
 use git2::{Config, Repository};
 
+use itertools::Itertools;
 use pb_commit_message_lints::{
     errors::PbCommitMessageLintsError,
     external::vcs::{Git2, Vcs},
-    lints::{set_lint_status, Lints},
+    lints::Lints,
 };
 
 const LOCAL_SCOPE: &str = "local";
 const LINT_NAME_ARGUMENT: &str = "lint";
 const COMMAND_LINT: &str = "lint";
+const COMMAND_LINT_AVAILABLE: &str = "available";
 const COMMAND_LINT_ENABLE: &str = "enable";
 const COMMAND_LINT_DISABLE: &str = "disable";
 const SCOPE_ARGUMENT: &str = "scope";
@@ -73,6 +75,7 @@ fn app() -> App<'static, 'static> {
         .subcommand(
             App::new(COMMAND_LINT)
                 .about("Manage active lints")
+                .subcommand(App::new(COMMAND_LINT_AVAILABLE).about("List the available lints"))
                 .subcommand(
                     App::new(COMMAND_LINT_ENABLE)
                         .about("Enable a lint")
@@ -88,29 +91,42 @@ fn app() -> App<'static, 'static> {
 }
 
 fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHooksError> {
-    args.subcommand_matches(COMMAND_LINT_ENABLE)
-        .map(|enable_args| (enable_args, true))
-        .or_else(|| {
-            args.subcommand_matches(COMMAND_LINT_DISABLE)
-                .map(|disable_args| (disable_args, false))
-        })
-        .ok_or_else(|| PbGitHooksError::UnrecognisedLintCommand)
-        .and_then(|(subcommand_args, enable)| {
-            set_lint_status(
-                &subcommand_args
-                    .values_of(LINT_NAME_ARGUMENT)
-                    .expect("Lint name not given")
-                    .map(|name| {
-                        Lints::try_from(name)
-                            .map_err(PbGitHooksError::from)
-                            .unwrap_or_else(|err| display_err_and_exit(&err))
-                    })
-                    .collect::<Vec<_>>(),
-                config,
-                enable,
-            )
-            .map_err(PbGitHooksError::from)
-        })
+    if let Some(mut subcommand_args) = args.subcommand_matches(COMMAND_LINT_ENABLE) {
+        set_lint_status(config, &mut subcommand_args, true)
+    } else if let Some(mut subcommand_args) = args.subcommand_matches(COMMAND_LINT_DISABLE) {
+        set_lint_status(config, &mut subcommand_args, false)
+    } else if let Some(_matches) = args.subcommand_matches(COMMAND_LINT_AVAILABLE) {
+        println!(
+            "{}",
+            Lints::iterator()
+                .map(pb_commit_message_lints::lints::Lints::name)
+                .join("\n")
+        );
+        Ok(())
+    } else {
+        Err(PbGitHooksError::UnrecognisedLintCommand)
+    }
+}
+
+fn set_lint_status(
+    config: &mut dyn Vcs,
+    subcommand_args: &&ArgMatches,
+    status: bool,
+) -> Result<(), PbGitHooksError> {
+    pb_commit_message_lints::lints::set_lint_status(
+        &subcommand_args
+            .values_of(LINT_NAME_ARGUMENT)
+            .expect("Lint name not given")
+            .map(|name| {
+                Lints::try_from(name)
+                    .map_err(PbGitHooksError::from)
+                    .unwrap_or_else(|err| display_err_and_exit(&err))
+            })
+            .collect::<Vec<_>>(),
+        config,
+        status,
+    )
+    .map_err(PbGitHooksError::from)
 }
 
 #[derive(Debug)]
@@ -125,7 +141,8 @@ impl Display for PbGitHooksError {
         match self {
             PbGitHooksError::UnrecognisedLintCommand => write!(
                 f,
-                "Unrecognised Lint command, only you may only enable or disable"
+                "Unrecognised Lint command, only you may only enable or disable, or list \
+                 available lints"
             ),
             PbGitHooksError::PbCommitMessageLintsError(error) => write!(f, "{}", error),
             PbGitHooksError::Io(file_source, error) => write!(
