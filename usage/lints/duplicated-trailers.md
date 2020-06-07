@@ -8,13 +8,6 @@ repository.
 ``` bash
 set -euo pipefail
 
-unset EDITOR
-unset VISUAL
-unset GIT_AUTHORS_EXEC
-unset GIT_AUTHORS_CONFIG
-PATH="$PWD/target/release/:$PATH"
-cd "$(mktemp -d)"
-
 git init .
 
 rm -rf .git/hooks/*

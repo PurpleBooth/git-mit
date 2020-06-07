@@ -5,12 +5,23 @@ set -euo pipefail
 # markdown bash execute
 function mbe() {
     if [ -f "$1" ]; then
-        # shellcheck disable=SC2016
-        sed -n '/``` bash/,/```/p' <"$1" | # get the bash code blocks
-            sed 's/``` bash//g' |          #  remove the ```bash
-            sed 's/```//g' |               # remove the trailing ```
-            sed '/^$/d' |                  # remove empty lines
-            /usr/bin/env bash              # execute the command
+        MARKDOWN_PATH="$(cd "$(dirname "$1")"; pwd -P)/$(basename "$1")"
+
+        (
+            unset EDITOR
+            unset VISUAL
+            unset GIT_AUTHORS_EXEC
+            unset GIT_AUTHORS_CONFIG
+            PATH="$PWD/target/release/:$PATH"
+
+            cd "$(mktemp -d)"
+            # shellcheck disable=SC2016
+            sed -n '/``` bash/,/```/p' <"$MARKDOWN_PATH" | # get the bash code blocks
+                sed 's/``` bash//g' |          #  remove the ```bash
+                sed 's/```//g' |               # remove the trailing ```
+                sed '/^$/d' |                  # remove empty lines
+                /usr/bin/env bash              # execute the command
+        )
     else
         echo "$1 is not valid"
         exit 1
