@@ -71,7 +71,7 @@ export GIT_AUTHORS_CONFIG="$PWD/git-authors.yml"
 You can't commit without an author set
 
 ``` bash
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 
 if git commit -m "Demo 1
@@ -89,7 +89,7 @@ last_commit() {
     git show --pretty="$(printf format:"author: %%an %%ae\nsigned: %%GS\ncommit:\n%%B")" -q
 }
 
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 
 git authors ae
@@ -110,7 +110,7 @@ diff <(echo "$ACTUAL") <(echo "$EXPECTED")
 You can set multiple people as the author and it sets the trailer
 
 ``` bash
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 
 git authors se ae
@@ -126,7 +126,7 @@ diff <(echo "$EXPECTED") <(echo "$ACTUAL")
 We even support mobbing
 
 ``` bash
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 
 git authors bt se ae
@@ -142,7 +142,7 @@ diff <(echo "$EXPECTED") <(echo "$ACTUAL")
 And you can sign your commits
 
 ``` bash
-echo "$(mktemp)" > demo.txt
+mktemp > demo.txt
 git add demo.txt
 
 git authors bt
