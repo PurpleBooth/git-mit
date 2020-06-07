@@ -16,14 +16,14 @@ jobs:
         shell: bash
         env:
           GIT_REPO: ${{ github.repository }}
-          GIT_TAG: ${{ github.ref }}
+          GIT_TAG: v0.1.0
       - uses: cuchi/jinja2-action@v1.1.0
         with:
           template: homebrew/formula.rb.j2
           output_file: formula.rb
           variables: |
             github_repo=${{ github.repository }}
-            git_tag=${{ github.ref }}
+            git_tag=v0.1.0
             file_sha=${{ steps.hash.outputs.SHA256 }}
       - uses: actions/upload-artifact@v2
         with:
