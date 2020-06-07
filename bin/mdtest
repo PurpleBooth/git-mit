@@ -16,7 +16,7 @@ function mbe() {
             unset VISUAL
             unset GIT_AUTHORS_EXEC
             unset GIT_AUTHORS_CONFIG
-            PATH="$PWD/target/release/:$PATH"
+            PATH="$2:$PATH"
 
             cd "$(mktemp -d)"
             # shellcheck disable=SC2016
@@ -35,5 +35,5 @@ function mbe() {
 for ARG in "${@:1}"; do
     echo "Trying: $ARG"
     echo
-    mbe "$ARG"
+    mbe "$ARG" "${2:-$PWD/target/release/}"
 done
