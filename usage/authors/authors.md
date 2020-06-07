@@ -1,4 +1,6 @@
-# Duplicated Trailer Lints
+# Authors
+
+This is the `git authors` part of the tool.
 
 ## Setup
 
