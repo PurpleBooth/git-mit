@@ -20,11 +20,31 @@ We need a author configuration that is current
 
 ``` bash
 
+export GNUPGHOME="$(mktemp -d)"
+cat >foo <<EOF
+%echo Generating a basic OpenPGP key
+%no-protection
+Key-Type: DSA
+Key-Length: 1024
+Subkey-Type: ELG-E
+Subkey-Length: 1024
+Name-Real: Billie Thompson
+Name-Email: billie@example.com
+Expire-Date: 0
+# Do a commit here, so that we can later print "done" :-)
+%commit
+%echo done
+EOF
+gpg --batch --generate-key foo
+KEY="$(gpg --with-colons --fingerprint billie@example.com | awk -F: '$1 == "fpr" {print $10;}' | head -n 1)"
+rm foo
+git config --local --add --bool commit.gpgsign false
+
 echo "---
 bt:
     name: Billie Thompson
     email: billie@example.com
-    signingkey: 0A46826A
+    signingkey: $KEY
 se:
     name: Someone Else
     email: someone@example.com

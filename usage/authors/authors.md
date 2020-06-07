@@ -22,11 +22,31 @@ We need a author configuration that is current
 
 ``` bash
 
+export GNUPGHOME="$(mktemp -d)"
+cat >foo <<EOF
+%echo Generating a basic OpenPGP key
+%no-protection
+Key-Type: DSA
+Key-Length: 1024
+Subkey-Type: ELG-E
+Subkey-Length: 1024
+Name-Real: Billie Thompson
+Name-Email: billie@example.com
+Expire-Date: 0
+# Do a commit here, so that we can later print "done" :-)
+%commit
+%echo done
+EOF
+gpg --batch --generate-key foo
+KEY="$(gpg --with-colons --fingerprint billie@example.com | awk -F: '$1 == "fpr" {print $10;}' | head -n 1)"
+rm foo
+git config --local --add --bool commit.gpgsign false
+
 echo "---
 bt:
     name: Billie Thompson
     email: billie@example.com
-    signingkey: 0A46826A
+    signingkey: "$KEY"
 se:
     name: Someone Else
     email: someone@example.com
@@ -66,7 +86,7 @@ You can set a single person as the author
 
 ``` bash
 last_commit() {
-    git show --pretty="$(printf format:"author: %%an %%ae\ncommit:\n%%B")" -q
+    git show --pretty="$(printf format:"author: %%an %%ae\nsigned: %%GS\ncommit:\n%%B")" -q
 }
 
 echo "$(mktemp)" > demo.txt
@@ -79,6 +99,7 @@ Full Demo"
 
 ACTUAL="$(last_commit)"
 EXPECTED="author: Anyone Else anyone@example.com
+signed: 
 commit:
 Demo 2
 
@@ -97,24 +118,39 @@ git commit -m "Demo 3
 
 Full Demo"
 ACTUAL="$(last_commit)"
-EXPECTED="$(printf "author: Someone Else someone@example.com\ncommit:\nDemo 3\nFull Demo\n\nCo-authored-by: Anyone Else <anyone@example.com>\n")"
+EXPECTED="$(printf "author: Someone Else someone@example.com\nsigned: \ncommit:\nDemo 3\nFull Demo\n\nCo-authored-by: Anyone Else <anyone@example.com>\n")"
 
 diff <(echo "$EXPECTED") <(echo "$ACTUAL")
 ```
 
 We even support mobbing
 
+``` bash
+echo "$(mktemp)" > demo.txt
+git add demo.txt
+
+git authors bt se ae
+git commit -m "Demo 5
+
+Full Demo"
+ACTUAL="$(last_commit)"
+EXPECTED="$(printf "author: Billie Thompson billie@example.com\nsigned: \ncommit:\nDemo 5\nFull Demo\n\nCo-authored-by: Someone Else <someone@example.com>\n\nCo-authored-by: Anyone Else <anyone@example.com>\n")"
+
+diff <(echo "$EXPECTED") <(echo "$ACTUAL")
+```
+
+And you can sign your commits
 
 ``` bash
 echo "$(mktemp)" > demo.txt
 git add demo.txt
 
-git authors se ae bt
-git commit -m "Demo 4
+git authors bt
+git commit -S -m "Demo 6
 
 Full Demo"
 ACTUAL="$(last_commit)"
-EXPECTED="$(printf "author: Someone Else someone@example.com\ncommit:\nDemo 4\nFull Demo\n\nCo-authored-by: Anyone Else <anyone@example.com>\n\nCo-authored-by: Billie Thompson <billie@example.com>\n")"
+EXPECTED="$(printf "author: Billie Thompson billie@example.com\nsigned: Billie Thompson <billie@example.com>\ncommit:\nDemo 6\nFull Demo\n\n")"
 
 diff <(echo "$EXPECTED") <(echo "$ACTUAL")
 ```

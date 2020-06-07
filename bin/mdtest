@@ -11,6 +11,7 @@ function mbe() {
         )/$(basename "$1")"
 
         (
+            unset GNUPGHOME
             unset EDITOR
             unset VISUAL
             unset GIT_AUTHORS_EXEC
