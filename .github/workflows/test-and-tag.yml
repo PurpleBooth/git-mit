@@ -7,6 +7,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - id: get_previous_version
         run: echo ::set-output name=PREVIOUS_VERSION::$(git tag --sort=-creatordate | head -n 1)
