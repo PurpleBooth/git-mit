@@ -66,19 +66,29 @@ impl CommitMessage {
     fn tail_length(&self) -> usize {
         let scissors_section_length = self.scissors_section_length();
 
-        scissors_section_length
-            + self
-                .lines()
-                .rev()
-                .skip(scissors_section_length)
-                .take_while(|line| line.starts_with(&self.comment_char))
-                .count()
+        let reverse_comments_section: Vec<&str> = self
+            .lines()
+            .rev()
+            .skip(scissors_section_length)
+            .take_while(|line| line.starts_with(&self.comment_char) || line.is_empty())
+            .collect();
+
+        let comments_section = reverse_comments_section.iter().rev();
+
+        let blank_lines = comments_section
+            .clone()
+            .take_while(|line| line.is_empty())
+            .count();
+
+        let comments_section_length = comments_section.count();
+
+        scissors_section_length + comments_section_length - blank_lines
     }
 
     fn scissors_section_length(&self) -> usize {
         let scissors_line = format!("{} {}", self.comment_char, SCISSORS_LINE);
 
-        if let Some(_) = self.lines().find(|line| *line == scissors_line) {
+        if self.lines().any(|line| *line == scissors_line) {
             self.lines()
                 .rev()
                 .take_while(|line| *line != scissors_line)
@@ -102,8 +112,7 @@ fn detect_comment_char(contents: &str) -> &str {
     pattern
         .captures(contents)
         .and_then(|caps| caps.name("char"))
-        .map(|m| m.as_str())
-        .unwrap_or("#")
+        .map_or("#", |m| m.as_str())
 }
 
 impl TryFrom<PathBuf> for CommitMessage {
@@ -394,6 +403,61 @@ mod test_commit_message {
                     % ------------------------ >8 ------------------------
                     % Do not modify or remove the line above.
                     % Everything below it will be ignored.
+                    diff --git a/commit_message.rs b/commit_message.rs
+                    "
+                )
+                .into(),
+            )
+            .add_trailer("Trailer: Content")
+        );
+    }
+
+    #[test]
+    fn adding_trailer_when_message_template_is_present() {
+        assert_eq!(
+            CommitMessage::new(
+                indoc!(
+                    "
+                    Message title
+
+                    Trailer: Content
+
+                    # Template message line 1
+                    # Template message line 2
+
+                    # On branch master
+                    # Your branch is ahead of 'origin/master' by 18 commits.
+                    #   (use \"git push\" to publish your local commits)
+                    #
+                    # Changes to be committed:
+                    #	modified:   commit_message.rs
+                    #
+                    # ------------------------ >8 ------------------------
+                    # Do not modify or remove the line above.
+                    # Everything below it will be ignored.
+                    diff --git a/commit_message.rs b/commit_message.rs
+                    "
+                )
+                .into(),
+            ),
+            CommitMessage::new(
+                indoc!(
+                    "
+                    Message title
+
+                    # Template message line 1
+                    # Template message line 2
+
+                    # On branch master
+                    # Your branch is ahead of 'origin/master' by 18 commits.
+                    #   (use \"git push\" to publish your local commits)
+                    #
+                    # Changes to be committed:
+                    #	modified:   commit_message.rs
+                    #
+                    # ------------------------ >8 ------------------------
+                    # Do not modify or remove the line above.
+                    # Everything below it will be ignored.
                     diff --git a/commit_message.rs b/commit_message.rs
                     "
                 )
