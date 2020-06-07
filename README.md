@@ -113,6 +113,10 @@ ae:
     email: anyone@example.com
 ```
 
+### More examples
+
+You can see more examples in the [usage directory](https://github.com/PurpleBooth/pb-git-hooks/tree/master/usage)
+
 ### Environment Variables
 
   - **GIT\_AUTHORS\_EXEC** A command to execute to generate the author
