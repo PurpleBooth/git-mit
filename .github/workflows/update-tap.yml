@@ -69,6 +69,13 @@ jobs:
           mkdir -p "$(brew --repo)/Library/Taps/purplebooth"
           cp -r ./homebrew-repo/. "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
 
+          (
+            cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo" && \
+            git add "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo/Formula/$REPOSITORY_NAME.rb" && \
+            git commit -m "Update $REPOSITORY_NAME to $GIT_TAG"
+            git push
+          )
+
           brew test-bot \
             --bintray-org="$BINTRAY_ORG" \
             --root-url="$BINTRAY_DL_URL" \
@@ -97,6 +104,7 @@ jobs:
             git push
           )
         env:
+          GIT_TAG: ${{ github.ref }}
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           BINTRAY_API_URL: https://api.bintray.com
           BINTRAY_DL_URL: https://dl.bintray.com/purplebooth/bottles-repo
