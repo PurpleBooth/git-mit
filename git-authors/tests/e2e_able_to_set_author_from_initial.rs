@@ -16,14 +16,16 @@ use pb_hook_test_helper::assert_output;
 fn no_authors_fail() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "git-authors", vec![]);
-    assert_output(
-        &output,
-        "",
-        "error: The following required arguments were not provided:\n    \
-         <initials>...\n\nUSAGE:\n    git-authors <initials>... --config <file> --timeout \
-         <timeout>\n\nFor more information try --help\n",
-        false,
-    )
+    let stderr = "error: The following required arguments were not provided:
+    <initials>...
+
+USAGE:
+    git-authors <initials>... --config <file> --timeout <timeout>
+
+For more information try --help
+";
+
+    assert_output(&output, "", stderr, false)
 }
 
 #[test]

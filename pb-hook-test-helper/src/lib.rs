@@ -136,7 +136,6 @@ pub fn assert_output(
         stdout,
         output.status.code()
     );
-
     assert_eq!(
         output.status.success(),
         expect_success,
