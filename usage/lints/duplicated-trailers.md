@@ -96,7 +96,7 @@ pb-git-hooks lint disable duplicated-trailers
 You'll be able to commit without an ID
 
 ``` bash
-echo "Hello, world!" > demo.txt
+echo "Hello, universe!" > demo.txt
 git add demo.txt
 
 echo "Another example
@@ -123,7 +123,7 @@ pb-git-hooks lint enable duplicated-trailers
 Then the lints are enabled again
 
 ``` bash
-echo "Hello, world!" > demo.txt
+echo "Goodbye, universe!" > demo.txt
 git add demo.txt
 
 echo "I am not made
