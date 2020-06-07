@@ -37,7 +37,7 @@ lint:
 	cargo fmt --all -- --check
 	cargo clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
 	cargo check
-	cargo audit check
+	cargo audit
 	find . \( -iname "*.yml" -o -iname "*.yaml" \) -exec npx prettier --check --write {} \;
 
 .PHONY: fmt
