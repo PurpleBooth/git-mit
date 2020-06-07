@@ -227,8 +227,7 @@ jobs:
           value: ${{ steps.get_current_version.outputs.VERSION }}
       - uses: actions-rs/cargo@v1
         with:
-          args: "--locked"
-          command: build
+          command: check
       - shell: bash
         run: |
           git config user.name "GitHub"
