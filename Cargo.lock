@@ -310,6 +310,7 @@ version = "2.119.0"
 dependencies = [
  "clap",
  "git2",
+ "indoc",
  "pb-commit-message-lints",
  "pb-hook-test-helper",
  "pretty_assertions",
@@ -322,6 +323,7 @@ version = "2.119.0"
 dependencies = [
  "clap",
  "git2",
+ "indoc",
  "pb-commit-message-lints",
  "pb-hook-test-helper",
  "pretty_assertions",
@@ -342,6 +344,7 @@ version = "2.119.0"
 dependencies = [
  "clap",
  "git2",
+ "indoc",
  "pb-commit-message-lints",
  "pb-hook-test-helper",
  "pretty_assertions",
@@ -353,6 +356,7 @@ version = "2.119.0"
 dependencies = [
  "clap",
  "git2",
+ "indoc",
  "pb-commit-message-lints",
  "pb-hook-test-helper",
  "pretty_assertions",

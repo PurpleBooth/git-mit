@@ -5,6 +5,7 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
+use indoc::indoc;
 use pretty_assertions::assert_eq;
 use tempfile::NamedTempFile;
 
@@ -22,43 +23,37 @@ fn co_author_trailer_should_be_appended() {
     );
     set_co_author(&working_dir, "Annie Example", "test@example.com", 0);
 
-    let commit_message_file = NamedTempFile::new().unwrap();
+    let commit_file = NamedTempFile::new().unwrap();
     writeln!(
-        commit_message_file.as_file(),
-        r#"Lorem Ipsum
-
-In this commit message I have put a witty message"#
+        commit_file.as_file(),
+        "Lorem Ipsum\n\nIn this commit message I have put a witty message\n"
     )
     .unwrap();
 
     let actual_output = pb_hook_test_helper::run_hook(
         &working_dir,
         "pb-prepare-commit-msg",
-        vec![&commit_message_file.path().to_str().unwrap()],
+        vec![&commit_file.path().to_str().unwrap()],
     );
 
-    let actual_commit_message = fs::read_to_string(commit_message_file).unwrap();
+    let actual_commit = fs::read_to_string(commit_file).unwrap();
+    let expected_commit = indoc!(
+        "
+        Lorem Ipsum
 
-    let expected_stdout = "";
-    let expected_stderr = r#""#;
-    let expect_success = true;
-    let expected_commit_message = r#"Lorem Ipsum
+        In this commit message I have put a witty message
 
-In this commit message I have put a witty message
 
-Co-authored-by: Annie Example <test@example.com>
-"#;
-
-    assert_output(
-        &actual_output,
-        expected_stdout,
-        expected_stderr,
-        expect_success,
+        Co-authored-by: Annie Example <test@example.com>
+        "
     );
+
+    assert_output(&actual_output, "", "", true);
+
     assert_eq!(
-        actual_commit_message, expected_commit_message,
+        actual_commit, expected_commit,
         "Expected the commit message to contain {:?}, instead it contained {:?}",
-        expected_commit_message, actual_commit_message
+        expected_commit, actual_commit
     );
 }
 
@@ -74,42 +69,36 @@ fn commit_message_produced_varies_based_on_given_commit_message() {
     );
     set_co_author(&working_dir, "Annie Example", "test@example.com", 0);
 
-    let commit_message_file = NamedTempFile::new().unwrap();
+    let commit_file = NamedTempFile::new().unwrap();
     writeln!(
-        commit_message_file.as_file(),
-        r#"A different mesage
-
-In this commit message I have put a witty message"#
+        commit_file.as_file(),
+        "A different mesage\n\nIn this commit message I have put a witty message\n"
     )
     .unwrap();
 
     let actual_output = pb_hook_test_helper::run_hook(
         &working_dir,
         "pb-prepare-commit-msg",
-        vec![&commit_message_file.path().to_str().unwrap()],
+        vec![&commit_file.path().to_str().unwrap()],
     );
-    let actual_commit_message = fs::read_to_string(commit_message_file).unwrap();
+    let actual_commit = fs::read_to_string(commit_file).unwrap();
 
-    let expected_stdout = "";
-    let expected_stderr = r#""#;
-    let expect_success = true;
-    let expected_commit_message = r#"A different mesage
+    let expected_commit = indoc!(
+        "
+        A different mesage
 
-In this commit message I have put a witty message
+        In this commit message I have put a witty message
 
-Co-authored-by: Annie Example <test@example.com>
-"#;
 
-    assert_output(
-        &actual_output,
-        expected_stdout,
-        expected_stderr,
-        expect_success,
+        Co-authored-by: Annie Example <test@example.com>
+        "
     );
+
+    assert_output(&actual_output, "", "", true);
     assert_eq!(
-        actual_commit_message, expected_commit_message,
+        actual_commit, expected_commit,
         "Expected the commit message to contain {:?}, instead it contained {:?}",
-        expected_commit_message, actual_commit_message
+        expected_commit, actual_commit
     );
 }
 
@@ -126,43 +115,38 @@ fn commit_message_co_author_varies_based_on_message() {
     set_co_author(&working_dir, "Joseph Bloggs", "joe@example.com", 0);
     set_co_author(&working_dir, "Annie Example", "annie@example.com", 1);
 
-    let commit_message_file = NamedTempFile::new().unwrap();
-    writeln!(
-        commit_message_file.as_file(),
-        r#"A different mesage
+    let commit_file = NamedTempFile::new().unwrap();
 
-In this commit message I have put a witty message"#
+    writeln!(
+        commit_file.as_file(),
+        "A different mesage\n\nIn this commit message I have put a witty message\n"
     )
     .unwrap();
 
     let actual_output = pb_hook_test_helper::run_hook(
         &working_dir,
         "pb-prepare-commit-msg",
-        vec![&commit_message_file.path().to_str().unwrap()],
+        vec![&commit_file.path().to_str().unwrap()],
     );
-    let actual_commit_message = fs::read_to_string(commit_message_file).unwrap();
+    let actual_commit = fs::read_to_string(commit_file).unwrap();
 
-    let expected_stdout = "";
-    let expected_stderr = r#""#;
-    let expect_success = true;
-    let expected_commit_message = r#"A different mesage
+    let expected_commit = indoc!(
+        "
+        A different mesage
 
-In this commit message I have put a witty message
+        In this commit message I have put a witty message
 
-Co-authored-by: Joseph Bloggs <joe@example.com>
 
-Co-authored-by: Annie Example <annie@example.com>
-"#;
+        Co-authored-by: Joseph Bloggs <joe@example.com>
 
-    assert_output(
-        &actual_output,
-        expected_stdout,
-        expected_stderr,
-        expect_success,
+        Co-authored-by: Annie Example <annie@example.com>
+        "
     );
+
+    assert_output(&actual_output, "", "", true);
     assert_eq!(
-        actual_commit_message, expected_commit_message,
+        actual_commit, expected_commit,
         "Expected the commit message to contain {:?}, instead it contained {:?}",
-        expected_commit_message, actual_commit_message
+        expected_commit, actual_commit
     );
 }

@@ -1,3 +1,4 @@
+use indoc::indoc;
 use std::{
     ops::{Add, Sub},
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -15,19 +16,22 @@ fn pre_commit_fails_if_expires_time_has_passed() {
             .sub(Duration::from_secs(100)),
         &working_dir,
     );
-    let expected_stdout = "";
-    let expected_stderr = r#"
-The details of the author of this commit are a bit stale. Can you confirm who's currently coding?
+    let expected_stderr = indoc!(
+        "
+        The details of the author of this commit are a bit stale. Can you confirm who's currently \
+         coding?
 
-It's nice to get and give the right credit.
+        It's nice to get and give the right credit.
 
-You can fix this by running `git authors` then the initials of whoever is coding for example:
-git authors bt
-git authors bt se
-"#;
-    let expect_success = false;
+        You can fix this by running `git authors` then the initials of whoever is coding for \
+         example:
+        git authors bt
+        git authors bt se
+
+        "
+    );
     let output = run_hook(&working_dir, "pb-pre-commit", vec![]);
-    assert_output(&output, expected_stdout, expected_stderr, expect_success);
+    assert_output(&output, "", expected_stderr, false);
 }
 
 #[test]
@@ -41,11 +45,7 @@ fn pre_commit_does_not_fail_if_time_has_not_passed() {
         &working_dir,
     );
 
-    let expected_stdout = "";
-    let expected_stderr = "";
-    let expect_success = true;
-
     let output = run_hook(&working_dir, "pb-pre-commit", vec![]);
 
-    assert_output(&output, expected_stdout, expected_stderr, expect_success);
+    assert_output(&output, "", "", true);
 }

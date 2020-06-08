@@ -44,14 +44,10 @@ fn main() {
 
     if co_author_configuration.is_none() {
         eprintln!(
-            r#"
-The details of the author of this commit are a bit stale. Can you confirm who's currently coding?
-
-It's nice to get and give the right credit.
-
-You can fix this by running `git authors` then the initials of whoever is coding for example:
-git authors bt
-git authors bt se"#,
+            "The details of the author of this commit are a bit stale. Can you confirm who's \
+             currently coding?\n\nIt's nice to get and give the right credit.\n\nYou can fix this \
+             by running `git authors` then the initials of whoever is coding for example:\ngit \
+             authors bt\ngit authors bt se\n"
         );
 
         process::exit(ExitCode::StaleAuthor as i32);

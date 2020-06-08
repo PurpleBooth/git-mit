@@ -2,16 +2,20 @@ use std::{io::Write, process::Command};
 
 use tempfile::NamedTempFile;
 
+use indoc::indoc;
 use pb_hook_test_helper::{assert_output, setup_working_dir};
 
 #[test]
 fn valid_commit() {
-    let input = r#"An example commit
+    let input = indoc!(
+        "
+        An example commit
 
-This is an example commit without the JIRA Issue Key
+        This is an example commit without the JIRA Issue Key
 
-JRA-123
-"#;
+        JRA-123
+        "
+    );
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)
@@ -36,10 +40,13 @@ JRA-123
 
 #[test]
 fn explicitly_enabled() {
-    let input = r#"An example commit
+    let input = indoc!(
+        "
+        An example commit
 
-This is an example commit without the JIRA Issue Key
-"#;
+        This is an example commit without the JIRA Issue Key
+        "
+    );
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)
@@ -59,29 +66,34 @@ This is an example commit without the JIRA Issue Key
         vec![commit_path.path().to_str().unwrap()],
     );
 
-    let expected_stderr = r#"An example commit
+    let expected_stderr = indoc!(
+        "
+        An example commit
 
-This is an example commit without the JIRA Issue Key
+        This is an example commit without the JIRA Issue Key
 
 
----
+        ---
 
+        Your commit is missing a JIRA Issue Key
 
-Your commit is missing a JIRA Issue Key
+        You can fix this by adding a key like `JRA-123` to the commit message
 
-You can fix this by adding a key like `JRA-123` to the commit message
-
-"#;
+        "
+    );
 
     assert_output(&output, "", expected_stderr, false)
 }
 
 #[test]
 fn disabled() {
-    let input = r#"An example commit
+    let input = indoc!(
+        "
+        An example commit
 
-This is an example commit without the jira issue key
-"#;
+        This is an example commit without the jira issue key
+        "
+    );
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)

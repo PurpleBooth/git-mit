@@ -17,6 +17,7 @@ git2 = "0.13"
 regex = "1"
 serde_yaml = "0.8.12"
 serde_derive = "1.0.110"
+indoc = "0.3"
 
   [dependencies.serde]
   version = "1.0.111"
@@ -24,7 +25,6 @@ serde_derive = "1.0.110"
 
 [dev-dependencies]
 pretty_assertions = "0.6.1"
-indoc = "0.3"
 
   [dev-dependencies.pb-hook-test-helper]
   path = "../pb-hook-test-helper"

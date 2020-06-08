@@ -1,18 +1,22 @@
 use std::{io::Write, process::Command};
 
+use indoc::indoc;
 use tempfile::NamedTempFile;
 
 use pb_hook_test_helper::{assert_output, setup_working_dir};
 
 #[test]
 fn duplicated_trailer() {
-    let input = r#"An example commit
+    let input = indoc!(
+        "
+        An example commit
 
-This is an example commit with duplicate trailers
+        This is an example commit with duplicate trailers
 
-Signed-off-by: Billie Thompson <email@example.com>
-Signed-off-by: Billie Thompson <email@example.com>
-"#;
+        Signed-off-by: Billie Thompson <email@example.com>
+        Signed-off-by: Billie Thompson <email@example.com>
+        "
+    );
 
     let working_dir = setup_working_dir();
 
@@ -28,33 +32,38 @@ Signed-off-by: Billie Thompson <email@example.com>
     assert_output(
         &output,
         "",
-        r#"An example commit
+        indoc!(
+            "An example commit
 
-This is an example commit with duplicate trailers
+            This is an example commit with duplicate trailers
 
-Signed-off-by: Billie Thompson <email@example.com>
-Signed-off-by: Billie Thompson <email@example.com>
+            Signed-off-by: Billie Thompson <email@example.com>
+            Signed-off-by: Billie Thompson <email@example.com>
 
 
----
+            ---
 
-Your commit cannot have the same name duplicated in the "Signed-off-by" field
+            Your commit cannot have the same name duplicated in the \"Signed-off-by\" field
 
-You can fix this by removing the duplicated field when you commit again
+            You can fix this by removing the duplicated field when you commit again
 
-"#,
+            "
+        ),
         false,
     )
 }
 
 #[test]
 fn valid_commit() {
-    let input = r#"An example commit
+    let input = indoc!(
+        "
+        An example commit
 
-This is an example commit with duplicate trailers
+        This is an example commit with duplicate trailers
 
-Signed-off-by: Billie Thompson <email@example.com>
-"#;
+        Signed-off-by: Billie Thompson <email@example.com>
+        "
+    );
 
     let working_dir = setup_working_dir();
 
@@ -72,13 +81,16 @@ Signed-off-by: Billie Thompson <email@example.com>
 
 #[test]
 fn disabled() {
-    let input = r#"An example commit
+    let input = indoc!(
+        "
+        An example commit
 
-This is an example commit with duplicate trailers
+        This is an example commit with duplicate trailers
 
-Signed-off-by: Billie Thompson <email@example.com>
-Signed-off-by: Billie Thompson <email@example.com>
-"#;
+        Signed-off-by: Billie Thompson <email@example.com>
+        Signed-off-by: Billie Thompson <email@example.com>
+        "
+    );
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)

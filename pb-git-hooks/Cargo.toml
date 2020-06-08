@@ -18,6 +18,7 @@ clap = "~2.33"
   path = "../pb-commit-message-lints"
 
 [dev-dependencies]
+indoc = "0.3"
 pretty_assertions = "0.6.1"
 
   [dev-dependencies.pb-hook-test-helper]

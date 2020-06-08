@@ -26,6 +26,7 @@ mod tests_able_to_load_config_from_yaml {
     use pretty_assertions::assert_eq;
 
     use crate::author::entities::{Author, Authors};
+    use indoc::indoc;
     use std::convert::TryFrom;
 
     #[test]
@@ -36,13 +37,14 @@ mod tests_able_to_load_config_from_yaml {
 
     #[test]
     fn it_can_parse_a_standard_yaml_file() {
-        let actual = Authors::try_from(
-            r#"---
-bt:
-    name: Billie Thompson
-    email: billie@example.com
-"#,
-        );
+        let actual = Authors::try_from(indoc!(
+            "
+            ---
+            bt:
+                name: Billie Thompson
+                email: billie@example.com
+            "
+        ));
 
         let mut input: BTreeMap<String, Author> = BTreeMap::new();
         input.insert(
@@ -56,14 +58,15 @@ bt:
 
     #[test]
     fn yaml_files_can_contain_signing_keys() {
-        let actual = Authors::try_from(
-            r#"---
-bt:
-    name: Billie Thompson
-    email: billie@example.com
-    signingkey: 0A46826A
-"#,
-        );
+        let actual = Authors::try_from(indoc!(
+            "
+            ---
+            bt:
+                name: Billie Thompson
+                email: billie@example.com
+                signingkey: 0A46826A
+            "
+        ));
 
         let mut expected_authors: BTreeMap<String, Author> = BTreeMap::new();
         expected_authors.insert(
@@ -83,6 +86,7 @@ mod tests_able_to_convert_authors_to_yaml {
     use pretty_assertions::assert_eq;
 
     use crate::author::entities::{Author, Authors};
+    use indoc::indoc;
     use std::convert::TryInto;
 
     #[test]
@@ -93,14 +97,18 @@ mod tests_able_to_convert_authors_to_yaml {
             Author::new("Billie Thompson", "billie@example.com", None),
         );
         let actual: String = Authors::new(map).try_into().unwrap();
-        let expected = r#"---
-bt:
-  name: Billie Thompson
-  email: billie@example.com"#
-            .to_string();
+        let expected = indoc!(
+            "
+            ---
+            bt:
+              name: Billie Thompson
+              email: billie@example.com"
+        )
+        .to_string();
 
         assert_eq!(expected, actual);
     }
+
     #[test]
     fn it_includes_the_signing_key_if_set() {
         let mut map: BTreeMap<String, Author> = BTreeMap::new();
@@ -109,12 +117,15 @@ bt:
             Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
         );
         let actual: String = Authors::new(map).try_into().unwrap();
-        let expected = r#"---
-bt:
-  name: Billie Thompson
-  email: billie@example.com
-  signingkey: 0A46826A"#
-            .to_string();
+        let expected = indoc!(
+            "
+            ---
+            bt:
+              name: Billie Thompson
+              email: billie@example.com
+              signingkey: 0A46826A"
+        )
+        .to_string();
 
         assert_eq!(expected, actual);
     }

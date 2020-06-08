@@ -20,6 +20,7 @@ git2 = "0.13"
   path = "../pb-commit-message-lints"
 
 [dev-dependencies]
+indoc = "0.3"
 pretty_assertions = "0.6.1"
 tempfile = "3"
 

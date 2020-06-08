@@ -1,17 +1,20 @@
 use std::{io::Write, process::Command};
 
-use tempfile::NamedTempFile;
-
+use indoc::indoc;
 use pb_hook_test_helper::{assert_output, setup_working_dir};
+use tempfile::NamedTempFile;
 
 #[test]
 fn valid_commit() {
-    let input = r#"An example commit
+    let input = indoc!(
+        "
+        An example commit
 
-This is an example commit without the pivotal tracker id
+        This is an example commit without the pivotal tracker id
 
-[#12345678]
-"#;
+        [#12345678]
+        "
+    );
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)
@@ -36,10 +39,13 @@ This is an example commit without the pivotal tracker id
 
 #[test]
 fn enabled() {
-    let input = r#"An example commit
+    let input = indoc!(
+        "
+        An example commit
 
-This is an example commit without the pivotal tracker id
-"#;
+        This is an example commit without the pivotal tracker id
+        "
+    );
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)
@@ -59,36 +65,41 @@ This is an example commit without the pivotal tracker id
         vec![commit_path.path().to_str().unwrap()],
     );
 
-    let expected_stderr = r#"An example commit
+    let expected_stderr = indoc!(
+        "
+        An example commit
 
-This is an example commit without the pivotal tracker id
+        This is an example commit without the pivotal tracker id
 
 
----
+        ---
 
+        Your commit is missing a Pivotal Tracker Id
 
-Your commit is missing a Pivotal Tracker Id
+        You can fix this by adding the Id in one of the styles below to the commit message
+        [Delivers #12345678]
+        [fixes #12345678]
+        [finishes #12345678]
+        [#12345884 #12345678]
+        [#12345884,#12345678]
+        [#12345678],[#12345884]
+        This will address [#12345884]
 
-You can fix this by adding the Id in one of the styles below to the commit message
-[Delivers #12345678]
-[fixes #12345678]
-[finishes #12345678]
-[#12345884 #12345678]
-[#12345884,#12345678]
-[#12345678],[#12345884]
-This will address [#12345884]
-
-"#;
+        "
+    );
 
     assert_output(&output, "", expected_stderr, false)
 }
 
 #[test]
 fn disabled() {
-    let input = r#"An example commit
+    let input = indoc!(
+        "
+        An example commit
 
-This is an example commit without the pivotal tracker id
-"#;
+        This is an example commit without the pivotal tracker id
+        "
+    );
     let working_dir = setup_working_dir();
     Command::new("git")
         .current_dir(&working_dir)
