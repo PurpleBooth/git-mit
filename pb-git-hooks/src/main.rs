@@ -11,14 +11,18 @@ use git2::{Config, Repository};
 
 use itertools::Itertools;
 use pb_commit_message_lints::{
+    author::entities::Authors,
     errors::PbCommitMessageLintsError,
     external::vcs::{Git2, Vcs},
     lints::{get_lint_configuration, Lints},
 };
+use std::convert::TryInto;
 
 const LOCAL_SCOPE: &str = "local";
 const LINT_NAME_ARGUMENT: &str = "lint";
 const COMMAND_LINT: &str = "lint";
+const COMMAND_AUTHORS: &str = "authors";
+const COMMAND_AUTHORS_EXAMPLE: &str = "example";
 const COMMAND_LINT_AVAILABLE: &str = "available";
 const COMMAND_LINT_ENABLE: &str = "enable";
 const COMMAND_LINT_DISABLE: &str = "disable";
@@ -48,6 +52,18 @@ fn main() {
 
     if let Some(value) = matches.subcommand_matches(COMMAND_LINT) {
         manage_lints(value, &mut vcs).unwrap_or_else(|err| display_err_and_exit(&err));
+    }
+    if let Some(subcommand) = matches.subcommand_matches(COMMAND_AUTHORS) {
+        if subcommand
+            .subcommand_matches(COMMAND_AUTHORS_EXAMPLE)
+            .is_some()
+        {
+            let example: String = Authors::example()
+                .try_into()
+                .map_err(PbGitHooksError::from)
+                .unwrap_or_else(|err| display_err_and_exit(&err));
+            println!("{}", example)
+        }
     }
 }
 
@@ -93,6 +109,14 @@ fn app() -> App<'static, 'static> {
                     App::new(COMMAND_LINT_DISABLE)
                         .about("Disable a lint")
                         .arg(lint_argument.clone()),
+                )
+                .setting(AppSettings::SubcommandRequiredElseHelp),
+        )
+        .subcommand(
+            App::new(COMMAND_AUTHORS)
+                .about("Manage author configuration")
+                .subcommand(
+                    App::new(COMMAND_AUTHORS_EXAMPLE).about("Print example author yaml file"),
                 )
                 .setting(AppSettings::SubcommandRequiredElseHelp),
         )

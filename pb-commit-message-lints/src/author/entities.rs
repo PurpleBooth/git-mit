@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 pub struct Author {
     name: String,
     email: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     signingkey: Option<String>,
 }
 
@@ -78,6 +79,24 @@ impl Authors {
             .map(|initial| self.authors.get(*initial))
             .collect()
     }
+
+    #[must_use]
+    pub fn example() -> Authors {
+        let mut store = HashMap::new();
+        store.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
+        );
+        store.insert(
+            "se".into(),
+            Author::new("Someone Else", "someone@example.com", None),
+        );
+        store.insert(
+            "ae".into(),
+            Author::new("Anyone Else", "anyone@example.com", None),
+        );
+        Authors::new(store)
+    }
 }
 
 #[cfg(test)]
@@ -134,5 +153,25 @@ mod tests_authors {
                 None,
             ))]
         )
+    }
+
+    #[test]
+    fn there_is_an_example_constructor() {
+        let mut store = HashMap::new();
+        store.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
+        );
+        store.insert(
+            "se".into(),
+            Author::new("Someone Else", "someone@example.com", None),
+        );
+        store.insert(
+            "ae".into(),
+            Author::new("Anyone Else", "anyone@example.com", None),
+        );
+        let expected = Authors::new(store);
+
+        assert_eq!(Authors::example(), expected,)
     }
 }

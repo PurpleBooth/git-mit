@@ -11,6 +11,14 @@ impl TryFrom<&str> for Authors {
     }
 }
 
+impl TryFrom<Authors> for String {
+    type Error = PbCommitMessageLintsError;
+
+    fn try_from(value: Authors) -> Result<Self, Self::Error> {
+        serde_yaml::to_string(&value.authors).map_err(PbCommitMessageLintsError::from)
+    }
+}
+
 #[cfg(test)]
 mod tests_able_to_load_config_from_yaml {
     use std::collections::HashMap;
@@ -63,6 +71,50 @@ bt:
             Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
         );
         let expected = Ok(Authors::new(expected_authors));
+
+        assert_eq!(expected, actual);
+    }
+}
+
+#[cfg(test)]
+mod tests_able_to_convert_authors_to_yaml {
+    use std::collections::HashMap;
+
+    use pretty_assertions::assert_eq;
+
+    use crate::author::entities::{Author, Authors};
+    use std::convert::TryInto;
+
+    #[test]
+    fn it_converts_to_standard_yaml() {
+        let mut map: HashMap<String, Author> = HashMap::new();
+        map.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", None),
+        );
+        let actual: String = Authors::new(map).try_into().unwrap();
+        let expected = r#"---
+bt:
+  name: Billie Thompson
+  email: billie@example.com"#
+            .to_string();
+
+        assert_eq!(expected, actual);
+    }
+    #[test]
+    fn it_includes_the_signing_key_if_set() {
+        let mut map: HashMap<String, Author> = HashMap::new();
+        map.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
+        );
+        let actual: String = Authors::new(map).try_into().unwrap();
+        let expected = r#"---
+bt:
+  name: Billie Thompson
+  email: billie@example.com
+  signingkey: 0A46826A"#
+            .to_string();
 
         assert_eq!(expected, actual);
     }
