@@ -159,8 +159,7 @@ mod tests_get_lint_configuration {
         errors::PbCommitMessageLintsError,
         external::vcs::InMemory,
         lints::{
-            get_lint_configuration,
-            Lints,
+            get_lint_configuration, Lints,
             Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
         },
     };

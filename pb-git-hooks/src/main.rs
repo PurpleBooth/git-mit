@@ -43,7 +43,7 @@ fn main() {
     let git_config = match matches.value_of(SCOPE_ARGUMENT) {
         Some(LOCAL_SCOPE) => {
             Repository::discover(current_dir).and_then(|repo: Repository| repo.config())
-        },
+        }
         _ => Config::open_default(),
     }
     .expect("Couldn't load any git config");

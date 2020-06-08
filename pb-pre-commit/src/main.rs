@@ -3,9 +3,7 @@ use std::{env, process};
 use clap::{crate_authors, crate_version, App};
 
 use pb_commit_message_lints::{
-    author::vcs::get_coauthor_configuration,
-    errors::PbCommitMessageLintsError,
-    external::vcs::Git2,
+    author::vcs::get_coauthor_configuration, errors::PbCommitMessageLintsError, external::vcs::Git2,
 };
 use std::{
     convert::TryFrom,

@@ -8,8 +8,7 @@ use std::{
 use crate::errors::PbCommitMessageLintsError;
 
 use crate::{
-    author::entities::Author,
-    errors::PbCommitMessageLintsError::NoAuthorsToSetError,
+    author::entities::Author, errors::PbCommitMessageLintsError::NoAuthorsToSetError,
     external::vcs::Vcs,
 };
 use std::{convert::TryInto, time::SystemTimeError};
@@ -32,7 +31,7 @@ pub fn get_coauthor_configuration(
             } else {
                 Ok(None)
             }
-        },
+        }
         Ok(None) => Ok(None),
         Err(error) => Err(error),
     }

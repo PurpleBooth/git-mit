@@ -231,11 +231,11 @@ impl Display for GitAuthorsError {
             GitAuthorsError::PbCommitMessageLints(error) => write!(f, "{}", error),
             GitAuthorsError::Io(file_source, error) => {
                 write!(f, "Failed to read from `{}`:\n{}", file_source, error)
-            },
+            }
             GitAuthorsError::Xdg(error) => write!(f, "Failed to find config directory: {}", error),
             GitAuthorsError::AuthorFileNotSet => {
                 write!(f, "Expected a author file path, didn't find one")
-            },
+            }
             GitAuthorsError::Utf8(error) => write!(
                 f,
                 "Failed to convert the output from the author file generation command to a UTF-8 \
