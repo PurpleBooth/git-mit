@@ -9,7 +9,6 @@ use std::{
 use clap::{crate_authors, crate_version, App, AppSettings, Arg, ArgMatches};
 use git2::{Config, Repository};
 
-use itertools::Itertools;
 use pb_commit_message_lints::{
     author::entities::Authors,
     errors::PbCommitMessageLintsError,
@@ -133,6 +132,7 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHook
             "{}",
             Lints::iterator()
                 .map(pb_commit_message_lints::lints::Lints::name)
+                .collect::<Vec<_>>()
                 .join("\n")
         );
         Ok(())
@@ -143,6 +143,7 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHook
             lints
                 .into_iter()
                 .map(pb_commit_message_lints::lints::Lints::name)
+                .collect::<Vec<_>>()
                 .join("\n")
         );
         Ok(())
@@ -171,7 +172,7 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHook
                         "disabled"
                     }
                 ))
-                .collect_vec()
+                .collect::<Vec<_>>()
                 .join("\n")
         );
         Ok(())
