@@ -31,11 +31,31 @@ diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 
 ## List enabled lints
 
-You can list all the available lints with a handy command
+You can list all the enabled lints with a handy command
 
 ``` bash
 ACTUAL="$(pb-git-hooks lint enabled)"
 EXPECTED="duplicated-trailers"
+
+diff <(printf "$ACTUAL") <(printf "$EXPECTED")
+```
+
+## Get Status of single lint
+
+You can get the status of a single lint either enabled
+
+``` bash
+ACTUAL="$(pb-git-hooks lint status duplicated-trailers)"
+EXPECTED="$(printf "duplicated-trailers\tenabled\n")"
+
+diff <(printf "$ACTUAL") <(printf "$EXPECTED")
+```
+
+or disabled
+
+``` bash
+ACTUAL="$(pb-git-hooks lint status jira-issue-key-missing)"
+EXPECTED="$(printf "jira-issue-key-missing\tdisabled\n")"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 ```

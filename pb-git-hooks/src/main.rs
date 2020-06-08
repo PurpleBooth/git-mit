@@ -24,6 +24,7 @@ const COMMAND_LINT_ENABLE: &str = "enable";
 const COMMAND_LINT_DISABLE: &str = "disable";
 const SCOPE_ARGUMENT: &str = "scope";
 const COMMAND_LINT_ENABLED: &str = "enabled";
+const COMMAND_LINT_STATUS: &str = "status";
 
 fn display_err_and_exit<T>(error: &PbGitHooksError) -> T {
     eprintln!("{}", error);
@@ -79,6 +80,11 @@ fn app() -> App<'static, 'static> {
                 .subcommand(App::new(COMMAND_LINT_AVAILABLE).about("List the available lints"))
                 .subcommand(App::new(COMMAND_LINT_ENABLED).about("List the enabled lints"))
                 .subcommand(
+                    App::new(COMMAND_LINT_STATUS)
+                        .about("Get status of a lint")
+                        .arg(lint_argument.clone()),
+                )
+                .subcommand(
                     App::new(COMMAND_LINT_ENABLE)
                         .about("Enable a lint")
                         .arg(lint_argument.clone()),
@@ -112,6 +118,35 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHook
             lints
                 .into_iter()
                 .map(pb_commit_message_lints::lints::Lints::name)
+                .join("\n")
+        );
+        Ok(())
+    } else if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_STATUS) {
+        let lints = &subcommand_args
+            .values_of(LINT_NAME_ARGUMENT)
+            .expect("Lint name not given")
+            .map(|name| {
+                Lints::try_from(name)
+                    .map_err(PbGitHooksError::from)
+                    .unwrap_or_else(|err| display_err_and_exit(&err))
+            })
+            .collect::<Vec<_>>();
+
+        let user_status = get_lint_configuration(config)?;
+        println!(
+            "{}",
+            lints
+                .iter()
+                .map(|lint| format!(
+                    "{}\t{}",
+                    lint.name(),
+                    if user_status.contains(lint) {
+                        "enabled"
+                    } else {
+                        "disabled"
+                    }
+                ))
+                .collect_vec()
                 .join("\n")
         );
         Ok(())
