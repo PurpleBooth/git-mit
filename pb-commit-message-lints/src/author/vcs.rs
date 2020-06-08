@@ -41,7 +41,7 @@ pub fn get_coauthor_configuration(
 #[cfg(test)]
 mod tests_able_to_load_config_from_git {
     use std::{
-        collections::HashMap,
+        collections::BTreeMap,
         convert::TryFrom,
         ops::{Add, Sub},
         time::{Duration, SystemTime, UNIX_EPOCH},
@@ -57,7 +57,7 @@ mod tests_able_to_load_config_from_git {
     #[test]
     fn there_is_no_author_config_if_it_has_expired() {
         let now_minus_10 = epoch_with_offset(subtract_10_seconds);
-        let mut strings: HashMap<String, String> = HashMap::new();
+        let mut strings: BTreeMap<String, String> = BTreeMap::new();
         strings.insert("pb.author.expires".into(), format!("{}", now_minus_10));
         let mut vcs = InMemory::new(&mut strings);
 
@@ -72,7 +72,7 @@ mod tests_able_to_load_config_from_git {
 
     #[test]
     fn there_is_a_config_if_the_config_has_not_expired() {
-        let mut strings = HashMap::new();
+        let mut strings = BTreeMap::new();
         strings.insert(
             "pb.author.expires".into(),
             format!("{}", epoch_with_offset(add_10_seconds)),
@@ -92,7 +92,7 @@ mod tests_able_to_load_config_from_git {
 
     #[test]
     fn we_get_author_config_back_if_there_is_any() {
-        let mut strs = HashMap::new();
+        let mut strs = BTreeMap::new();
         strs.insert(
             "pb.author.expires".into(),
             format!("{}", epoch_with_offset(add_10_seconds)),
@@ -132,7 +132,7 @@ mod tests_able_to_load_config_from_git {
 
     #[test]
     fn we_get_multiple_authors_back_if_there_are_multiple() {
-        let mut strs = HashMap::new();
+        let mut strs = BTreeMap::new();
         strs.insert(
             "pb.author.expires".into(),
             format!("{}", epoch_with_offset(add_10_seconds)),
@@ -265,7 +265,7 @@ pub fn set_authors(
 #[cfg(test)]
 mod tests_can_set_author_details {
     use std::{
-        collections::HashMap,
+        collections::BTreeMap,
         convert::TryFrom,
         error::Error,
         ops::Add,
@@ -279,7 +279,7 @@ mod tests_can_set_author_details {
 
     #[test]
     fn the_first_initial_becomes_the_author() {
-        let mut strs = HashMap::new();
+        let mut strs = BTreeMap::new();
 
         let mut vcs_config = InMemory::new(&mut strs);
 
@@ -296,7 +296,7 @@ mod tests_can_set_author_details {
 
     #[test]
     fn the_first_initial_sets_signing_key_if_it_is_there() {
-        let mut str_map = HashMap::new();
+        let mut str_map = BTreeMap::new();
         let mut vcs_config = InMemory::new(&mut str_map);
 
         let author = Author::new("Billie Thompson", "billie@example.com", Some("0A46826A"));
@@ -311,7 +311,7 @@ mod tests_can_set_author_details {
 
     #[test]
     fn the_first_initial_removes_if_it_is_there_and_not_present() {
-        let mut strs = HashMap::new();
+        let mut strs = BTreeMap::new();
         strs.insert("user.signingkey".into(), "0A46826A".into());
 
         let mut vcs_config = InMemory::new(&mut strs);
@@ -325,7 +325,7 @@ mod tests_can_set_author_details {
 
     #[test]
     fn multiple_authors_become_coauthors() {
-        let mut strs = HashMap::new();
+        let mut strs = BTreeMap::new();
         let mut vcs_config = InMemory::new(&mut strs);
 
         let author_1 = Author::new("Billie Thompson", "billie@example.com", None);
@@ -361,7 +361,7 @@ mod tests_can_set_author_details {
 
     #[test]
     fn old_co_authors_are_removed() {
-        let mut strs = HashMap::new();
+        let mut strs = BTreeMap::new();
         strs.insert(
             "pb.author.expires".into(),
             format!(
@@ -397,7 +397,7 @@ mod tests_can_set_author_details {
 
     #[test]
     fn sets_the_expiry_time() {
-        let mut strs = HashMap::new();
+        let mut strs = BTreeMap::new();
         let mut vcs_config = InMemory::new(&mut strs);
 
         let author = Author::new("Billie Thompson", "billie@example.com", None);

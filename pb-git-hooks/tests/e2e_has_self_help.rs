@@ -34,7 +34,8 @@ SUBCOMMANDS:
 fn lint_alone_provides_help() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "pb-git-hooks", vec!["lint"]);
-    let expected = r#"pb-git-hooks-lint
+    let expected = format!(
+        "pb-git-hooks-lint {}
 Manage active lints
 
 USAGE:
@@ -51,15 +52,18 @@ SUBCOMMANDS:
     enabled      List the enabled lints
     help         Prints this message or the help of the given subcommand(s)
     status       Get status of a lint
-"#;
+",
+        ""
+    );
 
-    assert_output(&output, "", expected, false)
+    assert_output(&output, "", &expected, false)
 }
 #[test]
 fn authors_alone_provides_help() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "pb-git-hooks", vec!["authors"]);
-    let expected = r#"pb-git-hooks-authors 
+    let expected = format!(
+        "pb-git-hooks-authors {}
 Manage author configuration
 
 USAGE:
@@ -72,7 +76,9 @@ FLAGS:
 SUBCOMMANDS:
     example    Print example author yaml file
     help       Prints this message or the help of the given subcommand(s)
-"#;
+",
+        ""
+    );
 
-    assert_output(&output, "", expected, false)
+    assert_output(&output, "", &expected, false)
 }

@@ -151,7 +151,7 @@ mod missing_jira_issue_key;
 
 #[cfg(test)]
 mod tests_get_lint_configuration {
-    use std::collections::HashMap;
+    use std::collections::BTreeMap;
 
     use pretty_assertions::assert_eq;
 
@@ -167,7 +167,7 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn defaults() {
-        let mut strings = HashMap::new();
+        let mut strings = BTreeMap::new();
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
@@ -182,7 +182,7 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn disabled_duplicated_trailers() {
-        let mut strings = HashMap::new();
+        let mut strings = BTreeMap::new();
         strings.insert("pb.lint.duplicated-trailers".into(), "false".into());
         let config = InMemory::new(&mut strings);
 
@@ -198,7 +198,7 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn enabled_duplicated_trailers() {
-        let mut strings = HashMap::new();
+        let mut strings = BTreeMap::new();
         strings.insert("pb.lint.duplicated-trailers".into(), "true".into());
         let config = InMemory::new(&mut strings);
 
@@ -214,7 +214,7 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn enabled_pivotal_tracker_id() {
-        let mut strings = HashMap::new();
+        let mut strings = BTreeMap::new();
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
         let config = InMemory::new(&mut strings);
 
@@ -231,7 +231,7 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn enabled_jira_issue_key_missing() {
-        let mut strings = HashMap::new();
+        let mut strings = BTreeMap::new();
         strings.insert("pb.lint.jira-issue-key-missing".into(), "true".into());
         let config = InMemory::new(&mut strings);
 
@@ -248,7 +248,7 @@ mod tests_get_lint_configuration {
 
     #[test]
     fn disabled_jira_issue_key_missing() {
-        let mut strings = HashMap::new();
+        let mut strings = BTreeMap::new();
         strings.insert("pb.lint.jira-issue-key-missing".into(), "false".into());
         let config = InMemory::new(&mut strings);
 
@@ -265,7 +265,7 @@ mod tests_get_lint_configuration {
 
 #[cfg(test)]
 mod tests_can_enable_lints_via_a_command {
-    use std::collections::HashMap;
+    use std::collections::BTreeMap;
 
     use pretty_assertions::assert_eq;
 
@@ -276,7 +276,7 @@ mod tests_can_enable_lints_via_a_command {
 
     #[test]
     fn we_can_enable_lints() {
-        let mut strings = HashMap::new();
+        let mut strings = BTreeMap::new();
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
 
@@ -292,7 +292,7 @@ mod tests_can_enable_lints_via_a_command {
 
     #[test]
     fn we_can_disable_lints() {
-        let mut strings = HashMap::new();
+        let mut strings = BTreeMap::new();
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 

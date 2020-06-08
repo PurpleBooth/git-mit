@@ -1,7 +1,7 @@
 use crate::errors::PbCommitMessageLintsError;
 use git2::{Config, Repository};
 use serde::export::TryFrom;
-use std::{collections::HashMap, path::PathBuf, string::String};
+use std::{collections::BTreeMap, path::PathBuf, string::String};
 
 pub trait Vcs {
     /// # Errors
@@ -31,12 +31,12 @@ pub trait Vcs {
 }
 
 pub struct InMemory<'a> {
-    store: &'a mut HashMap<String, String>,
+    store: &'a mut BTreeMap<String, String>,
 }
 
 impl InMemory<'_> {
     #[must_use]
-    pub fn new(store: &mut HashMap<String, String>) -> InMemory {
+    pub fn new(store: &mut BTreeMap<String, String>) -> InMemory {
         InMemory { store }
     }
 }

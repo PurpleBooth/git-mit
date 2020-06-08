@@ -21,7 +21,7 @@ impl TryFrom<Authors> for String {
 
 #[cfg(test)]
 mod tests_able_to_load_config_from_yaml {
-    use std::collections::HashMap;
+    use std::collections::BTreeMap;
 
     use pretty_assertions::assert_eq;
 
@@ -44,7 +44,7 @@ bt:
 "#,
         );
 
-        let mut input: HashMap<String, Author> = HashMap::new();
+        let mut input: BTreeMap<String, Author> = BTreeMap::new();
         input.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", None),
@@ -65,7 +65,7 @@ bt:
 "#,
         );
 
-        let mut expected_authors: HashMap<String, Author> = HashMap::new();
+        let mut expected_authors: BTreeMap<String, Author> = BTreeMap::new();
         expected_authors.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
@@ -78,7 +78,7 @@ bt:
 
 #[cfg(test)]
 mod tests_able_to_convert_authors_to_yaml {
-    use std::collections::HashMap;
+    use std::collections::BTreeMap;
 
     use pretty_assertions::assert_eq;
 
@@ -87,7 +87,7 @@ mod tests_able_to_convert_authors_to_yaml {
 
     #[test]
     fn it_converts_to_standard_yaml() {
-        let mut map: HashMap<String, Author> = HashMap::new();
+        let mut map: BTreeMap<String, Author> = BTreeMap::new();
         map.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", None),
@@ -103,7 +103,7 @@ bt:
     }
     #[test]
     fn it_includes_the_signing_key_if_set() {
-        let mut map: HashMap<String, Author> = HashMap::new();
+        let mut map: BTreeMap<String, Author> = BTreeMap::new();
         map.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),

@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
@@ -63,12 +63,12 @@ mod tests_author {
 
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Authors {
-    pub authors: HashMap<String, Author>,
+    pub authors: BTreeMap<String, Author>,
 }
 
 impl Authors {
     #[must_use]
-    pub fn new(authors: HashMap<String, Author>) -> Authors {
+    pub fn new(authors: BTreeMap<String, Author>) -> Authors {
         Authors { authors }
     }
 
@@ -82,18 +82,18 @@ impl Authors {
 
     #[must_use]
     pub fn example() -> Authors {
-        let mut store = HashMap::new();
+        let mut store = BTreeMap::new();
         store.insert(
-            "bt".into(),
-            Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
+            "ae".into(),
+            Author::new("Anyone Else", "anyone@example.com", None),
         );
         store.insert(
             "se".into(),
             Author::new("Someone Else", "someone@example.com", None),
         );
         store.insert(
-            "ae".into(),
-            Author::new("Anyone Else", "anyone@example.com", None),
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
         );
         Authors::new(store)
     }
@@ -107,7 +107,7 @@ mod tests_authors {
 
     #[test]
     fn it_can_get_an_author_in_it() {
-        let mut store = HashMap::new();
+        let mut store = BTreeMap::new();
         store.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", None),
@@ -126,7 +126,7 @@ mod tests_authors {
 
     #[test]
     fn i_can_get_multiple_authors_out_at_the_same_time() {
-        let mut store: HashMap<String, Author> = HashMap::new();
+        let mut store: BTreeMap<String, Author> = BTreeMap::new();
         store.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", None),
@@ -157,7 +157,7 @@ mod tests_authors {
 
     #[test]
     fn there_is_an_example_constructor() {
-        let mut store = HashMap::new();
+        let mut store = BTreeMap::new();
         store.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
