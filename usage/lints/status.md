@@ -28,3 +28,14 @@ jira-issue-key-missing"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 ```
+
+## List enabled lints
+
+You can list all the available lints with a handy command
+
+``` bash
+ACTUAL="$(pb-git-hooks lint enabled)"
+EXPECTED="duplicated-trailers"
+
+diff <(printf "$ACTUAL") <(printf "$EXPECTED")
+```

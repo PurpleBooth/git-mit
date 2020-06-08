@@ -13,7 +13,7 @@ use itertools::Itertools;
 use pb_commit_message_lints::{
     errors::PbCommitMessageLintsError,
     external::vcs::{Git2, Vcs},
-    lints::Lints,
+    lints::{get_lint_configuration, Lints},
 };
 
 const LOCAL_SCOPE: &str = "local";
@@ -23,6 +23,7 @@ const COMMAND_LINT_AVAILABLE: &str = "available";
 const COMMAND_LINT_ENABLE: &str = "enable";
 const COMMAND_LINT_DISABLE: &str = "disable";
 const SCOPE_ARGUMENT: &str = "scope";
+const COMMAND_LINT_ENABLED: &str = "enabled";
 
 fn display_err_and_exit<T>(error: &PbGitHooksError) -> T {
     eprintln!("{}", error);
@@ -76,6 +77,7 @@ fn app() -> App<'static, 'static> {
             App::new(COMMAND_LINT)
                 .about("Manage active lints")
                 .subcommand(App::new(COMMAND_LINT_AVAILABLE).about("List the available lints"))
+                .subcommand(App::new(COMMAND_LINT_ENABLED).about("List the enabled lints"))
                 .subcommand(
                     App::new(COMMAND_LINT_ENABLE)
                         .about("Enable a lint")
@@ -99,6 +101,16 @@ fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHook
         println!(
             "{}",
             Lints::iterator()
+                .map(pb_commit_message_lints::lints::Lints::name)
+                .join("\n")
+        );
+        Ok(())
+    } else if args.subcommand_matches(COMMAND_LINT_ENABLED).is_some() {
+        let lints = get_lint_configuration(config)?;
+        println!(
+            "{}",
+            lints
+                .into_iter()
                 .map(pb_commit_message_lints::lints::Lints::name)
                 .join("\n")
         );
