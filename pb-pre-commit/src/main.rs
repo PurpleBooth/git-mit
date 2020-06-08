@@ -22,23 +22,20 @@ fn display_err_and_exit<T>(error: &PbPreCommitError) -> T {
 }
 
 fn main() {
+    run().unwrap_or_else(|err| display_err_and_exit(&err))
+}
+
+fn run() -> Result<(), PbPreCommitError> {
     App::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .get_matches();
 
-    let current_dir = env::current_dir()
-        .map_err(|err| PbPreCommitError::new_io("<current_dir>".into(), &err))
-        .unwrap_or_else(|err| display_err_and_exit(&err));
-
-    let mut git_config = Git2::try_from(current_dir)
-        .map_err(PbPreCommitError::from)
-        .unwrap_or_else(|err| display_err_and_exit(&err));
-
-    let co_author_configuration = get_coauthor_configuration(&mut git_config)
-        .map_err(PbPreCommitError::from)
-        .unwrap_or_else(|err| display_err_and_exit(&err));
+    let current_dir =
+        env::current_dir().map_err(|err| PbPreCommitError::new_io("<current_dir>".into(), &err))?;
+    let mut git_config = Git2::try_from(current_dir)?;
+    let co_author_configuration = get_coauthor_configuration(&mut git_config)?;
 
     if co_author_configuration.is_none() {
         eprintln!(
@@ -50,6 +47,8 @@ fn main() {
 
         process::exit(ExitCode::StaleAuthor as i32);
     }
+
+    Ok(())
 }
 
 #[derive(Debug)]

@@ -25,38 +25,34 @@ fn display_err_and_exit<T>(error: &PbCommitMessageError) -> T {
 }
 
 fn main() {
+    run().unwrap_or_else(|err| display_err_and_exit(&err))
+}
+
+fn run() -> Result<(), PbCommitMessageError> {
     let matches = app().get_matches();
 
     let commit_file_path = matches
         .value_of(COMMIT_FILE_PATH_NAME)
         .map(PathBuf::from)
-        .expect("Expected file path name");
+        .ok_or_else(|| PbCommitMessageError::CommitPathMissing)?;
 
-    let commit_message = CommitMessage::try_from(commit_file_path)
-        .map_err(PbCommitMessageError::from)
-        .unwrap_or_else(|err| display_err_and_exit(&err));
+    let commit_message = CommitMessage::try_from(commit_file_path)?;
 
-    let current_dir = env::current_dir()
-        .map_err(|err| PbCommitMessageError::new_io("$PWD".into(), &err))
-        .unwrap_or_else(|err| display_err_and_exit(&err));
+    let current_dir =
+        env::current_dir().map_err(|err| PbCommitMessageError::new_io("$PWD".into(), &err))?;
 
-    let git_config = Git2::try_from(current_dir)
-        .map_err(PbCommitMessageError::from)
-        .unwrap_or_else(|err| display_err_and_exit(&err));
+    let git_config = Git2::try_from(current_dir)?;
 
     let output = format_lint_problems(
         &commit_message,
-        lint(
-            &commit_message,
-            get_lint_configuration(&git_config)
-                .map_err(PbCommitMessageError::from)
-                .unwrap_or_else(|err| display_err_and_exit(&err)),
-        ),
+        lint(&commit_message, get_lint_configuration(&git_config)?),
     );
 
     if let Some((message, exit_code)) = output {
         display_lint_err_and_exit(&message, exit_code)
     }
+
+    Ok(())
 }
 
 fn app() -> App<'static, 'static> {
@@ -108,6 +104,7 @@ fn display_lint_err_and_exit(commit_message: &str, exit_code: LintCode) {
 
 #[derive(Debug)]
 enum PbCommitMessageError {
+    CommitPathMissing,
     PbCommitMessageLints(PbCommitMessageLintsError),
     Io(String, String),
 }
@@ -127,6 +124,7 @@ impl Display for PbCommitMessageError {
                 "Failed to read git config from `{}`:\n{}",
                 file_source, error
             ),
+            PbCommitMessageError::CommitPathMissing => write!(f, "Expected file path name",),
         }
     }
 }

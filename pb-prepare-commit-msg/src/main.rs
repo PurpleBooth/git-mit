@@ -2,6 +2,7 @@ use std::{env, fs::File, io::Write, process};
 
 use clap::{crate_authors, crate_version, App, Arg};
 
+use crate::PbPrepareCommitMessageError::MissingCommitFilePath;
 use pb_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
     errors::PbCommitMessageLintsError,
@@ -21,28 +22,26 @@ fn display_err_and_exit<T>(error: &PbPrepareCommitMessageError) -> T {
 }
 
 fn main() {
+    run().unwrap_or_else(|err| display_err_and_exit(&err))
+}
+
+fn run() -> Result<(), PbPrepareCommitMessageError> {
     let matches = app().get_matches();
 
     let commit_message_path = matches
         .value_of("commit-message-path")
         .map(PathBuf::from)
-        .expect("Expected commit file path");
+        .ok_or_else(|| MissingCommitFilePath)?;
     let current_dir = env::current_dir()
-        .map_err(|err| PbPrepareCommitMessageError::new_io("$PWD".into(), &err))
-        .unwrap_or_else(|err| display_err_and_exit(&err));
+        .map_err(|err| PbPrepareCommitMessageError::new_io("$PWD".into(), &err))?;
 
-    let mut git_config = Git2::try_from(current_dir)
-        .map_err(PbPrepareCommitMessageError::from)
-        .unwrap_or_else(|err| display_err_and_exit(&err));
+    let mut git_config = Git2::try_from(current_dir)?;
 
-    if let Some(authors) = get_coauthor_configuration(&mut git_config)
-        .map_err(PbPrepareCommitMessageError::from)
-        .unwrap_or_else(|err| display_err_and_exit(&err))
-    {
-        append_coauthors_to_commit_message(commit_message_path, &authors)
-            .map_err(PbPrepareCommitMessageError::from)
-            .unwrap_or_else(|err| display_err_and_exit(&err))
+    if let Some(authors) = get_coauthor_configuration(&mut git_config)? {
+        append_coauthors_to_commit_message(commit_message_path, &authors)?
     }
+
+    Ok(())
 }
 
 fn app() -> App<'static, 'static> {
@@ -101,12 +100,16 @@ fn append_coauthors_to_commit_message(
 enum PbPrepareCommitMessageError {
     PbCommitMessageLintsError(PbCommitMessageLintsError),
     Io(String, String),
+    MissingCommitFilePath,
 }
 
 impl Display for PbPrepareCommitMessageError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             PbPrepareCommitMessageError::PbCommitMessageLintsError(error) => write!(f, "{}", error),
+            PbPrepareCommitMessageError::MissingCommitFilePath => {
+                write!(f, "Expected commit file path")
+            }
             PbPrepareCommitMessageError::Io(file_source, error) => write!(
                 f,
                 "Failed to read author config from `{}`:\n{}",
