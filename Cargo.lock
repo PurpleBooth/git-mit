@@ -132,7 +132,7 @@ dependencies = [
 
 [[package]]
 name = "git-authors"
-version = "2.113.0"
+version = "2.114.0"
 dependencies = [
  "clap",
  "git2",
@@ -327,7 +327,7 @@ dependencies = [
 
 [[package]]
 name = "pb-commit-message-lints"
-version = "2.113.0"
+version = "2.114.0"
 dependencies = [
  "enum-iterator",
  "git2",
@@ -344,7 +344,7 @@ dependencies = [
 
 [[package]]
 name = "pb-commit-msg"
-version = "2.113.0"
+version = "2.114.0"
 dependencies = [
  "clap",
  "git2",
@@ -357,7 +357,7 @@ dependencies = [
 
 [[package]]
 name = "pb-git-hooks"
-version = "2.113.0"
+version = "2.114.0"
 dependencies = [
  "clap",
  "enum-iterator",
@@ -371,7 +371,7 @@ dependencies = [
 
 [[package]]
 name = "pb-hook-test-helper"
-version = "2.113.0"
+version = "2.114.0"
 dependencies = [
  "git2",
  "pretty_assertions",
@@ -380,7 +380,7 @@ dependencies = [
 
 [[package]]
 name = "pb-pre-commit"
-version = "2.113.0"
+version = "2.114.0"
 dependencies = [
  "clap",
  "git2",
@@ -393,7 +393,7 @@ dependencies = [
 
 [[package]]
 name = "pb-prepare-commit-msg"
-version = "2.113.0"
+version = "2.114.0"
 dependencies = [
  "clap",
  "git2",
