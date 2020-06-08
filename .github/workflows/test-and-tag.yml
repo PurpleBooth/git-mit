@@ -237,12 +237,11 @@ jobs:
       - shell: bash
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         run: |
-          git add .
-          git stash
+          git add . && git stash || true
           git rebase origin/master
           git checkout master
           git merge --ff-only -
-          git stash pop
+          git stash pop || true
       - shell: bash
         run: |
           git commit -am "Release $(cat ./version/version)"
