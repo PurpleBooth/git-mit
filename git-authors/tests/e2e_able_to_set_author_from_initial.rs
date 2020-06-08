@@ -1,3 +1,5 @@
+use git2::{Config, Repository};
+use indoc::indoc;
 use std::{
     error::Error,
     io::Write,
@@ -6,8 +8,6 @@ use std::{
     str::FromStr,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-
-use git2::{Config, Repository};
 use tempfile::NamedTempFile;
 
 use pb_hook_test_helper::assert_output;
@@ -16,14 +16,17 @@ use pb_hook_test_helper::assert_output;
 fn no_authors_fail() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "git-authors", vec![]);
-    let stderr = "error: The following required arguments were not provided:
-    <initials>...
+    let stderr = indoc!(
+        "
+        error: The following required arguments were not provided:
+            <initials>...
 
-USAGE:
-    git-authors <initials>... --config <file> --timeout <timeout>
+        USAGE:
+            git-authors <initials>... --config <file> --timeout <timeout>
 
-For more information try --help
-";
+        For more information try --help
+        "
+    );
 
     assert_output(&output, "", stderr, false)
 }
@@ -32,12 +35,14 @@ For more information try --help
 fn one_initial_sets_that_initial_as_author() {
     let mut author_config =
         tempfile::NamedTempFile::new().expect("Failed to create temporary file");
-    let config = r#"
----
-bt:
-    name: Billie Thompson
-    email: billie@example.com
-"#;
+    let config = indoc!(
+        "
+        ---
+        bt:
+            name: Billie Thompson
+            email: billie@example.com
+        "
+    );
     write_author_config(&mut author_config, config);
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(
@@ -101,15 +106,17 @@ bt:
 fn multiple_initials_become_co_authors() {
     let mut author_config =
         tempfile::NamedTempFile::new().expect("Failed to create temporary file");
-    let config = r#"
----
-bt:
-    name: Billie Thompson
-    email: billie@example.com
-se:
-    name: Someone Else
-    email: someone@example.com
-"#;
+    let config = indoc!(
+        "
+        ---
+        bt:
+            name: Billie Thompson
+            email: billie@example.com
+        se:
+            name: Someone Else
+            email: someone@example.com
+        "
+    );
     write_author_config(&mut author_config, config);
     let working_dir = pb_hook_test_helper::setup_working_dir();
 
@@ -183,12 +190,16 @@ se:
 
 #[test]
 fn the_file_can_be_generated_by_an_command_executed_in_the_users_shell() {
-    let config = r#"echo '
----
-bt:
-    name: Billie Thompson
-    email: billie@example.com
-'"#;
+    let config = indoc!(
+        "
+        echo '
+        ---
+        bt:
+            name: Billie Thompson
+            email: billie@example.com
+        '
+        "
+    );
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output =
         pb_hook_test_helper::run_hook(&working_dir, "git-authors", vec!["-e", config, "bt"]);

@@ -22,6 +22,7 @@ use pb_commit_message_lints::{
     external::vcs::Git2,
 };
 
+use crate::GitAuthorsError::NoAuthorInitialsProvided;
 use crate::{ExitCode::InitialNotMatchedToAuthor, GitAuthorsError::NoTimeoutSet};
 
 #[repr(i32)]
@@ -41,16 +42,16 @@ fn display_err_and_exit<T>(error: &GitAuthorsError) -> T {
 }
 
 fn main() {
-    let config_path =
-        config_file_path(env!("CARGO_PKG_NAME")).unwrap_or_else(|err| display_err_and_exit(&err));
-    let matches = app(&config_path).get_matches();
+    run().unwrap_or_else(|err| display_err_and_exit(&err))
+}
 
-    let users_config = get_users_config(&matches).unwrap_or_else(|err| display_err_and_exit(&err));
+fn run() -> Result<(), GitAuthorsError> {
+    let path = config_path(env!("CARGO_PKG_NAME"))?;
+    let matches = app(&path).get_matches();
+    let users_config = get_users_config(&matches)?;
+    let authors_initials = get_author_initials(&matches).ok_or_else(|| NoAuthorInitialsProvided)?;
 
-    let authors_initials = get_author_initials(&matches).expect("No author initials provided");
-    let all_authors = Authors::try_from(users_config.as_str())
-        .map_err(GitAuthorsError::from)
-        .unwrap_or_else(|err| display_err_and_exit(&err));
+    let all_authors = Authors::try_from(users_config.as_str())?;
     let selected_authors = all_authors.get(&authors_initials);
     let initials_without_authors = find_initials_missing(authors_initials, &selected_authors);
 
@@ -58,27 +59,19 @@ fn main() {
         exit_initial_not_matched_to_author(&initials_without_authors);
     }
 
-    let current_dir = env::current_dir()
-        .map_err(|error| GitAuthorsError::new_io("$PWD".into(), &error))
-        .unwrap_or_else(|err| display_err_and_exit(&err));
+    let current_dir =
+        env::current_dir().map_err(|error| GitAuthorsError::new_io("$PWD".into(), &error))?;
 
-    let mut git_config = Git2::try_from(current_dir)
-        .map_err(GitAuthorsError::from)
-        .unwrap_or_else(|err| display_err_and_exit(&err));
+    let mut git_config = Git2::try_from(current_dir)?;
 
     let authors = selected_authors.into_iter().flatten().collect::<Vec<_>>();
     set_authors(
         &mut git_config,
         &authors,
-        Duration::from_secs(
-            get_timeout(&matches).unwrap_or_else(|err| {
-                eprintln!("{}", err);
-                process::exit(ExitCode::GenericError as i32);
-            }) * 60,
-        ),
-    )
-    .map_err(GitAuthorsError::from)
-    .unwrap_or_else(|err| display_err_and_exit(&err));
+        Duration::from_secs(get_timeout(&matches)? * 60),
+    )?;
+
+    Ok(())
 }
 
 fn exit_initial_not_matched_to_author(initials_without_authors: &[&str]) {
@@ -189,11 +182,11 @@ fn get_timeout(matches: &ArgMatches) -> Result<u64, GitAuthorsError> {
         .and_then(|x| x.parse().map_err(GitAuthorsError::from))
 }
 
-fn config_file_path(cargo_package_name: &str) -> Result<String, GitAuthorsError> {
+fn config_path(cargo_package_name: &str) -> Result<String, GitAuthorsError> {
     xdg::BaseDirectories::with_prefix(cargo_package_name.to_string())
         .map_err(GitAuthorsError::from)
-        .and_then(|x| authors_config_file(&x))
-        .map(|x| x.to_string_lossy().into())
+        .and_then(|base| authors_config_file(&base))
+        .map(|path| path.to_string_lossy().into())
 }
 
 fn authors_config_file(config_directory: &BaseDirectories) -> Result<PathBuf, GitAuthorsError> {
@@ -204,6 +197,7 @@ fn authors_config_file(config_directory: &BaseDirectories) -> Result<PathBuf, Gi
 
 #[derive(Debug)]
 enum GitAuthorsError {
+    NoAuthorInitialsProvided,
     NoTimeoutSet,
     PbCommitMessageLints(PbCommitMessageLintsError),
     Io(String, String),
@@ -222,6 +216,7 @@ impl GitAuthorsError {
 impl Display for GitAuthorsError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
+            GitAuthorsError::NoAuthorInitialsProvided => write!(f, "No author initials provided"),
             GitAuthorsError::NoTimeoutSet => write!(f, "No timeout set"),
             GitAuthorsError::TimeoutNotNumber(error) => write!(
                 f,

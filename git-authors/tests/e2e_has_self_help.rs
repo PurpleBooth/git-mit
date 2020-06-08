@@ -1,44 +1,48 @@
-use xdg::BaseDirectories;
-
+use indoc::indoc;
 use pb_hook_test_helper::assert_output;
+use xdg::BaseDirectories;
 
 #[test]
 fn help_returned_by_long_flag() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "git-authors", vec!["--help"]);
     let default_config_file = config_file_path();
-    assert_output(
-        &output,
-        &format!(
-            r#"git-authors {}
-Billie Thompson <billie+git-author@billiecodes.com>
-Set author and Co-authored trailer.
 
-USAGE:
-    git-authors [OPTIONS] <initials>...
+    let expected_stdout = vec![
+        format!("git-authors {}", env!("CARGO_PKG_VERSION")),
+        indoc!(
+            "
+            Billie Thompson <billie+git-author@billiecodes.com>
+            Set author and Co-authored trailer.
 
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
+            USAGE:
+                git-authors [OPTIONS] <initials>...
 
-OPTIONS:
-    -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
-                               instead of the file, if both this and the file is present, this takes precedence [env:
-                               GIT_AUTHORS_EXEC=]
-    -c, --config <file>        Path to a file where authors initials, emails and names can be found [env:
-                               GIT_AUTHORS_CONFIG=]  [default: {}]
-    -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]  [default:
-                               60]
+            FLAGS:
+                -h, --help       Prints help information
+                -V, --version    Prints version information
 
-ARGS:
-    <initials>...    Initials of the authors to put in the commit
-"#,
-            env!("CARGO_PKG_VERSION"),
-            default_config_file
-        ),
-        "",
-        true,
-    )
+            OPTIONS:
+                -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
+                                           instead of the file, if both this and the file is present, this takes precedence [env:
+                                           GIT_AUTHORS_EXEC=]
+                -c, --config <file>        Path to a file where authors initials, emails and names can be found [env:")
+            .into(),
+
+    format!("                               GIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
+    indoc!("
+                -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]  [default:
+                                           60]
+
+            ARGS:
+                <initials>...    Initials of the authors to put in the commit
+            "
+        )
+            .into(),
+    ]
+        .join("\n");
+
+    assert_output(&output, &expected_stdout, "", true)
 }
 
 #[test]
@@ -46,38 +50,41 @@ fn help_returned_by_short_flag() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "git-authors", vec!["-h"]);
     let default_config_file = config_file_path();
-    assert_output(
-        &output,
-        &format!(
-            r#"git-authors {}
-Billie Thompson <billie+git-author@billiecodes.com>
-Set author and Co-authored trailer.
 
-USAGE:
-    git-authors [OPTIONS] <initials>...
+    let expected_stdout = vec![
+        format!("git-authors {}", env!("CARGO_PKG_VERSION")),
+        indoc!(
+            "
+            Billie Thompson <billie+git-author@billiecodes.com>
+            Set author and Co-authored trailer.
 
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
+            USAGE:
+                git-authors [OPTIONS] <initials>...
 
-OPTIONS:
-    -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
-                               instead of the file, if both this and the file is present, this takes precedence [env:
-                               GIT_AUTHORS_EXEC=]
-    -c, --config <file>        Path to a file where authors initials, emails and names can be found [env:
-                               GIT_AUTHORS_CONFIG=]  [default: {}]
-    -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]  [default:
-                               60]
+            FLAGS:
+                -h, --help       Prints help information
+                -V, --version    Prints version information
 
-ARGS:
-    <initials>...    Initials of the authors to put in the commit
-"#,
-            env!("CARGO_PKG_VERSION"),
-            default_config_file
-        ),
-        "",
-        true,
-    )
+            OPTIONS:
+                -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
+                                           instead of the file, if both this and the file is present, this takes precedence [env:
+                                           GIT_AUTHORS_EXEC=]
+                -c, --config <file>        Path to a file where authors initials, emails and names can be found [env:")
+            .into(),
+
+        format!("                               GIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
+        indoc!("
+                -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_AUTHORS_TIMEOUT=]  [default:
+                                           60]
+
+            ARGS:
+                <initials>...    Initials of the authors to put in the commit
+            "
+        )
+            .into(),
+    ]
+        .join("\n");
+    assert_output(&output, &expected_stdout, "", true)
 }
 
 fn config_file_path() -> String {
@@ -97,13 +104,16 @@ fn config_file_path() -> String {
 fn short_help_returned_when_a_wrong_message_commands_passed() {
     let working_dir = pb_hook_test_helper::setup_working_dir();
     let output = pb_hook_test_helper::run_hook(&working_dir, "git-authors", vec!["--banana"]);
-    let expected = r#"error: Found argument '--banana' which wasn't expected, or isn't valid in this context
+    let expected = indoc!(
+        "
+        error: Found argument '--banana' which wasn't expected, or isn't valid in this context
 
-USAGE:
-    git-authors [OPTIONS] <initials>...
+        USAGE:
+            git-authors [OPTIONS] <initials>...
 
-For more information try --help
-"#;
+        For more information try --help
+        "
+    );
 
     assert_output(&output, "", expected, false)
 }

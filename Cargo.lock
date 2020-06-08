@@ -110,6 +110,7 @@ version = "2.121.0"
 dependencies = [
  "clap",
  "git2",
+ "indoc",
  "pb-commit-message-lints",
  "pb-hook-test-helper",
  "tempfile",
