@@ -93,7 +93,8 @@ fn app() -> App<'static, 'static> {
                     App::new(COMMAND_LINT_DISABLE)
                         .about("Disable a lint")
                         .arg(lint_argument.clone()),
-                ),
+                )
+                .setting(AppSettings::SubcommandRequiredElseHelp),
         )
         .setting(AppSettings::SubcommandRequiredElseHelp)
 }

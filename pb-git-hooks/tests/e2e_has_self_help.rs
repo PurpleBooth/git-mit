@@ -28,3 +28,29 @@ SUBCOMMANDS:
 
     assert_output(&output, "", expected, false)
 }
+
+#[test]
+fn lint_alone_provides_help() {
+    let working_dir = pb_hook_test_helper::setup_working_dir();
+    let output = pb_hook_test_helper::run_hook(&working_dir, "pb-git-hooks", vec!["lint"]);
+    let expected = r#"pb-git-hooks-lint 
+Manage active lints
+
+USAGE:
+    pb-git-hooks lint <SUBCOMMAND>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    available    List the available lints
+    disable      Disable a lint
+    enable       Enable a lint
+    enabled      List the enabled lints
+    help         Prints this message or the help of the given subcommand(s)
+    status       Get status of a lint
+"#;
+
+    assert_output(&output, "", expected, false)
+}
