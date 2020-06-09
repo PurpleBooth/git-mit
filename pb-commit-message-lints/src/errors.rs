@@ -6,7 +6,7 @@ use std::{
     str::ParseBoolError,
 };
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Clone)]
 pub enum PbCommitMessageLintsError {
     ConfigIoGit2Error(String),
     ParseBoolError(std::str::ParseBoolError),

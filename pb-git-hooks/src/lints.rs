@@ -1,6 +1,7 @@
+use crate::PbGitHooksError::LintNameNotGiven;
 use crate::{
-    display_err_and_exit, PbGitHooksError, COMMAND_LINT_AVAILABLE, COMMAND_LINT_DISABLE,
-    COMMAND_LINT_ENABLE, COMMAND_LINT_ENABLED, COMMAND_LINT_STATUS, LINT_NAME_ARGUMENT,
+    PbGitHooksError, COMMAND_LINT_AVAILABLE, COMMAND_LINT_DISABLE, COMMAND_LINT_ENABLE,
+    COMMAND_LINT_ENABLED, COMMAND_LINT_STATUS, LINT_NAME_ARGUMENT,
 };
 use clap::ArgMatches;
 use pb_commit_message_lints::external::vcs::Vcs;
@@ -33,15 +34,7 @@ pub(crate) fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<()
         );
         Ok(())
     } else if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_STATUS) {
-        let lints = &subcommand_args
-            .values_of(LINT_NAME_ARGUMENT)
-            .expect("Lint name not given")
-            .map(|name| {
-                Lints::try_from(name)
-                    .map_err(PbGitHooksError::from)
-                    .unwrap_or_else(|err| display_err_and_exit(&err))
-            })
-            .collect::<Vec<_>>();
+        let lints = get_selected_lints(&subcommand_args)?;
 
         let user_status = get_lint_configuration(config)?;
         println!(
@@ -66,23 +59,30 @@ pub(crate) fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<()
     }
 }
 
+fn get_selected_lints(args: &ArgMatches) -> Result<Vec<Lints>, PbGitHooksError> {
+    let results = args
+        .values_of(LINT_NAME_ARGUMENT)
+        .ok_or_else(|| LintNameNotGiven)?
+        .map(Lints::try_from)
+        .collect::<Vec<_>>();
+
+    let errors = results
+        .iter()
+        .filter(|result| result.is_err())
+        .collect::<Vec<_>>();
+
+    if let Some(Err(first_error)) = errors.first() {
+        return Err(PbGitHooksError::from(first_error.clone()));
+    }
+
+    Ok(results.into_iter().flatten().collect())
+}
+
 pub fn set_lint_status(
     config: &mut dyn Vcs,
-    subcommand_args: &ArgMatches,
+    args: &ArgMatches,
     status: bool,
 ) -> Result<(), PbGitHooksError> {
-    pb_commit_message_lints::lints::set_lint_status(
-        &subcommand_args
-            .values_of(LINT_NAME_ARGUMENT)
-            .expect("Lint name not given")
-            .map(|name| {
-                Lints::try_from(name)
-                    .map_err(PbGitHooksError::from)
-                    .unwrap_or_else(|err| display_err_and_exit(&err))
-            })
-            .collect::<Vec<_>>(),
-        config,
-        status,
-    )
-    .map_err(PbGitHooksError::from)
+    pb_commit_message_lints::lints::set_lint_status(&get_selected_lints(&args)?, config, status)
+        .map_err(PbGitHooksError::from)
 }

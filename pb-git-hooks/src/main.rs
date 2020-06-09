@@ -126,6 +126,7 @@ mod lints;
 pub enum PbGitHooksError {
     ConfigIoGit2Error(String),
     UnrecognisedLintCommand,
+    LintNameNotGiven,
     PbCommitMessageLintsError(PbCommitMessageLintsError),
     Io(String, String),
 }
@@ -138,6 +139,7 @@ impl Display for PbGitHooksError {
                 "Unrecognised Lint command, only you may only enable or disable, or list \
                  available lints"
             ),
+            PbGitHooksError::LintNameNotGiven => write!(f, "Please specify a lint"),
             PbGitHooksError::PbCommitMessageLintsError(error) => write!(f, "{}", error),
             PbGitHooksError::Io(file_source, error) => write!(
                 f,
