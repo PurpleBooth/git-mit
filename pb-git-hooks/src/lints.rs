@@ -14,42 +14,26 @@ pub(crate) fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<()
     } else if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_DISABLE) {
         set_lint_status(config, &subcommand_args, false)
     } else if args.subcommand_matches(COMMAND_LINT_AVAILABLE).is_some() {
-        println!(
-            "{}",
-            Lints::iterator()
-                .map(pb_commit_message_lints::lints::Lints::name)
-                .collect::<Vec<_>>()
-                .join("\n")
-        );
+        let all_lints = Lints::iterator().collect::<Vec<_>>();
+        println!("{}", get_lint_names(&all_lints).join("\n"));
         Ok(())
     } else if args.subcommand_matches(COMMAND_LINT_ENABLED).is_some() {
         let lints = get_lint_configuration(config)?;
-        println!(
-            "{}",
-            lints
-                .into_iter()
-                .map(pb_commit_message_lints::lints::Lints::name)
-                .collect::<Vec<_>>()
-                .join("\n")
-        );
+        println!("{}", get_lint_names(&lints).join("\n"));
         Ok(())
     } else if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_STATUS) {
         let lints = get_selected_lints(&subcommand_args)?;
 
-        let user_status = get_lint_configuration(config)?;
+        let config = get_lint_configuration(config)?;
+        let status = get_config_status(&lints, &config);
+        let names = get_lint_names(&lints);
+
         println!(
             "{}",
-            lints
+            names
                 .iter()
-                .map(|lint| format!(
-                    "{}\t{}",
-                    lint.name(),
-                    if user_status.contains(lint) {
-                        "enabled"
-                    } else {
-                        "disabled"
-                    }
-                ))
+                .zip(status)
+                .map(|(name, status)| format!("{}\t{}", name, status))
                 .collect::<Vec<_>>()
                 .join("\n")
         );
@@ -57,6 +41,27 @@ pub(crate) fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<()
     } else {
         Err(PbGitHooksError::UnrecognisedLintCommand)
     }
+}
+
+fn get_config_status<'a>(lints: &'a [Lints], config: &'a [Lints]) -> Vec<&'a str> {
+    lints
+        .iter()
+        .map(|lint| {
+            if config.contains(lint) {
+                "enabled"
+            } else {
+                "disabled"
+            }
+        })
+        .collect::<Vec<_>>()
+}
+
+fn get_lint_names(lints: &[Lints]) -> Vec<String> {
+    lints
+        .iter()
+        .map(|lint| lint.name())
+        .map(String::from)
+        .collect()
 }
 
 fn get_selected_lints(args: &ArgMatches) -> Result<Vec<Lints>, PbGitHooksError> {
