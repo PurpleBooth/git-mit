@@ -59,6 +59,10 @@ jobs:
           key: ${{ runner.os }}-brew-${{ hashFiles('**/formula.rb.j2') }}
       - shell: bash
         run: |
+          brew update
+          brew upgrade
+      - shell: bash
+        run: |
           if [ ! -f "$FORMULA_LOCATION" ] || ! grep -q "$(cat ./hash/hash)" "$FORMULA_LOCATION" ; then
             cp formula/formula.rb "$FORMULA_LOCATION"
           fi
