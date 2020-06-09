@@ -322,8 +322,8 @@ mod test_commit_message {
 
                     Trailer: Content
 
-                    # On branch master
-                    # Your branch is ahead of 'origin/master' by 18 commits.
+                    # On branch main
+                    # Your branch is ahead of 'origin/main' by 18 commits.
                     #   (use \"git push\" to publish your local commits)
                     #
                     # Changes to be committed:
@@ -343,8 +343,8 @@ mod test_commit_message {
                     "
                     Message title
 
-                    # On branch master
-                    # Your branch is ahead of 'origin/master' by 18 commits.
+                    # On branch main
+                    # Your branch is ahead of 'origin/main' by 18 commits.
                     #   (use \"git push\" to publish your local commits)
                     #
                     # Changes to be committed:
@@ -373,8 +373,8 @@ mod test_commit_message {
 
                     Trailer: Content
 
-                    % On branch master
-                    % Your branch is ahead of 'origin/master' by 18 commits.
+                    % On branch main
+                    % Your branch is ahead of 'origin/main' by 18 commits.
                     %   (use \"git push\" to publish your local commits)
                     %
                     % Changes to be committed:
@@ -393,8 +393,8 @@ mod test_commit_message {
                     "
                     Message title
 
-                    % On branch master
-                    % Your branch is ahead of 'origin/master' by 18 commits.
+                    % On branch main
+                    % Your branch is ahead of 'origin/main' by 18 commits.
                     %   (use \"git push\" to publish your local commits)
                     %
                     % Changes to be committed:
@@ -425,8 +425,8 @@ mod test_commit_message {
                     # Template message line 1
                     # Template message line 2
 
-                    # On branch master
-                    # Your branch is ahead of 'origin/master' by 18 commits.
+                    # On branch main
+                    # Your branch is ahead of 'origin/main' by 18 commits.
                     #   (use \"git push\" to publish your local commits)
                     #
                     # Changes to be committed:
@@ -448,8 +448,8 @@ mod test_commit_message {
                     # Template message line 1
                     # Template message line 2
 
-                    # On branch master
-                    # Your branch is ahead of 'origin/master' by 18 commits.
+                    # On branch main
+                    # Your branch is ahead of 'origin/main' by 18 commits.
                     #   (use \"git push\" to publish your local commits)
                     #
                     # Changes to be committed:

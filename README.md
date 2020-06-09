@@ -116,7 +116,7 @@ se:
 ### More examples
 
 You can see more examples in the [usage
-directory](https://github.com/PurpleBooth/pb-git-hooks/tree/master/usage)
+directory](https://github.com/PurpleBooth/pb-git-hooks/tree/main/usage)
 
 ### Environment Variables
 

@@ -162,7 +162,7 @@ jobs:
           # This part is also where you can pass other options, for example:
           prettier_options: --check **/*.{yml,yaml}
   merge-and-push:
-    if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' || ( github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, 'Release v') )
+    if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' || ( github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'Release v') )
     needs:
       - version
       - mdtest
@@ -238,8 +238,8 @@ jobs:
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         run: |
           git add . && git stash || true
-          git rebase origin/master
-          git checkout master
+          git rebase origin/main
+          git checkout main
           git merge --ff-only -
           git stash pop || true
       - shell: bash
