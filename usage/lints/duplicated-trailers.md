@@ -41,16 +41,16 @@ rm foo
 git config --local --add --bool commit.gpgsign false
 
 echo "---
-bt:
-    name: Billie Thompson
-    email: billie@example.com
-    signingkey: $KEY
-se:
-    name: Someone Else
-    email: someone@example.com
 ae:
-    name: Anyone Else
-    email: anyone@example.com" > git-authors.yml
+  name: Anyone Else
+  email: anyone@example.com
+bt:
+  name: Billie Thompson
+  email: billie@example.com
+  signingkey: $KEY
+se:
+  name: Someone Else
+  email: someone@example.com" > git-authors.yml
 
 git-authors -c git-authors.yml ae se
 echo "git-authors.yml" > .gitignore

@@ -101,16 +101,16 @@ save it into a file
 
 ``` yaml
 ---
-bt:
-    name: Billie Thompson
-    email: billie@example.com
-    signingkey: 0A46826A
-se:
-    name: Someone Else
-    email: someone@example.com
 ae:
-    name: Anyone Else
-    email: anyone@example.com
+  name: Anyone Else
+  email: anyone@example.com
+bt:
+  name: Billie Thompson
+  email: billie@example.com
+  signingkey: 0A46826A
+se:
+  name: Someone Else
+  email: someone@example.com
 ```
 
 ### More examples
