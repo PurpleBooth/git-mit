@@ -46,7 +46,7 @@ jobs:
           repository: PurpleBooth/homebrew-repo
           token: ${{ secrets.COMMITTER_TOKEN }}
           path: homebrew-repo
-          ref: 'main'
+          ref: 'master'
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.COMMITTER_TOKEN }}
