@@ -29,7 +29,7 @@ For example:
 
 Doesn't tell me anything about why you're doing that
 
-> Add a lint for Pivotal Tracker. Pivotal Tracker is a popular issue 
+> Add a lint for Pivotal Tracker. Pivotal Tracker is a popular issue
 > tracking system. We should support checking to see if the ID is there
 > as this something I miss every day.
 
@@ -48,12 +48,14 @@ the action you have taken to solve it.
 
 The aim of this repository is:
 
- - We aim to be easy to use
- - We aim to be include lints that developers in large organisations need, but not have hundreds of them
- - We aim to encourage and advocate for pair programming
- - To provide an alternative to git duet
+  - We aim to be easy to use
+  - We aim to be include lints that developers in large organisations
+    need, but not have hundreds of them
+  - We aim to encourage and advocate for pair programming
+  - To provide an alternative to git duet
 
-Git duet is fantastic, but hard to use, and hard to add additional lints to.
+Git duet is fantastic, but hard to use, and hard to add additional lints
+to.
 
 ### Does it follow the contributor covenant
 
