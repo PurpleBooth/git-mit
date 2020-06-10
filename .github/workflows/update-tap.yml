@@ -46,7 +46,7 @@ jobs:
           repository: PurpleBooth/homebrew-repo
           token: ${{ secrets.COMMITTER_TOKEN }}
           path: homebrew-repo
-          ref: 'main'
+          ref: "main"
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.COMMITTER_TOKEN }}
@@ -86,19 +86,15 @@ jobs:
           if ! git diff-index --quiet HEAD -- ; then
             git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION"
             git commit -m "Update $REPOSITORY_NAME to $GIT_TAG"
-            git push -f origin "$REPOSITORY_NAME-$GIT_TAG"
+
+            brew install github/gh/gh
+            gh pr create --label releases --base main --fill
           fi
         env:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           GIT_TAG: ${{ github.ref }}
           FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
-      - name: pull-request
-        uses: repo-sync/pull-request@v2
-        with:
-          github_token: '${{ secrets.COMMITTER_TOKEN }}'
-          pr_label: "releases"
-          destination_branch: "main"
-          source_branch: "${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}-${{ github.ref }}"
+          GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
       - shell: bash
         run: |
           brew test-bot \
@@ -141,15 +137,12 @@ jobs:
       - shell: bash
         run: |
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
-          git push -f origin "$REPOSITORY_NAME-$GIT_TAG"
+          git checkout -b "$REPOSITORY_NAME-$GIT_TAG-bottle"
+          git push -f origin "$REPOSITORY_NAME-$GIT_TAG-bottle"
+          brew install github/gh/gh
+          gh pr create --label bottles --base main --fill
         env:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           GIT_TAG: ${{ github.ref }}
           FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
-      - name: pull-request
-        uses: repo-sync/pull-request@v2
-        with:
-          github_token: '${{ secrets.COMMITTER_TOKEN }}'
-          pr_label: "bottles"
-          destination_branch: "main"
-          source_branch: "${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}-${{ github.ref }}"
+          GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
