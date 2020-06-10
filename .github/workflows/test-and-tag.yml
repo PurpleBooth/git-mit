@@ -232,20 +232,16 @@ jobs:
         run: |
           git config user.name "GitHub"
           git config user.email "noreply@github.com"
-
-          git fetch
-      - shell: bash
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
-        run: |
-          git add . && git stash || true
-          git rebase origin/main
-          git checkout main
-          git merge --ff-only -
-          git stash pop || true
-      - shell: bash
-        run: |
           git commit -am "Release $(cat ./version/version)"
           git tag -a -m "Release $(cat ./version/version)" "$(cat ./version/version)"
-          git pull --rebase
-          git push
           git push --tags
+          
+          git checkout -b "release-$(cat ./version/version)"
+          git push -f origin "release-$(cat ./version/version)"
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: '${{ secrets.COMMITTER_TOKEN }}'
+          pr_label: "releases"
+          destination_branch: "main"
+          source_branch: "release-${{ steps.get_current_version.outputs.VERSION }}"
