@@ -46,7 +46,7 @@ jobs:
           repository: PurpleBooth/homebrew-repo
           token: ${{ secrets.COMMITTER_TOKEN }}
           path: homebrew-repo
-          ref: 'master'
+          ref: 'main'
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.COMMITTER_TOKEN }}
@@ -76,16 +76,29 @@ jobs:
       - shell: bash
         run: |
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
+          git checkout -b "$REPOSITORY_NAME-$GIT_TAG"
+        env:
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+          GIT_TAG: ${{ github.ref }}
+      - shell: bash
+        run: |
+          cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
           if ! git diff-index --quiet HEAD -- ; then
             git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION"
             git commit -m "Update $REPOSITORY_NAME to $GIT_TAG"
-            git pull --rebase
-            git push
+            git push -f origin "$REPOSITORY_NAME-$GIT_TAG"
           fi
         env:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           GIT_TAG: ${{ github.ref }}
           FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: '${{ secrets.COMMITTER_TOKEN }}'
+          pr_label: "releases"
+          destination_branch: "main"
+          source_branch: "${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}-${{ github.ref }}"
       - shell: bash
         run: |
           brew test-bot \
@@ -127,9 +140,16 @@ jobs:
           BINTRAY_ORG: purplebooth
       - shell: bash
         run: |
-          cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo" && \
-          git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION" && \
-          git pull --rebase && \
-          git push
+          cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
+          git push -f origin "$REPOSITORY_NAME-$GIT_TAG"
         env:
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+          GIT_TAG: ${{ github.ref }}
           FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: '${{ secrets.COMMITTER_TOKEN }}'
+          pr_label: "bottles"
+          destination_branch: "main"
+          source_branch: "${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}-${{ github.ref }}"
