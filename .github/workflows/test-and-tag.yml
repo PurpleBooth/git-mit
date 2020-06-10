@@ -244,4 +244,4 @@ jobs:
           github_token: '${{ secrets.COMMITTER_TOKEN }}'
           pr_label: "releases"
           destination_branch: "main"
-          source_branch: "release-${{ steps.get_current_version.outputs.VERSION }}"
+          source_branch: "release-${{ steps.get_current_version.outputs.V_VERSION }}"
