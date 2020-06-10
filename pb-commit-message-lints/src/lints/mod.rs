@@ -14,6 +14,7 @@ use crate::{
 pub mod lib;
 
 use lib::CommitMessage;
+use std::convert::TryFrom;
 
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
@@ -49,6 +50,20 @@ impl Lints {
             Lints::PivotalTrackerIdMissing => lint_missing_pivotal_tracker_id(commit_message),
             Lints::JiraIssueKeyMissing => lint_missing_jira_issue_key(commit_message),
         }
+    }
+
+    #[must_use]
+    pub fn from_names(names: Vec<&str>) -> Vec<Result<Lints, PbCommitMessageLintsError>> {
+        names.into_iter().map(Lints::try_from).collect()
+    }
+
+    #[must_use]
+    pub fn convert_to_names(lints: &[Lints]) -> Vec<String> {
+        lints
+            .iter()
+            .map(|lint| lint.name())
+            .map(String::from)
+            .collect()
     }
 }
 
@@ -258,6 +273,75 @@ mod tests_get_lint_configuration {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
+        )
+    }
+}
+
+#[cfg(test)]
+mod tests_from_names {
+    use pretty_assertions::assert_eq;
+
+    use crate::errors::PbCommitMessageLintsError;
+    use crate::lints::Lints;
+
+    #[test]
+    fn test_it_converts_a_single_name() {
+        let actual = Lints::from_names(vec!["pivotal-tracker-id-missing"]);
+        let expected = vec![Ok(Lints::PivotalTrackerIdMissing)];
+
+        assert_eq!(expected, actual)
+    }
+
+    #[test]
+    fn test_it_converts_multiple_names() {
+        let actual =
+            Lints::from_names(vec!["pivotal-tracker-id-missing", "jira-issue-key-missing"]);
+        let expected = vec![
+            Ok(Lints::PivotalTrackerIdMissing),
+            Ok(Lints::JiraIssueKeyMissing),
+        ];
+
+        assert_eq!(expected, actual)
+    }
+
+    #[test]
+    fn test_it_returns_an_error_on_a_fake_name() {
+        let actual = Lints::from_names(vec![
+            "pivotal-tracker-id-missing",
+            "!@\u{a3}456y I do not exist",
+        ]);
+        let expected = vec![
+            Ok(Lints::PivotalTrackerIdMissing),
+            Err(PbCommitMessageLintsError::LintNotFoundError(
+                "!@\u{a3}456y I do not exist".into(),
+            )),
+        ];
+
+        assert_eq!(expected, actual)
+    }
+}
+
+#[cfg(test)]
+mod tests_into_names {
+    use pretty_assertions::assert_eq;
+
+    use crate::lints::Lints;
+
+    #[test]
+    fn one_name() {
+        let input = vec![Lints::JiraIssueKeyMissing];
+        assert_eq!(
+            vec!["jira-issue-key-missing"],
+            Lints::convert_to_names(&input)
+        )
+    }
+
+    #[test]
+    fn multiple_names() {
+        let input = vec![Lints::PivotalTrackerIdMissing, Lints::JiraIssueKeyMissing];
+        assert_eq!(
+            vec!["pivotal-tracker-id-missing", "jira-issue-key-missing"],
+            Lints::convert_to_names(&input)
         )
     }
 }
