@@ -39,8 +39,8 @@ jobs:
     steps:
       - shell: bash
         run: |
-          mkdir -p /tmp/$HOME/.config/gh/
-          cat > /tmp/$HOME/.config/gh/config.yml <<EOF
+          mkdir -p $HOME/.config/gh/
+          cat > $HOME/.config/gh/config.yml <<EOF
           github.com:
            - user: "$GH_USERNAME"
              oauth_token: "$GITHUB_TOKEN"
