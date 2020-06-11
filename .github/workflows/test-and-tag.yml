@@ -73,17 +73,6 @@ jobs:
             ~/.cargo/bin
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - shell: bash
-        run: |
-            mkdir -p /tmp/$HOME/.config/gh/
-            cat > /tmp/$HOME/.config/gh/config.yml <<EOF
-            github.com:
-             - user: "$GH_USERNAME"
-               oauth_token: "$GITHUB_TOKEN"
-            EOF
-        env:
-          GH_USERNAME: ${{ github.repository_owner }}
-          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
