@@ -88,13 +88,13 @@ jobs:
         run: |
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
           git checkout -b "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
-
+          
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
           if ! git diff-index --quiet HEAD -- ; then
             git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION"
             git commit -m "Update $REPOSITORY_NAME to $(echo $GIT_TAG | sed 's/^refs\/tags\///')"
-            git push -f origin "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
             brew install github/gh/gh
+            git push -f origin "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
             gh pr create --label releases --base main --fill
           fi
         env:
@@ -145,6 +145,7 @@ jobs:
         run: |
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
           git checkout -b "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')-bottle"
+          git fetch && git rebase origin/main
           git push -f origin "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
           brew install github/gh/gh
           gh pr create --label bottles --base main --fill
