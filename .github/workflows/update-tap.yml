@@ -37,6 +37,17 @@ jobs:
       - generate-formula
     runs-on: macos-latest
     steps:
+      - shell: bash
+        run: |
+          mkdir -p /tmp/$HOME/.config/gh/
+          cat > /tmp/$HOME/.config/gh/config.yml <<EOF
+          github.com:
+           - user: "$GH_USERNAME"
+             oauth_token: "$GITHUB_TOKEN"
+          EOF
+        env:
+          GH_USERNAME: ${{ github.repository_owner }}
+          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       - id: get_repository_name
         run: echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
         shell: bash
