@@ -10,7 +10,7 @@ use git2::{Config, Repository};
 
 use crate::lints::manage_lints;
 use pb_commit_message_lints::{
-    author::entities::Authors, errors::PbCommitMessageLintsError, external::vcs::Git2, lints::Lints,
+    author::entities::Authors, errors::PbCommitMessageLintsError, external::vcs::Git2, lints::Lint,
 };
 use std::convert::TryInto;
 
@@ -71,8 +71,8 @@ fn app() -> App<'static, 'static> {
         .multiple(true)
         .min_values(1)
         .possible_values(
-            Lints::iterator()
-                .map(pb_commit_message_lints::lints::Lints::name)
+            Lint::iterator()
+                .map(pb_commit_message_lints::lints::Lint::name)
                 .collect::<Vec<_>>()
                 .as_slice(),
         );

@@ -7,18 +7,19 @@ use crate::{
         duplicate_trailers::lint_duplicated_trailers,
         missing_jira_issue_key::lint_missing_jira_issue_key,
         missing_pivotal_tracker_id::lint_missing_pivotal_tracker_id,
-        Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
+        Lint::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
     },
 };
 
 pub mod lib;
 
+use crate::lints::collection::Lints;
 use lib::CommitMessage;
-use std::convert::TryFrom;
+use std::convert::TryInto;
 
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
-pub enum Lints {
+pub enum Lint {
     DuplicatedTrailers,
     PivotalTrackerIdMissing,
     JiraIssueKeyMissing,
@@ -28,9 +29,11 @@ const CONFIG_DUPLICATED_TRAILERS: &str = "duplicated-trailers";
 const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pivotal-tracker-id-missing";
 const CONFIG_JIRA_ISSUE_KEY_MISSING: &str = "jira-issue-key-missing";
 
-impl Lints {
-    pub fn iterator() -> impl Iterator<Item = Lints> {
-        static LINTS: [Lints; 3] = [
+const CONFIG_KEY_PREFIX: &str = "pb.lint";
+
+impl Lint {
+    pub fn iterator() -> impl Iterator<Item = Lint> {
+        static LINTS: [Lint; 3] = [
             DuplicatedTrailers,
             PivotalTrackerIdMissing,
             JiraIssueKeyMissing,
@@ -40,63 +43,56 @@ impl Lints {
 
     #[must_use]
     pub fn config_key(self) -> String {
-        format!("pb.lint.{}", self)
+        format!("{}.{}", CONFIG_KEY_PREFIX, self)
     }
 
     #[must_use]
     pub fn lint(self, commit_message: &CommitMessage) -> Option<LintProblem> {
         match self {
-            Lints::DuplicatedTrailers => lint_duplicated_trailers(commit_message),
-            Lints::PivotalTrackerIdMissing => lint_missing_pivotal_tracker_id(commit_message),
-            Lints::JiraIssueKeyMissing => lint_missing_jira_issue_key(commit_message),
+            Lint::DuplicatedTrailers => lint_duplicated_trailers(commit_message),
+            Lint::PivotalTrackerIdMissing => lint_missing_pivotal_tracker_id(commit_message),
+            Lint::JiraIssueKeyMissing => lint_missing_jira_issue_key(commit_message),
         }
     }
 
-    #[must_use]
-    pub fn from_names(names: Vec<&str>) -> Vec<Result<Lints, PbCommitMessageLintsError>> {
-        names.into_iter().map(Lints::try_from).collect()
-    }
-
-    #[must_use]
-    pub fn convert_to_names(lints: &[Lints]) -> Vec<String> {
-        lints
-            .iter()
-            .map(|lint| lint.name())
-            .map(String::from)
-            .collect()
+    /// Try and convert a list of names into lints
+    ///
+    /// # Errors
+    /// If the lint does not exist
+    pub fn from_names(names: Vec<&str>) -> Result<Vec<Lint>, PbCommitMessageLintsError> {
+        let lints: Lints = names.try_into()?;
+        Ok(lints.into_iter().collect())
     }
 }
 
-impl std::fmt::Display for Lints {
+impl std::fmt::Display for Lint {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.name())
     }
 }
 
-impl Into<&str> for Lints {
+impl Into<&str> for Lint {
     fn into(self) -> &'static str {
         self.name()
     }
 }
 
-impl std::convert::TryFrom<&str> for Lints {
+impl std::convert::TryFrom<&str> for Lint {
     type Error = PbCommitMessageLintsError;
 
     fn try_from(from: &str) -> Result<Self, Self::Error> {
-        Lints::iterator()
-            .zip(Lints::iterator().map(|lint| format!("{}", lint)))
-            .filter_map(
-                |(lint, name): (Lints, String)| if name == from { Some(lint) } else { None },
-            )
-            .collect::<Vec<Lints>>()
+        Lint::iterator()
+            .zip(Lint::iterator().map(|lint| format!("{}", lint)))
+            .filter_map(|(lint, name): (Lint, String)| if name == from { Some(lint) } else { None })
+            .collect::<Vec<Lint>>()
             .first()
             .copied()
             .ok_or_else(|| PbCommitMessageLintsError::LintNotFoundError(from.into()))
     }
 }
 
-impl std::convert::From<Lints> for String {
-    fn from(from: Lints) -> Self {
+impl std::convert::From<Lint> for String {
+    fn from(from: Lint) -> Self {
         format!("{}", from)
     }
 }
@@ -106,22 +102,24 @@ impl std::convert::From<Lints> for String {
 /// # Errors
 ///
 /// If there's an error reading from the configuration source
-pub fn get_lint_configuration(config: &dyn Vcs) -> Result<Vec<Lints>, PbCommitMessageLintsError> {
-    Ok(vec![
-        get_config_or_default(config, Lints::DuplicatedTrailers, true)?,
-        get_config_or_default(config, Lints::PivotalTrackerIdMissing, false)?,
-        get_config_or_default(config, Lints::JiraIssueKeyMissing, false)?,
-    ]
-    .into_iter()
-    .flatten()
-    .collect())
+pub fn get_lint_configuration(config: &dyn Vcs) -> Result<Lints, PbCommitMessageLintsError> {
+    Ok(Lints::new(
+        vec![
+            get_config_or_default(config, Lint::DuplicatedTrailers, true)?,
+            get_config_or_default(config, Lint::PivotalTrackerIdMissing, false)?,
+            get_config_or_default(config, Lint::JiraIssueKeyMissing, false)?,
+        ]
+        .into_iter()
+        .flatten()
+        .collect(),
+    ))
 }
 
 fn get_config_or_default(
     config: &dyn Vcs,
-    lint: Lints,
+    lint: Lint,
     default: bool,
-) -> Result<Option<Lints>, PbCommitMessageLintsError> {
+) -> Result<Option<Lint>, PbCommitMessageLintsError> {
     Ok(config
         .get_bool(&lint.config_key())?
         .or(Some(default))
@@ -135,17 +133,17 @@ mod tests_lints {
 
     use pretty_assertions::assert_eq;
 
-    use crate::lints::{Lints, Lints::PivotalTrackerIdMissing};
+    use crate::lints::{Lint, Lint::PivotalTrackerIdMissing};
 
     #[test]
     fn it_is_convertible_to_string() {
-        let string: String = Lints::PivotalTrackerIdMissing.into();
+        let string: String = Lint::PivotalTrackerIdMissing.into();
         assert_eq!("pivotal-tracker-id-missing".to_string(), string)
     }
 
     #[test]
     fn it_can_be_created_from_string() {
-        let lint: Lints = "pivotal-tracker-id-missing".try_into().unwrap();
+        let lint: Lint = "pivotal-tracker-id-missing".try_into().unwrap();
         assert_eq!(PivotalTrackerIdMissing, lint)
     }
 
@@ -153,7 +151,7 @@ mod tests_lints {
     fn it_is_printable() {
         assert_eq!(
             "pivotal-tracker-id-missing",
-            &format!("{}", Lints::PivotalTrackerIdMissing)
+            &format!("{}", Lint::PivotalTrackerIdMissing)
         )
     }
 }
@@ -170,12 +168,13 @@ mod tests_get_lint_configuration {
 
     use pretty_assertions::assert_eq;
 
+    use crate::lints::collection::Lints;
     use crate::{
         errors::PbCommitMessageLintsError,
         external::vcs::InMemory,
         lints::{
-            get_lint_configuration, Lints,
-            Lints::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
+            get_lint_configuration,
+            Lint::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
         },
     };
 
@@ -185,7 +184,7 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected = Ok(vec![DuplicatedTrailers]);
+        let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
 
         assert_eq!(
             expected, actual,
@@ -201,7 +200,7 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected: Result<Vec<Lints>, PbCommitMessageLintsError> = Ok(vec![]);
+        let expected: Result<Lints, PbCommitMessageLintsError> = Ok(Lints::new(vec![]));
 
         assert_eq!(
             expected, actual,
@@ -217,7 +216,7 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected: Result<Vec<Lints>, PbCommitMessageLintsError> = Ok(vec![DuplicatedTrailers]);
+        let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
 
         assert_eq!(
             expected, actual,
@@ -233,8 +232,10 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected: Result<Vec<Lints>, PbCommitMessageLintsError> =
-            Ok(vec![DuplicatedTrailers, PivotalTrackerIdMissing]);
+        let expected = Ok(Lints::new(vec![
+            DuplicatedTrailers,
+            PivotalTrackerIdMissing,
+        ]));
 
         assert_eq!(
             expected, actual,
@@ -250,8 +251,7 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected: Result<Vec<Lints>, PbCommitMessageLintsError> =
-            Ok(vec![DuplicatedTrailers, JiraIssueKeyMissing]);
+        let expected = Ok(Lints::new(vec![DuplicatedTrailers, JiraIssueKeyMissing]));
 
         assert_eq!(
             expected, actual,
@@ -267,7 +267,7 @@ mod tests_get_lint_configuration {
         let config = InMemory::new(&mut strings);
 
         let actual = get_lint_configuration(&config);
-        let expected = Ok(vec![DuplicatedTrailers]);
+        let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
 
         assert_eq!(
             expected, actual,
@@ -278,83 +278,15 @@ mod tests_get_lint_configuration {
 }
 
 #[cfg(test)]
-mod tests_from_names {
-    use pretty_assertions::assert_eq;
-
-    use crate::errors::PbCommitMessageLintsError;
-    use crate::lints::Lints;
-
-    #[test]
-    fn test_it_converts_a_single_name() {
-        let actual = Lints::from_names(vec!["pivotal-tracker-id-missing"]);
-        let expected = vec![Ok(Lints::PivotalTrackerIdMissing)];
-
-        assert_eq!(expected, actual)
-    }
-
-    #[test]
-    fn test_it_converts_multiple_names() {
-        let actual =
-            Lints::from_names(vec!["pivotal-tracker-id-missing", "jira-issue-key-missing"]);
-        let expected = vec![
-            Ok(Lints::PivotalTrackerIdMissing),
-            Ok(Lints::JiraIssueKeyMissing),
-        ];
-
-        assert_eq!(expected, actual)
-    }
-
-    #[test]
-    fn test_it_returns_an_error_on_a_fake_name() {
-        let actual = Lints::from_names(vec![
-            "pivotal-tracker-id-missing",
-            "!@\u{a3}456y I do not exist",
-        ]);
-        let expected = vec![
-            Ok(Lints::PivotalTrackerIdMissing),
-            Err(PbCommitMessageLintsError::LintNotFoundError(
-                "!@\u{a3}456y I do not exist".into(),
-            )),
-        ];
-
-        assert_eq!(expected, actual)
-    }
-}
-
-#[cfg(test)]
-mod tests_into_names {
-    use pretty_assertions::assert_eq;
-
-    use crate::lints::Lints;
-
-    #[test]
-    fn one_name() {
-        let input = vec![Lints::JiraIssueKeyMissing];
-        assert_eq!(
-            vec!["jira-issue-key-missing"],
-            Lints::convert_to_names(&input)
-        )
-    }
-
-    #[test]
-    fn multiple_names() {
-        let input = vec![Lints::PivotalTrackerIdMissing, Lints::JiraIssueKeyMissing];
-        assert_eq!(
-            vec!["pivotal-tracker-id-missing", "jira-issue-key-missing"],
-            Lints::convert_to_names(&input)
-        )
-    }
-}
-
-#[cfg(test)]
 mod tests_can_enable_lints_via_a_command {
     use std::collections::BTreeMap;
 
     use pretty_assertions::assert_eq;
 
+    use crate::lints::collection::Lints;
     use crate::{
         external::vcs::InMemory,
-        lints::{set_lint_status, Lints::PivotalTrackerIdMissing},
+        lints::{set_lint_status, Lint::PivotalTrackerIdMissing},
     };
 
     #[test]
@@ -363,7 +295,7 @@ mod tests_can_enable_lints_via_a_command {
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
 
-        set_lint_status(&[PivotalTrackerIdMissing], &mut config, true).unwrap();
+        set_lint_status(Lints::new(vec![PivotalTrackerIdMissing]), &mut config, true).unwrap();
 
         let expected = "true".to_string();
         let actual = strings
@@ -379,7 +311,12 @@ mod tests_can_enable_lints_via_a_command {
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 
-        set_lint_status(&[PivotalTrackerIdMissing], &mut config, false).unwrap();
+        set_lint_status(
+            Lints::new(vec![PivotalTrackerIdMissing]),
+            &mut config,
+            false,
+        )
+        .unwrap();
 
         let expected = "false".to_string();
         let actual = strings
@@ -394,18 +331,19 @@ mod tests_can_enable_lints_via_a_command {
 ///
 /// Errors if writing to the VCS config fails
 pub fn set_lint_status(
-    lints: &[Lints],
+    lints: Lints,
     vcs: &mut dyn Vcs,
     status: bool,
 ) -> Result<(), PbCommitMessageLintsError> {
     lints
-        .iter()
-        .try_for_each(|lint| vcs.set_str(&lint.config_key(), &status.to_string()))?;
+        .config_keys()
+        .into_iter()
+        .try_for_each(|lint| vcs.set_str(&lint, &status.to_string()))?;
     Ok(())
 }
 
 #[must_use]
-pub fn lint(commit_message: &CommitMessage, lints: Vec<Lints>) -> Vec<LintProblem> {
+pub fn lint(commit_message: &CommitMessage, lints: Lints) -> Vec<LintProblem> {
     lints
         .into_iter()
         .flat_map(|lint| lint.lint(commit_message))
@@ -444,13 +382,141 @@ pub enum LintCode {
     JiraIssueKeyMissing,
 }
 
-impl Lints {
+impl Lint {
     #[must_use]
     pub fn name(self) -> &'static str {
         match self {
             DuplicatedTrailers => CONFIG_DUPLICATED_TRAILERS,
             PivotalTrackerIdMissing => CONFIG_PIVOTAL_TRACKER_ID_MISSING,
             JiraIssueKeyMissing => CONFIG_JIRA_ISSUE_KEY_MISSING,
+        }
+    }
+}
+
+pub mod collection {
+    use crate::lints::Lint;
+
+    use crate::errors::PbCommitMessageLintsError;
+    use std::convert::{TryFrom, TryInto};
+    use std::vec::IntoIter;
+
+    #[derive(Debug, Eq, PartialEq, Clone)]
+    pub struct Lints {
+        lints: Vec<Lint>,
+    }
+
+    impl Lints {
+        #[must_use]
+        pub fn new(lints: Vec<Lint>) -> Lints {
+            Lints { lints }
+        }
+
+        #[must_use]
+        pub fn names(self) -> Vec<&'static str> {
+            self.lints.iter().map(|lint| lint.name()).collect()
+        }
+
+        #[must_use]
+        pub fn config_keys(self) -> Vec<String> {
+            self.lints.iter().map(|lint| lint.config_key()).collect()
+        }
+    }
+
+    impl std::iter::IntoIterator for Lints {
+        type Item = Lint;
+        type IntoIter = IntoIter<Lint>;
+
+        fn into_iter(self) -> Self::IntoIter {
+            self.lints.into_iter()
+        }
+    }
+
+    impl TryInto<Lints> for Vec<&str> {
+        type Error = PbCommitMessageLintsError;
+
+        fn try_into(self) -> Result<Lints, Self::Error> {
+            self.into_iter()
+                .try_fold(
+                    vec![],
+                    |lints: Vec<Lint>, item_name| -> Result<Vec<Lint>, PbCommitMessageLintsError> {
+                        match Lint::try_from(item_name) {
+                            Err(err) => Err(err),
+                            Ok(item) => Ok(vec![lints, vec![item]].concat()),
+                        }
+                    },
+                )
+                .map(Lints::new)
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use crate::lints::collection::Lints;
+
+        use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
+        use pretty_assertions::assert_eq;
+
+        use crate::errors::PbCommitMessageLintsError;
+        use std::convert::TryInto;
+
+        #[test]
+        fn it_returns_an_error_if_one_of_the_names_is_wrong() {
+            let lints = vec![
+                "pivotal-tracker-id-missing",
+                "broken",
+                "jira-issue-key-missing",
+            ];
+            let actual: Result<Lints, PbCommitMessageLintsError> = lints.try_into();
+
+            assert_eq!(true, actual.is_err());
+        }
+
+        #[test]
+        fn it_can_construct_itself_from_names() {
+            let lints = vec!["pivotal-tracker-id-missing", "jira-issue-key-missing"];
+            let expected = Ok(Lints::new(vec![
+                PivotalTrackerIdMissing,
+                JiraIssueKeyMissing,
+            ]));
+            let actual: Result<Lints, PbCommitMessageLintsError> = lints.try_into();
+
+            assert_eq!(expected, actual);
+        }
+
+        #[test]
+        fn it_can_give_me_an_into_iterator() {
+            let lints = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
+            let input = Lints::new(lints);
+
+            let expected = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
+            let actual = input.into_iter().collect::<Vec<_>>();
+
+            assert_eq!(expected, actual);
+        }
+
+        #[test]
+        fn it_can_give_me_the_names() {
+            let lints = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
+            let input = Lints::new(lints);
+
+            let expected = vec![PivotalTrackerIdMissing.name(), JiraIssueKeyMissing.name()];
+            let actual = input.names();
+
+            assert_eq!(expected, actual);
+        }
+
+        #[test]
+        fn it_can_give_me_the_config_keys() {
+            let lints = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
+            let input = Lints::new(lints);
+
+            let expected = vec![
+                PivotalTrackerIdMissing.config_key(),
+                JiraIssueKeyMissing.config_key(),
+            ];
+            let actual = input.config_keys();
+
+            assert_eq!(expected, actual);
         }
     }
 }

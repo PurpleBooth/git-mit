@@ -8,8 +8,10 @@ use crate::PbCommitMessageError::PbCommitMessageLints;
 use pb_commit_message_lints::{
     errors::PbCommitMessageLintsError,
     external::vcs::Git2,
-    lints::{get_lint_configuration, lib::CommitMessage, lint, LintCode, LintProblem},
+    lints::{lib::CommitMessage, lint, LintCode, LintProblem},
 };
+
+use pb_commit_message_lints::lints::get_lint_configuration;
 use std::{
     convert::TryFrom,
     error::Error,

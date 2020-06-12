@@ -88,7 +88,7 @@ jobs:
         run: |
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
           git checkout -b "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
-          
+
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
           if ! git diff-index --quiet HEAD -- ; then
             git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION"
