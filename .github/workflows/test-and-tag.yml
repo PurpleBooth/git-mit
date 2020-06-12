@@ -155,7 +155,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: "--all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo"
+          args: "--all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo"
       - name: Prettify code
         uses: creyD/prettier_action@v3.0
         with:
