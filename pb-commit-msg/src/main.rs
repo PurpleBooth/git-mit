@@ -1,6 +1,6 @@
 extern crate pb_commit_message_lints;
 
-use std::{env, process};
+use std::env;
 
 use clap::{crate_authors, crate_version, App, Arg};
 
@@ -21,16 +21,7 @@ use std::{
 
 const COMMIT_FILE_PATH_NAME: &str = "commit-file-path";
 
-fn display_err_and_exit<T>(error: &PbCommitMessageError) -> T {
-    eprintln!("{}", error);
-    process::exit(1);
-}
-
-fn main() {
-    run().unwrap_or_else(|err| display_err_and_exit(&err))
-}
-
-fn run() -> Result<(), PbCommitMessageError> {
+fn main() -> Result<(), PbCommitMessageError> {
     let matches = app().get_matches();
 
     let commit_file_path = matches

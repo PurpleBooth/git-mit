@@ -1,4 +1,4 @@
-use std::{env, fs::File, io::Write, process};
+use std::{env, fs::File, io::Write};
 
 use clap::{crate_authors, crate_version, App, Arg};
 
@@ -16,16 +16,7 @@ use std::{
     path::PathBuf,
 };
 
-fn display_err_and_exit<T>(error: &PbPrepareCommitMessageError) -> T {
-    eprintln!("{}", error);
-    process::exit(1);
-}
-
-fn main() {
-    run().unwrap_or_else(|err| display_err_and_exit(&err))
-}
-
-fn run() -> Result<(), PbPrepareCommitMessageError> {
+fn main() -> Result<(), PbPrepareCommitMessageError> {
     let matches = app().get_matches();
 
     let commit_message_path = matches

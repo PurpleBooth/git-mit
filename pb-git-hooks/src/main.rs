@@ -2,7 +2,6 @@ use std::{
     env,
     error::Error,
     fmt::{Display, Formatter},
-    process,
 };
 
 use clap::{crate_authors, crate_version, App, AppSettings, Arg};
@@ -26,16 +25,7 @@ const SCOPE_ARGUMENT: &str = "scope";
 const COMMAND_LINT_ENABLED: &str = "enabled";
 const COMMAND_LINT_STATUS: &str = "status";
 
-fn display_err_and_exit<T>(error: &PbGitHooksError) -> T {
-    eprintln!("{}", error);
-    process::exit(1);
-}
-
-fn main() {
-    run().unwrap_or_else(|err| display_err_and_exit(&err))
-}
-
-fn run() -> Result<(), PbGitHooksError> {
+fn main() -> Result<(), PbGitHooksError> {
     let matches = app().get_matches();
 
     let current_dir =
