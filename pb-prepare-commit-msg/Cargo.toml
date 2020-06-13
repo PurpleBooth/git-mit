@@ -1,6 +1,6 @@
 [package]
 name = "pb-prepare-commit-msg"
-version = "2.144.0"
+version = "2.145.0"
 authors = [
   "Billie Thompson <billie+pb-prepare-commit-msg@billiecodes.com>"
 ]
