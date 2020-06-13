@@ -5,28 +5,27 @@ use crate::{
 };
 use clap::ArgMatches;
 use pb_commit_message_lints::external::vcs::Vcs;
-use pb_commit_message_lints::lints;
-use pb_commit_message_lints::lints::get_lint_configuration;
 use pb_commit_message_lints::lints::lib::Lints;
+use pb_commit_message_lints::lints::Lint;
 use std::convert::TryInto;
 
-pub(crate) fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHooksError> {
+pub(crate) fn manage_lints(args: &ArgMatches, vcs: &mut dyn Vcs) -> Result<(), PbGitHooksError> {
     if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_ENABLE) {
-        set_lint_status(config, &subcommand_args, true)
+        set_lint_status(vcs, &subcommand_args, true)
     } else if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_DISABLE) {
-        set_lint_status(config, &subcommand_args, false)
+        set_lint_status(vcs, &subcommand_args, false)
     } else if args.subcommand_matches(COMMAND_LINT_AVAILABLE).is_some() {
-        let all_lints = Lints::new(lints::Lint::iterator().collect());
+        let all_lints = Lints::new(Lint::iterator().collect());
         println!("{}", all_lints.names().join("\n"));
         Ok(())
     } else if args.subcommand_matches(COMMAND_LINT_ENABLED).is_some() {
-        let lints: Lints = get_lint_configuration(config)?;
+        let lints: Lints = Lints::try_from_vcs(vcs)?;
         println!("{}", lints.names().join("\n"));
         Ok(())
     } else if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_STATUS) {
         let lints = get_selected_lints(&subcommand_args)?;
 
-        let config = get_lint_configuration(config)?;
+        let config = Lints::try_from_vcs(vcs)?;
         let status = get_config_status(lints.clone(), config);
         let names = lints.names();
 
