@@ -1,6 +1,6 @@
 [package]
 name = "pb-commit-message-lints"
-version = "2.145.0"
+version = "2.146.0"
 authors = [
   "Billie Thompson <billie+pb-commit-message-lints@billiecodes.com>"
 ]
