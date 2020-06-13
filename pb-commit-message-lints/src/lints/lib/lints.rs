@@ -1,6 +1,7 @@
 use crate::lints::Lint;
 
 use crate::errors::PbCommitMessageLintsError;
+use crate::external::vcs::Vcs;
 use std::convert::TryFrom;
 use std::vec::IntoIter;
 
@@ -23,6 +24,23 @@ impl Lints {
     #[must_use]
     pub fn config_keys(self) -> Vec<String> {
         self.lints.iter().map(|lint| lint.config_key()).collect()
+    }
+
+    /// Create lints from the VCS configuration
+    ///
+    /// # Errors
+    /// If reading from the VCS fails
+    pub fn try_from_vcs(config: &mut dyn Vcs) -> Result<Lints, PbCommitMessageLintsError> {
+        Ok(Lints::new(
+            vec![
+                get_config_or_default(config, Lint::DuplicatedTrailers, true)?,
+                get_config_or_default(config, Lint::PivotalTrackerIdMissing, false)?,
+                get_config_or_default(config, Lint::JiraIssueKeyMissing, false)?,
+            ]
+            .into_iter()
+            .flatten()
+            .collect(),
+        ))
     }
 }
 
@@ -54,12 +72,28 @@ impl TryFrom<Vec<&str>> for Lints {
     }
 }
 
+fn get_config_or_default(
+    config: &dyn Vcs,
+    lint: Lint,
+    default: bool,
+) -> Result<Option<Lint>, PbCommitMessageLintsError> {
+    Ok(config
+        .get_bool(&lint.config_key())?
+        .or(Some(default))
+        .filter(|lint_value| lint_value == &true)
+        .map(|_| lint))
+}
+
 #[cfg(test)]
 mod tests {
     use crate::lints::lib::lints::Lints;
 
     use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
     use pretty_assertions::assert_eq;
+
+    use std::collections::BTreeMap;
+
+    use crate::{external::vcs::InMemory, lints::Lint::DuplicatedTrailers};
 
     use crate::errors::PbCommitMessageLintsError;
     use std::convert::TryInto;
@@ -122,5 +156,102 @@ mod tests {
         let actual = input.config_keys();
 
         assert_eq!(expected, actual);
+    }
+    #[test]
+    fn defaults() {
+        let mut strings = BTreeMap::new();
+        let mut config = InMemory::new(&mut strings);
+
+        let actual = Lints::try_from_vcs(&mut config);
+        let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn disabled_duplicated_trailers() {
+        let mut strings = BTreeMap::new();
+        strings.insert("pb.lint.duplicated-trailers".into(), "false".into());
+        let mut config = InMemory::new(&mut strings);
+
+        let actual = Lints::try_from_vcs(&mut config);
+        let expected: Result<Lints, PbCommitMessageLintsError> = Ok(Lints::new(vec![]));
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn enabled_duplicated_trailers() {
+        let mut strings = BTreeMap::new();
+        strings.insert("pb.lint.duplicated-trailers".into(), "true".into());
+        let mut config = InMemory::new(&mut strings);
+
+        let actual = Lints::try_from_vcs(&mut config);
+        let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn enabled_pivotal_tracker_id() {
+        let mut strings = BTreeMap::new();
+        strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
+        let mut config = InMemory::new(&mut strings);
+
+        let actual = Lints::try_from_vcs(&mut config);
+        let expected = Ok(Lints::new(vec![
+            DuplicatedTrailers,
+            PivotalTrackerIdMissing,
+        ]));
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn enabled_jira_issue_key_missing() {
+        let mut strings = BTreeMap::new();
+        strings.insert("pb.lint.jira-issue-key-missing".into(), "true".into());
+        let mut config = InMemory::new(&mut strings);
+
+        let actual = Lints::try_from_vcs(&mut config);
+        let expected = Ok(Lints::new(vec![DuplicatedTrailers, JiraIssueKeyMissing]));
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn disabled_jira_issue_key_missing() {
+        let mut strings = BTreeMap::new();
+        strings.insert("pb.lint.jira-issue-key-missing".into(), "false".into());
+        let mut config = InMemory::new(&mut strings);
+
+        let actual = Lints::try_from_vcs(&mut config);
+        let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
     }
 }

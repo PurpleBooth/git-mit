@@ -9,8 +9,8 @@ use pb_commit_message_lints::{
     external::vcs::Git2,
     lints::lib::CommitMessage,
 };
+use std::convert::TryFrom;
 use std::{
-    convert::TryFrom,
     error::Error,
     fmt::{Display, Formatter},
     path::PathBuf,

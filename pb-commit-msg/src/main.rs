@@ -8,10 +8,9 @@ use crate::PbCommitMessageError::PbCommitMessageLints;
 use pb_commit_message_lints::{
     errors::PbCommitMessageLintsError,
     external::vcs::Git2,
-    lints::{lib::CommitMessage, lint, LintCode, LintProblem},
+    lints::{lib::CommitMessage, lib::Lints, lint, LintCode, LintProblem},
 };
 
-use pb_commit_message_lints::lints::get_lint_configuration;
 use std::{
     convert::TryFrom,
     error::Error,
@@ -34,12 +33,10 @@ fn main() -> Result<(), PbCommitMessageError> {
     let current_dir =
         env::current_dir().map_err(|err| PbCommitMessageError::new_io("$PWD".into(), &err))?;
 
-    let git_config = Git2::try_from(current_dir)?;
+    let mut git_config = Git2::try_from(current_dir)?;
 
-    let output = format_lint_problems(
-        &commit_message,
-        lint(&commit_message, get_lint_configuration(&git_config)?),
-    );
+    let lint_config = Lints::try_from_vcs(&mut git_config)?;
+    let output = format_lint_problems(&commit_message, lint(&commit_message, lint_config));
 
     if let Some((message, exit_code)) = output {
         display_lint_err_and_exit(&message, exit_code)
