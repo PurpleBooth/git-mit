@@ -8,7 +8,7 @@ use crate::PbCommitMessageError::PbCommitMessageLints;
 use pb_commit_message_lints::{
     errors::PbCommitMessageLintsError,
     external::vcs::Git2,
-    lints::{lib::CommitMessage, lib::Lints, lint, LintCode, LintProblem},
+    lints::{lib::CommitMessage, lib::Lints, lint, Code, Problem},
 };
 
 use std::{
@@ -63,8 +63,8 @@ fn app() -> App<'static, 'static> {
 
 fn format_lint_problems(
     original_message: &CommitMessage,
-    lint_problems: Vec<LintProblem>,
-) -> Option<(String, LintCode)> {
+    lint_problems: Vec<Problem>,
+) -> Option<(String, Code)> {
     let (_, message_and_code) = lint_problems.into_iter().fold(
         (original_message, None),
         |(commit_message, output), item| {
@@ -86,7 +86,7 @@ fn format_lint_problems(
     message_and_code
 }
 
-fn display_lint_err_and_exit(commit_message: &str, exit_code: LintCode) {
+fn display_lint_err_and_exit(commit_message: &str, exit_code: Code) {
     eprintln!("{}", commit_message);
 
     std::process::exit(exit_code as i32);

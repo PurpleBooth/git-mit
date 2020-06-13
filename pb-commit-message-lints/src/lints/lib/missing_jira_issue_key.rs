@@ -1,7 +1,10 @@
 use regex::Regex;
 
-use crate::lints::{CommitMessage, LintCode, LintProblem};
+use crate::lints::lib::problem::Code;
+use crate::lints::lib::{CommitMessage, Problem};
 use indoc::indoc;
+
+pub(crate) const CONFIG_JIRA_ISSUE_KEY_MISSING: &str = "jira-issue-key-missing";
 
 const JIRA_HELP_MESSAGE: &str = indoc!(
     "
@@ -18,11 +21,11 @@ fn has_missing_jira_issue_key(commit_message: &CommitMessage) -> bool {
     !commit_message.matches_pattern(&re)
 }
 
-pub(crate) fn lint_missing_jira_issue_key(commit_message: &CommitMessage) -> Option<LintProblem> {
+pub(crate) fn lint_missing_jira_issue_key(commit_message: &CommitMessage) -> Option<Problem> {
     if has_missing_jira_issue_key(commit_message) {
-        Some(LintProblem::new(
+        Some(Problem::new(
             JIRA_HELP_MESSAGE.into(),
-            LintCode::JiraIssueKeyMissing,
+            Code::JiraIssueKeyMissing,
         ))
     } else {
         None
@@ -108,7 +111,7 @@ mod tests_has_missing_jira_issue_key {
                 This is an example commit
                 "
             ),
-            &Some(LintProblem::new(
+            &Some(Problem::new(
                 indoc!(
                     "
                     Your commit is missing a JIRA Issue Key
@@ -117,7 +120,7 @@ mod tests_has_missing_jira_issue_key {
                     "
                 )
                 .into(),
-                LintCode::JiraIssueKeyMissing,
+                Code::JiraIssueKeyMissing,
             )),
         );
         test_has_missing_jira_issue_key(
@@ -130,7 +133,7 @@ mod tests_has_missing_jira_issue_key {
                 A-123
                 "
             ),
-            &Some(LintProblem::new(
+            &Some(Problem::new(
                 indoc!(
                     "
                     Your commit is missing a JIRA Issue Key
@@ -139,7 +142,7 @@ mod tests_has_missing_jira_issue_key {
                     "
                 )
                 .into(),
-                LintCode::JiraIssueKeyMissing,
+                Code::JiraIssueKeyMissing,
             )),
         );
         test_has_missing_jira_issue_key(
@@ -152,7 +155,7 @@ mod tests_has_missing_jira_issue_key {
                 JRA-
                 "
             ),
-            &Some(LintProblem::new(
+            &Some(Problem::new(
                 indoc!(
                     "
                     Your commit is missing a JIRA Issue Key
@@ -161,12 +164,12 @@ mod tests_has_missing_jira_issue_key {
                     "
                 )
                 .into(),
-                LintCode::JiraIssueKeyMissing,
+                Code::JiraIssueKeyMissing,
             )),
         );
     }
 
-    fn test_has_missing_jira_issue_key(message: &str, expected: &Option<LintProblem>) {
+    fn test_has_missing_jira_issue_key(message: &str, expected: &Option<Problem>) {
         let actual = &lint_missing_jira_issue_key(&CommitMessage::new(message.into()));
         assert_eq!(
             actual, expected,
