@@ -16,16 +16,7 @@ enum ExitCode {
     StaleAuthor = 3,
 }
 
-fn display_err_and_exit<T>(error: &PbPreCommitError) -> T {
-    eprintln!("{}", error);
-    process::exit(1);
-}
-
-fn main() {
-    run().unwrap_or_else(|err| display_err_and_exit(&err))
-}
-
-fn run() -> Result<(), PbPreCommitError> {
+fn main() -> Result<(), PbPreCommitError> {
     App::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
         .author(crate_authors!())

@@ -5,7 +5,6 @@ use std::{
     fmt::{Display, Formatter},
     fs,
     path::PathBuf,
-    process,
     process::{Command, Stdio},
     time::Duration,
 };
@@ -27,7 +26,6 @@ use crate::{ExitCode::InitialNotMatchedToAuthor, GitAuthorsError::NoTimeoutSet};
 
 #[repr(i32)]
 enum ExitCode {
-    GenericError = 1,
     InitialNotMatchedToAuthor = 3,
 }
 
@@ -36,16 +34,7 @@ const AUTHOR_FILE_PATH: &str = "file";
 const AUTHOR_FILE_COMMAND: &str = "command";
 const TIMEOUT: &str = "timeout";
 
-fn display_err_and_exit<T>(error: &GitAuthorsError) -> T {
-    eprintln!("{}", error);
-    process::exit(ExitCode::GenericError as i32);
-}
-
-fn main() {
-    run().unwrap_or_else(|err| display_err_and_exit(&err))
-}
-
-fn run() -> Result<(), GitAuthorsError> {
+fn main() -> Result<(), GitAuthorsError> {
     let path = config_path(env!("CARGO_PKG_NAME"))?;
     let matches = app(&path).get_matches();
     let users_config = get_users_config(&matches)?;
