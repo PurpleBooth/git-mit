@@ -33,6 +33,7 @@ jobs:
           MERGE_METHOD: rebase
           MERGE_LABELS: dependencies
           MERGE_RETRY_SLEEP: "100000"
+          MERGE_RETRIES: 20
       - name: automerge
         uses: "pascalgn/automerge-action@v0.8.4"
         env:
@@ -40,10 +41,11 @@ jobs:
           MERGE_METHOD: rebase
           MERGE_LABELS: releases
           MERGE_RETRY_SLEEP: "100000"
+          MERGE_RETRIES: 20
           UPDATE_METHOD: rebase
           UPDATE_LABELS: releases
           UPDATE_RETRY_SLEEP: "100000"
-          UPDATE_RETRIES: 6
+          UPDATE_RETRIES: 20
   automerge-label-rebase:
     runs-on: ubuntu-latest
     steps:
@@ -54,6 +56,7 @@ jobs:
           MERGE_METHOD: rebase
           MERGE_RETRY_SLEEP: "100000"
           MERGE_LABELS: automerge-rebase
+          MERGE_RETRIES: 20
   automerge-label-squash:
     runs-on: ubuntu-latest
     steps:
@@ -64,3 +67,4 @@ jobs:
           MERGE_METHOD: squash
           MERGE_RETRY_SLEEP: "100000"
           MERGE_LABELS: automerge-squash
+          MERGE_RETRIES: 20
