@@ -29,19 +29,6 @@ const COMMAND_LINT_STATUS: &str = "status";
 fn main() -> Result<(), PbGitHooksError> {
     let matches = app().get_matches();
 
-    let current_dir =
-        env::current_dir().map_err(|error| PbGitHooksError::new_io("$PWD".into(), &error))?;
-    let git_config = match matches.value_of(SCOPE_ARGUMENT) {
-        Some(LOCAL_SCOPE) => {
-            Repository::discover(current_dir).and_then(|repo: Repository| repo.config())
-        }
-        _ => Config::open_default(),
-    }?;
-    let mut vcs = Git2::new(git_config);
-
-    if let Some(value) = matches.subcommand_matches(COMMAND_LINT) {
-        manage_lints(value, &mut vcs)?;
-    }
     if let Some(subcommand) = matches.subcommand_matches(COMMAND_AUTHORS) {
         if subcommand
             .subcommand_matches(COMMAND_AUTHORS_EXAMPLE)
@@ -49,10 +36,24 @@ fn main() -> Result<(), PbGitHooksError> {
         {
             let example: String = Authors::example().try_into()?;
             println!("{}", example)
-        }
-    }
+        };
+        Ok(())
+    } else if let Some(value) = matches.subcommand_matches(COMMAND_LINT) {
+        let current_dir =
+            env::current_dir().map_err(|error| PbGitHooksError::new_io("$PWD".into(), &error))?;
 
-    Ok(())
+        let git_config = match matches.value_of(SCOPE_ARGUMENT) {
+            Some(LOCAL_SCOPE) => {
+                Repository::discover(current_dir).and_then(|repo: Repository| repo.config())
+            }
+            _ => Config::open_default(),
+        }?;
+
+        let mut vcs = Git2::new(git_config);
+        manage_lints(value, &mut vcs)
+    } else {
+        Ok(())
+    }
 }
 
 fn app() -> App<'static, 'static> {
