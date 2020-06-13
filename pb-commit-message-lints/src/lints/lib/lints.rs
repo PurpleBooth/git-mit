@@ -1,7 +1,7 @@
 use crate::lints::Lint;
 
 use crate::errors::PbCommitMessageLintsError;
-use std::convert::{TryFrom, TryInto};
+use std::convert::TryFrom;
 use std::vec::IntoIter;
 
 #[derive(Debug, Eq, PartialEq, Clone)]
@@ -35,11 +35,12 @@ impl std::iter::IntoIterator for Lints {
     }
 }
 
-impl TryInto<Lints> for Vec<&str> {
+impl TryFrom<Vec<&str>> for Lints {
     type Error = PbCommitMessageLintsError;
 
-    fn try_into(self) -> Result<Lints, Self::Error> {
-        self.into_iter()
+    fn try_from(value: Vec<&str>) -> Result<Self, Self::Error> {
+        value
+            .into_iter()
             .try_fold(
                 vec![],
                 |lints: Vec<Lint>, item_name| -> Result<Vec<Lint>, PbCommitMessageLintsError> {
