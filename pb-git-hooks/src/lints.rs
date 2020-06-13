@@ -6,8 +6,8 @@ use crate::{
 use clap::ArgMatches;
 use pb_commit_message_lints::external::vcs::Vcs;
 use pb_commit_message_lints::lints;
-use pb_commit_message_lints::lints::collection::Lints;
 use pb_commit_message_lints::lints::get_lint_configuration;
+use pb_commit_message_lints::lints::lib::Lints;
 use std::convert::TryInto;
 
 pub(crate) fn manage_lints(args: &ArgMatches, config: &mut dyn Vcs) -> Result<(), PbGitHooksError> {
@@ -60,7 +60,7 @@ fn get_config_status<'a>(lints: Lints, config: Lints) -> Vec<&'a str> {
         .collect::<Vec<_>>()
 }
 
-fn get_selected_lints(args: &ArgMatches) -> Result<lints::collection::Lints, PbGitHooksError> {
+fn get_selected_lints(args: &ArgMatches) -> Result<Lints, PbGitHooksError> {
     let names: Vec<_> = args
         .values_of(LINT_NAME_ARGUMENT)
         .ok_or_else(|| LintNameNotGiven)?
