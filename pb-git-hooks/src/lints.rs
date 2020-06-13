@@ -5,8 +5,9 @@ use crate::{
 };
 use clap::ArgMatches;
 use pb_commit_message_lints::external::vcs::Vcs;
-use pb_commit_message_lints::lints::lib::Lints;
+use pb_commit_message_lints::lints::set_status;
 use pb_commit_message_lints::lints::Lint;
+use pb_commit_message_lints::lints::Lints;
 use std::convert::TryInto;
 
 pub(crate) fn manage_lints(args: &ArgMatches, vcs: &mut dyn Vcs) -> Result<(), PbGitHooksError> {
@@ -74,6 +75,5 @@ pub fn set_lint_status(
     args: &ArgMatches,
     status: bool,
 ) -> Result<(), PbGitHooksError> {
-    pb_commit_message_lints::lints::set_lint_status(get_selected_lints(&args)?, config, status)
-        .map_err(PbGitHooksError::from)
+    set_status(get_selected_lints(&args)?, config, status).map_err(PbGitHooksError::from)
 }

@@ -1,6 +1,9 @@
 use std::{collections::HashSet, iter::FromIterator};
 
-use crate::lints::{CommitMessage, LintCode, LintProblem};
+use crate::lints::lib::problem::Code;
+use crate::lints::lib::{CommitMessage, Problem};
+
+pub(crate) const CONFIG_DUPLICATED_TRAILERS: &str = "duplicated-trailers";
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const FIELD_SINGULAR: &str = "field";
@@ -27,7 +30,7 @@ fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &str) -> bool
         .unwrap()
 }
 
-pub(crate) fn lint_duplicated_trailers(commit_message: &CommitMessage) -> Option<LintProblem> {
+pub(crate) fn lint_duplicated_trailers(commit_message: &CommitMessage) -> Option<Problem> {
     let duplicated_trailers = has_duplicated_trailers(commit_message);
     if duplicated_trailers.is_empty() {
         None
@@ -42,7 +45,7 @@ pub(crate) fn lint_duplicated_trailers(commit_message: &CommitMessage) -> Option
                 FIELD_SINGULAR
             }
         );
-        Some(LintProblem::new(warning, LintCode::DuplicatedTrailers))
+        Some(Problem::new(warning, Code::DuplicatedTrailers))
     }
 }
 
@@ -82,7 +85,7 @@ mod tests_has_duplicated_trailers {
                 "
             )
             .into(),
-            &Some(LintProblem::new(
+            &Some(Problem::new(
                 indoc!(
                     "
                     Your commit cannot have the same name duplicated in the \"Signed-off-by\", \
@@ -92,7 +95,7 @@ mod tests_has_duplicated_trailers {
                     "
                 )
                 .into(),
-                LintCode::DuplicatedTrailers,
+                Code::DuplicatedTrailers,
             )),
         );
         test_lint_duplicated_trailers(
@@ -107,7 +110,7 @@ mod tests_has_duplicated_trailers {
                 "
             )
             .into(),
-            &Some(LintProblem::new(
+            &Some(Problem::new(
                 indoc!(
                     "
                     Your commit cannot have the same name duplicated in the \"Signed-off-by\" field
@@ -116,7 +119,7 @@ mod tests_has_duplicated_trailers {
                     "
                 )
                 .into(),
-                LintCode::DuplicatedTrailers,
+                Code::DuplicatedTrailers,
             )),
         );
         test_lint_duplicated_trailers(
@@ -131,7 +134,7 @@ mod tests_has_duplicated_trailers {
                 "
             )
             .into(),
-            &Some(LintProblem::new(
+            &Some(Problem::new(
                 indoc!(
                     "
                     Your commit cannot have the same name duplicated in the \"Co-authored-by\" \
@@ -141,12 +144,12 @@ mod tests_has_duplicated_trailers {
                     "
                 )
                 .into(),
-                LintCode::DuplicatedTrailers,
+                Code::DuplicatedTrailers,
             )),
         );
     }
 
-    fn test_lint_duplicated_trailers(message: String, expected: &Option<LintProblem>) {
+    fn test_lint_duplicated_trailers(message: String, expected: &Option<Problem>) {
         let actual = &lint_duplicated_trailers(&CommitMessage::new(message));
         assert_eq!(
             actual, expected,
@@ -158,7 +161,8 @@ mod tests_has_duplicated_trailers {
 
 #[cfg(test)]
 mod tests_has_duplicated_trailer {
-    use crate::lints::{duplicate_trailers::has_duplicated_trailer, CommitMessage};
+    use crate::lints::lib::duplicate_trailers::has_duplicated_trailer;
+    use crate::lints::CommitMessage;
     use indoc::indoc;
 
     fn test_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {

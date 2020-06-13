@@ -8,8 +8,9 @@ use clap::{crate_authors, crate_version, App, AppSettings, Arg};
 use git2::{Config, Repository};
 
 use crate::lints::manage_lints;
+use pb_commit_message_lints::lints::Lint;
 use pb_commit_message_lints::{
-    author::entities::Authors, errors::PbCommitMessageLintsError, external::vcs::Git2, lints::Lint,
+    author::entities::Authors, errors::PbCommitMessageLintsError, external::vcs::Git2,
 };
 use std::convert::TryInto;
 

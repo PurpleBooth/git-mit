@@ -1,7 +1,6 @@
-use crate::lints::Lint;
-
 use crate::errors::PbCommitMessageLintsError;
 use crate::external::vcs::Vcs;
+use crate::lints::lib::Lint;
 use std::convert::TryFrom;
 use std::vec::IntoIter;
 

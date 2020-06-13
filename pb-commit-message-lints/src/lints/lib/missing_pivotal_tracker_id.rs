@@ -1,7 +1,10 @@
 use regex::Regex;
 
-use crate::lints::{CommitMessage, LintCode, LintProblem};
+use crate::lints::lib::problem::Code;
+use crate::lints::lib::{CommitMessage, Problem};
 use indoc::indoc;
+
+pub(crate) const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pivotal-tracker-id-missing";
 
 const REGEX_PIVOTAL_TRACKER_ID: &str =
     r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
@@ -15,13 +18,11 @@ fn has_no_pivotal_tracker_id(text: &CommitMessage) -> bool {
     !text.matches_pattern(&re)
 }
 
-pub(crate) fn lint_missing_pivotal_tracker_id(
-    commit_message: &CommitMessage,
-) -> Option<LintProblem> {
+pub(crate) fn lint_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> Option<Problem> {
     if has_missing_pivotal_tracker_id(commit_message) {
-        Some(LintProblem::new(
+        Some(Problem::new(
             PIVOTAL_TRACKER_HELP.into(),
-            LintCode::PivotalTrackerIdMissing,
+            Code::PivotalTrackerIdMissing,
         ))
     } else {
         None
@@ -70,7 +71,7 @@ mod tests_has_missing_pivotal_tracker_id {
         );
     }
 
-    fn test_has_missing_pivotal_tracker_id(message: &str, expected: &Option<LintProblem>) {
+    fn test_has_missing_pivotal_tracker_id(message: &str, expected: &Option<Problem>) {
         let actual = &lint_missing_pivotal_tracker_id(&CommitMessage::new(message.into()));
         assert_eq!(
             actual, expected,
@@ -364,7 +365,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 [fake #12345678]
                 "
             ),
-            &Some(LintProblem::new(
+            &Some(Problem::new(
                 indoc!(
                     "
                     Your commit is missing a Pivotal Tracker Id
@@ -381,7 +382,7 @@ mod tests_has_missing_pivotal_tracker_id {
                     "
                 )
                 .into(),
-                LintCode::PivotalTrackerIdMissing,
+                Code::PivotalTrackerIdMissing,
             )),
         );
     }
@@ -396,7 +397,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
                 "
             ),
-            &Some(LintProblem::new(
+            &Some(Problem::new(
                 indoc!(
                     "
                     Your commit is missing a Pivotal Tracker Id
@@ -413,7 +414,7 @@ mod tests_has_missing_pivotal_tracker_id {
                     "
                 )
                 .into(),
-                LintCode::PivotalTrackerIdMissing,
+                Code::PivotalTrackerIdMissing,
             )),
         );
 
@@ -427,7 +428,7 @@ mod tests_has_missing_pivotal_tracker_id {
             [#]
             "
             ),
-            &Some(LintProblem::new(
+            &Some(Problem::new(
                 indoc!(
                     "
                 Your commit is missing a Pivotal Tracker Id
@@ -443,7 +444,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 "
                 )
                 .into(),
-                LintCode::PivotalTrackerIdMissing,
+                Code::PivotalTrackerIdMissing,
             )),
         );
     }
