@@ -2,12 +2,15 @@ use std::{
     env,
     error::Error,
     fmt::{Display, Formatter},
+    io,
 };
 
 use clap::{crate_authors, crate_version, App, AppSettings, Arg};
 use git2::{Config, Repository};
 
 use crate::lints::manage_lints;
+use clap_generate::generate;
+use clap_generate::generators::{Bash, Elvish, Fish, Zsh};
 use mit_commit_message_lints::lints::Lint;
 use mit_commit_message_lints::{
     author::entities::Authors, errors::MitCommitMessageLintsError, external::vcs::Git2,
@@ -25,9 +28,24 @@ const COMMAND_LINT_DISABLE: &str = "disable";
 const SCOPE_ARGUMENT: &str = "scope";
 const COMMAND_LINT_ENABLED: &str = "enabled";
 const COMMAND_LINT_STATUS: &str = "status";
+const COMPLETION: &str = "completion";
 
 fn main() -> Result<(), GitMitConfigError> {
     let matches = app().get_matches();
+
+    if let Some(shell) = matches.value_of(COMPLETION) {
+        if shell == "bash" {
+            generate::<Bash, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
+        } else if shell == "fish" {
+            generate::<Fish, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
+        } else if shell == "zsh" {
+            generate::<Zsh, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
+        } else if shell == "elvish" {
+            generate::<Elvish, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
+        }
+
+        return Ok(());
+    }
 
     if let Some(subcommand) = matches.subcommand_matches(COMMAND_AUTHORS) {
         if subcommand
@@ -108,6 +126,12 @@ fn app() -> App<'static> {
                     App::new(COMMAND_AUTHORS_EXAMPLE).about("Print example author yaml file"),
                 )
                 .setting(AppSettings::SubcommandRequiredElseHelp),
+        )
+        .arg(
+            Arg::with_name(COMPLETION)
+                .long("completion")
+                .about("Print completion information for your shell")
+                .possible_values(&["bash", "fish", "zsh", "elvish"]),
         )
         .setting(AppSettings::SubcommandRequiredElseHelp)
 }

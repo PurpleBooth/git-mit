@@ -149,6 +149,7 @@ name = "git-mit-config"
 version = "3.2.0"
 dependencies = [
  "clap",
+ "clap_generate",
  "git2",
  "indoc",
  "mit-commit-message-lints",
