@@ -13,22 +13,22 @@ class GitMit < Formula
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit/"
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit-config/"
 
-    output = Utils.popen_read("#{bin}/git-mit --completion bash ig")
+    output = Utils.popen_read("#{bin}/git-mit --completion bash")
     (bash_completion/"git-mit").write output
 
-    output = Utils.popen_read("#{bin}/git-mit --completion zsh ig")
+    output = Utils.popen_read("#{bin}/git-mit --completion zsh")
     (zsh_completion/"_git-mit").write output
 
-    output = Utils.popen_read("#{bin}/git-mit --completion fish ig")
+    output = Utils.popen_read("#{bin}/git-mit --completion fish")
     (fish_completion/"git-mit.fish").write output
 
-    output = Utils.popen_read("#{bin}/git-mit-config --completion bash mit example")
+    output = Utils.popen_read("#{bin}/git-mit-config completion bash")
     (bash_completion/"git-mit-config").write output
 
-    output = Utils.popen_read("#{bin}/git-mit-config --completion zsh mit example")
+    output = Utils.popen_read("#{bin}/git-mit-config completion zsh")
     (zsh_completion/"_git-mit-config").write output
 
-    output = Utils.popen_read("#{bin}/git-mit-config --completion fish mit example")
+    output = Utils.popen_read("#{bin}/git-mit-config completion fish")
     (fish_completion/"git-mit-config.fish").write output
   end
 

@@ -20,14 +20,13 @@ fn help_printed_when_no_arguments_passed() {
                 -V, --version    Prints version information
 
             OPTIONS:
-                    --completion <completion>    Print completion information for your shell [possible values: bash, fish, zsh,
-                                                 elvish]
-                -s, --scope <scope>               [default: local]  [possible values: local, global]
+                -s, --scope <scope>     [default: local]  [possible values: local, global]
 
             SUBCOMMANDS:
-                help    Prints this message or the help of the given subcommand(s)
-                lint    Manage active lints
-                mit     Manage author configuration
+                completion    Print completion information
+                help          Prints this message or the help of the given subcommand(s)
+                lint          Manage active lints
+                mit           Manage author configuration
             "
         )
         .into(),

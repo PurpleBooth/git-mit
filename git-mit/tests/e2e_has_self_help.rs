@@ -16,7 +16,7 @@ fn help_returned_by_long_flag() {
             Set author and Co-authored trailer.
 
             USAGE:
-                git-mit [OPTIONS] <initials>...
+                git-mit [OPTIONS] [initials]...
 
             ARGS:
                 <initials>...    Initials of the author to put in the commit
@@ -57,7 +57,7 @@ fn help_returned_by_short_flag() {
             Set author and Co-authored trailer.
 
             USAGE:
-                git-mit [OPTIONS] <initials>...
+                git-mit [OPTIONS] [initials]...
 
             ARGS:
                 <initials>...    Initials of the author to put in the commit
@@ -106,7 +106,7 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
         If you tried to supply `--banana` as a PATTERN use `-- --banana`
 
         USAGE:
-            git-mit [OPTIONS] <initials>...
+            git-mit [OPTIONS] [initials]...
 
         For more information try --help
         "
