@@ -1,4 +1,4 @@
-# pb-git-hooks
+# git mit
 
 My git commit hooks in binary form
 
@@ -16,13 +16,13 @@ My git commit hooks in binary form
 ### Enabling Lints
 
 ``` shell
-pb-git-hooks lint enable duplicated-trailers
+git mit-config lint enable duplicated-trailers
 ```
 
 ### Disabling Lints
 
 ``` shell
-pb-git-hooks lint disable duplicated-trailers
+git mit-config lint disable duplicated-trailers
 ```
 
 ### Setting Authors and Co-Authors
@@ -30,19 +30,19 @@ pb-git-hooks lint disable duplicated-trailers
 Just set the author
 
 ``` shell
-git authors bt
+git mit bt
 ```
 
 Set the author and co-author trailer
 
 ``` shell
-git authors bt se
+git mit bt se
 ```
 
 If you're mobbing
 
 ``` shell
-git authors bt se ae
+git mit bt se ae
 ```
 
 ## Installing
@@ -56,11 +56,11 @@ brew tap PurpleBooth/repo
 Next install the binary
 
 ``` shell
-brew install PurpleBooth/repo/pb-git-hooks
+brew install PurpleBooth/repo/git-mit
 ```
 
 You can also download the [latest
-release](https://github.com/PurpleBooth/pb-git-hooks/releases/latest)
+release](https://github.com/PurpleBooth/git-mit/releases/latest)
 and run it.
 
 ## Configuration
@@ -68,9 +68,9 @@ and run it.
 ### Adding to a repository
 
 ``` shell
-ln -s "$(command -v pb-commit-msg)" .git/hooks/commit-msg
-ln -s "$(command -v pb-pre-commit)" .git/hooks/pre-commit
-ln -s "$(command -v pb-prepare-commit-msg)" .git/hooks/prepare-commit-msg
+ln -s "$(command -v mit-commit-msg)" .git/hooks/commit-msg
+ln -s "$(command -v mit-pre-commit)" .git/hooks/pre-commit
+ln -s "$(command -v mit-prepare-commit-msg)" .git/hooks/prepare-commit-msg
 ```
 
 You can make git link these for you automatically by adding them to your
@@ -80,9 +80,9 @@ you run `git init`.
 
 ``` shell
 mkdir -p "$HOME/.config/git/init-template/hooks"
-ln -s "$(command -v pb-commit-msg)" "$HOME/.config/git/init-template/hooks/commit-msg"
-ln -s "$(command -v pb-pre-commit)" "$HOME/.config/git/init-template/hooks/pre-commit"
-ln -s "$(command -v pb-prepare-commit-msg)" "$HOME/.config/git/init-template/hooks/prepare-commit-msg"
+ln -s "$(command -v mit-commit-msg)" "$HOME/.config/git/init-template/hooks/commit-msg"
+ln -s "$(command -v mit-pre-commit)" "$HOME/.config/git/init-template/hooks/pre-commit"
+ln -s "$(command -v mit-prepare-commit-msg)" "$HOME/.config/git/init-template/hooks/prepare-commit-msg"
 git config --global init.templatedir "$HOME/.config/git/init-template"
 ```
 
@@ -116,13 +116,13 @@ se:
 ### More examples
 
 You can see more examples in the [usage
-directory](https://github.com/PurpleBooth/pb-git-hooks/tree/main/usage)
+directory](https://github.com/PurpleBooth/git-mit/tree/main/usage)
 
 ### Environment Variables
 
-  - **GIT\_AUTHORS\_EXEC** A command to execute to generate the author
+  - **GIT\_MIT_AUTHORS\_EXEC** A command to execute to generate the author
     configuration
-  - **GIT\_AUTHORS\_CONFIG** The location of a author file *Default:
+  - **GIT\_MIT_AUTHORS\_CONFIG** The location of a author file *Default:
     `$HOME/.config/git-authors/authors.yml`*
-  - **GIT\_AUTHORS\_TIMEOUT** How long to wait before you need to run
-    git authors again *Default: `60`*
+  - **GIT\_MIT_AUTHORS\_TIMEOUT** How long to wait before you need to run
+    git mit again *Default: `60`*

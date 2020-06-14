@@ -11,9 +11,9 @@ set -euo pipefail
 git init .
 
 rm -rf .git/hooks/*
-ln -s "$(command -v pb-commit-msg)" .git/hooks/commit-msg
-ln -s "$(command -v pb-pre-commit)" .git/hooks/pre-commit
-ln -s "$(command -v pb-prepare-commit-msg)" .git/hooks/prepare-commit-msg
+ln -s "$(command -v mit-commit-msg)" .git/hooks/commit-msg
+ln -s "$(command -v mit-pre-commit)" .git/hooks/pre-commit
+ln -s "$(command -v mit-prepare-commit-msg)" .git/hooks/prepare-commit-msg
 ```
 
 We need a author configuration that is current
@@ -50,10 +50,10 @@ bt:
   signingkey: $KEY
 se:
   name: Someone Else
-  email: someone@example.com" > git-authors.yml
+  email: someone@example.com" > git-mit.yml
 
-git-authors -c git-authors.yml se
-echo "git-authors.yml" > .gitignore
+git-mit -c git-mit.yml se
+echo "git-mit.yml" > .gitignore
 git add .
 git commit -m "Add a git ignore"
 
@@ -74,7 +74,7 @@ git commit -m "Enabling a lint"
 To enable it run
 
 ``` bash
-pb-git-hooks lint enable pivotal-tracker-id-missing
+git mit-config lint enable pivotal-tracker-id-missing
 ```
 
 After enabling the lint you can't commit without a issue id
@@ -106,7 +106,7 @@ git commit -m "Enabled the lint
 You can also disable the lint
 
 ``` bash
-pb-git-hooks lint disable pivotal-tracker-id-missing
+git mit-config lint disable pivotal-tracker-id-missing
 ```
 
 You'll be able to commit without an ID

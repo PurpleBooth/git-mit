@@ -11,7 +11,7 @@ show-help:
 .PHONY: test
 ## Test it was built ok
 test:
-	unset GIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test --locked
+	unset GIT_MIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test --locked
 
 .PHONY: mdtest
 ## Test the markdown in the usage directory
@@ -21,10 +21,13 @@ mdtest: build
 .PHONY: smoke-test
 ## Run a smoke test and see if the app runs
 smoke-test:
-	cargo run --locked --bin pb-prepare-commit-msg -- -h
-	cargo run --locked --bin pb-pre-commit -- -h
-	cargo run --locked --bin pb-commit-msg -- -h
-	cargo run --locked --bin git-authors -- -h
+	cargo run --locked --bin git-mit -- -h
+	cargo run --locked --bin git-mit-config -- -h
+	cargo run --locked --bin mit-commit-message-lints -- -h
+	cargo run --locked --bin mit-commit-msg -- -h
+	cargo run --locked --bin mit-hook-test-helper -- -h
+	cargo run --locked --bin mit-pre-commit -- -h
+	cargo run --locked --bin mit-prepare-commit-msg -- -h
 
 .PHONY: build
 ## Build release version

@@ -31,24 +31,24 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v2
         with:
-          name: pb-commit-msg-${{ matrix.target }}
-          path: ./target/release/pb-commit-msg${{ matrix.suffix }}
+          name: mit-commit-msg-${{ matrix.target }}
+          path: ./target/release/mit-commit-msg${{ matrix.suffix }}
       - uses: actions/upload-artifact@v2
         with:
-          name: pb-git-hooks-${{ matrix.target }}
-          path: ./target/release/pb-git-hooks${{ matrix.suffix }}
+          name: git-mit-config-${{ matrix.target }}
+          path: ./target/release/git-mit-config${{ matrix.suffix }}
       - uses: actions/upload-artifact@v2
         with:
-          name: pb-pre-commit-${{ matrix.target }}
-          path: ./target/release/pb-pre-commit${{ matrix.suffix }}
+          name: mit-pre-commit-${{ matrix.target }}
+          path: ./target/release/mit-pre-commit${{ matrix.suffix }}
       - uses: actions/upload-artifact@v2
         with:
-          name: pb-prepare-commit-msg-${{ matrix.target }}
-          path: ./target/release/pb-prepare-commit-msg${{ matrix.suffix }}
+          name: mit-prepare-commit-msg-${{ matrix.target }}
+          path: ./target/release/mit-prepare-commit-msg${{ matrix.suffix }}
       - uses: actions/upload-artifact@v2
         with:
-          name: git-authors-${{ matrix.target }}
-          path: ./target/release/git-authors${{ matrix.suffix }}
+          name: git-mit-${{ matrix.target }}
+          path: ./target/release/git-mit${{ matrix.suffix }}
 
     strategy:
       matrix:
@@ -89,7 +89,7 @@ jobs:
         run: 'echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / ''{print $2}'' | sed -e "s/:refs//")'
         shell: bash
       - id: get_version
-        run: "echo ::set-output name=VERSION::v$(toml get git-authors/Cargo.toml package.version | tail -c +2 | head -c -2)"
+        run: "echo ::set-output name=VERSION::v$(toml get git-mit/Cargo.toml package.version | tail -c +2 | head -c -2)"
         shell: bash
       - env:
           GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
@@ -105,78 +105,78 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./pb-pre-commit-x86_64-unknown-linux-gnu/pb-pre-commit
-          asset_name: pb-pre-commit-x86_64-unknown-linux-gnu
+          asset_path: ./mit-pre-commit-x86_64-unknown-linux-gnu/mit-pre-commit
+          asset_name: mit-pre-commit-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./pb-prepare-commit-msg-x86_64-unknown-linux-gnu/pb-prepare-commit-msg
-          asset_name: pb-prepare-commit-msg-x86_64-unknown-linux-gnu
+          asset_path: ./mit-prepare-commit-msg-x86_64-unknown-linux-gnu/mit-prepare-commit-msg
+          asset_name: mit-prepare-commit-msg-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./pb-commit-msg-x86_64-unknown-linux-gnu/pb-commit-msg
-          asset_name: pb-commit-msg-x86_64-unknown-linux-gnu
+          asset_path: ./mit-commit-msg-x86_64-unknown-linux-gnu/mit-commit-msg
+          asset_name: mit-commit-msg-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./pb-git-hooks-x86_64-unknown-linux-gnu/pb-git-hooks
-          asset_name: pb-git-hooks-x86_64-unknown-linux-gnu
+          asset_path: ./git-mit-config-x86_64-unknown-linux-gnu/git-mit-config
+          asset_name: git-mit-config-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./git-authors-x86_64-unknown-linux-gnu/git-authors
-          asset_name: git-authors-x86_64-unknown-linux-gnu
+          asset_path: ./git-mit-x86_64-unknown-linux-gnu/git-mit
+          asset_name: git-mit-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./pb-pre-commit-x86_64-apple-darwin/pb-pre-commit
-          asset_name: pb-pre-commit-x86_64-apple-darwin
+          asset_path: ./mit-pre-commit-x86_64-apple-darwin/mit-pre-commit
+          asset_name: mit-pre-commit-x86_64-apple-darwin
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./pb-prepare-commit-msg-x86_64-apple-darwin/pb-prepare-commit-msg
-          asset_name: pb-prepare-commit-msg-x86_64-apple-darwin
+          asset_path: ./mit-prepare-commit-msg-x86_64-apple-darwin/mit-prepare-commit-msg
+          asset_name: mit-prepare-commit-msg-x86_64-apple-darwin
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./pb-commit-msg-x86_64-apple-darwin/pb-commit-msg
-          asset_name: pb-commit-msg-x86_64-apple-darwin
+          asset_path: ./mit-commit-msg-x86_64-apple-darwin/mit-commit-msg
+          asset_name: mit-commit-msg-x86_64-apple-darwin
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./pb-git-hooks-x86_64-apple-darwin/pb-git-hooks
-          asset_name: pb-git-hooks-x86_64-apple-darwin
+          asset_path: ./git-mit-config-x86_64-apple-darwin/git-mit-config
+          asset_name: git-mit-config-x86_64-apple-darwin
           asset_content_type: application/octet-stream
       - uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./git-authors-x86_64-apple-darwin/git-authors
-          asset_name: git-authors-x86_64-apple-darwin
+          asset_path: ./git-mit-x86_64-apple-darwin/git-mit
+          asset_name: git-mit-x86_64-apple-darwin
           asset_content_type: application/octet-stream

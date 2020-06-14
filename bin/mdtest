@@ -14,8 +14,8 @@ function mbe() {
             unset GNUPGHOME
             unset EDITOR
             unset VISUAL
-            unset GIT_AUTHORS_EXEC
-            unset GIT_AUTHORS_CONFIG
+            unset GIT_MIT_AUTHORS_EXEC
+            unset GIT_MIT_AUTHORS_CONFIG
             PATH="$PWD/target/release/:$PATH"
 
             cd "$(mktemp -d)"
