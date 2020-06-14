@@ -18,6 +18,9 @@ fn help_returned_by_long_flag() {
             USAGE:
                 git-mit [OPTIONS] <initials>...
 
+            ARGS:
+                <initials>...    Initials of the author to put in the commit
+
             FLAGS:
                 -h, --help       Prints help information
                 -V, --version    Prints version information
@@ -30,15 +33,8 @@ fn help_returned_by_long_flag() {
             .into(),
 
     format!("                               GIT_MIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
-    indoc!("
-                -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_MIT_AUTHORS_TIMEOUT=]
-                                           [default: 60]
-
-            ARGS:
-                <initials>...    Initials of the author to put in the commit
-            "
-        )
-            .into(),
+        "    -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_MIT_AUTHORS_TIMEOUT=]".into(),
+        "                               [default: 60]\n".into()
     ]
         .join("\n");
 
@@ -61,6 +57,9 @@ fn help_returned_by_short_flag() {
             USAGE:
                 git-mit [OPTIONS] <initials>...
 
+            ARGS:
+                <initials>...    Initials of the author to put in the commit
+
             FLAGS:
                 -h, --help       Prints help information
                 -V, --version    Prints version information
@@ -73,15 +72,8 @@ fn help_returned_by_short_flag() {
             .into(),
 
         format!("                               GIT_MIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
-        indoc!("
-                -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_MIT_AUTHORS_TIMEOUT=]
-                                           [default: 60]
-
-            ARGS:
-                <initials>...    Initials of the author to put in the commit
-            "
-        )
-            .into(),
+"    -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_MIT_AUTHORS_TIMEOUT=]".into(),
+        "                               [default: 60]\n".into()
     ]
         .join("\n");
     assert_output(&output, &expected_stdout, "", true)
@@ -106,6 +98,8 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
     let expected = indoc!(
         "
         error: Found argument '--banana' which wasn't expected, or isn't valid in this context
+
+        If you tried to supply `--banana` as a PATTERN use `-- --banana`
 
         USAGE:
             git-mit [OPTIONS] <initials>...

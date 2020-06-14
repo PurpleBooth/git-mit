@@ -56,9 +56,9 @@ fn main() -> Result<(), GitMitConfigError> {
     }
 }
 
-fn app() -> App<'static, 'static> {
+fn app() -> App<'static> {
     let lint_argument = Arg::with_name(LINT_NAME_ARGUMENT)
-        .help("The lint to enable")
+        .about("The lint to enable")
         .required(true)
         .multiple(true)
         .min_values(1)
@@ -75,7 +75,7 @@ fn app() -> App<'static, 'static> {
         .arg(
             Arg::with_name(SCOPE_ARGUMENT)
                 .long("scope")
-                .short("s")
+                .short('s')
                 .possible_values(&[LOCAL_SCOPE, "global"])
                 .default_value(LOCAL_SCOPE),
         )

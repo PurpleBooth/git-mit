@@ -35,20 +35,20 @@ fn main() -> Result<(), MitPrepareCommitMessageError> {
     Ok(())
 }
 
-fn app() -> App<'static, 'static> {
+fn app() -> App<'static> {
     App::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::with_name("commit-message-path")
-                .help("The name of the file that contains the commit log message")
+                .about("The name of the file that contains the commit log message")
                 .index(1)
                 .required(true),
         )
         .arg(
             Arg::with_name("commit-message-source")
-                .help(
+                .about(
                     "The commit message, and can be: message (if a -m or -F option was given to \
                      git); template (if a -t option was given or the configuration option \
                      commit.template is set in git); merge (if the commit is a merge or a \
@@ -60,7 +60,7 @@ fn app() -> App<'static, 'static> {
         )
         .arg(
             Arg::with_name("commit-sha")
-                .help("Commit SHA-1 (if a -c, -C or --amend option was given to git).")
+                .about("Commit SHA-1 (if a -c, -C or --amend option was given to git).")
                 .index(3)
                 .required(false),
         )

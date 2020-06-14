@@ -17,10 +17,6 @@ fn help_returned_by_long_flag() {
             USAGE:
                 mit-prepare-commit-msg <commit-message-path> [ARGS]
 
-            FLAGS:
-                -h, --help       Prints help information
-                -V, --version    Prints version information
-
             ARGS:
                 <commit-message-path>      The name of the file that contains the commit log \
              message
@@ -33,6 +29,10 @@ fn help_returned_by_long_flag() {
                                            a .git/SQUASH_MSG file exists); or commit
                 <commit-sha>               Commit SHA-1 (if a -c, -C or --amend option was given \
              to git).
+
+            FLAGS:
+                -h, --help       Prints help information
+                -V, --version    Prints version information
             "
         )
         .into(),
@@ -57,10 +57,6 @@ fn help_returned_by_short_flag() {
             USAGE:
                 mit-prepare-commit-msg <commit-message-path> [ARGS]
 
-            FLAGS:
-                -h, --help       Prints help information
-                -V, --version    Prints version information
-
             ARGS:
                 <commit-message-path>      The name of the file that contains the commit log \
              message
@@ -73,6 +69,10 @@ fn help_returned_by_short_flag() {
                                            a .git/SQUASH_MSG file exists); or commit
                 <commit-sha>               Commit SHA-1 (if a -c, -C or --amend option was given \
              to git).
+
+            FLAGS:
+                -h, --help       Prints help information
+                -V, --version    Prints version information
             "
         )
         .into(),
@@ -91,6 +91,8 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
     let expected_stderr = indoc!(
         "
         error: Found argument '--banana' which wasn't expected, or isn't valid in this context
+
+        If you tried to supply `--banana` as a PATTERN use `-- --banana`
 
         USAGE:
             mit-prepare-commit-msg <commit-message-path> [ARGS]

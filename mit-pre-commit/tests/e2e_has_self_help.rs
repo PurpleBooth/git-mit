@@ -63,6 +63,8 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
         "
         error: Found argument '--banana' which wasn't expected, or isn't valid in this context
 
+        If you tried to supply `--banana` as a PATTERN use `-- --banana`
+
         USAGE:
             mit-pre-commit
 

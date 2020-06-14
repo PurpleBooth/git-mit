@@ -12,7 +12,7 @@ description = "A command for enabling and disabling git lints"
 
 [dependencies]
 git2 = "0.13"
-clap = "~2.33"
+clap = "3.0.0-beta.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"

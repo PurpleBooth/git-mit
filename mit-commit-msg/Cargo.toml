@@ -11,7 +11,7 @@ readme = "../README.md"
 repository = "https://github.com/PurpleBooth/pb-git-hooks"
 
 [dependencies]
-clap = "~2.33"
+clap = "3.0.0-beta.1"
 git2 = "0.13"
 
   [dependencies.mit-commit-message-lints]
