@@ -117,7 +117,7 @@ fn app(config_file_path: &str) -> App {
             Arg::with_name(AUTHOR_INITIAL)
                 .about("Initials of the author to put in the commit")
                 .multiple(true)
-                .required(true)
+                .required_unless(COMPLETION)
                 .min_values(1),
         )
         .arg(

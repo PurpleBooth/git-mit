@@ -28,20 +28,22 @@ const COMMAND_LINT_DISABLE: &str = "disable";
 const SCOPE_ARGUMENT: &str = "scope";
 const COMMAND_LINT_ENABLED: &str = "enabled";
 const COMMAND_LINT_STATUS: &str = "status";
-const COMPLETION: &str = "completion";
+const COMMAND_COMPLETION: &str = "completion";
 
 fn main() -> Result<(), GitMitConfigError> {
     let matches = app().get_matches();
 
-    if let Some(shell) = matches.value_of(COMPLETION) {
-        if shell == "bash" {
-            generate::<Bash, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
-        } else if shell == "fish" {
-            generate::<Fish, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
-        } else if shell == "zsh" {
-            generate::<Zsh, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
-        } else if shell == "elvish" {
-            generate::<Elvish, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
+    if let Some(subcommand) = matches.subcommand_matches(COMMAND_COMPLETION) {
+        if let Some(shell) = subcommand.value_of("shell") {
+            if shell == "bash" {
+                generate::<Bash, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
+            } else if shell == "fish" {
+                generate::<Fish, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
+            } else if shell == "zsh" {
+                generate::<Zsh, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
+            } else if shell == "elvish" {
+                generate::<Elvish, _>(&mut app(), env!("CARGO_PKG_NAME"), &mut io::stdout())
+            }
         }
 
         return Ok(());
@@ -127,11 +129,15 @@ fn app() -> App<'static> {
                 )
                 .setting(AppSettings::SubcommandRequiredElseHelp),
         )
-        .arg(
-            Arg::with_name(COMPLETION)
-                .long("completion")
-                .about("Print completion information for your shell")
-                .possible_values(&["bash", "fish", "zsh", "elvish"]),
+        .subcommand(
+            App::new(COMMAND_COMPLETION)
+                .about("Print completion information")
+                .arg(
+                    Arg::with_name("shell")
+                        .about("Print completion information for your shell")
+                        .possible_values(&["bash", "fish", "zsh", "elvish"])
+                        .required(true),
+                ),
         )
         .setting(AppSettings::SubcommandRequiredElseHelp)
 }
