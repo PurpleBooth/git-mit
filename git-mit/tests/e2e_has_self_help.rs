@@ -26,7 +26,7 @@ fn help_returned_by_long_flag() {
                 -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
                                            instead of the file, if both this and the file is present, this takes precedence [env:
                                            GIT_MIT_AUTHORS_EXEC=]
-                -c, --config <file>        Path to a file where mit initials, emails and names can be found [env:")
+                -c, --config <file>        Path to a file where author initials, emails and names can be found [env:")
             .into(),
 
     format!("                               GIT_MIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
@@ -35,7 +35,7 @@ fn help_returned_by_long_flag() {
                                            [default: 60]
 
             ARGS:
-                <initials>...    Initials of the mit to put in the commit
+                <initials>...    Initials of the author to put in the commit
             "
         )
             .into(),
@@ -69,7 +69,7 @@ fn help_returned_by_short_flag() {
                 -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
                                            instead of the file, if both this and the file is present, this takes precedence [env:
                                            GIT_MIT_AUTHORS_EXEC=]
-                -c, --config <file>        Path to a file where mit initials, emails and names can be found [env:")
+                -c, --config <file>        Path to a file where author initials, emails and names can be found [env:")
             .into(),
 
         format!("                               GIT_MIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
@@ -78,7 +78,7 @@ fn help_returned_by_short_flag() {
                                            [default: 60]
 
             ARGS:
-                <initials>...    Initials of the mit to put in the commit
+                <initials>...    Initials of the author to put in the commit
             "
         )
             .into(),

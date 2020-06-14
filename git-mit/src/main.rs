@@ -97,7 +97,7 @@ fn app(config_file_path: &str) -> App {
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::with_name(AUTHOR_INITIAL)
-                .help("Initials of the mit to put in the commit")
+                .help("Initials of the author to put in the commit")
                 .multiple(true)
                 .required(true)
                 .min_values(1),
@@ -106,7 +106,7 @@ fn app(config_file_path: &str) -> App {
             Arg::with_name(AUTHOR_FILE_PATH)
                 .short("c")
                 .long("config")
-                .help("Path to a file where mit initials, emails and names can be found")
+                .help("Path to a file where author initials, emails and names can be found")
                 .env("GIT_MIT_AUTHORS_CONFIG")
                 .default_value(config_file_path),
         )
