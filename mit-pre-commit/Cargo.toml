@@ -1,6 +1,6 @@
 [package]
 name = "mit-pre-commit"
-version = "3.0.3"
+version = "3.1.0"
 authors = [ "Billie Thompson <billie+mit-pre-commit@billiecodes.com>" ]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
