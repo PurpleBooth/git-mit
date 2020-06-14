@@ -6,7 +6,7 @@ fn long_flag() {
     let output = mit_hook_test_helper::run_hook(&working_dir, "mit-commit-msg", vec!["--version"]);
     assert_output(
         &output,
-        &format!("mit-commit-msg {}\n", env!("CARGO_PKG_VERSION")),
+        &format!("mit-commit-msg {}", env!("CARGO_PKG_VERSION")),
         "",
         true,
     )
@@ -18,7 +18,7 @@ fn short_flag() {
     let output = mit_hook_test_helper::run_hook(&working_dir, "mit-commit-msg", vec!["-V"]);
     assert_output(
         &output,
-        &format!("mit-commit-msg {}\n", env!("CARGO_PKG_VERSION")),
+        &format!("mit-commit-msg {}", env!("CARGO_PKG_VERSION")),
         "",
         true,
     )

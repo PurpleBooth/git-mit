@@ -7,7 +7,7 @@ fn version_returned_by_long_flag() {
         mit_hook_test_helper::run_hook(&working_dir, "mit-prepare-commit-msg", vec!["--version"]);
     assert_output(
         &output,
-        &format!("mit-prepare-commit-msg {}\n", env!("CARGO_PKG_VERSION")),
+        &format!("mit-prepare-commit-msg {}", env!("CARGO_PKG_VERSION")),
         "",
         true,
     )
@@ -19,7 +19,7 @@ fn version_returned_by_short_flag() {
     let output = mit_hook_test_helper::run_hook(&working_dir, "mit-prepare-commit-msg", vec!["-V"]);
     assert_output(
         &output,
-        &format!("mit-prepare-commit-msg {}\n", env!("CARGO_PKG_VERSION")),
+        &format!("mit-prepare-commit-msg {}", env!("CARGO_PKG_VERSION")),
         "",
         true,
     )

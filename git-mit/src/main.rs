@@ -97,24 +97,24 @@ fn app(config_file_path: &str) -> App {
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::with_name(AUTHOR_INITIAL)
-                .help("Initials of the author to put in the commit")
+                .about("Initials of the author to put in the commit")
                 .multiple(true)
                 .required(true)
                 .min_values(1),
         )
         .arg(
             Arg::with_name(AUTHOR_FILE_PATH)
-                .short("c")
+                .short('c')
                 .long("config")
-                .help("Path to a file where author initials, emails and names can be found")
+                .about("Path to a file where author initials, emails and names can be found")
                 .env("GIT_MIT_AUTHORS_CONFIG")
                 .default_value(config_file_path),
         )
         .arg(
             Arg::with_name(AUTHOR_FILE_COMMAND)
-                .short("e")
+                .short('e')
                 .long("exec")
-                .help(
+                .about(
                     "Execute a command to generate the author configuration, stdout will be \
                      captured and used instead of the file, if both this and the file is present, \
                      this takes precedence",
@@ -123,9 +123,9 @@ fn app(config_file_path: &str) -> App {
         )
         .arg(
             Arg::with_name(TIMEOUT)
-                .short("t")
+                .short('t')
                 .long("timeout")
-                .help("Number of minutes to expire the configuration in")
+                .about("Number of minutes to expire the configuration in")
                 .env("GIT_MIT_AUTHORS_TIMEOUT")
                 .default_value("60"),
         )
@@ -160,7 +160,7 @@ fn get_author_config_from_file(matches: &ArgMatches) -> Result<String, GitMitErr
         })
 }
 
-fn get_author_file_path<'a>(matches: &'a ArgMatches) -> Option<&'a str> {
+fn get_author_file_path(matches: &ArgMatches) -> Option<&str> {
     matches.value_of(AUTHOR_FILE_PATH)
 }
 

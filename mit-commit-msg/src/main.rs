@@ -45,14 +45,14 @@ fn main() -> Result<(), MitCommitMsgError> {
     Ok(())
 }
 
-fn app() -> App<'static, 'static> {
+fn app() -> App<'static> {
     App::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::with_name(COMMIT_FILE_PATH_NAME)
-                .help(
+                .about(
                     "Path to a temporary file that contains the commit message written by the \
                      developer",
                 )
