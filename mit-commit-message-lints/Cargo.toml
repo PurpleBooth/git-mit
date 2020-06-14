@@ -1,6 +1,6 @@
 [package]
 name = "mit-commit-message-lints"
-version = "2.152.0"
+version = "2.154.0"
 authors = [
   "Billie Thompson <billie+mit-commit-message-lints@billiecodes.com>"
 ]
