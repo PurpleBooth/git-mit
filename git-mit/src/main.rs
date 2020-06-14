@@ -3,7 +3,7 @@ use std::{
     env,
     error::Error,
     fmt::{Display, Formatter},
-    fs,
+    fs, io,
     path::PathBuf,
     process::{Command, Stdio},
     time::Duration,
@@ -23,6 +23,8 @@ use mit_commit_message_lints::{
 
 use crate::GitMitError::NoAuthorInitialsProvided;
 use crate::{ExitCode::InitialNotMatchedToAuthor, GitMitError::NoTimeoutSet};
+use clap_generate::generate;
+use clap_generate::generators::{Bash, Elvish, Fish, Zsh};
 
 #[repr(i32)]
 enum ExitCode {
@@ -33,10 +35,26 @@ const AUTHOR_INITIAL: &str = "initials";
 const AUTHOR_FILE_PATH: &str = "file";
 const AUTHOR_FILE_COMMAND: &str = "command";
 const TIMEOUT: &str = "timeout";
+const COMPLETION: &str = "completion";
 
 fn main() -> Result<(), GitMitError> {
     let path = config_path(env!("CARGO_PKG_NAME"))?;
     let matches = app(&path).get_matches();
+
+    if let Some(shell) = matches.value_of(COMPLETION) {
+        if shell == "bash" {
+            generate::<Bash, _>(&mut app(&path), env!("CARGO_PKG_NAME"), &mut io::stdout())
+        } else if shell == "fish" {
+            generate::<Fish, _>(&mut app(&path), env!("CARGO_PKG_NAME"), &mut io::stdout())
+        } else if shell == "zsh" {
+            generate::<Zsh, _>(&mut app(&path), env!("CARGO_PKG_NAME"), &mut io::stdout())
+        } else if shell == "elvish" {
+            generate::<Elvish, _>(&mut app(&path), env!("CARGO_PKG_NAME"), &mut io::stdout())
+        }
+
+        return Ok(());
+    }
+
     let users_config = get_users_config(&matches)?;
     let authors_initials = get_author_initials(&matches).ok_or_else(|| NoAuthorInitialsProvided)?;
 
@@ -128,6 +146,12 @@ fn app(config_file_path: &str) -> App {
                 .about("Number of minutes to expire the configuration in")
                 .env("GIT_MIT_AUTHORS_TIMEOUT")
                 .default_value("60"),
+        )
+        .arg(
+            Arg::with_name(COMPLETION)
+                .long("completion")
+                .about("Print completion information for your shell")
+                .possible_values(&["bash", "fish", "zsh", "elvish"]),
         )
 }
 

@@ -89,6 +89,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "clap_generate"
+version = "3.0.0-beta.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "188d8b137fa922515d549cf17ece165ddbc71bf21e723e81d84406958dcdef67"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "ctor"
 version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -126,6 +135,7 @@ name = "git-mit"
 version = "3.2.0"
 dependencies = [
  "clap",
+ "clap_generate",
  "git2",
  "indoc",
  "mit-commit-message-lints",
