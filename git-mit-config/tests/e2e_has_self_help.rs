@@ -20,7 +20,9 @@ fn help_printed_when_no_arguments_passed() {
                 -V, --version    Prints version information
 
             OPTIONS:
-                -s, --scope <scope>     [default: local]  [possible values: local, global]
+                    --completion <completion>    Print completion information for your shell [possible values: bash, fish, zsh,
+                                                 elvish]
+                -s, --scope <scope>               [default: local]  [possible values: local, global]
 
             SUBCOMMANDS:
                 help    Prints this message or the help of the given subcommand(s)
