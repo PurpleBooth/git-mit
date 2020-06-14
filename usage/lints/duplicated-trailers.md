@@ -11,9 +11,9 @@ set -euo pipefail
 git init .
 
 rm -rf .git/hooks/*
-ln -s "$(command -v pb-commit-msg)" .git/hooks/commit-msg
-ln -s "$(command -v pb-pre-commit)" .git/hooks/pre-commit
-ln -s "$(command -v pb-prepare-commit-msg)" .git/hooks/prepare-commit-msg
+ln -s "$(command -v mit-commit-msg)" .git/hooks/commit-msg
+ln -s "$(command -v mit-pre-commit)" .git/hooks/pre-commit
+ln -s "$(command -v mit-prepare-commit-msg)" .git/hooks/prepare-commit-msg
 ```
 
 We need a author configuration that is current
@@ -50,10 +50,10 @@ bt:
   signingkey: $KEY
 se:
   name: Someone Else
-  email: someone@example.com" > git-authors.yml
+  email: someone@example.com" > git-mit.yml
 
-git-authors -c git-authors.yml ae se
-echo "git-authors.yml" > .gitignore
+git-mit -c git-mit.yml ae se
+echo "git-mit.yml" > .gitignore
 git add .
 ```
 
@@ -117,7 +117,7 @@ fi
 You can also disable the lint
 
 ``` bash
-pb-git-hooks lint disable duplicated-trailers
+git mit-config lint disable duplicated-trailers
 ```
 
 You'll be able to commit without an ID
@@ -150,7 +150,7 @@ git commit
 To enable it run
 
 ``` bash
-pb-git-hooks lint enable duplicated-trailers
+git mit-config lint enable duplicated-trailers
 ```
 
 Then the lints are enabled again

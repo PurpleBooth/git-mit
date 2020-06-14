@@ -1,11 +1,11 @@
 [workspace]
 
 members = [
-    "pb-git-hooks",
-    "pb-prepare-commit-msg",
-    "pb-pre-commit",
-    "pb-commit-msg",
-    "pb-commit-message-lints",
-    "pb-hook-test-helper",
-    "git-authors"
+    "git-mit-config",
+    "mit-prepare-commit-msg",
+    "mit-pre-commit",
+    "mit-commit-msg",
+    "mit-commit-message-lints",
+    "mit-hook-test-helper",
+    "git-mit"
 ]

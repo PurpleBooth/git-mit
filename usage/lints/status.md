@@ -11,9 +11,9 @@ set -euo pipefail
 git init .
 
 rm -rf .git/hooks/*
-ln -s "$(command -v pb-commit-msg)" .git/hooks/commit-msg
-ln -s "$(command -v pb-pre-commit)" .git/hooks/pre-commit
-ln -s "$(command -v pb-prepare-commit-msg)" .git/hooks/prepare-commit-msg
+ln -s "$(command -v mit-commit-msg)" .git/hooks/commit-msg
+ln -s "$(command -v mit-pre-commit)" .git/hooks/pre-commit
+ln -s "$(command -v mit-prepare-commit-msg)" .git/hooks/prepare-commit-msg
 ```
 
 ## List available lints
@@ -21,7 +21,7 @@ ln -s "$(command -v pb-prepare-commit-msg)" .git/hooks/prepare-commit-msg
 You can list all the available lints with a handy command
 
 ``` bash
-ACTUAL="$(pb-git-hooks lint available)"
+ACTUAL="$(git mit-config lint available)"
 EXPECTED="duplicated-trailers
 pivotal-tracker-id-missing
 jira-issue-key-missing"
@@ -34,7 +34,7 @@ diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 You can list all the enabled lints with a handy command
 
 ``` bash
-ACTUAL="$(pb-git-hooks lint enabled)"
+ACTUAL="$(git mit-config lint enabled)"
 EXPECTED="duplicated-trailers"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")
@@ -45,7 +45,7 @@ diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 You can get the status of a single lint either enabled
 
 ``` bash
-ACTUAL="$(pb-git-hooks lint status duplicated-trailers)"
+ACTUAL="$(git mit-config lint status duplicated-trailers)"
 EXPECTED="$(printf "duplicated-trailers\tenabled\n")"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")
@@ -54,7 +54,7 @@ diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 or disabled
 
 ``` bash
-ACTUAL="$(pb-git-hooks lint status jira-issue-key-missing)"
+ACTUAL="$(git mit-config lint status jira-issue-key-missing)"
 EXPECTED="$(printf "jira-issue-key-missing\tdisabled\n")"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")

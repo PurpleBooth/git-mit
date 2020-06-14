@@ -105,16 +105,28 @@ dependencies = [
 ]
 
 [[package]]
-name = "git-authors"
+name = "git-mit"
 version = "2.151.0"
 dependencies = [
  "clap",
  "git2",
  "indoc",
- "pb-commit-message-lints",
- "pb-hook-test-helper",
+ "mit-commit-message-lints",
+ "mit-hook-test-helper",
  "tempfile",
  "xdg",
+]
+
+[[package]]
+name = "git-mit-config"
+version = "2.151.0"
+dependencies = [
+ "clap",
+ "git2",
+ "indoc",
+ "mit-commit-message-lints",
+ "mit-hook-test-helper",
+ "pretty_assertions",
 ]
 
 [[package]]
@@ -264,6 +276,67 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3728d817d99e5ac407411fa471ff9800a778d88a24685968b36824eaf4bee400"
 
 [[package]]
+name = "mit-commit-message-lints"
+version = "2.151.0"
+dependencies = [
+ "git2",
+ "indoc",
+ "mit-hook-test-helper",
+ "pretty_assertions",
+ "regex",
+ "serde",
+ "serde_derive",
+ "serde_yaml",
+]
+
+[[package]]
+name = "mit-commit-msg"
+version = "2.151.0"
+dependencies = [
+ "clap",
+ "git2",
+ "indoc",
+ "mit-commit-message-lints",
+ "mit-hook-test-helper",
+ "pretty_assertions",
+ "tempfile",
+]
+
+[[package]]
+name = "mit-hook-test-helper"
+version = "2.151.0"
+dependencies = [
+ "git2",
+ "pretty_assertions",
+ "tempfile",
+]
+
+[[package]]
+name = "mit-pre-commit"
+version = "2.151.0"
+dependencies = [
+ "clap",
+ "git2",
+ "indoc",
+ "mit-commit-message-lints",
+ "mit-hook-test-helper",
+ "pretty_assertions",
+]
+
+[[package]]
+name = "mit-prepare-commit-msg"
+version = "2.151.0"
+dependencies = [
+ "clap",
+ "git2",
+ "indoc",
+ "mit-commit-message-lints",
+ "mit-hook-test-helper",
+ "pretty_assertions",
+ "tempfile",
+]
+
+[[package]]
 name = "openssl-probe"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -289,79 +362,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "53cdc5b785b7a58c5aad8216b3dfa114df64b0b06ae6e1501cef91df2fbdf8f9"
 dependencies = [
  "winapi",
-]
-
-[[package]]
-name = "pb-commit-message-lints"
-version = "2.151.0"
-dependencies = [
- "git2",
- "indoc",
- "pb-hook-test-helper",
- "pretty_assertions",
- "regex",
- "serde",
- "serde_derive",
- "serde_yaml",
-]
-
-[[package]]
-name = "pb-commit-msg"
-version = "2.151.0"
-dependencies = [
- "clap",
- "git2",
- "indoc",
- "pb-commit-message-lints",
- "pb-hook-test-helper",
- "pretty_assertions",
- "tempfile",
-]
-
-[[package]]
-name = "pb-git-hooks"
-version = "2.151.0"
-dependencies = [
- "clap",
- "git2",
- "indoc",
- "pb-commit-message-lints",
- "pb-hook-test-helper",
- "pretty_assertions",
-]
-
-[[package]]
-name = "pb-hook-test-helper"
-version = "2.151.0"
-dependencies = [
- "git2",
- "pretty_assertions",
- "tempfile",
-]
-
-[[package]]
-name = "pb-pre-commit"
-version = "2.151.0"
-dependencies = [
- "clap",
- "git2",
- "indoc",
- "pb-commit-message-lints",
- "pb-hook-test-helper",
- "pretty_assertions",
-]
-
-[[package]]
-name = "pb-prepare-commit-msg"
-version = "2.151.0"
-dependencies = [
- "clap",
- "git2",
- "indoc",
- "pb-commit-message-lints",
- "pb-hook-test-helper",
- "pretty_assertions",
- "tempfile",
 ]
 
 [[package]]

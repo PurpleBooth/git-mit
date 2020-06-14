@@ -1,0 +1,30 @@
+[package]
+name = "mit-commit-message-lints"
+version = "2.151.0"
+authors = [
+  "Billie Thompson <billie+mit-commit-message-lints@billiecodes.com>"
+]
+edition = "2018"
+license = "CC0 1.0 Universal"
+categories = [ "development-tools", "command-line-utilities" ]
+keywords = [ "git", "git-hooks" ]
+readme = "../README.md"
+repository = "https://github.com/PurpleBooth/pb-git-hooks"
+description = "Check the correctness of a specific commit message. Designed to be used in tools providing commit-msg style hooks"
+
+[dependencies]
+git2 = "0.13"
+regex = "1"
+serde_yaml = "0.8.13"
+serde_derive = "1.0.110"
+indoc = "0.3"
+
+  [dependencies.serde]
+  version = "1.0.111"
+  features = [ "derive" ]
+
+[dev-dependencies]
+pretty_assertions = "0.6.1"
+
+  [dev-dependencies.mit-hook-test-helper]
+  path = "../mit-hook-test-helper"
