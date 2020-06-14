@@ -12,6 +12,24 @@ class GitMit < Formula
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./mit-prepare-commit-msg/"
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit/"
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit-config/"
+
+    output = Utils.popen_read("#{bin}/git-mit --completion bash ig")
+    (bash_completion/"git-mit").write output
+
+    output = Utils.popen_read("#{bin}/git-mit --completion zsh ig")
+    (zsh_completion/"_git-mit").write output
+
+    output = Utils.popen_read("#{bin}/git-mit --completion fish ig")
+    (fish_completion/"git-mit.fish").write output
+
+    output = Utils.popen_read("#{bin}/git-mit-config --completion bash mit example")
+    (bash_completion/"git-mit-config").write output
+
+    output = Utils.popen_read("#{bin}/git-mit-config --completion zsh mit example")
+    (zsh_completion/"_git-mit-config").write output
+
+    output = Utils.popen_read("#{bin}/git-mit-config --completion fish mit example")
+    (fish_completion/"git-mit-config.fish").write output
   end
 
   test do
