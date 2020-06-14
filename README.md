@@ -125,6 +125,6 @@ directory](https://github.com/PurpleBooth/git-mit/tree/main/usage)
   - **GIT\_MIT\_AUTHORS\_EXEC** A command to execute to generate the
     author configuration
   - **GIT\_MIT\_AUTHORS\_CONFIG** The location of a author file
-    *Default: `$HOME/.config/git-authors/authors.yml`*
+    *Default: `$HOME/.config/git-mit/mit.yml`*
   - **GIT\_MIT\_AUTHORS\_TIMEOUT** How long to wait before you need to
     run git mit again *Default: `60`*
