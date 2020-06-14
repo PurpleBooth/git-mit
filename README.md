@@ -1,6 +1,8 @@
-# git mit
+# git-mit
 
-My git commit hooks in binary form
+This started out as a reimplementation of git-duet. It was an excuse for
+me to learn Rust and I also had some irritating problems with git duet.
+It's a bit more than that now, with lints for issues.
 
 ## Usage
 
@@ -60,8 +62,8 @@ brew install PurpleBooth/repo/git-mit
 ```
 
 You can also download the [latest
-release](https://github.com/PurpleBooth/git-mit/releases/latest)
-and run it.
+release](https://github.com/PurpleBooth/git-mit/releases/latest) and run
+it.
 
 ## Configuration
 
@@ -120,9 +122,9 @@ directory](https://github.com/PurpleBooth/git-mit/tree/main/usage)
 
 ### Environment Variables
 
-  - **GIT\_MIT_AUTHORS\_EXEC** A command to execute to generate the author
-    configuration
-  - **GIT\_MIT_AUTHORS\_CONFIG** The location of a author file *Default:
-    `$HOME/.config/git-authors/authors.yml`*
-  - **GIT\_MIT_AUTHORS\_TIMEOUT** How long to wait before you need to run
-    git mit again *Default: `60`*
+  - **GIT\_MIT\_AUTHORS\_EXEC** A command to execute to generate the
+    author configuration
+  - **GIT\_MIT\_AUTHORS\_CONFIG** The location of a author file
+    *Default: `$HOME/.config/git-authors/authors.yml`*
+  - **GIT\_MIT\_AUTHORS\_TIMEOUT** How long to wait before you need to
+    run git mit again *Default: `60`*
