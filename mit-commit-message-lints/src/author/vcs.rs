@@ -15,7 +15,7 @@ use std::{convert::TryInto, time::SystemTimeError};
 
 const CONFIG_KEY_EXPIRES: &str = "pb.author.expires";
 
-/// Get the co-mit that are currently defined for this vcs config source
+/// Get the co-authors that are currently defined for this vcs config source
 ///
 /// # Errors
 ///
