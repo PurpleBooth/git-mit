@@ -106,7 +106,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit"
-version = "2.152.0"
+version = "3.0.2"
 dependencies = [
  "clap",
  "git2",
@@ -119,7 +119,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-config"
-version = "2.152.0"
+version = "3.0.2"
 dependencies = [
  "clap",
  "git2",
@@ -146,9 +146,9 @@ dependencies = [
 
 [[package]]
 name = "hermit-abi"
-version = "0.1.13"
+version = "0.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "91780f809e750b0a89f5544be56617ff6b1227ee485bcb06ebe10cdf89bd3b71"
+checksum = "b9586eedd4ce6b3c498bc3b4dd92fc9f11166aa908a914071953768066c67909"
 dependencies = [
  "libc",
 ]
@@ -277,7 +277,7 @@ checksum = "3728d817d99e5ac407411fa471ff9800a778d88a24685968b36824eaf4bee400"
 
 [[package]]
 name = "mit-commit-message-lints"
-version = "2.152.0"
+version = "3.0.2"
 dependencies = [
  "git2",
  "indoc",
@@ -291,7 +291,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-msg"
-version = "2.152.0"
+version = "3.0.2"
 dependencies = [
  "clap",
  "git2",
@@ -304,7 +304,7 @@ dependencies = [
 
 [[package]]
 name = "mit-hook-test-helper"
-version = "2.152.0"
+version = "3.0.2"
 dependencies = [
  "git2",
  "pretty_assertions",
@@ -313,7 +313,7 @@ dependencies = [
 
 [[package]]
 name = "mit-pre-commit"
-version = "2.152.0"
+version = "3.0.2"
 dependencies = [
  "clap",
  "git2",
@@ -325,7 +325,7 @@ dependencies = [
 
 [[package]]
 name = "mit-prepare-commit-msg"
-version = "2.152.0"
+version = "3.0.2"
 dependencies = [
  "clap",
  "git2",
@@ -485,9 +485,9 @@ checksum = "26412eb97c6b088a6997e05f69403a802a92d520de2f8e63c2b65f9e0f47c4e8"
 
 [[package]]
 name = "remove_dir_all"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a83fa3702a688b9359eccba92d153ac33fd2e8462f9e0e3fdf155239ea7792e"
+checksum = "3acd125665422973a33ac9d3dd2df85edad0f4ae9b00dafb1a05e43a9f5ef8e7"
 dependencies = [
  "winapi",
 ]
@@ -538,9 +538,9 @@ checksum = "8ea5119cdb4c55b55d432abb513a0429384878c15dde60cc77b1c99de1a95a6a"
 
 [[package]]
 name = "syn"
-version = "1.0.30"
+version = "1.0.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "93a56fabc59dce20fe48b6c832cc249c713e7ed88fa28b0ee0a3bfcaae5fe4e2"
+checksum = "b5304cfdf27365b7585c25d4af91b35016ed21ef88f17ced89c7093b43dba8b6"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -628,9 +628,9 @@ dependencies = [
 
 [[package]]
 name = "vcpkg"
-version = "0.2.9"
+version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "55d1e41d56121e07f1e223db0a4def204e45c85425f6a16d462fd07c8d10d74c"
+checksum = "6454029bf181f092ad1b853286f23e2c507d8e8194d01d92da4a55c274a5508c"
 
 [[package]]
 name = "vec_map"
