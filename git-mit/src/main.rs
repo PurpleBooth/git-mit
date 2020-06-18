@@ -167,12 +167,12 @@ fn get_users_config(matches: &ArgMatches) -> Result<String, GitMitError> {
 }
 
 fn get_author_config_from_exec(command: &str) -> Result<String, GitMitError> {
-    Command::new(env::var("SHELL").unwrap_or_else(|_| String::from("sh")))
+    Command::new("sh")
         .stderr(Stdio::inherit())
         .arg("-c")
         .arg(command)
         .output()
-        .map_err(|error| GitMitError::new_io(command.into(), &error))
+        .map_err(|error| GitMitError::new_exec(command.into(), &error))
         .and_then(|x| String::from_utf8(x.stdout).map_err(GitMitError::from))
 }
 
@@ -214,6 +214,7 @@ enum GitMitError {
     NoTimeoutSet,
     PbCommitMessageLints(MitCommitMessageLintsError),
     Io(String, String),
+    Exec(String, String),
     Xdg(String),
     TimeoutNotNumber(String),
     Utf8(String),
@@ -223,6 +224,9 @@ enum GitMitError {
 impl GitMitError {
     fn new_io(source: String, error: &std::io::Error) -> GitMitError {
         GitMitError::Io(source, format!("{}", error))
+    }
+    fn new_exec(source: String, error: &std::io::Error) -> GitMitError {
+        GitMitError::Exec(source, format!("{}", error))
     }
 }
 
@@ -240,6 +244,7 @@ impl Display for GitMitError {
             GitMitError::Io(file_source, error) => {
                 write!(f, "Failed to read from `{}`:\n{}", file_source, error)
             }
+            GitMitError::Exec(exec, error) => write!(f, "Failed to run `{}`:\n{}", exec, error),
             GitMitError::Xdg(error) => write!(f, "Failed to find config directory: {}", error),
             GitMitError::AuthorFileNotSet => {
                 write!(f, "Expected a author file path, didn't find one")
