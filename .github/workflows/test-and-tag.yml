@@ -229,7 +229,7 @@ jobs:
         with:
           command: check
       - shell: bash
-        env: 
+        env:
           GITHUB_ACTOR: ${{ github.actor }}
         run: |
           git config user.name "$GITHUB_ACTOR"
