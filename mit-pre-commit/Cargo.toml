@@ -10,6 +10,11 @@ keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
 repository = "https://github.com/PurpleBooth/pb-git-hooks"
 
+[build-dependencies]
+clap = "3.0.0-beta.1"
+clap_generate = "3.0.0-beta.1"
+
+
 [dependencies]
 clap = "3.0.0-beta.1"
 git2 = "0.13"

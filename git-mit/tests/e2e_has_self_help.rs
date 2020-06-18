@@ -16,7 +16,7 @@ fn help_returned_by_long_flag() {
             Set author and Co-authored trailer.
 
             USAGE:
-                git-mit [OPTIONS] [initials]...
+                git-mit [OPTIONS] <initials>...
 
             ARGS:
                 <initials>...    Initials of the author to put in the commit
@@ -26,17 +26,15 @@ fn help_returned_by_long_flag() {
                 -V, --version    Prints version information
 
             OPTIONS:
-                -e, --exec <command>             Execute a command to generate the author configuration, stdout will be captured and
-                                                 used instead of the file, if both this and the file is present, this takes
-                                                 precedence [env: GIT_MIT_AUTHORS_EXEC=]
-                    --completion <completion>    Print completion information for your shell [possible values: bash, fish, zsh,
-                                                 elvish]
-                -c, --config <file>              Path to a file where author initials, emails and names can be found [env:")
+                -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
+                                           instead of the file, if both this and the file is present, this takes precedence [env:
+                                           GIT_MIT_AUTHORS_EXEC=]
+                -c, --config <file>        Path to a file where author initials, emails and names can be found [env:")
             .into(),
 
-    format!("                                     GIT_MIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
-        "    -t, --timeout <timeout>          Number of minutes to expire the configuration in [env: GIT_MIT_AUTHORS_TIMEOUT=]".into(),
-        "                                     [default: 60]\n".into()
+        format!("                               GIT_MIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
+            "    -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_MIT_AUTHORS_TIMEOUT=]".into(),
+            "                               [default: 60]\n".into(),
     ]
         .join("\n");
 
@@ -57,7 +55,7 @@ fn help_returned_by_short_flag() {
             Set author and Co-authored trailer.
 
             USAGE:
-                git-mit [OPTIONS] [initials]...
+                git-mit [OPTIONS] <initials>...
 
             ARGS:
                 <initials>...    Initials of the author to put in the commit
@@ -67,17 +65,15 @@ fn help_returned_by_short_flag() {
                 -V, --version    Prints version information
 
             OPTIONS:
-                -e, --exec <command>             Execute a command to generate the author configuration, stdout will be captured and
-                                                 used instead of the file, if both this and the file is present, this takes
-                                                 precedence [env: GIT_MIT_AUTHORS_EXEC=]
-                    --completion <completion>    Print completion information for your shell [possible values: bash, fish, zsh,
-                                                 elvish]
-                -c, --config <file>              Path to a file where author initials, emails and names can be found [env:")
+                -e, --exec <command>       Execute a command to generate the author configuration, stdout will be captured and used
+                                           instead of the file, if both this and the file is present, this takes precedence [env:
+                                           GIT_MIT_AUTHORS_EXEC=]
+                -c, --config <file>        Path to a file where author initials, emails and names can be found [env:")
             .into(),
 
-        format!("                                     GIT_MIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
-        "    -t, --timeout <timeout>          Number of minutes to expire the configuration in [env: GIT_MIT_AUTHORS_TIMEOUT=]".into(),
-        "                                     [default: 60]\n".into()
+        format!("                               GIT_MIT_AUTHORS_CONFIG=]  [default: {}]", default_config_file),
+        "    -t, --timeout <timeout>    Number of minutes to expire the configuration in [env: GIT_MIT_AUTHORS_TIMEOUT=]".into(),
+        "                               [default: 60]\n".into(),
     ]
         .join("\n");
     assert_output(&output, &expected_stdout, "", true)
@@ -106,7 +102,7 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
         If you tried to supply `--banana` as a PATTERN use `-- --banana`
 
         USAGE:
-            git-mit [OPTIONS] [initials]...
+            git-mit [OPTIONS] <initials>...
 
         For more information try --help
         "

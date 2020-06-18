@@ -13,23 +13,17 @@ class GitMit < Formula
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit/"
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit-config/"
 
-    output = Utils.popen_read("#{bin}/git-mit --completion bash")
-    (bash_completion/"git-mit").write output
+    Pathname.glob('**/bash_completion/*').each do |file|
+      bash_completion.install file
+    end
 
-    output = Utils.popen_read("#{bin}/git-mit --completion zsh")
-    (zsh_completion/"_git-mit").write output
+    Pathname.glob('**/fish_completion/*').each do |file|
+      fish_completion.install file
+    end
 
-    output = Utils.popen_read("#{bin}/git-mit --completion fish")
-    (fish_completion/"git-mit.fish").write output
-
-    output = Utils.popen_read("#{bin}/git-mit-config completion bash")
-    (bash_completion/"git-mit-config").write output
-
-    output = Utils.popen_read("#{bin}/git-mit-config completion zsh")
-    (zsh_completion/"_git-mit-config").write output
-
-    output = Utils.popen_read("#{bin}/git-mit-config completion fish")
-    (fish_completion/"git-mit-config.fish").write output
+    Pathname.glob('**/zsh_completion/*').each do |file|
+      zsh_completion.install file
+    end
   end
 
   test do

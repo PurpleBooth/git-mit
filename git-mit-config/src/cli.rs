@@ -1,6 +1,6 @@
 use clap::{crate_authors, crate_version, App, AppSettings, Arg};
 
-pub(crate) fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
+pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
     let lint_argument = Arg::with_name("lint")
         .about("The lint to enable")
         .required(true)
@@ -45,16 +45,6 @@ pub(crate) fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                 .about("Manage author configuration")
                 .subcommand(App::new("example").about("Print example author yaml file"))
                 .setting(AppSettings::SubcommandRequiredElseHelp),
-        )
-        .subcommand(
-            App::new("completion")
-                .about("Print completion information")
-                .arg(
-                    Arg::with_name("shell")
-                        .about("Print completion information for your shell")
-                        .possible_values(&["bash", "fish", "zsh", "elvish"])
-                        .required(true),
-                ),
         )
         .setting(AppSettings::SubcommandRequiredElseHelp)
 }

@@ -1,6 +1,6 @@
 use std::{
     convert::TryFrom,
-    env, fs, io,
+    env, fs,
     path::PathBuf,
     process::{Command, Stdio},
     time::Duration,
@@ -20,8 +20,6 @@ use mit_commit_message_lints::{
 use crate::errors::GitMitError;
 use crate::errors::GitMitError::{NoAuthorInitialsProvided, NoTimeoutSet};
 use crate::ExitCode::InitialNotMatchedToAuthor;
-use clap_generate::generate;
-use clap_generate::generators::{Bash, Elvish, Fish, Zsh};
 
 #[repr(i32)]
 enum ExitCode {
@@ -33,37 +31,6 @@ const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
 fn main() -> Result<(), errors::GitMitError> {
     let path = config_path(env!("CARGO_PKG_NAME"))?;
     let matches = cli::app(&path).get_matches();
-
-    if let Some(shell) = matches.value_of("completion") {
-        if shell == "bash" {
-            generate::<Bash, _>(
-                &mut cli::app(&path),
-                env!("CARGO_PKG_NAME"),
-                &mut io::stdout(),
-            )
-        } else if shell == "fish" {
-            generate::<Fish, _>(
-                &mut cli::app(&path),
-                env!("CARGO_PKG_NAME"),
-                &mut io::stdout(),
-            )
-        } else if shell == "zsh" {
-            generate::<Zsh, _>(
-                &mut cli::app(&path),
-                env!("CARGO_PKG_NAME"),
-                &mut io::stdout(),
-            )
-        } else if shell == "elvish" {
-            generate::<Elvish, _>(
-                &mut cli::app(&path),
-                env!("CARGO_PKG_NAME"),
-                &mut io::stdout(),
-            )
-        }
-
-        return Ok(());
-    }
-
     let users_config = get_users_config(&matches)?;
     let authors_initials = get_author_initials(&matches).ok_or_else(|| NoAuthorInitialsProvided)?;
 
