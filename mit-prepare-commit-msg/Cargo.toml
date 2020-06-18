@@ -1,6 +1,6 @@
 [package]
 name = "mit-prepare-commit-msg"
-version = "3.11.0"
+version = "3.13.0"
 authors = [
   "Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>"
 ]
@@ -15,7 +15,6 @@ repository = "https://github.com/PurpleBooth/pb-git-hooks"
 [build-dependencies]
 clap = "3.0.0-beta.1"
 clap_generate = "3.0.0-beta.1"
-
 
 [dependencies]
 clap = "3.0.0-beta.1"
