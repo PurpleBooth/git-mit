@@ -1,9 +1,6 @@
 use std::{
     convert::TryFrom,
-    env,
-    error::Error,
-    fmt::{Display, Formatter},
-    fs, io,
+    env, fs, io,
     path::PathBuf,
     process::{Command, Stdio},
     time::Duration,
@@ -17,12 +14,12 @@ use mit_commit_message_lints::{
         entities::{Author, Authors},
         vcs::set_authors,
     },
-    errors::MitCommitMessageLintsError,
     external::vcs::Git2,
 };
 
-use crate::GitMitError::NoAuthorInitialsProvided;
-use crate::{ExitCode::InitialNotMatchedToAuthor, GitMitError::NoTimeoutSet};
+use crate::errors::GitMitError;
+use crate::errors::GitMitError::{NoAuthorInitialsProvided, NoTimeoutSet};
+use crate::ExitCode::InitialNotMatchedToAuthor;
 use clap_generate::generate;
 use clap_generate::generators::{Bash, Elvish, Fish, Zsh};
 
@@ -39,7 +36,7 @@ const COMPLETION: &str = "completion";
 
 const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
 
-fn main() -> Result<(), GitMitError> {
+fn main() -> Result<(), errors::GitMitError> {
     let path = config_path(env!("CARGO_PKG_NAME"))?;
     let matches = app(&path).get_matches();
 
@@ -157,7 +154,7 @@ fn app(config_file_path: &str) -> App {
         )
 }
 
-fn get_author_initials<'a>(matches: &'a ArgMatches) -> Option<Vec<&'a str>> {
+fn get_author_initials(matches: &ArgMatches) -> Option<Vec<&str>> {
     matches.values_of(AUTHOR_INITIAL).map(Iterator::collect)
 }
 
@@ -211,79 +208,4 @@ fn authors_config_file(config_directory: &BaseDirectories) -> Result<PathBuf, Gi
         .map_err(|error| GitMitError::new_io("<config_dir>/author.yml".into(), &error))
 }
 
-#[derive(Debug)]
-enum GitMitError {
-    NoAuthorInitialsProvided,
-    NoTimeoutSet,
-    PbCommitMessageLints(MitCommitMessageLintsError),
-    Io(String, String),
-    Exec(String, String),
-    Xdg(String),
-    TimeoutNotNumber(String),
-    Utf8(String),
-    AuthorFileNotSet,
-}
-
-impl GitMitError {
-    fn new_io(source: String, error: &std::io::Error) -> GitMitError {
-        GitMitError::Io(source, format!("{}", error))
-    }
-    fn new_exec(source: String, error: &std::io::Error) -> GitMitError {
-        GitMitError::Exec(source, format!("{}", error))
-    }
-}
-
-impl Display for GitMitError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            GitMitError::NoAuthorInitialsProvided => write!(f, "No author initials provided"),
-            GitMitError::NoTimeoutSet => write!(f, "No timeout set"),
-            GitMitError::TimeoutNotNumber(error) => write!(
-                f,
-                "The timeout needs to be the number of minutes:\n{}",
-                error
-            ),
-            GitMitError::PbCommitMessageLints(error) => write!(f, "{}", error),
-            GitMitError::Io(file_source, error) => {
-                write!(f, "Failed to read from `{}`:\n{}", file_source, error)
-            }
-            GitMitError::Exec(exec, error) => write!(f, "Failed to run `{}`:\n{}", exec, error),
-            GitMitError::Xdg(error) => write!(f, "Failed to find config directory: {}", error),
-            GitMitError::AuthorFileNotSet => {
-                write!(f, "Expected a author file path, didn't find one")
-            }
-            GitMitError::Utf8(error) => write!(
-                f,
-                "Failed to convert the output from the author file generation command to a UTF-8 \
-                 String:\n{}",
-                error
-            ),
-        }
-    }
-}
-
-impl From<std::string::FromUtf8Error> for GitMitError {
-    fn from(from: std::string::FromUtf8Error) -> Self {
-        GitMitError::Utf8(format!("{}", from))
-    }
-}
-
-impl From<MitCommitMessageLintsError> for GitMitError {
-    fn from(from: MitCommitMessageLintsError) -> Self {
-        GitMitError::PbCommitMessageLints(from)
-    }
-}
-
-impl From<std::num::ParseIntError> for GitMitError {
-    fn from(from: std::num::ParseIntError) -> Self {
-        GitMitError::TimeoutNotNumber(format!("{}", from))
-    }
-}
-
-impl From<xdg::BaseDirectoriesError> for GitMitError {
-    fn from(from: xdg::BaseDirectoriesError) -> Self {
-        GitMitError::Xdg(format!("{}", from))
-    }
-}
-
-impl Error for GitMitError {}
+mod errors;
