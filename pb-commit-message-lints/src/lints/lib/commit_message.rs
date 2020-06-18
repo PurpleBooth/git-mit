@@ -5,7 +5,7 @@ use crate::errors::PbCommitMessageLintsError;
 
 const SCISSORS_LINE: &str = "------------------------ >8 ------------------------";
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct CommitMessage {
     contents: String,
     comment_char: String,
@@ -37,7 +37,9 @@ impl CommitMessage {
     pub fn add_trailer(&self, trailer: &str) -> Self {
         let (body, tail) = self.message_parts();
 
-        if body.is_empty() && tail.is_empty() {
+        if self.has_trailer(trailer) {
+            self.clone()
+        } else if body.is_empty() && tail.is_empty() {
             Self::new(format!("\n{}\n", trailer))
         } else if body.is_empty() {
             Self::new(format!("\n{}\n\n{}\n", trailer, tail))
@@ -46,6 +48,13 @@ impl CommitMessage {
         } else {
             Self::new(format!("{}\n{}\n\n{}\n", body, trailer, tail))
         }
+    }
+
+    fn has_trailer(&self, trailer: &str) -> bool {
+        self.contents
+            .lines()
+            .map(|line| line)
+            .any(|line| line == trailer)
     }
 
     fn line_has_trailer(trailer: &str, line: &str) -> bool {
@@ -217,6 +226,37 @@ mod test_commit_message {
                     Simple commit message
 
                     With a description.
+                    "
+                )
+                .into(),
+            )
+            .add_trailer("Anything: Some Trailer")
+        );
+    }
+
+    #[test]
+    fn adding_a_trailer_twice() {
+        assert_eq!(
+            CommitMessage::new(
+                indoc!(
+                    "
+                    Simple commit message
+
+                    With a description.
+
+                    Anything: Some Trailer
+                    "
+                )
+                .into(),
+            ),
+            CommitMessage::new(
+                indoc!(
+                    "
+                    Simple commit message
+
+                    With a description.
+
+                    Anything: Some Trailer
                     "
                 )
                 .into(),
