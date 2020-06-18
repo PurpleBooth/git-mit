@@ -1,6 +1,6 @@
 [package]
 name = "mit-pre-commit"
-version = "3.11.0"
+version = "3.12.0"
 authors = [ "Billie Thompson <billie+mit-pre-commit@billiecodes.com>" ]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
@@ -13,7 +13,6 @@ repository = "https://github.com/PurpleBooth/pb-git-hooks"
 [build-dependencies]
 clap = "3.0.0-beta.1"
 clap_generate = "3.0.0-beta.1"
-
 
 [dependencies]
 clap = "3.0.0-beta.1"
