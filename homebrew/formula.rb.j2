@@ -13,15 +13,15 @@ class GitMit < Formula
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit/"
     system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit-config/"
 
-    Pathname.glob('**/bash_completion/*').each do |file|
+    Pathname.glob("**/bash_completion/*").each do |file|
       bash_completion.install file
     end
 
-    Pathname.glob('**/fish_completion/*').each do |file|
+    Pathname.glob("**/fish_completion/*").each do |file|
       fish_completion.install file
     end
 
-    Pathname.glob('**/zsh_completion/*').each do |file|
+    Pathname.glob("**/zsh_completion/*").each do |file|
       zsh_completion.install file
     end
   end
