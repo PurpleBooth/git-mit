@@ -6,7 +6,7 @@ use std::{
     time::Duration,
 };
 
-use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
+use clap::ArgMatches;
 use xdg::BaseDirectories;
 
 use mit_commit_message_lints::{
@@ -28,27 +28,37 @@ enum ExitCode {
     InitialNotMatchedToAuthor = 3,
 }
 
-const AUTHOR_INITIAL: &str = "initials";
-const AUTHOR_FILE_PATH: &str = "file";
-const AUTHOR_FILE_COMMAND: &str = "command";
-const TIMEOUT: &str = "timeout";
-const COMPLETION: &str = "completion";
-
 const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
 
 fn main() -> Result<(), errors::GitMitError> {
     let path = config_path(env!("CARGO_PKG_NAME"))?;
-    let matches = app(&path).get_matches();
+    let matches = cli::app(&path).get_matches();
 
-    if let Some(shell) = matches.value_of(COMPLETION) {
+    if let Some(shell) = matches.value_of("completion") {
         if shell == "bash" {
-            generate::<Bash, _>(&mut app(&path), env!("CARGO_PKG_NAME"), &mut io::stdout())
+            generate::<Bash, _>(
+                &mut cli::app(&path),
+                env!("CARGO_PKG_NAME"),
+                &mut io::stdout(),
+            )
         } else if shell == "fish" {
-            generate::<Fish, _>(&mut app(&path), env!("CARGO_PKG_NAME"), &mut io::stdout())
+            generate::<Fish, _>(
+                &mut cli::app(&path),
+                env!("CARGO_PKG_NAME"),
+                &mut io::stdout(),
+            )
         } else if shell == "zsh" {
-            generate::<Zsh, _>(&mut app(&path), env!("CARGO_PKG_NAME"), &mut io::stdout())
+            generate::<Zsh, _>(
+                &mut cli::app(&path),
+                env!("CARGO_PKG_NAME"),
+                &mut io::stdout(),
+            )
         } else if shell == "elvish" {
-            generate::<Elvish, _>(&mut app(&path), env!("CARGO_PKG_NAME"), &mut io::stdout())
+            generate::<Elvish, _>(
+                &mut cli::app(&path),
+                env!("CARGO_PKG_NAME"),
+                &mut io::stdout(),
+            )
         }
 
         return Ok(());
@@ -107,59 +117,14 @@ fn find_initials_missing<'a>(
         .collect()
 }
 
-fn app(config_file_path: &str) -> App {
-    App::new(String::from(env!("CARGO_PKG_NAME")))
-        .version(crate_version!())
-        .author(crate_authors!())
-        .about(env!("CARGO_PKG_DESCRIPTION"))
-        .arg(
-            Arg::with_name(AUTHOR_INITIAL)
-                .about("Initials of the author to put in the commit")
-                .multiple(true)
-                .required_unless(COMPLETION)
-                .min_values(1),
-        )
-        .arg(
-            Arg::with_name(AUTHOR_FILE_PATH)
-                .short('c')
-                .long("config")
-                .about("Path to a file where author initials, emails and names can be found")
-                .env("GIT_MIT_AUTHORS_CONFIG")
-                .default_value(config_file_path),
-        )
-        .arg(
-            Arg::with_name(AUTHOR_FILE_COMMAND)
-                .short('e')
-                .long("exec")
-                .about(
-                    "Execute a command to generate the author configuration, stdout will be \
-                     captured and used instead of the file, if both this and the file is present, \
-                     this takes precedence",
-                )
-                .env("GIT_MIT_AUTHORS_EXEC"),
-        )
-        .arg(
-            Arg::with_name(TIMEOUT)
-                .short('t')
-                .long("timeout")
-                .about("Number of minutes to expire the configuration in")
-                .env("GIT_MIT_AUTHORS_TIMEOUT")
-                .default_value("60"),
-        )
-        .arg(
-            Arg::with_name(COMPLETION)
-                .long("completion")
-                .about("Print completion information for your shell")
-                .possible_values(&["bash", "fish", "zsh", "elvish"]),
-        )
-}
+mod cli;
 
 fn get_author_initials(matches: &ArgMatches) -> Option<Vec<&str>> {
-    matches.values_of(AUTHOR_INITIAL).map(Iterator::collect)
+    matches.values_of("initials").map(Iterator::collect)
 }
 
 fn get_users_config(matches: &ArgMatches) -> Result<String, GitMitError> {
-    match matches.value_of(AUTHOR_FILE_COMMAND) {
+    match matches.value_of("command") {
         Some(command) => get_author_config_from_exec(command),
         None => get_author_config_from_file(matches),
     }
@@ -185,12 +150,12 @@ fn get_author_config_from_file(matches: &ArgMatches) -> Result<String, GitMitErr
 }
 
 fn get_author_file_path(matches: &ArgMatches) -> Option<&str> {
-    matches.value_of(AUTHOR_FILE_PATH)
+    matches.value_of("file")
 }
 
 fn get_timeout(matches: &ArgMatches) -> Result<u64, GitMitError> {
     matches
-        .value_of(TIMEOUT)
+        .value_of("timeout")
         .ok_or_else(|| NoTimeoutSet)
         .and_then(|x| x.parse().map_err(GitMitError::from))
 }

@@ -1,7 +1,6 @@
 use std::{env, process};
 
-use clap::{crate_authors, crate_version, App};
-
+use crate::cli::app;
 use crate::errors::MitPreCommitError;
 use mit_commit_message_lints::{author::vcs::get_coauthor_configuration, external::vcs::Git2};
 use std::convert::TryFrom;
@@ -12,11 +11,7 @@ enum ExitCode {
 }
 
 fn main() -> Result<(), errors::MitPreCommitError> {
-    App::new(env!("CARGO_PKG_NAME"))
-        .version(crate_version!())
-        .author(crate_authors!())
-        .about(env!("CARGO_PKG_DESCRIPTION"))
-        .get_matches();
+    app().get_matches();
 
     let current_dir = env::current_dir()
         .map_err(|err| MitPreCommitError::new_io("<current_dir>".into(), &err))?;
@@ -36,5 +31,7 @@ fn main() -> Result<(), errors::MitPreCommitError> {
 
     Ok(())
 }
+
+mod cli;
 
 mod errors;

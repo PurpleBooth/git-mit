@@ -2,23 +2,20 @@ extern crate mit_commit_message_lints;
 
 use std::env;
 
-use clap::{crate_authors, crate_version, App, Arg};
-
 use mit_commit_message_lints::{
     external::vcs::Git2,
     lints::{lib::CommitMessage, lib::Lints, lint, Code, Problem},
 };
 
+use crate::cli::app;
 use crate::errors::MitCommitMsgError;
 use std::{convert::TryFrom, path::PathBuf};
-
-const COMMIT_FILE_PATH_NAME: &str = "commit-file-path";
 
 fn main() -> Result<(), MitCommitMsgError> {
     let matches = app().get_matches();
 
     let commit_file_path = matches
-        .value_of(COMMIT_FILE_PATH_NAME)
+        .value_of("commit-file-path")
         .map(PathBuf::from)
         .ok_or_else(|| errors::MitCommitMsgError::CommitPathMissing)?;
 
@@ -39,21 +36,7 @@ fn main() -> Result<(), MitCommitMsgError> {
     Ok(())
 }
 
-fn app() -> App<'static> {
-    App::new(env!("CARGO_PKG_NAME"))
-        .version(crate_version!())
-        .author(crate_authors!())
-        .about(env!("CARGO_PKG_DESCRIPTION"))
-        .arg(
-            Arg::with_name(COMMIT_FILE_PATH_NAME)
-                .about(
-                    "Path to a temporary file that contains the commit message written by the \
-                     developer",
-                )
-                .index(1)
-                .required(true),
-        )
-}
+mod cli;
 
 fn format_lint_problems(
     original_message: &CommitMessage,
