@@ -1,8 +1,6 @@
 use crate::GitMitConfigError::LintNameNotGiven;
-use crate::{
-    GitMitConfigError, COMMAND_LINT_AVAILABLE, COMMAND_LINT_DISABLE, COMMAND_LINT_ENABLE,
-    COMMAND_LINT_ENABLED, COMMAND_LINT_STATUS, LINT_NAME_ARGUMENT,
-};
+
+use crate::errors::GitMitConfigError;
 use clap::ArgMatches;
 use mit_commit_message_lints::external::vcs::Vcs;
 use mit_commit_message_lints::lints::set_status;
@@ -11,19 +9,19 @@ use mit_commit_message_lints::lints::Lints;
 use std::convert::TryInto;
 
 pub(crate) fn manage_lints(args: &ArgMatches, vcs: &mut dyn Vcs) -> Result<(), GitMitConfigError> {
-    if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_ENABLE) {
+    if let Some(subcommand_args) = args.subcommand_matches("enable") {
         set_lint_status(vcs, &subcommand_args, true)
-    } else if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_DISABLE) {
+    } else if let Some(subcommand_args) = args.subcommand_matches("disable") {
         set_lint_status(vcs, &subcommand_args, false)
-    } else if args.subcommand_matches(COMMAND_LINT_AVAILABLE).is_some() {
+    } else if args.subcommand_matches("available").is_some() {
         let all_lints = Lints::new(Lint::iterator().collect());
         println!("{}", all_lints.names().join("\n"));
         Ok(())
-    } else if args.subcommand_matches(COMMAND_LINT_ENABLED).is_some() {
+    } else if args.subcommand_matches("enabled").is_some() {
         let lints: Lints = Lints::try_from_vcs(vcs)?;
         println!("{}", lints.names().join("\n"));
         Ok(())
-    } else if let Some(subcommand_args) = args.subcommand_matches(COMMAND_LINT_STATUS) {
+    } else if let Some(subcommand_args) = args.subcommand_matches("status") {
         let lints = get_selected_lints(&subcommand_args)?;
 
         let config = Lints::try_from_vcs(vcs)?;
@@ -62,7 +60,7 @@ fn get_config_status<'a>(lints: Lints, config: Lints) -> Vec<&'a str> {
 
 fn get_selected_lints(args: &ArgMatches) -> Result<Lints, GitMitConfigError> {
     let names: Vec<_> = args
-        .values_of(LINT_NAME_ARGUMENT)
+        .values_of("lint")
         .ok_or_else(|| LintNameNotGiven)?
         .collect();
     let lints = names.try_into()?;
