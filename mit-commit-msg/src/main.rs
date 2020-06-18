@@ -4,19 +4,13 @@ use std::env;
 
 use clap::{crate_authors, crate_version, App, Arg};
 
-use crate::MitCommitMsgError::PbCommitMessageLints;
 use mit_commit_message_lints::{
-    errors::MitCommitMessageLintsError,
     external::vcs::Git2,
     lints::{lib::CommitMessage, lib::Lints, lint, Code, Problem},
 };
 
-use std::{
-    convert::TryFrom,
-    error::Error,
-    fmt::{Display, Formatter},
-    path::PathBuf,
-};
+use crate::errors::MitCommitMsgError;
+use std::{convert::TryFrom, path::PathBuf};
 
 const COMMIT_FILE_PATH_NAME: &str = "commit-file-path";
 
@@ -26,7 +20,7 @@ fn main() -> Result<(), MitCommitMsgError> {
     let commit_file_path = matches
         .value_of(COMMIT_FILE_PATH_NAME)
         .map(PathBuf::from)
-        .ok_or_else(|| MitCommitMsgError::CommitPathMissing)?;
+        .ok_or_else(|| errors::MitCommitMsgError::CommitPathMissing)?;
 
     let commit_message = CommitMessage::try_from(commit_file_path)?;
 
@@ -92,37 +86,4 @@ fn display_lint_err_and_exit(commit_message: &str, exit_code: Code) {
     std::process::exit(exit_code as i32);
 }
 
-#[derive(Debug)]
-enum MitCommitMsgError {
-    CommitPathMissing,
-    PbCommitMessageLints(MitCommitMessageLintsError),
-    Io(String, String),
-}
-
-impl MitCommitMsgError {
-    fn new_io(location: String, error: &std::io::Error) -> MitCommitMsgError {
-        MitCommitMsgError::Io(location, format!("{}", error))
-    }
-}
-
-impl Display for MitCommitMsgError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PbCommitMessageLints(error) => write!(f, "{}", error),
-            MitCommitMsgError::Io(file_source, error) => write!(
-                f,
-                "Failed to read git config from `{}`:\n{}",
-                file_source, error
-            ),
-            MitCommitMsgError::CommitPathMissing => write!(f, "Expected file path name",),
-        }
-    }
-}
-
-impl From<MitCommitMessageLintsError> for MitCommitMsgError {
-    fn from(err: MitCommitMessageLintsError) -> Self {
-        PbCommitMessageLints(err)
-    }
-}
-
-impl Error for MitCommitMsgError {}
+mod errors;

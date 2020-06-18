@@ -2,22 +2,16 @@ use std::{env, process};
 
 use clap::{crate_authors, crate_version, App};
 
-use mit_commit_message_lints::{
-    author::vcs::get_coauthor_configuration, errors::MitCommitMessageLintsError,
-    external::vcs::Git2,
-};
-use std::{
-    convert::TryFrom,
-    error::Error,
-    fmt::{Display, Formatter},
-};
+use crate::errors::MitPreCommitError;
+use mit_commit_message_lints::{author::vcs::get_coauthor_configuration, external::vcs::Git2};
+use std::convert::TryFrom;
 
 #[repr(i32)]
 enum ExitCode {
     StaleAuthor = 3,
 }
 
-fn main() -> Result<(), MitPreCommitError> {
+fn main() -> Result<(), errors::MitPreCommitError> {
     App::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
         .author(crate_authors!())
@@ -43,35 +37,4 @@ fn main() -> Result<(), MitPreCommitError> {
     Ok(())
 }
 
-#[derive(Debug)]
-enum MitPreCommitError {
-    PbCommitMessageLintsError(MitCommitMessageLintsError),
-    Io(String, String),
-}
-
-impl Display for MitPreCommitError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            MitPreCommitError::PbCommitMessageLintsError(error) => write!(f, "{}", error),
-            MitPreCommitError::Io(file_source, error) => write!(
-                f,
-                "Failed to read from config from `{}`:\n{}",
-                file_source, error
-            ),
-        }
-    }
-}
-
-impl From<MitCommitMessageLintsError> for MitPreCommitError {
-    fn from(from: MitCommitMessageLintsError) -> Self {
-        MitPreCommitError::PbCommitMessageLintsError(from)
-    }
-}
-
-impl Error for MitPreCommitError {}
-
-impl MitPreCommitError {
-    fn new_io(source: String, error: &std::io::Error) -> MitPreCommitError {
-        MitPreCommitError::Io(source, format!("{}", error))
-    }
-}
+mod errors;

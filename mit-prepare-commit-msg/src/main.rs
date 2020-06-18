@@ -2,21 +2,17 @@ use std::{env, fs::File, io::Write};
 
 use clap::{crate_authors, crate_version, App, Arg};
 
+use crate::errors::MitPrepareCommitMessageError;
 use crate::MitPrepareCommitMessageError::MissingCommitFilePath;
 use mit_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
-    errors::MitCommitMessageLintsError,
     external::vcs::Git2,
     lints::lib::CommitMessage,
 };
 use std::convert::TryFrom;
-use std::{
-    error::Error,
-    fmt::{Display, Formatter},
-    path::PathBuf,
-};
+use std::path::PathBuf;
 
-fn main() -> Result<(), MitPrepareCommitMessageError> {
+fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
     let matches = app().get_matches();
 
     let commit_message_path = matches
@@ -87,41 +83,4 @@ fn append_coauthors_to_commit_message(
         .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))
 }
 
-#[derive(Debug)]
-enum MitPrepareCommitMessageError {
-    PbCommitMessageLintsError(MitCommitMessageLintsError),
-    Io(String, String),
-    MissingCommitFilePath,
-}
-
-impl Display for MitPrepareCommitMessageError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            MitPrepareCommitMessageError::PbCommitMessageLintsError(error) => {
-                write!(f, "{}", error)
-            }
-            MitPrepareCommitMessageError::MissingCommitFilePath => {
-                write!(f, "Expected commit file path")
-            }
-            MitPrepareCommitMessageError::Io(file_source, error) => write!(
-                f,
-                "Failed to read author config from `{}`:\n{}",
-                file_source, error
-            ),
-        }
-    }
-}
-
-impl From<MitCommitMessageLintsError> for MitPrepareCommitMessageError {
-    fn from(from: MitCommitMessageLintsError) -> Self {
-        MitPrepareCommitMessageError::PbCommitMessageLintsError(from)
-    }
-}
-
-impl Error for MitPrepareCommitMessageError {}
-
-impl MitPrepareCommitMessageError {
-    fn new_io(source: String, error: &std::io::Error) -> MitPrepareCommitMessageError {
-        MitPrepareCommitMessageError::Io(source, format!("{}", error))
-    }
-}
+mod errors;
