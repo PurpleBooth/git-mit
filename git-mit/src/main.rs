@@ -37,6 +37,8 @@ const AUTHOR_FILE_COMMAND: &str = "command";
 const TIMEOUT: &str = "timeout";
 const COMPLETION: &str = "completion";
 
+const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
+
 fn main() -> Result<(), GitMitError> {
     let path = config_path(env!("CARGO_PKG_NAME"))?;
     let matches = app(&path).get_matches();
@@ -167,7 +169,9 @@ fn get_users_config(matches: &ArgMatches) -> Result<String, GitMitError> {
 }
 
 fn get_author_config_from_exec(command: &str) -> Result<String, GitMitError> {
-    Command::new("sh")
+    let shell = env::var("SHELL")
+        .unwrap_or_else(|_| PROBABLY_SAFE_FALLBACK_SHELL.into());
+    Command::new(shell)
         .stderr(Stdio::inherit())
         .arg("-c")
         .arg(command)
