@@ -169,8 +169,7 @@ fn get_users_config(matches: &ArgMatches) -> Result<String, GitMitError> {
 }
 
 fn get_author_config_from_exec(command: &str) -> Result<String, GitMitError> {
-    let shell = env::var("SHELL")
-        .unwrap_or_else(|_| PROBABLY_SAFE_FALLBACK_SHELL.into());
+    let shell = env::var("SHELL").unwrap_or_else(|_| PROBABLY_SAFE_FALLBACK_SHELL.into());
     Command::new(shell)
         .stderr(Stdio::inherit())
         .arg("-c")
