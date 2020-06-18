@@ -23,10 +23,9 @@ fn help_printed_when_no_arguments_passed() {
                 -s, --scope <scope>     [default: local]  [possible values: local, global]
 
             SUBCOMMANDS:
-                completion    Print completion information
-                help          Prints this message or the help of the given subcommand(s)
-                lint          Manage active lints
-                mit           Manage author configuration
+                help    Prints this message or the help of the given subcommand(s)
+                lint    Manage active lints
+                mit     Manage author configuration
             "
         )
         .into(),

@@ -1,6 +1,6 @@
 use clap::{crate_authors, crate_version, App, Arg};
 
-pub(crate) fn app(config_file_path: &str) -> App {
+pub fn app(config_file_path: &str) -> App {
     App::new(String::from(env!("CARGO_PKG_NAME")))
         .version(crate_version!())
         .author(crate_authors!())
@@ -9,7 +9,7 @@ pub(crate) fn app(config_file_path: &str) -> App {
             Arg::with_name("initials")
                 .about("Initials of the author to put in the commit")
                 .multiple(true)
-                .required_unless("completion")
+                .required(true)
                 .min_values(1),
         )
         .arg(
@@ -38,11 +38,5 @@ pub(crate) fn app(config_file_path: &str) -> App {
                 .about("Number of minutes to expire the configuration in")
                 .env("GIT_MIT_AUTHORS_TIMEOUT")
                 .default_value("60"),
-        )
-        .arg(
-            Arg::with_name("completion")
-                .long("completion")
-                .about("Print completion information for your shell")
-                .possible_values(&["bash", "fish", "zsh", "elvish"]),
         )
 }
