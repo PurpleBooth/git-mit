@@ -1,7 +1,16 @@
 use regex::{Regex, RegexBuilder};
-use std::{convert::TryFrom, fmt::Display, fs::File, io::Read, path::PathBuf, str::Lines};
+use std::{
+    convert::TryFrom,
+    fmt::Display,
+    fs::File,
+    io::Read,
+    path::PathBuf,
+    str::{FromStr, Lines},
+};
 
 use crate::errors::MitCommitMessageLintsError;
+
+use super::Trailer;
 
 const SCISSORS_LINE: &str = "------------------------ >8 ------------------------";
 
@@ -26,18 +35,25 @@ impl CommitMessage {
     }
 
     #[must_use]
-    pub fn get_trailer(&self, trailer: &str) -> Vec<&str> {
+    pub fn get_trailer(&self, trailer_key: &str) -> Vec<Trailer> {
+        self.get_all_trailers()
+            .into_iter()
+            .filter(|trailer| trailer.has_key(trailer_key))
+            .collect()
+    }
+
+    fn get_all_trailers(&self) -> Vec<Trailer> {
         self.contents
             .lines()
-            .filter(|line: &&str| CommitMessage::line_has_trailer(trailer, line))
-            .collect::<Vec<_>>()
+            .filter_map(|line: &str| Trailer::from_str(line).ok())
+            .collect()
     }
 
     #[must_use]
-    pub fn add_trailer(&self, trailer: &str) -> Self {
+    pub fn add_trailer(&self, trailer: &Trailer) -> Self {
         let (body, tail) = self.message_parts();
 
-        if self.has_trailer(trailer) {
+        if self.has_line(&trailer.to_string()) {
             self.clone()
         } else if body.is_empty() && tail.is_empty() {
             Self::new(format!("\n{}\n", trailer))
@@ -50,15 +66,11 @@ impl CommitMessage {
         }
     }
 
-    fn has_trailer(&self, trailer: &str) -> bool {
+    fn has_line(&self, search: &str) -> bool {
         self.contents
             .lines()
             .map(|line| line)
-            .any(|line| line == trailer)
-    }
-
-    fn line_has_trailer(trailer: &str, line: &str) -> bool {
-        line.starts_with(&format!("{}:", trailer))
+            .any(|line| line == search)
     }
 
     fn message_parts(&self) -> (String, String) {
@@ -147,10 +159,11 @@ impl Display for CommitMessage {
 mod test_commit_message {
     use pretty_assertions::assert_eq;
     use regex::Regex;
+    use std::str::FromStr;
 
     use indoc::indoc;
 
-    use super::CommitMessage;
+    use super::{CommitMessage, Trailer};
 
     #[test]
     fn with_trailers() {
@@ -166,9 +179,15 @@ mod test_commit_message {
             .into(),
         );
 
-        assert_eq!(vec!["Another: Trailer"], commit.get_trailer("Another"));
         assert_eq!(
-            vec!["Anything: Some Trailer", "Anything: Some Trailer"],
+            vec![Trailer::new("Another", "Trailer")],
+            commit.get_trailer("Another")
+        );
+        assert_eq!(
+            vec![
+                Trailer::new("Anything", "Some Trailer"),
+                Trailer::new("Anything", "Some Trailer"),
+            ],
             commit.get_trailer("Anything")
         )
     }
@@ -201,7 +220,8 @@ mod test_commit_message {
     fn adding_trailer_to_empty_message() {
         assert_eq!(
             CommitMessage::new("\nAnything: Some Trailer\n".into()),
-            CommitMessage::new("".into()).add_trailer("Anything: Some Trailer")
+            CommitMessage::new("".into())
+                .add_trailer(&Trailer::from_str("Anything: Some Trailer").unwrap())
         );
     }
 
@@ -230,7 +250,7 @@ mod test_commit_message {
                 )
                 .into(),
             )
-            .add_trailer("Anything: Some Trailer")
+            .add_trailer(&Trailer::from_str("Anything: Some Trailer").unwrap())
         );
     }
 
@@ -261,7 +281,7 @@ mod test_commit_message {
                 )
                 .into(),
             )
-            .add_trailer("Anything: Some Trailer")
+            .add_trailer(&Trailer::from_str("Anything: Some Trailer").unwrap())
         );
     }
 
@@ -280,7 +300,7 @@ mod test_commit_message {
                 .into(),
             ),
             CommitMessage::new("# Comments about writing a commit message\n".into())
-                .add_trailer("Trailer: Title")
+                .add_trailer(&Trailer::from_str("Trailer: Title").unwrap())
         );
     }
 
@@ -309,7 +329,7 @@ mod test_commit_message {
                 )
                 .into(),
             )
-            .add_trailer("Trailer: Title")
+            .add_trailer(&Trailer::from_str("Trailer: Title").unwrap())
         );
     }
 
@@ -348,7 +368,7 @@ mod test_commit_message {
                 )
                 .into(),
             )
-            .add_trailer("Trailer: Title")
+            .add_trailer(&Trailer::from_str("Trailer: Title").unwrap())
         );
     }
 
@@ -399,7 +419,7 @@ mod test_commit_message {
                 )
                 .into(),
             )
-            .add_trailer("Trailer: Content")
+            .add_trailer(&Trailer::from_str("Trailer: Content").unwrap())
         );
     }
 
@@ -448,7 +468,7 @@ mod test_commit_message {
                 )
                 .into(),
             )
-            .add_trailer("Trailer: Content")
+            .add_trailer(&Trailer::from_str("Trailer: Content").unwrap())
         );
     }
 
@@ -503,7 +523,7 @@ mod test_commit_message {
                 )
                 .into(),
             )
-            .add_trailer("Trailer: Content")
+            .add_trailer(&Trailer::from_str("Trailer: Content").unwrap())
         );
     }
 }

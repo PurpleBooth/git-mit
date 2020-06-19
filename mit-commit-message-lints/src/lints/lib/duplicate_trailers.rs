@@ -1,7 +1,7 @@
 use std::{collections::HashSet, iter::FromIterator};
 
 use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem};
+use crate::lints::lib::{CommitMessage, Problem, Trailer};
 
 pub(crate) const CONFIG_DUPLICATED_TRAILERS: &str = "duplicated-trailers";
 
@@ -16,16 +16,16 @@ fn has_duplicated_trailers(commit_message: &CommitMessage) -> Vec<String> {
         .collect::<Vec<String>>()
 }
 
-fn filter_without_duplicates(commit_message: &CommitMessage, trailer: &str) -> Option<String> {
-    Some(trailer)
+fn filter_without_duplicates(commit_message: &CommitMessage, trailer_key: &str) -> Option<String> {
+    Some(trailer_key)
         .map(String::from)
         .filter(|trailer| has_duplicated_trailer(commit_message, trailer))
 }
 
-fn has_duplicated_trailer(commit_message: &CommitMessage, trailer: &str) -> bool {
-    Some(commit_message.get_trailer(trailer))
-        .map(|trailers| (trailers.clone(), trailers.clone()))
-        .map(|(commit, unique)| (commit, HashSet::<&str>::from_iter(unique)))
+fn has_duplicated_trailer(commit_message: &CommitMessage, trailer_key: &str) -> bool {
+    Some(commit_message.get_trailer(trailer_key))
+        .map(|trailers| (trailers.clone(), trailers))
+        .map(|(commit, unique)| (commit, HashSet::<Trailer>::from_iter(unique)))
         .map(|(commit, unique)| commit.len() != unique.len())
         .unwrap()
 }

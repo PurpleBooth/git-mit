@@ -6,7 +6,7 @@ use crate::MitPrepareCommitMessageError::MissingCommitFilePath;
 use mit_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
     external::vcs::Git2,
-    lints::lib::CommitMessage,
+    lints::lib::{CommitMessage, Trailer},
 };
 use std::convert::TryFrom;
 use std::path::PathBuf;
@@ -43,7 +43,7 @@ fn append_coauthors_to_commit_message(
         "{}",
         authors
             .iter()
-            .map(|x| format!("Co-authored-by: {} <{}>", x.name(), x.email()))
+            .map(|x| Trailer::new("Co-authored-by", &format!("{} <{}>", x.name(), x.email())))
             .fold(commit_message, |message, trailer| message
                 .add_trailer(&trailer))
     );
