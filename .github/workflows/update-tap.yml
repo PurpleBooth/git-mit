@@ -6,7 +6,7 @@ jobs:
   generate-formula:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.0
+      - uses: actions/checkout@v2.3.1
       - run: |
           curl -Lo file.tar.gz "https://github.com/$GIT_REPO/archive/$GIT_TAG.tar.gz"
           sha256sum -b file.tar.gz | awk '{ print $1 }' > hash
@@ -52,13 +52,13 @@ jobs:
         run: echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
         shell: bash
       - uses: actions/download-artifact@v2
-      - uses: actions/checkout@v2.3.0
+      - uses: actions/checkout@v2.3.1
         with:
           repository: PurpleBooth/homebrew-repo
           token: ${{ secrets.COMMITTER_TOKEN }}
           path: homebrew-repo
           ref: "main"
-      - uses: actions/checkout@v2.3.0
+      - uses: actions/checkout@v2.3.1
         with:
           token: ${{ secrets.COMMITTER_TOKEN }}
           path: source-repo
