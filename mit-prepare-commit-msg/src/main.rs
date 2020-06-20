@@ -5,7 +5,7 @@ use crate::errors::MitPrepareCommitMessageError;
 use crate::MitPrepareCommitMessageError::MissingCommitFilePath;
 use mit_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
-    external::vcs::Git2,
+    external::Git2,
     lints::lib::{CommitMessage, Trailer},
 };
 use std::convert::TryFrom;

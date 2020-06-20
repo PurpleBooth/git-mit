@@ -1,7 +1,6 @@
 use std::fmt;
 use std::str::FromStr;
-
-use super::Error;
+use thiserror::Error;
 
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
 pub struct Trailer {
@@ -95,4 +94,10 @@ mod test_trailer {
     fn has_key_returns_true_if_key_does_match() {
         assert_eq!(true, Trailer::new("key", "value").has_key("key"))
     }
+}
+
+#[derive(Error, Debug, PartialEq)]
+pub enum Error {
+    #[error("trailer is missing delimiting colon: {string}")]
+    FailedToParseTrailer { string: String },
 }

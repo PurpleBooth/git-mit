@@ -3,7 +3,7 @@ extern crate mit_commit_message_lints;
 use std::env;
 
 use mit_commit_message_lints::{
-    external::vcs::Git2,
+    external::Git2,
     lints::{lib::CommitMessage, lib::Lints, lint, Code, Problem},
 };
 

@@ -1,4 +1,3 @@
-use crate::errors::MitCommitMessageLintsError;
 use crate::lints::lib::duplicate_trailers::lint_duplicated_trailers;
 use crate::lints::lib::lint::Lint::{
     DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing,
@@ -10,6 +9,7 @@ use crate::lints::lib::{
     duplicate_trailers, missing_jira_issue_key, missing_pivotal_tracker_id, CommitMessage, Lints,
 };
 use std::convert::TryInto;
+use thiserror::Error;
 
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash, Ord, PartialOrd)]
@@ -22,7 +22,7 @@ pub enum Lint {
 const CONFIG_KEY_PREFIX: &str = "pb.lint";
 
 impl std::convert::TryFrom<&str> for Lint {
-    type Error = MitCommitMessageLintsError;
+    type Error = Error;
 
     fn try_from(from: &str) -> Result<Self, Self::Error> {
         Lint::iterator()
@@ -31,7 +31,7 @@ impl std::convert::TryFrom<&str> for Lint {
             .collect::<Vec<Lint>>()
             .first()
             .copied()
-            .ok_or_else(|| MitCommitMessageLintsError::LintNotFoundError(from.into()))
+            .ok_or_else(|| Error::LintNotFound(from.into()))
     }
 }
 
@@ -88,7 +88,7 @@ impl Lint {
     ///
     /// # Errors
     /// If the lint does not exist
-    pub fn from_names(names: Vec<&str>) -> Result<Vec<Lint>, MitCommitMessageLintsError> {
+    pub fn from_names(names: Vec<&str>) -> Result<Vec<Lint>, super::lints::Error> {
         let lints: Lints = names.try_into()?;
         Ok(lints.into_iter().collect())
     }
@@ -127,4 +127,10 @@ impl std::fmt::Display for Lint {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.name())
     }
+}
+
+#[derive(Error, Debug)]
+pub enum Error {
+    #[error("Lint not found: {0}")]
+    LintNotFound(String),
 }

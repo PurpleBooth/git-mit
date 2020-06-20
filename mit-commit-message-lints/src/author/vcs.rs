@@ -1,17 +1,15 @@
 use std::{
+    num,
     ops::Add,
     option::Option,
     result::Result,
+    time,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use crate::errors::MitCommitMessageLintsError;
-
-use crate::{
-    author::entities::Author, errors::MitCommitMessageLintsError::NoAuthorsToSetError,
-    external::vcs::Vcs,
-};
+use crate::{author::entities::Author, external, external::Vcs};
 use std::{convert::TryInto, time::SystemTimeError};
+use thiserror::Error;
 
 const CONFIG_KEY_EXPIRES: &str = "pb.author.expires";
 
@@ -21,19 +19,22 @@ const CONFIG_KEY_EXPIRES: &str = "pb.author.expires";
 ///
 /// Will fail if reading or writing from the VCS config fails, or it contains
 /// data in an incorrect format
-pub fn get_coauthor_configuration(
-    config: &mut dyn Vcs,
-) -> Result<Option<Vec<Author>>, MitCommitMessageLintsError> {
-    match config.get_i64(CONFIG_KEY_EXPIRES) {
-        Ok(Some(config_value)) => {
-            if now()? < Duration::from_secs(config_value.try_into()?) {
-                Ok(Some(get_vcs_authors(config)?))
+pub fn get_coauthor_configuration(config: &mut dyn Vcs) -> Result<Option<Vec<Author>>, Error> {
+    let config_value = config.get_i64(CONFIG_KEY_EXPIRES)?;
+
+    match config_value {
+        Some(config_value) => {
+            let now = now()?;
+
+            if now < Duration::from_secs(config_value.try_into()?) {
+                let author_config = get_vcs_authors(config)?;
+
+                Ok(Some(author_config))
             } else {
                 Ok(None)
             }
         }
-        Ok(None) => Ok(None),
-        Err(error) => Err(error),
+        None => Ok(None),
     }
 }
 
@@ -50,7 +51,7 @@ mod tests_able_to_load_config_from_git {
 
     use crate::{
         author::{entities::Author, vcs::get_coauthor_configuration},
-        external::vcs::InMemory,
+        external::InMemory,
     };
 
     #[test]
@@ -60,8 +61,8 @@ mod tests_able_to_load_config_from_git {
         strings.insert("pb.author.expires".into(), format!("{}", now_minus_10));
         let mut vcs = InMemory::new(&mut strings);
 
-        let actual = get_coauthor_configuration(&mut vcs);
-        let expected = Ok(None);
+        let actual = get_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
+        let expected = None;
         assert_eq!(
             expected, actual,
             "Expected the author config to be {:?}, instead got {:?}",
@@ -79,8 +80,8 @@ mod tests_able_to_load_config_from_git {
 
         let mut vcs = InMemory::new(&mut strings);
 
-        let actual = get_coauthor_configuration(&mut vcs);
-        let expected: Result<Option<Vec<Author>>, _> = Ok(Some(vec![]));
+        let actual = get_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
+        let expected: Option<Vec<Author>> = Some(vec![]);
 
         assert_eq!(
             expected, actual,
@@ -103,12 +104,12 @@ mod tests_able_to_load_config_from_git {
         strs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
         let mut vcs = InMemory::new(&mut strs);
 
-        let actual = get_coauthor_configuration(&mut vcs);
-        let expected = Ok(Some(vec![Author::new(
+        let actual = get_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
+        let expected = Some(vec![Author::new(
             "Annie Example",
             "annie@example.com",
             None,
-        )]));
+        )]);
 
         assert_eq!(
             expected, actual,
@@ -149,11 +150,11 @@ mod tests_able_to_load_config_from_git {
 
         let mut vcs = InMemory::new(&mut strs);
 
-        let actual = get_coauthor_configuration(&mut vcs);
-        let expected = Ok(Some(vec![
+        let actual = get_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
+        let expected = Some(vec![
             Author::new("Annie Example", "annie@example.com", None),
             Author::new("Joe Bloggs", "joe@example.com", None),
-        ]));
+        ]);
 
         assert_eq!(
             expected, actual,
@@ -177,7 +178,7 @@ fn now() -> Result<Duration, SystemTimeError> {
     SystemTime::now().duration_since(UNIX_EPOCH)
 }
 
-fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>, MitCommitMessageLintsError> {
+fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>, Error> {
     let co_author_names = get_vcs_coauthor_names(config)?;
     let co_author_emails = get_vcs_coauthor_emails(config)?;
 
@@ -195,15 +196,11 @@ fn new_author(parameters: (&Option<&str>, Option<&str>)) -> Option<Author> {
     }
 }
 
-fn get_vcs_coauthor_names(
-    config: &dyn Vcs,
-) -> Result<Vec<Option<&str>>, MitCommitMessageLintsError> {
+fn get_vcs_coauthor_names(config: &dyn Vcs) -> Result<Vec<Option<&str>>, Error> {
     get_vcs_coauthors_config(config, "name")
 }
 
-fn get_vcs_coauthor_emails(
-    config: &dyn Vcs,
-) -> Result<Vec<Option<&str>>, MitCommitMessageLintsError> {
+fn get_vcs_coauthor_emails(config: &dyn Vcs) -> Result<Vec<Option<&str>>, Error> {
     get_vcs_coauthors_config(config, "email")
 }
 
@@ -211,7 +208,7 @@ fn get_vcs_coauthor_emails(
 fn get_vcs_coauthors_config<'a>(
     config: &'a dyn Vcs,
     key: &'a str,
-) -> Result<Vec<Option<&'a str>>, MitCommitMessageLintsError> {
+) -> Result<Vec<Option<&'a str>>, Error> {
     (0..)
         .take_while(|index| has_vcs_coauthor(config, *index))
         .map(|index| get_vcs_coauthor_config(config, key, index))
@@ -227,8 +224,10 @@ fn get_vcs_coauthor_config<'a>(
     config: &'a dyn Vcs,
     key: &str,
     index: i32,
-) -> Result<Option<&'a str>, MitCommitMessageLintsError> {
-    config.get_str(&format!("pb.author.coauthors.{}.{}", index, key))
+) -> Result<Option<&'a str>, Error> {
+    config
+        .get_str(&format!("pb.author.coauthors.{}.{}", index, key))
+        .map_err(Error::from)
 }
 
 fn has_vcs_coauthor(config: &dyn Vcs, index: i32) -> bool {
@@ -250,8 +249,8 @@ pub fn set_authors(
     config: &mut dyn Vcs,
     authors: &[&Author],
     expires_in: Duration,
-) -> Result<(), MitCommitMessageLintsError> {
-    let (first_author, others) = authors.split_first().ok_or_else(|| NoAuthorsToSetError)?;
+) -> Result<(), Error> {
+    let (first_author, others) = authors.split_first().ok_or_else(|| Error::NoAuthorsToSet)?;
 
     remove_coauthors(config)?;
     set_vcs_user(config, first_author)?;
@@ -273,7 +272,7 @@ mod tests_can_set_author_details {
 
     use crate::{
         author::{entities::Author, vcs::set_authors},
-        external::vcs::InMemory,
+        external::InMemory,
     };
 
     #[test]
@@ -442,10 +441,12 @@ mod tests_can_set_author_details {
     }
 }
 
-fn remove_coauthors(config: &mut dyn Vcs) -> Result<(), MitCommitMessageLintsError> {
+fn remove_coauthors(config: &mut dyn Vcs) -> Result<(), Error> {
     get_defined_vcs_coauthor_keys(config)
         .into_iter()
-        .try_for_each(|key| config.remove(&key))
+        .try_for_each(|key| config.remove(&key))?;
+
+    Ok(())
 }
 
 #[allow(clippy::maybe_infinite_iter)]
@@ -463,30 +464,21 @@ fn get_defined_vcs_coauthor_keys(config: &mut dyn Vcs) -> Vec<String> {
         .collect()
 }
 
-fn set_vcs_coauthors(
-    config: &mut dyn Vcs,
-    authors: &[&Author],
-) -> Result<(), MitCommitMessageLintsError> {
+fn set_vcs_coauthors(config: &mut dyn Vcs, authors: &[&Author]) -> Result<(), Error> {
     authors
         .iter()
         .enumerate()
         .try_for_each(|(index, author)| set_vcs_coauthor(config, index, author))
 }
 
-fn set_vcs_coauthor(
-    config: &mut dyn Vcs,
-    index: usize,
-    author: &Author,
-) -> Result<(), MitCommitMessageLintsError> {
-    set_vcs_coauthor_name(config, index, author)
-        .and_then(|_| set_vcs_coauthor_email(config, index, author))
+fn set_vcs_coauthor(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<(), Error> {
+    set_vcs_coauthor_name(config, index, author)?;
+    set_vcs_coauthor_email(config, index, author)?;
+
+    Ok(())
 }
 
-fn set_vcs_coauthor_name(
-    config: &mut dyn Vcs,
-    index: usize,
-    author: &Author,
-) -> Result<(), MitCommitMessageLintsError> {
+fn set_vcs_coauthor_name(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<(), Error> {
     config.set_str(
         &format!("pb.author.coauthors.{}.name", index),
         &author.name(),
@@ -498,7 +490,7 @@ fn set_vcs_coauthor_email(
     config: &mut dyn Vcs,
     index: usize,
     author: &Author,
-) -> Result<(), MitCommitMessageLintsError> {
+) -> Result<(), Error> {
     config.set_str(
         &format!("pb.author.coauthors.{}.email", index),
         &author.email(),
@@ -506,28 +498,37 @@ fn set_vcs_coauthor_email(
     Ok(())
 }
 
-fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), MitCommitMessageLintsError> {
-    config
-        .set_str("user.name", &author.name())
-        .and_then(|_| config.set_str("user.email", &author.email()))
-        .and_then(|_| set_author_signing_key(config, author))
+fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), Error> {
+    config.set_str("user.name", &author.name())?;
+    config.set_str("user.email", &author.email())?;
+    set_author_signing_key(config, author)?;
+
+    Ok(())
 }
 
-fn set_author_signing_key(
-    config: &mut dyn Vcs,
-    author: &Author,
-) -> Result<(), MitCommitMessageLintsError> {
+fn set_author_signing_key(config: &mut dyn Vcs, author: &Author) -> Result<(), Error> {
     match author.signingkey() {
-        Some(key) => config.set_str("user.signingkey", &key),
+        Some(key) => config.set_str("user.signingkey", &key).map_err(Error::from),
         None => config.remove("user.signingkey").or_else(|_| Ok(())),
     }
 }
 
-fn set_vcs_expires_time(
-    config: &mut dyn Vcs,
-    expires_in: Duration,
-) -> Result<(), MitCommitMessageLintsError> {
+fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<(), Error> {
     let now = SystemTime::now().duration_since(UNIX_EPOCH)?;
     let expiry_time = now.add(expires_in).as_secs().try_into()?;
-    config.set_i64(CONFIG_KEY_EXPIRES, expiry_time)
+    config
+        .set_i64(CONFIG_KEY_EXPIRES, expiry_time)
+        .map_err(Error::from)
+}
+
+#[derive(Error, Debug)]
+pub enum Error {
+    #[error("failed to interact with git repository: {0}")]
+    GitIo(#[from] external::Error),
+    #[error("no authors provided to set")]
+    NoAuthorsToSet,
+    #[error("unable to read the current time {0}")]
+    UnableToDetermineNow(#[from] time::SystemTimeError),
+    #[error("unable to parse time {0}")]
+    TimeInUnusualFormat(#[from] num::TryFromIntError),
 }

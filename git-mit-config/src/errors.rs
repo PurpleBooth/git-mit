@@ -1,51 +1,27 @@
-use mit_commit_message_lints::errors::MitCommitMessageLintsError;
-use std::error::Error;
-use std::fmt::{Display, Formatter};
+use mit_commit_message_lints::{author, lints};
+use thiserror::Error;
 
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub enum GitMitConfigError {
-    ConfigIoGit2Error(String),
-    UnrecognisedLintCommand,
+    #[error("Lint not found: {0}")]
+    CommitMessageReadError(#[from] lints::CommitMessageError),
+    #[error("lint name not given")]
     LintNameNotGiven,
-    MitCommitMessageLintsError(MitCommitMessageLintsError),
+    #[error("failed to parse author yaml {0}")]
+    AuthorYaml(#[from] author::YamlError),
+    #[error("failed to read config from `{0}`: {1}")]
     Io(String, String),
+    #[error("failed to open git repository {0}")]
+    Git2(#[from] git2::Error),
+    #[error("{0}")]
+    LintsError(#[from] lints::LintsError),
+    #[error(
+        "Unrecognised Lint command, only you may only enable or disable, or list available lints"
+    )]
+    UnrecognisedLintCommand,
+    #[error("{0}")]
+    SetStatus(#[from] lints::SetStatusError),
 }
-
-impl Display for GitMitConfigError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            GitMitConfigError::UnrecognisedLintCommand => write!(
-                f,
-                "Unrecognised Lint command, only you may only enable or disable, or list \
-             available lints"
-            ),
-            GitMitConfigError::LintNameNotGiven => write!(f, "Please specify a lint"),
-            GitMitConfigError::MitCommitMessageLintsError(error) => write!(f, "{}", error),
-            GitMitConfigError::Io(file_source, error) => write!(
-                f,
-                "Failed to read git config from `{}`:\n{}",
-                file_source, error
-            ),
-            GitMitConfigError::ConfigIoGit2Error(error) => {
-                write!(f, "Failed to load a git config: {}", error)
-            }
-        }
-    }
-}
-
-impl From<git2::Error> for GitMitConfigError {
-    fn from(error: git2::Error) -> Self {
-        GitMitConfigError::ConfigIoGit2Error(format!("{}", error))
-    }
-}
-
-impl From<MitCommitMessageLintsError> for GitMitConfigError {
-    fn from(from: MitCommitMessageLintsError) -> Self {
-        GitMitConfigError::MitCommitMessageLintsError(from)
-    }
-}
-
-impl Error for GitMitConfigError {}
 
 impl GitMitConfigError {
     pub(crate) fn new_io(source: String, error: &std::io::Error) -> GitMitConfigError {
