@@ -8,6 +8,7 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
         .min_values(1)
         .possible_values(lint_names);
     App::new(env!("CARGO_PKG_NAME"))
+        .bin_name(String::from(env!("CARGO_PKG_NAME")))
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
