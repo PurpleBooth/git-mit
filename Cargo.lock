@@ -132,19 +132,16 @@ dependencies = [
 
 [[package]]
 name = "git-mit"
-version = "3.19.0"
+version = "3.17.0"
 dependencies = [
  "clap",
  "clap_generate",
  "git2",
  "indoc",
+ "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
- "serde",
- "serde_derive",
- "serde_json",
  "tempfile",
- "tinytemplate",
  "xdg",
 ]
 
@@ -156,6 +153,7 @@ dependencies = [
  "clap_generate",
  "git2",
  "indoc",
+ "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "pretty_assertions",
@@ -336,6 +334,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3728d817d99e5ac407411fa471ff9800a778d88a24685968b36824eaf4bee400"
 
 [[package]]
+name = "mit-build-tools"
+version = "3.17.0"
+dependencies = [
+ "clap",
+ "clap_generate",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "tinytemplate",
+ "xdg",
+]
+
+[[package]]
 name = "mit-commit-message-lints"
 version = "3.19.0"
 dependencies = [
@@ -357,6 +368,7 @@ dependencies = [
  "clap_generate",
  "git2",
  "indoc",
+ "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "pretty_assertions",
@@ -384,6 +396,7 @@ dependencies = [
  "clap_generate",
  "git2",
  "indoc",
+ "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "pretty_assertions",
@@ -401,6 +414,7 @@ dependencies = [
  "clap_generate",
  "git2",
  "indoc",
+ "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "pretty_assertions",
