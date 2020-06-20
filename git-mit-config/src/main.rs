@@ -7,7 +7,7 @@ use crate::lints::manage_lints;
 
 use crate::cli::app;
 use mit_commit_message_lints::lints::Lint;
-use mit_commit_message_lints::{author::entities::Authors, external::vcs::Git2};
+use mit_commit_message_lints::{author::entities::Authors, external::Git2};
 use std::convert::TryInto;
 
 fn main() -> Result<(), GitMitConfigError> {

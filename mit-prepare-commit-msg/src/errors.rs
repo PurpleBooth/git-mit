@@ -1,39 +1,21 @@
-use mit_commit_message_lints::errors::MitCommitMessageLintsError;
-use std::error::Error;
-use std::fmt::{Display, Formatter};
+use mit_commit_message_lints::author::VcsError;
+use mit_commit_message_lints::external;
+use mit_commit_message_lints::lints::CommitMessageError;
+use thiserror::Error;
 
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub(crate) enum MitPrepareCommitMessageError {
-    PbCommitMessageLintsError(MitCommitMessageLintsError),
+    #[error("{0}")]
+    MitCommitMessageLintsError(#[from] CommitMessageError),
+    #[error("Failed to read author config from `{0}`:\n{1}")]
     Io(String, String),
+    #[error("Expected commit file path")]
     MissingCommitFilePath,
+    #[error("{0}")]
+    AuthorWrite(#[from] VcsError),
+    #[error("{0}")]
+    ReadFromVcs(#[from] external::Error),
 }
-
-impl Display for MitPrepareCommitMessageError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            MitPrepareCommitMessageError::PbCommitMessageLintsError(error) => {
-                write!(f, "{}", error)
-            }
-            MitPrepareCommitMessageError::MissingCommitFilePath => {
-                write!(f, "Expected commit file path")
-            }
-            MitPrepareCommitMessageError::Io(file_source, error) => write!(
-                f,
-                "Failed to read author config from `{}`:\n{}",
-                file_source, error
-            ),
-        }
-    }
-}
-
-impl From<MitCommitMessageLintsError> for MitPrepareCommitMessageError {
-    fn from(from: MitCommitMessageLintsError) -> Self {
-        MitPrepareCommitMessageError::PbCommitMessageLintsError(from)
-    }
-}
-
-impl Error for MitPrepareCommitMessageError {}
 
 impl MitPrepareCommitMessageError {
     pub(crate) fn new_io(source: String, error: &std::io::Error) -> MitPrepareCommitMessageError {

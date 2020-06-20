@@ -5,8 +5,11 @@ mod lints;
 mod trailer;
 
 pub use commit_message::CommitMessage;
+pub use commit_message::Error as CommitMessageError;
 pub use error::Error;
+pub use lint::Error as LintError;
 pub use lint::Lint;
+pub use lints::Error as LintsError;
 pub use lints::Lints;
 pub use problem::{Code, Problem};
 pub use trailer::Trailer;

@@ -14,7 +14,7 @@ use mit_commit_message_lints::{
         entities::{Author, Authors},
         vcs::set_authors,
     },
-    external::vcs::Git2,
+    external::Git2,
 };
 
 use crate::errors::GitMitError;

@@ -3,12 +3,12 @@ use std::{
     convert::TryFrom,
     fmt::Display,
     fs::File,
+    io,
     io::Read,
     path::PathBuf,
     str::{FromStr, Lines},
 };
-
-use crate::errors::MitCommitMessageLintsError;
+use thiserror::Error;
 
 use super::Trailer;
 
@@ -137,14 +137,14 @@ fn detect_comment_char(contents: &str) -> &str {
 }
 
 impl TryFrom<PathBuf> for CommitMessage {
-    type Error = MitCommitMessageLintsError;
+    type Error = Error;
 
     fn try_from(value: PathBuf) -> Result<Self, Self::Error> {
         let mut file = File::open(value)?;
         let mut buffer = String::new();
 
         file.read_to_string(&mut buffer)
-            .map_err(MitCommitMessageLintsError::from)
+            .map_err(Error::from)
             .map(move |_| CommitMessage::new(buffer))
     }
 }
@@ -526,4 +526,10 @@ mod test_commit_message {
             .add_trailer(&Trailer::from_str("Trailer: Content").unwrap())
         );
     }
+}
+
+#[derive(Error, Debug)]
+pub enum Error {
+    #[error("failed to read commit message from file: {0}")]
+    CommitMessageRead(#[from] io::Error),
 }

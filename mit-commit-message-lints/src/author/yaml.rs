@@ -1,21 +1,22 @@
-use crate::{author::entities::Authors, errors::MitCommitMessageLintsError};
+use crate::author::entities::Authors;
 use std::convert::TryFrom;
+use thiserror::Error;
 
 impl TryFrom<&str> for Authors {
-    type Error = MitCommitMessageLintsError;
+    type Error = Error;
 
     fn try_from(yaml: &str) -> Result<Self, Self::Error> {
         serde_yaml::from_str(yaml)
-            .map_err(MitCommitMessageLintsError::from)
+            .map_err(Error::from)
             .map(Authors::new)
     }
 }
 
 impl TryFrom<Authors> for String {
-    type Error = MitCommitMessageLintsError;
+    type Error = Error;
 
     fn try_from(value: Authors) -> Result<Self, Self::Error> {
-        serde_yaml::to_string(&value.authors).map_err(MitCommitMessageLintsError::from)
+        serde_yaml::to_string(&value.authors).map_err(Error::from)
     }
 }
 
@@ -31,7 +32,7 @@ mod tests_able_to_load_config_from_yaml {
 
     #[test]
     fn must_be_valid_yaml() {
-        let actual = Authors::try_from("Hello I am invalid yaml : : :");
+        let actual: Result<_, _> = Authors::try_from("Hello I am invalid yaml : : :");
         assert_eq!(true, actual.is_err())
     }
 
@@ -44,14 +45,15 @@ mod tests_able_to_load_config_from_yaml {
                 name: Billie Thompson
                 email: billie@example.com
             "
-        ));
+        ))
+        .expect("Failed to parse yaml");
 
         let mut input: BTreeMap<String, Author> = BTreeMap::new();
         input.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", None),
         );
-        let expected = Ok(Authors::new(input));
+        let expected = Authors::new(input);
 
         assert_eq!(expected, actual);
     }
@@ -66,14 +68,15 @@ mod tests_able_to_load_config_from_yaml {
                 email: billie@example.com
                 signingkey: 0A46826A
             "
-        ));
+        ))
+        .expect("Failed to parse yaml");
 
         let mut expected_authors: BTreeMap<String, Author> = BTreeMap::new();
         expected_authors.insert(
             "bt".into(),
             Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
         );
-        let expected = Ok(Authors::new(expected_authors));
+        let expected = Authors::new(expected_authors);
 
         assert_eq!(expected, actual);
     }
@@ -129,4 +132,10 @@ mod tests_able_to_convert_authors_to_yaml {
 
         assert_eq!(expected, actual);
     }
+}
+
+#[derive(Error, Debug)]
+pub enum Error {
+    #[error("failed to parse yaml: {0}")]
+    YamlParse(#[from] serde_yaml::Error),
 }

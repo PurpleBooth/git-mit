@@ -13,7 +13,8 @@ repository = "https://github.com/PurpleBooth/pb-git-hooks"
 description = "Check the correctness of a specific commit message. Designed to be used in tools providing commit-msg style hooks"
 
 [dependencies]
-git2 = "0.13"
+thiserror = "1.0"
+git2 =  "0.13"
 regex = "1"
 serde_yaml = "0.8.13"
 serde_derive = "1.0.110"

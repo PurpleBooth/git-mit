@@ -1,13 +1,19 @@
-use crate::errors::MitCommitMsgError::PbCommitMessageLints;
-use mit_commit_message_lints::errors::MitCommitMessageLintsError;
-use std::error::Error;
-use std::fmt::{Display, Formatter};
+use mit_commit_message_lints::external;
+use mit_commit_message_lints::lints::{CommitMessageError, LintsError};
+use thiserror::Error;
 
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub(crate) enum MitCommitMsgError {
+    #[error("expected file path name")]
     CommitPathMissing,
-    PbCommitMessageLints(MitCommitMessageLintsError),
+    #[error("failed to read git config from `{0}`: {1}")]
     Io(String, String),
+    #[error("{0}")]
+    MitCommitMessageLint(#[from] LintsError),
+    #[error("{0}")]
+    MitCommitMessage(#[from] CommitMessageError),
+    #[error("{0}")]
+    External(#[from] external::Error),
 }
 
 impl MitCommitMsgError {
@@ -15,25 +21,3 @@ impl MitCommitMsgError {
         MitCommitMsgError::Io(location, format!("{}", error))
     }
 }
-
-impl Display for MitCommitMsgError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PbCommitMessageLints(error) => write!(f, "{}", error),
-            MitCommitMsgError::Io(file_source, error) => write!(
-                f,
-                "Failed to read git config from `{}`:\n{}",
-                file_source, error
-            ),
-            MitCommitMsgError::CommitPathMissing => write!(f, "Expected file path name",),
-        }
-    }
-}
-
-impl From<MitCommitMessageLintsError> for MitCommitMsgError {
-    fn from(err: MitCommitMessageLintsError) -> Self {
-        PbCommitMessageLints(err)
-    }
-}
-
-impl Error for MitCommitMsgError {}

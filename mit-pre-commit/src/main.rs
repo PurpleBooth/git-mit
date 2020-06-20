@@ -2,7 +2,7 @@ use std::{env, process};
 
 use crate::cli::app;
 use crate::errors::MitPreCommitError;
-use mit_commit_message_lints::{author::vcs::get_coauthor_configuration, external::vcs::Git2};
+use mit_commit_message_lints::{author::vcs::get_coauthor_configuration, external::Git2};
 use std::convert::TryFrom;
 
 #[repr(i32)]

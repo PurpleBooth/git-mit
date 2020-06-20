@@ -1,8 +1,7 @@
-use crate::GitMitConfigError::LintNameNotGiven;
-
 use crate::errors::GitMitConfigError;
+use crate::errors::GitMitConfigError::LintNameNotGiven;
 use clap::ArgMatches;
-use mit_commit_message_lints::external::vcs::Vcs;
+use mit_commit_message_lints::external::Vcs;
 use mit_commit_message_lints::lints::set_status;
 use mit_commit_message_lints::lints::Lint;
 use mit_commit_message_lints::lints::Lints;

@@ -1,15 +1,12 @@
-use crate::errors::MitCommitMessageLintsError;
-use crate::external::vcs::Vcs;
+use crate::external;
+use crate::external::Vcs;
 use crate::lints::lib::Lints;
+use thiserror::Error;
 
 /// # Errors
 ///
 /// Errors if writing to the VCS config fails
-pub fn set_status(
-    lints: Lints,
-    vcs: &mut dyn Vcs,
-    status: bool,
-) -> Result<(), MitCommitMessageLintsError> {
+pub fn set_status(lints: Lints, vcs: &mut dyn Vcs, status: bool) -> Result<(), Error> {
     lints
         .config_keys()
         .into_iter()
@@ -19,7 +16,7 @@ pub fn set_status(
 
 #[cfg(test)]
 mod tests_can_enable_lints_via_a_command {
-    use crate::external::vcs::InMemory;
+    use crate::external::InMemory;
     use crate::lints::cmd::set_status::set_status;
     use crate::lints::lib::{Lint, Lints};
     use pretty_assertions::assert_eq;
@@ -62,4 +59,10 @@ mod tests_can_enable_lints_via_a_command {
             .clone();
         assert_eq!(expected, actual);
     }
+}
+
+#[derive(Error, Debug)]
+pub enum Error {
+    #[error("could not set lint status: {0}")]
+    VcsIo(#[from] external::Error),
 }

@@ -1,10 +1,11 @@
-use crate::errors::MitCommitMessageLintsError;
-use crate::external::vcs::Vcs;
-use crate::lints::lib::Lint;
+use crate::external;
+use crate::external::Vcs;
+use crate::lints::lib::{lint, Lint};
 use std::collections::BTreeSet;
 use std::convert::TryFrom;
 use std::iter::FromIterator;
 use std::vec::IntoIter;
+use thiserror::Error;
 
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Lints {
@@ -31,7 +32,7 @@ impl Lints {
     ///
     /// # Errors
     /// If reading from the VCS fails
-    pub fn try_from_vcs(config: &mut dyn Vcs) -> Result<Lints, MitCommitMessageLintsError> {
+    pub fn try_from_vcs(config: &mut dyn Vcs) -> Result<Lints, Error> {
         Ok(Lints::new(
             vec![
                 get_config_or_default(config, Lint::DuplicatedTrailers, true)?,
@@ -60,18 +61,17 @@ impl std::iter::IntoIterator for Lints {
 }
 
 impl TryFrom<Vec<&str>> for Lints {
-    type Error = MitCommitMessageLintsError;
+    type Error = Error;
 
     fn try_from(value: Vec<&str>) -> Result<Self, Self::Error> {
         let lints = value
             .into_iter()
             .try_fold(
                 vec![],
-                |lints: Vec<Lint>, item_name| -> Result<Vec<Lint>, MitCommitMessageLintsError> {
-                    match Lint::try_from(item_name) {
-                        Err(err) => Err(err),
-                        Ok(item) => Ok(vec![lints, vec![item]].concat()),
-                    }
+                |lints: Vec<Lint>, item_name| -> Result<Vec<Lint>, Error> {
+                    let lint = Lint::try_from(item_name)?;
+
+                    Ok(vec![lints, vec![lint]].concat())
                 },
             )
             .map(Vec::into_iter)?;
@@ -84,7 +84,7 @@ fn get_config_or_default(
     config: &dyn Vcs,
     lint: Lint,
     default: bool,
-) -> Result<Option<Lint>, MitCommitMessageLintsError> {
+) -> Result<Option<Lint>, Error> {
     Ok(config
         .get_bool(&lint.config_key())?
         .or(Some(default))
@@ -94,16 +94,15 @@ fn get_config_or_default(
 
 #[cfg(test)]
 mod tests {
-    use crate::lints::lib::lints::Lints;
+    use crate::lints::lib::lints::{Error, Lints};
 
     use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
     use pretty_assertions::assert_eq;
 
     use std::collections::{BTreeMap, BTreeSet};
 
-    use crate::{external::vcs::InMemory, lints::Lint::DuplicatedTrailers};
+    use crate::{external::InMemory, lints::Lint::DuplicatedTrailers};
 
-    use crate::errors::MitCommitMessageLintsError;
     use std::convert::TryInto;
 
     #[test]
@@ -113,7 +112,7 @@ mod tests {
             "broken",
             "jira-issue-key-missing",
         ];
-        let actual: Result<Lints, MitCommitMessageLintsError> = lints.try_into();
+        let actual: Result<Lints, Error> = lints.try_into();
 
         assert_eq!(true, actual.is_err());
     }
@@ -126,8 +125,8 @@ mod tests {
         expected_lints.insert(PivotalTrackerIdMissing);
         expected_lints.insert(JiraIssueKeyMissing);
 
-        let expected = Ok(Lints::new(expected_lints));
-        let actual: Result<Lints, MitCommitMessageLintsError> = lints.try_into();
+        let expected = Lints::new(expected_lints);
+        let actual: Lints = lints.try_into().expect("Lints to have been parsed");
 
         assert_eq!(expected, actual);
     }
@@ -180,9 +179,9 @@ mod tests {
 
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
-        let expected = Ok(Lints::new(lints));
+        let expected = Lints::new(lints);
 
-        let actual = Lints::try_from_vcs(&mut config);
+        let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
 
         assert_eq!(
             expected, actual,
@@ -197,8 +196,8 @@ mod tests {
         strings.insert("pb.lint.duplicated-trailers".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
 
-        let actual = Lints::try_from_vcs(&mut config);
-        let expected: Result<Lints, MitCommitMessageLintsError> = Ok(Lints::new(BTreeSet::new()));
+        let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
+        let expected: Lints = Lints::new(BTreeSet::new());
 
         assert_eq!(
             expected, actual,
@@ -215,9 +214,9 @@ mod tests {
 
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
-        let expected = Ok(Lints::new(lints));
+        let expected = Lints::new(lints);
 
-        let actual = Lints::try_from_vcs(&mut config);
+        let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
 
         assert_eq!(
             expected, actual,
@@ -235,9 +234,9 @@ mod tests {
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
         lints.insert(PivotalTrackerIdMissing);
-        let expected = Ok(Lints::new(lints));
+        let expected = Lints::new(lints);
 
-        let actual = Lints::try_from_vcs(&mut config);
+        let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
 
         assert_eq!(
             expected, actual,
@@ -255,9 +254,9 @@ mod tests {
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
         lints.insert(JiraIssueKeyMissing);
-        let expected = Ok(Lints::new(lints));
+        let expected = Lints::new(lints);
 
-        let actual = Lints::try_from_vcs(&mut config);
+        let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
 
         assert_eq!(
             expected, actual,
@@ -272,11 +271,11 @@ mod tests {
         strings.insert("pb.lint.jira-issue-key-missing".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
 
-        let actual = Lints::try_from_vcs(&mut config);
+        let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
 
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
-        let expected = Ok(Lints::new(lints));
+        let expected = Lints::new(lints);
 
         assert_eq!(
             expected, actual,
@@ -334,4 +333,12 @@ mod tests {
             expected, actual
         )
     }
+}
+
+#[derive(Error, Debug)]
+pub enum Error {
+    #[error("{0}")]
+    LintNameUnknown(#[from] lint::Error),
+    #[error("failed to read lint config from git: {0}")]
+    VcsIoError(#[from] external::Error),
 }
