@@ -1,12 +1,15 @@
 use clap_generate::generators::{Bash, Elvish, Fish};
-use clap_generate::{generate_to, Generator};
-use std::{env, fs};
 
 use mit_commit_message_lints::lints::Lint;
+use std::env;
 use std::path::PathBuf;
+
+extern crate tinytemplate;
 
 #[path = "src/cli.rs"]
 mod cli;
+mod completion;
+mod manpage;
 
 fn main() {
     let lint_names: Vec<_> = Lint::iterator()
@@ -14,21 +17,12 @@ fn main() {
         .collect();
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
 
-    generate_completion::<Elvish>(&lint_names, &out_dir.join("elvish_completion"));
-    generate_completion::<Fish>(&lint_names, &out_dir.join("fish_completion"));
-    // This segfaults at the moment
-    // generate_completion::<Zsh>(&lint_names, &out_dir.join("zsh_completion"));
-    generate_completion::<Bash>(&lint_names, &out_dir.join("bash_completion"));
-}
+    let app = cli::app(&lint_names);
 
-fn generate_completion<T>(lint_names: &[&str], dir: &PathBuf)
-where
-    T: Generator,
-{
-    if dir.exists() {
-        fs::remove_dir_all(dir.clone()).unwrap();
-    }
+    completion::generate::<Elvish>(&app, &out_dir.join("elvish_completion"));
+    completion::generate::<Fish>(&app, &out_dir.join("fish_completion"));
+    //completion::generate::<Zsh>(&app, &out_dir.join("zsh_completion")); // This segfaults at the moment
+    completion::generate::<Bash>(&app, &out_dir.join("bash_completion"));
 
-    fs::create_dir(dir.clone()).unwrap();
-    generate_to::<T, _, _>(&mut cli::app(lint_names), env!("CARGO_PKG_NAME"), &dir);
+    manpage::generate(&app, &out_dir);
 }

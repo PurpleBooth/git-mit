@@ -4,6 +4,7 @@ class GitMit < Formula
   url "https://github.com/{{ github_repo }}/archive/{{ git_tag }}.tar.gz"
   sha256 "{{ file_sha }}"
   depends_on "rust" => :build
+  depends_on "pandoc" => :build
   depends_on "openssl@1.1"
 
   def install
@@ -23,6 +24,12 @@ class GitMit < Formula
 
     Pathname.glob("**/zsh_completion/*").each do |file|
       zsh_completion.install file
+    end
+
+    Pathname.glob("**/*.man.md").each do |file|
+      base = file.basename(".man.md")
+      system "pandoc", "-s", "-f", "gfm", "-t", "man", file, "-o", "#{base}.1"
+      man1.install "#{base}.1"
     end
   end
 
