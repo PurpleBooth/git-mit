@@ -28,7 +28,7 @@ class GitMit < Formula
 
     Pathname.glob("**/*.man.md").each do |file|
       base = file.basename(".man.md")
-      system "pandoc", "-s", "-f", "gfm", "-t", "man", file, "-o", "#{base}.1"
+      system "pandoc", "-s", "-f", "markdown", "-t", "man", file, "-o", "#{base}.1"
       man1.install "#{base}.1"
     end
   end
