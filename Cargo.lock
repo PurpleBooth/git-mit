@@ -132,7 +132,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit"
-version = "3.18.0"
+version = "3.19.0"
 dependencies = [
  "clap",
  "clap_generate",
@@ -150,7 +150,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-config"
-version = "3.18.0"
+version = "3.19.0"
 dependencies = [
  "clap",
  "clap_generate",
@@ -337,7 +337,7 @@ checksum = "3728d817d99e5ac407411fa471ff9800a778d88a24685968b36824eaf4bee400"
 
 [[package]]
 name = "mit-commit-message-lints"
-version = "3.18.0"
+version = "3.19.0"
 dependencies = [
  "git2",
  "indoc",
@@ -351,7 +351,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-msg"
-version = "3.18.0"
+version = "3.19.0"
 dependencies = [
  "clap",
  "clap_generate",
@@ -369,7 +369,7 @@ dependencies = [
 
 [[package]]
 name = "mit-hook-test-helper"
-version = "3.18.0"
+version = "3.19.0"
 dependencies = [
  "git2",
  "pretty_assertions",
@@ -378,7 +378,7 @@ dependencies = [
 
 [[package]]
 name = "mit-pre-commit"
-version = "3.18.0"
+version = "3.19.0"
 dependencies = [
  "clap",
  "clap_generate",
@@ -395,7 +395,7 @@ dependencies = [
 
 [[package]]
 name = "mit-prepare-commit-msg"
-version = "3.18.0"
+version = "3.19.0"
 dependencies = [
  "clap",
  "clap_generate",
