@@ -38,7 +38,7 @@ pub fn generate(app: &App, out_dir: &PathBuf, md_template: &str) {
 
     let rendered = tt.render("man", &context).unwrap();
     let mut file =
-        File::create(&out_dir.join(format!("{}.man.md", env!("CARGO_PKG_NAME")))).unwrap();
+        File::create(&out_dir.join(format!("{}.man.md", app.get_bin_name().unwrap()))).unwrap();
     file.write_all(rendered.as_ref()).unwrap();
 }
 
