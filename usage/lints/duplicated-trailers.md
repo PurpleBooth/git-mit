@@ -120,7 +120,7 @@ You can also disable the lint
 git mit-config lint disable duplicated-trailers
 ```
 
-You'll be able to commit without an ID
+You'll be able to commit with duplicated IDs
 
 ``` bash
 mktemp > demo.txt
@@ -169,3 +169,4 @@ if git commit -s ; then
     exit 1
 fi
 ```
+

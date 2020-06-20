@@ -1,13 +1,19 @@
 use crate::errors::GitMitConfigError;
 use crate::errors::GitMitConfigError::LintNameNotGiven;
 use clap::ArgMatches;
+use mit_commit_message_lints::external;
 use mit_commit_message_lints::external::Vcs;
 use mit_commit_message_lints::lints::set_status;
 use mit_commit_message_lints::lints::Lint;
 use mit_commit_message_lints::lints::Lints;
 use std::convert::TryInto;
+use std::path::PathBuf;
 
-pub(crate) fn manage_lints(args: &ArgMatches, vcs: &mut dyn Vcs) -> Result<(), GitMitConfigError> {
+pub(crate) fn manage_lints(
+    args: &ArgMatches,
+    vcs: &mut dyn Vcs,
+    current_dir: PathBuf,
+) -> Result<(), GitMitConfigError> {
     if let Some(subcommand_args) = args.subcommand_matches("enable") {
         set_lint_status(vcs, &subcommand_args, true)
     } else if let Some(subcommand_args) = args.subcommand_matches("disable") {
@@ -17,7 +23,8 @@ pub(crate) fn manage_lints(args: &ArgMatches, vcs: &mut dyn Vcs) -> Result<(), G
         println!("{}", all_lints.names().join("\n"));
         Ok(())
     } else if args.subcommand_matches("enabled").is_some() {
-        let lints: Lints = Lints::try_from_vcs(vcs)?;
+        let toml = external::read_toml(current_dir)?;
+        let lints = Lints::get_from_toml_or_else_vcs(&toml, vcs)?;
         println!("{}", lints.names().join("\n"));
         Ok(())
     } else if let Some(subcommand_args) = args.subcommand_matches("status") {

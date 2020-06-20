@@ -3,7 +3,7 @@ extern crate mit_commit_message_lints;
 use std::env;
 
 use mit_commit_message_lints::{
-    external::Git2,
+    external,
     lints::{lib::CommitMessage, lib::Lints, lint, Code, Problem},
 };
 
@@ -24,9 +24,12 @@ fn main() -> Result<(), MitCommitMsgError> {
     let current_dir =
         env::current_dir().map_err(|err| MitCommitMsgError::new_io("$PWD".into(), &err))?;
 
-    let mut git_config = Git2::try_from(current_dir)?;
-    let lint_config = Lints::try_from_vcs(&mut git_config)?;
-    let output = format_lint_problems(&commit_message, lint(&commit_message, lint_config));
+    let toml = external::read_toml(current_dir.clone())?;
+    let mut git_config = external::Git2::try_from(current_dir)?;
+    let lint_config = Lints::get_from_toml_or_else_vcs(&toml, &mut git_config)?;
+
+    let lint_problems = lint(&commit_message, lint_config);
+    let output = format_lint_problems(&commit_message, lint_problems);
 
     if let Some((message, exit_code)) = output {
         display_lint_err_and_exit(&message, exit_code)
