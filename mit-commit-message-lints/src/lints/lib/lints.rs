@@ -13,10 +13,8 @@ pub struct Lints {
 
 impl Lints {
     #[must_use]
-    pub fn new(lints: Vec<Lint>) -> Lints {
-        Lints {
-            lints: BTreeSet::from_iter(lints.into_iter()),
-        }
+    pub fn new(lints: BTreeSet<Lint>) -> Lints {
+        Lints { lints }
     }
 
     #[must_use]
@@ -47,10 +45,8 @@ impl Lints {
     }
 
     #[must_use]
-    pub fn merge(&self, other: Lints) -> Lints {
-        let set_b = BTreeSet::from_iter(other.lints.into_iter());
-
-        Lints::new(self.lints.union(&set_b).cloned().collect::<Vec<_>>())
+    pub fn merge(&self, other: &Lints) -> Lints {
+        Lints::new(BTreeSet::from_iter(self.lints.union(&other.lints).cloned()))
     }
 }
 
@@ -67,7 +63,7 @@ impl TryFrom<Vec<&str>> for Lints {
     type Error = MitCommitMessageLintsError;
 
     fn try_from(value: Vec<&str>) -> Result<Self, Self::Error> {
-        value
+        let lints = value
             .into_iter()
             .try_fold(
                 vec![],
@@ -78,7 +74,9 @@ impl TryFrom<Vec<&str>> for Lints {
                     }
                 },
             )
-            .map(Lints::new)
+            .map(Vec::into_iter)?;
+
+        Ok(Lints::new(BTreeSet::from_iter(lints)))
     }
 }
 
@@ -101,7 +99,7 @@ mod tests {
     use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
     use pretty_assertions::assert_eq;
 
-    use std::collections::BTreeMap;
+    use std::collections::{BTreeMap, BTreeSet};
 
     use crate::{external::vcs::InMemory, lints::Lint::DuplicatedTrailers};
 
@@ -123,10 +121,12 @@ mod tests {
     #[test]
     fn it_can_construct_itself_from_names() {
         let lints = vec!["pivotal-tracker-id-missing", "jira-issue-key-missing"];
-        let expected = Ok(Lints::new(vec![
-            PivotalTrackerIdMissing,
-            JiraIssueKeyMissing,
-        ]));
+
+        let mut expected_lints = BTreeSet::new();
+        expected_lints.insert(PivotalTrackerIdMissing);
+        expected_lints.insert(JiraIssueKeyMissing);
+
+        let expected = Ok(Lints::new(expected_lints));
         let actual: Result<Lints, MitCommitMessageLintsError> = lints.try_into();
 
         assert_eq!(expected, actual);
@@ -134,7 +134,9 @@ mod tests {
 
     #[test]
     fn it_can_give_me_an_into_iterator() {
-        let lints = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
+        let mut lints = BTreeSet::new();
+        lints.insert(PivotalTrackerIdMissing);
+        lints.insert(JiraIssueKeyMissing);
         let input = Lints::new(lints);
 
         let expected = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
@@ -145,7 +147,9 @@ mod tests {
 
     #[test]
     fn it_can_give_me_the_names() {
-        let lints = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
+        let mut lints = BTreeSet::new();
+        lints.insert(PivotalTrackerIdMissing);
+        lints.insert(JiraIssueKeyMissing);
         let input = Lints::new(lints);
 
         let expected = vec![PivotalTrackerIdMissing.name(), JiraIssueKeyMissing.name()];
@@ -156,7 +160,9 @@ mod tests {
 
     #[test]
     fn it_can_give_me_the_config_keys() {
-        let lints = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
+        let mut lints = BTreeSet::new();
+        lints.insert(PivotalTrackerIdMissing);
+        lints.insert(JiraIssueKeyMissing);
         let input = Lints::new(lints);
 
         let expected = vec![
@@ -172,8 +178,11 @@ mod tests {
         let mut strings = BTreeMap::new();
         let mut config = InMemory::new(&mut strings);
 
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+        let expected = Ok(Lints::new(lints));
+
         let actual = Lints::try_from_vcs(&mut config);
-        let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
 
         assert_eq!(
             expected, actual,
@@ -189,7 +198,7 @@ mod tests {
         let mut config = InMemory::new(&mut strings);
 
         let actual = Lints::try_from_vcs(&mut config);
-        let expected: Result<Lints, MitCommitMessageLintsError> = Ok(Lints::new(vec![]));
+        let expected: Result<Lints, MitCommitMessageLintsError> = Ok(Lints::new(BTreeSet::new()));
 
         assert_eq!(
             expected, actual,
@@ -204,8 +213,11 @@ mod tests {
         strings.insert("pb.lint.duplicated-trailers".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+        let expected = Ok(Lints::new(lints));
+
         let actual = Lints::try_from_vcs(&mut config);
-        let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
 
         assert_eq!(
             expected, actual,
@@ -220,11 +232,12 @@ mod tests {
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+        lints.insert(PivotalTrackerIdMissing);
+        let expected = Ok(Lints::new(lints));
+
         let actual = Lints::try_from_vcs(&mut config);
-        let expected = Ok(Lints::new(vec![
-            DuplicatedTrailers,
-            PivotalTrackerIdMissing,
-        ]));
 
         assert_eq!(
             expected, actual,
@@ -239,8 +252,12 @@ mod tests {
         strings.insert("pb.lint.jira-issue-key-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+        lints.insert(JiraIssueKeyMissing);
+        let expected = Ok(Lints::new(lints));
+
         let actual = Lints::try_from_vcs(&mut config);
-        let expected = Ok(Lints::new(vec![DuplicatedTrailers, JiraIssueKeyMissing]));
 
         assert_eq!(
             expected, actual,
@@ -256,7 +273,10 @@ mod tests {
         let mut config = InMemory::new(&mut strings);
 
         let actual = Lints::try_from_vcs(&mut config);
-        let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
+
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+        let expected = Ok(Lints::new(lints));
 
         assert_eq!(
             expected, actual,
@@ -267,11 +287,21 @@ mod tests {
 
     #[test]
     fn two_sets_of_lints_can_be_merged() {
-        let set_a = Lints::new(vec![PivotalTrackerIdMissing]);
-        let set_b = Lints::new(vec![DuplicatedTrailers]);
+        let mut set_a_lints = BTreeSet::new();
+        set_a_lints.insert(PivotalTrackerIdMissing);
 
-        let actual = set_a.merge(set_b);
-        let expected = Lints::new(vec![PivotalTrackerIdMissing, DuplicatedTrailers]);
+        let mut set_b_lints = BTreeSet::new();
+        set_b_lints.insert(DuplicatedTrailers);
+
+        let set_a = Lints::new(set_a_lints);
+        let set_b = Lints::new(set_b_lints);
+
+        let actual = set_a.merge(&set_b);
+
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+        lints.insert(PivotalTrackerIdMissing);
+        let expected = Lints::new(lints);
 
         assert_eq!(
             expected, actual,
@@ -281,11 +311,22 @@ mod tests {
     }
     #[test]
     fn when_merging_overlapping_does_not_lead_to_duplication() {
-        let set_a = Lints::new(vec![PivotalTrackerIdMissing]);
-        let set_b = Lints::new(vec![PivotalTrackerIdMissing, DuplicatedTrailers]);
+        let mut set_a_lints = BTreeSet::new();
+        set_a_lints.insert(PivotalTrackerIdMissing);
 
-        let actual = set_a.merge(set_b);
-        let expected = Lints::new(vec![DuplicatedTrailers, PivotalTrackerIdMissing]);
+        let mut set_b_lints = BTreeSet::new();
+        set_b_lints.insert(DuplicatedTrailers);
+        set_b_lints.insert(PivotalTrackerIdMissing);
+
+        let set_a = Lints::new(set_a_lints);
+        let set_b = Lints::new(set_b_lints);
+
+        let actual = set_a.merge(&set_b);
+
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+        lints.insert(PivotalTrackerIdMissing);
+        let expected = Lints::new(lints);
 
         assert_eq!(
             expected, actual,

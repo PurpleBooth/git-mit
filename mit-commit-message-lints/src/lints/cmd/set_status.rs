@@ -23,7 +23,7 @@ mod tests_can_enable_lints_via_a_command {
     use crate::lints::cmd::set_status::set_status;
     use crate::lints::lib::{Lint, Lints};
     use pretty_assertions::assert_eq;
-    use std::collections::BTreeMap;
+    use std::collections::{BTreeMap, BTreeSet};
 
     #[test]
     fn we_can_enable_lints() {
@@ -31,12 +31,10 @@ mod tests_can_enable_lints_via_a_command {
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
 
-        set_status(
-            Lints::new(vec![Lint::PivotalTrackerIdMissing]),
-            &mut config,
-            true,
-        )
-        .unwrap();
+        let mut lints = BTreeSet::new();
+        lints.insert(Lint::PivotalTrackerIdMissing);
+
+        set_status(Lints::new(lints), &mut config, true).unwrap();
 
         let expected = "true".to_string();
         let actual = strings
@@ -52,12 +50,10 @@ mod tests_can_enable_lints_via_a_command {
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 
-        set_status(
-            Lints::new(vec![Lint::PivotalTrackerIdMissing]),
-            &mut config,
-            false,
-        )
-        .unwrap();
+        let mut lints = BTreeSet::new();
+        lints.insert(Lint::PivotalTrackerIdMissing);
+
+        set_status(Lints::new(lints), &mut config, false).unwrap();
 
         let expected = "false".to_string();
         let actual = strings
