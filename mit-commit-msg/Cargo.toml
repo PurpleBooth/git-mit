@@ -1,6 +1,6 @@
 [package]
 name = "mit-commit-msg"
-version = "3.19.0"
+version = "3.20.0"
 authors = [ "Billie Thompson <billie+mit-commit-msg@billiecodes.com>" ]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
@@ -23,7 +23,6 @@ serde_derive = "1.0.111"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
-
 
 [dependencies]
 clap = "3.0.0-beta.1"

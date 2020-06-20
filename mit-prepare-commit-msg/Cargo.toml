@@ -1,6 +1,6 @@
 [package]
 name = "mit-prepare-commit-msg"
-version = "3.19.0"
+version = "3.20.0"
 authors = [
   "Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>"
 ]
@@ -25,7 +25,6 @@ serde_derive = "1.0.111"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
-
 
 [dependencies]
 clap = "3.0.0-beta.1"
