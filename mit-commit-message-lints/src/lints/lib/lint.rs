@@ -12,7 +12,7 @@ use crate::lints::lib::{
 use std::convert::TryInto;
 
 /// The lints that are supported
-#[derive(Debug, Eq, PartialEq, Copy, Clone)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, Hash, Ord, PartialOrd)]
 pub enum Lint {
     DuplicatedTrailers,
     PivotalTrackerIdMissing,

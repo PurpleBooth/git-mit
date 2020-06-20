@@ -25,7 +25,6 @@ fn main() -> Result<(), MitCommitMsgError> {
         env::current_dir().map_err(|err| MitCommitMsgError::new_io("$PWD".into(), &err))?;
 
     let mut git_config = Git2::try_from(current_dir)?;
-
     let lint_config = Lints::try_from_vcs(&mut git_config)?;
     let output = format_lint_problems(&commit_message, lint(&commit_message, lint_config));
 

@@ -1,18 +1,22 @@
 use crate::errors::MitCommitMessageLintsError;
 use crate::external::vcs::Vcs;
 use crate::lints::lib::Lint;
+use std::collections::BTreeSet;
 use std::convert::TryFrom;
+use std::iter::FromIterator;
 use std::vec::IntoIter;
 
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Lints {
-    lints: Vec<Lint>,
+    lints: BTreeSet<Lint>,
 }
 
 impl Lints {
     #[must_use]
     pub fn new(lints: Vec<Lint>) -> Lints {
-        Lints { lints }
+        Lints {
+            lints: BTreeSet::from_iter(lints.into_iter()),
+        }
     }
 
     #[must_use]
@@ -41,6 +45,13 @@ impl Lints {
             .collect(),
         ))
     }
+
+    #[must_use]
+    pub fn merge(&self, other: Lints) -> Lints {
+        let set_b = BTreeSet::from_iter(other.lints.into_iter());
+
+        Lints::new(self.lints.union(&set_b).cloned().collect::<Vec<_>>())
+    }
 }
 
 impl std::iter::IntoIterator for Lints {
@@ -48,7 +59,7 @@ impl std::iter::IntoIterator for Lints {
     type IntoIter = IntoIter<Lint>;
 
     fn into_iter(self) -> Self::IntoIter {
-        self.lints.into_iter()
+        self.lints.into_iter().collect::<Vec<_>>().into_iter()
     }
 }
 
@@ -246,6 +257,35 @@ mod tests {
 
         let actual = Lints::try_from_vcs(&mut config);
         let expected = Ok(Lints::new(vec![DuplicatedTrailers]));
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn two_sets_of_lints_can_be_merged() {
+        let set_a = Lints::new(vec![PivotalTrackerIdMissing]);
+        let set_b = Lints::new(vec![DuplicatedTrailers]);
+
+        let actual = set_a.merge(set_b);
+        let expected = Lints::new(vec![PivotalTrackerIdMissing, DuplicatedTrailers]);
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+    #[test]
+    fn when_merging_overlapping_does_not_lead_to_duplication() {
+        let set_a = Lints::new(vec![PivotalTrackerIdMissing]);
+        let set_b = Lints::new(vec![PivotalTrackerIdMissing, DuplicatedTrailers]);
+
+        let actual = set_a.merge(set_b);
+        let expected = Lints::new(vec![DuplicatedTrailers, PivotalTrackerIdMissing]);
 
         assert_eq!(
             expected, actual,
