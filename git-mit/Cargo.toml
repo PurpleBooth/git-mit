@@ -1,6 +1,6 @@
 [package]
 name = "git-mit"
-version = "3.19.0"
+version = "3.17.0"
 authors = [ "Billie Thompson <billie+git-mit@billiecodes.com>" ]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
@@ -11,16 +11,13 @@ readme = "../README.md"
 repository = "https://github.com/PurpleBooth/pb-git-hooks"
 
 [build-dependencies]
+xdg = "^2.1"
 clap = "3.0.0-beta.1"
 clap_generate = "3.0.0-beta.1"
-xdg = "^2.1"
-tinytemplate = "1.0"
-serde_json = "1"
-serde_derive = "1.0.111"
 
-  [build-dependencies.serde]
-  version = "1.0.111"
-  features = [ "derive" ]
+  [build-dependencies.mit-build-tools]
+  path = "../mit-build-tools"
+
 
 [dependencies]
 clap = "3.0.0-beta.1"

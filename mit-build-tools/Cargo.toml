@@ -1,0 +1,25 @@
+[package]
+name = "mit-build-tools"
+version = "3.17.0"
+authors = [
+  "Billie Thompson <billie+mit-build-tools@billiecodes.com>"
+]
+edition = "2018"
+license = "CC0 1.0 Universal"
+categories = [ "development-tools", "command-line-utilities" ]
+keywords = [ "manpages", "completion" ]
+readme = "../README.md"
+repository = "https://github.com/PurpleBooth/pb-git-hooks"
+description = "Generate different things from a clap app file"
+
+[dependencies]
+clap = "3.0.0-beta.1"
+clap_generate = "3.0.0-beta.1"
+xdg = "^2.1"
+tinytemplate = "1.0"
+serde_json = "1"
+serde_derive = "1.0.111"
+
+  [dependencies.serde]
+  version = "1.0.111"
+  features = [ "derive" ]

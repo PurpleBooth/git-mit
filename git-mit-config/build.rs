@@ -4,12 +4,10 @@ use mit_commit_message_lints::lints::Lint;
 use std::env;
 use std::path::PathBuf;
 
-extern crate tinytemplate;
-
 #[path = "src/cli.rs"]
 mod cli;
-mod completion;
-mod manpage;
+use mit_build_tools::completion;
+use mit_build_tools::manpage;
 
 fn main() {
     let lint_names: Vec<_> = Lint::iterator()
@@ -24,5 +22,5 @@ fn main() {
     //completion::generate::<Zsh>(&app, &out_dir.join("zsh_completion")); // This segfaults at the moment
     completion::generate::<Bash>(&app, &out_dir.join("bash_completion"));
 
-    manpage::generate(&app, &out_dir);
+    manpage::generate(&app, &out_dir, "docs/manpage.template.md");
 }

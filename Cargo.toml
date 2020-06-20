@@ -7,5 +7,6 @@ members = [
     "mit-commit-msg",
     "mit-commit-message-lints",
     "mit-hook-test-helper",
-    "git-mit"
+    "git-mit",
+    "mit-build-tools"
 ]
