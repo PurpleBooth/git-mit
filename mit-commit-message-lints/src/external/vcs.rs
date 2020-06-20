@@ -35,4 +35,6 @@ pub enum Error {
     InMemoryParseInt(#[from] std::num::ParseIntError),
     #[error("failed to read bool from in memory datastore: {0}")]
     InMemoryParseBool(#[from] std::str::ParseBoolError),
+    #[error("failed to read git-mit config")]
+    Io(#[from] std::io::Error),
 }

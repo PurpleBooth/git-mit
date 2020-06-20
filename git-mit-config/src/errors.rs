@@ -1,4 +1,4 @@
-use mit_commit_message_lints::{author, lints};
+use mit_commit_message_lints::{author, external, lints};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -21,6 +21,8 @@ pub enum GitMitConfigError {
     UnrecognisedLintCommand,
     #[error("{0}")]
     SetStatus(#[from] lints::SetStatusError),
+    #[error("{0}")]
+    External(#[from] external::Error),
 }
 
 impl GitMitConfigError {

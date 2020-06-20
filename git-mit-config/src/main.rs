@@ -28,13 +28,13 @@ fn main() -> Result<(), GitMitConfigError> {
 
         let git_config = match matches.value_of("scope") {
             Some("local") => {
-                Repository::discover(current_dir).and_then(|repo: Repository| repo.config())
+                Repository::discover(current_dir.clone()).and_then(|repo: Repository| repo.config())
             }
             _ => Config::open_default(),
         }?;
 
         let mut vcs = Git2::new(git_config);
-        manage_lints(value, &mut vcs)
+        manage_lints(value, &mut vcs, current_dir)
     } else {
         Ok(())
     }

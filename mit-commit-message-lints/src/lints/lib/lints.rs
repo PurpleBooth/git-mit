@@ -1,8 +1,9 @@
 use crate::external;
 use crate::external::Vcs;
 use crate::lints::lib::{lint, Lint};
-use std::collections::BTreeSet;
-use std::convert::TryFrom;
+use std::borrow::Borrow;
+use std::collections::{BTreeMap, BTreeSet};
+use std::convert::{TryFrom, TryInto};
 use std::iter::FromIterator;
 use std::vec::IntoIter;
 use thiserror::Error;
@@ -28,6 +29,40 @@ impl Lints {
         self.lints.iter().map(|lint| lint.config_key()).collect()
     }
 
+    /// # Errors
+    ///
+    /// If we fail to parse the toml
+    pub fn get_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lints, Error> {
+        let vcs_lints = Lints::try_from_vcs(vcs)?;
+        // contains PB  // contains lint // contains config
+        let config: BTreeMap<String, BTreeMap<String, BTreeMap<String, bool>>> =
+            toml::from_str(config)?;
+
+        let config = match config.get("pb") {
+            None => return Ok(vcs_lints),
+            Some(lints) => lints,
+        };
+
+        let lint_names = match config.get("lint") {
+            None => return Ok(vcs_lints),
+            Some(lints) => lints,
+        };
+
+        let to_add: Lints = lint_names
+            .iter()
+            .filter_map(|(key, value)| if *value { Some(key.borrow()) } else { None })
+            .collect::<Vec<&str>>()
+            .try_into()?;
+
+        let to_remove: Lints = lint_names
+            .iter()
+            .filter_map(|(key, value)| if *value { None } else { Some(key.borrow()) })
+            .collect::<Vec<&str>>()
+            .try_into()?;
+
+        Ok(vcs_lints.subtract(&to_remove).merge(&to_add))
+    }
+
     /// Create lints from the VCS configuration
     ///
     /// # Errors
@@ -48,6 +83,13 @@ impl Lints {
     #[must_use]
     pub fn merge(&self, other: &Lints) -> Lints {
         Lints::new(BTreeSet::from_iter(self.lints.union(&other.lints).cloned()))
+    }
+
+    #[must_use]
+    pub fn subtract(&self, other: &Lints) -> Lints {
+        Lints::new(BTreeSet::from_iter(
+            self.lints.difference(&other.lints).cloned(),
+        ))
     }
 }
 
@@ -95,6 +137,7 @@ fn get_config_or_default(
 #[cfg(test)]
 mod tests {
     use crate::lints::lib::lints::{Error, Lints};
+    use indoc::indoc;
 
     use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
     use pretty_assertions::assert_eq;
@@ -173,7 +216,87 @@ mod tests {
         assert_eq!(expected, actual);
     }
     #[test]
-    fn defaults() {
+    fn try_from_toml_defaults() {
+        let mut store = BTreeMap::new();
+        let mut vcs = InMemory::new(&mut store);
+
+        let actual = Lints::get_from_toml_or_else_vcs(
+            indoc!(
+                "
+                "
+            ),
+            &mut vcs,
+        )
+        .expect("Failed to parse toml");
+
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+
+        let expected = Lints::new(lints);
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn try_from_toml_adding_single_lint() {
+        let mut store = BTreeMap::new();
+        let mut vcs = InMemory::new(&mut store);
+
+        let actual = Lints::get_from_toml_or_else_vcs(
+            indoc!(
+                "
+                [pb.lint]
+                \"pivotal-tracker-id-missing\" = true
+                "
+            ),
+            &mut vcs,
+        )
+        .expect("Failed to parse toml");
+
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+        lints.insert(PivotalTrackerIdMissing);
+        let expected = Lints::new(lints);
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn try_from_toml_removing_single_lint() {
+        let mut store = BTreeMap::new();
+        let mut vcs = InMemory::new(&mut store);
+
+        let actual = Lints::get_from_toml_or_else_vcs(
+            indoc!(
+                "
+                [pb.lint]
+                \"duplicated-trailers\" = false
+                "
+            ),
+            &mut vcs,
+        )
+        .expect("Failed to parse toml");
+
+        let lints = BTreeSet::new();
+        let expected = Lints::new(lints);
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn try_from_vcs_defaults() {
         let mut strings = BTreeMap::new();
         let mut config = InMemory::new(&mut strings);
 
@@ -191,7 +314,7 @@ mod tests {
     }
 
     #[test]
-    fn disabled_duplicated_trailers() {
+    fn try_from_vcs_disabled_duplicated_trailers() {
         let mut strings = BTreeMap::new();
         strings.insert("pb.lint.duplicated-trailers".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
@@ -207,7 +330,7 @@ mod tests {
     }
 
     #[test]
-    fn enabled_duplicated_trailers() {
+    fn try_from_vcs_enabled_duplicated_trailers() {
         let mut strings = BTreeMap::new();
         strings.insert("pb.lint.duplicated-trailers".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
@@ -226,7 +349,7 @@ mod tests {
     }
 
     #[test]
-    fn enabled_pivotal_tracker_id() {
+    fn try_from_vcs_enabled_pivotal_tracker_id() {
         let mut strings = BTreeMap::new();
         strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
@@ -246,7 +369,7 @@ mod tests {
     }
 
     #[test]
-    fn enabled_jira_issue_key_missing() {
+    fn try_from_vcs_enabled_jira_issue_key_missing() {
         let mut strings = BTreeMap::new();
         strings.insert("pb.lint.jira-issue-key-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
@@ -266,7 +389,7 @@ mod tests {
     }
 
     #[test]
-    fn disabled_jira_issue_key_missing() {
+    fn try_from_vcs_disabled_jira_issue_key_missing() {
         let mut strings = BTreeMap::new();
         strings.insert("pb.lint.jira-issue-key-missing".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
@@ -333,6 +456,31 @@ mod tests {
             expected, actual
         )
     }
+    #[test]
+    fn we_can_subtract_lints_from_the_lint_list() {
+        let mut set_a_lints = BTreeSet::new();
+        set_a_lints.insert(JiraIssueKeyMissing);
+        set_a_lints.insert(PivotalTrackerIdMissing);
+
+        let mut set_b_lints = BTreeSet::new();
+        set_b_lints.insert(DuplicatedTrailers);
+        set_b_lints.insert(PivotalTrackerIdMissing);
+
+        let set_a = Lints::new(set_a_lints);
+        let set_b = Lints::new(set_b_lints);
+
+        let actual = set_a.subtract(&set_b);
+
+        let mut lints = BTreeSet::new();
+        lints.insert(JiraIssueKeyMissing);
+        let expected = Lints::new(lints);
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
 }
 
 #[derive(Error, Debug)]
@@ -340,5 +488,7 @@ pub enum Error {
     #[error("{0}")]
     LintNameUnknown(#[from] lint::Error),
     #[error("failed to read lint config from git: {0}")]
-    VcsIoError(#[from] external::Error),
+    VcsIo(#[from] external::Error),
+    #[error("Failed to parse lint config file: {0}")]
+    TomlParse(#[from] toml::de::Error),
 }
