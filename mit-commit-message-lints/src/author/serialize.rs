@@ -5,8 +5,11 @@ use thiserror::Error;
 impl TryFrom<&str> for Authors {
     type Error = Error;
 
-    fn try_from(yaml: &str) -> Result<Self, Self::Error> {
-        serde_yaml::from_str(yaml)
+    fn try_from(input: &str) -> Result<Self, Self::Error> {
+        serde_yaml::from_str(input)
+            .or_else(|yaml_error| {
+                toml::from_str(input).map_err(|toml_error| Error::Parse(yaml_error, toml_error))
+            })
             .map_err(Error::from)
             .map(Authors::new)
     }
@@ -16,24 +19,44 @@ impl TryFrom<Authors> for String {
     type Error = Error;
 
     fn try_from(value: Authors) -> Result<Self, Self::Error> {
-        serde_yaml::to_string(&value.authors).map_err(Error::from)
+        toml::to_string(&value.authors).map_err(Error::from)
     }
 }
 
 #[cfg(test)]
-mod tests_able_to_load_config_from_yaml {
-    use std::collections::BTreeMap;
-
-    use pretty_assertions::assert_eq;
-
+mod tests {
     use crate::author::entities::{Author, Authors};
     use indoc::indoc;
+    use pretty_assertions::assert_eq;
+    use std::collections::BTreeMap;
     use std::convert::TryFrom;
+    use std::convert::TryInto;
 
     #[test]
     fn must_be_valid_yaml() {
         let actual: Result<_, _> = Authors::try_from("Hello I am invalid yaml : : :");
         assert_eq!(true, actual.is_err())
+    }
+
+    #[test]
+    fn it_can_parse_a_standard_toml_file() {
+        let actual = Authors::try_from(indoc!(
+            "
+            [bt]
+            name = \"Billie Thompson\"
+            email = \"billie@example.com\"
+            "
+        ))
+        .expect("Failed to parse yaml");
+
+        let mut input: BTreeMap<String, Author> = BTreeMap::new();
+        input.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", None),
+        );
+        let expected = Authors::new(input);
+
+        assert_eq!(expected, actual);
     }
 
     #[test]
@@ -80,20 +103,9 @@ mod tests_able_to_load_config_from_yaml {
 
         assert_eq!(expected, actual);
     }
-}
-
-#[cfg(test)]
-mod tests_able_to_convert_authors_to_yaml {
-    use std::collections::BTreeMap;
-
-    use pretty_assertions::assert_eq;
-
-    use crate::author::entities::{Author, Authors};
-    use indoc::indoc;
-    use std::convert::TryInto;
 
     #[test]
-    fn it_converts_to_standard_yaml() {
+    fn it_converts_to_standard_toml() {
         let mut map: BTreeMap<String, Author> = BTreeMap::new();
         map.insert(
             "bt".into(),
@@ -102,10 +114,10 @@ mod tests_able_to_convert_authors_to_yaml {
         let actual: String = Authors::new(map).try_into().unwrap();
         let expected = indoc!(
             "
-            ---
-            bt:
-              name: Billie Thompson
-              email: billie@example.com"
+            [bt]
+            name = \"Billie Thompson\"
+            email = \"billie@example.com\"
+            "
         )
         .to_string();
 
@@ -122,11 +134,11 @@ mod tests_able_to_convert_authors_to_yaml {
         let actual: String = Authors::new(map).try_into().unwrap();
         let expected = indoc!(
             "
-            ---
-            bt:
-              name: Billie Thompson
-              email: billie@example.com
-              signingkey: 0A46826A"
+            [bt]
+            name = \"Billie Thompson\"
+            email = \"billie@example.com\"
+            signingkey = \"0A46826A\"
+            "
         )
         .to_string();
 
@@ -136,6 +148,8 @@ mod tests_able_to_convert_authors_to_yaml {
 
 #[derive(Error, Debug)]
 pub enum Error {
-    #[error("failed to parse yaml: {0}")]
-    YamlParse(#[from] serde_yaml::Error),
+    #[error("failed to parse authors as toml {0} or as yaml {1}")]
+    Parse(serde_yaml::Error, toml::de::Error),
+    #[error("failed to serialise toml {0}")]
+    SerialiseYaml(#[from] toml::ser::Error),
 }
