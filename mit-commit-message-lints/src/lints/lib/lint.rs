@@ -1,12 +1,12 @@
 use crate::lints::lib::duplicate_trailers::lint_duplicated_trailers;
-use crate::lints::lib::lint::Lint::{
-    DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing,
-};
+
+use crate::lints::lib::missing_github_id::lint_missing_github_id;
 use crate::lints::lib::missing_jira_issue_key::lint_missing_jira_issue_key;
 use crate::lints::lib::missing_pivotal_tracker_id::lint_missing_pivotal_tracker_id;
 use crate::lints::lib::problem::Problem;
 use crate::lints::lib::{
-    duplicate_trailers, missing_jira_issue_key, missing_pivotal_tracker_id, CommitMessage, Lints,
+    duplicate_trailers, missing_github_id, missing_jira_issue_key, missing_pivotal_tracker_id,
+    CommitMessage, Lints,
 };
 use std::convert::TryInto;
 use thiserror::Error;
@@ -17,6 +17,7 @@ pub enum Lint {
     DuplicatedTrailers,
     PivotalTrackerIdMissing,
     JiraIssueKeyMissing,
+    GitHubIdMissing,
 }
 
 pub(crate) const CONFIG_KEY_PREFIX: &str = "mit.lint";
@@ -51,11 +52,12 @@ impl Lint {
     #[must_use]
     pub fn name(self) -> &'static str {
         match self {
-            DuplicatedTrailers => duplicate_trailers::CONFIG_DUPLICATED_TRAILERS,
-            PivotalTrackerIdMissing => {
+            Lint::DuplicatedTrailers => duplicate_trailers::CONFIG_DUPLICATED_TRAILERS,
+            Lint::PivotalTrackerIdMissing => {
                 missing_pivotal_tracker_id::CONFIG_PIVOTAL_TRACKER_ID_MISSING
             }
-            JiraIssueKeyMissing => missing_jira_issue_key::CONFIG_JIRA_ISSUE_KEY_MISSING,
+            Lint::JiraIssueKeyMissing => missing_jira_issue_key::CONFIG_JIRA_ISSUE_KEY_MISSING,
+            Lint::GitHubIdMissing => missing_github_id::CONFIG_GITHUB_ID_MISSING,
         }
     }
 }
@@ -63,9 +65,9 @@ impl Lint {
 impl Lint {
     pub fn iterator() -> impl Iterator<Item = Lint> {
         static LINTS: [Lint; 3] = [
-            DuplicatedTrailers,
-            PivotalTrackerIdMissing,
-            JiraIssueKeyMissing,
+            Lint::DuplicatedTrailers,
+            Lint::PivotalTrackerIdMissing,
+            Lint::JiraIssueKeyMissing,
         ];
         LINTS.iter().copied()
     }
@@ -81,6 +83,7 @@ impl Lint {
             Lint::DuplicatedTrailers => lint_duplicated_trailers(commit_message),
             Lint::PivotalTrackerIdMissing => lint_missing_pivotal_tracker_id(commit_message),
             Lint::JiraIssueKeyMissing => lint_missing_jira_issue_key(commit_message),
+            Lint::GitHubIdMissing => lint_missing_github_id(commit_message),
         }
     }
 
