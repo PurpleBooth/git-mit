@@ -1,0 +1,35 @@
+[package]
+name = "git-relates-to"
+version = "3.30.0"
+authors = [ "Billie Thompson <billie+git-relates-to@billiecodes.com>" ]
+edition = "2018"
+license = "Creative Commons Zero v1.0 Universal"
+description = "Set Relates-to trailer."
+categories = [ "development-tools", "command-line-utilities" ]
+keywords = [ "git", "git-hooks" ]
+readme = "../README.md"
+repository = "https://github.com/PurpleBooth/git-mit"
+
+[build-dependencies]
+clap = "3.0.0-beta.1"
+clap_generate = "3.0.0-beta.1"
+
+  [build-dependencies.mit-build-tools]
+  path = "../mit-build-tools"
+
+[dependencies]
+thiserror = "1.0"
+clap = "3.0.0-beta.1"
+xdg = "^2.1"
+git2 = "0.13"
+clap_generate = "3.0.0-beta.1"
+
+  [dependencies.mit-commit-message-lints]
+  path = "../mit-commit-message-lints"
+
+[dev-dependencies]
+indoc = "0.3"
+tempfile = "3"
+
+  [dev-dependencies.mit-hook-test-helper]
+  path = "../mit-hook-test-helper"

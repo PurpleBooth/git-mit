@@ -1,6 +1,5 @@
-use mit_commit_message_lints::author::VcsError;
-use mit_commit_message_lints::external;
 use mit_commit_message_lints::lints::CommitMessageError;
+use mit_commit_message_lints::{author, external, relates};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -12,7 +11,9 @@ pub(crate) enum MitPrepareCommitMessageError {
     #[error("Expected commit file path")]
     MissingCommitFilePath,
     #[error("{0}")]
-    AuthorWrite(#[from] VcsError),
+    AuthorWrite(#[from] author::VcsError),
+    #[error("{0}")]
+    RelatesToWrite(#[from] relates::VcsError),
     #[error("{0}")]
     ReadFromVcs(#[from] external::Error),
 }

@@ -41,6 +41,20 @@ I recommend you commit `.git-mit.toml.dist` and `.gitignore`
 "pivotal-tracker-id-missing" = true
 ```
 
+### Append issue number
+
+You can append an issue number to your commits in a trailer
+
+``` shell
+git relates-to "#21346578"
+```
+
+Will append
+
+    Relates-to: #21346578
+
+To your commit messsage
+
 ### Setting Authors and Co-Authors
 
 Just set the author
@@ -159,3 +173,5 @@ directory](https://github.com/PurpleBooth/git-mit/tree/main/usage)
     *Default: `$HOME/.config/git-mit/mit.yml`*
   - **GIT\_MIT\_AUTHORS\_TIMEOUT** How long to wait before you need to
     run git mit again *Default: `60`*
+  - **GIT\_MIT\_RELATES\_TO\_TIMEOUT** How long to wait before you need
+    to run git relates-to again *Default: `60`*
