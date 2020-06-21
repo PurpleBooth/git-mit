@@ -214,8 +214,8 @@ fn get_vcs_coauthors_config<'a>(
         .map(|index| get_vcs_coauthor_config(config, key, index))
         .fold(Ok(Vec::<Option<&'a str>>::new()), |acc, item| {
             match (acc, item) {
+                (Err(error), _) | (Ok(_), Err(error)) => Err(error),
                 (Ok(list), Ok(item)) => Ok(vec![list, vec![item]].concat()),
-                (Err(error), Ok(_)) | (Ok(_), Err(error)) | (Err(error), Err(_)) => Err(error),
             }
         })
 }
