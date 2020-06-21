@@ -19,7 +19,7 @@ Commands
 --------
 
 ```
-{subcommands}
+{subcommands|unescape}
 ```
 
 
@@ -27,7 +27,7 @@ Options
 -------
 
 ```
-{unified}
+{unified|unescape}
 ```
 
 FILES
