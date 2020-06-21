@@ -38,12 +38,17 @@ impl Lints {
         let config: BTreeMap<String, BTreeMap<String, BTreeMap<String, bool>>> =
             toml::from_str(config)?;
 
-        let config = match config.get("pb") {
+        let lint_prefix = lint::CONFIG_KEY_PREFIX.split('.').collect::<Vec<_>>();
+        let namespace = (*lint_prefix.get(0).unwrap()).to_string();
+
+        let config = match config.get(&namespace) {
             None => return Ok(vcs_lints),
             Some(lints) => lints,
         };
 
-        let lint_names = match config.get("lint") {
+        let group = (*lint_prefix.get(1).unwrap()).to_string();
+
+        let lint_names = match config.get(&group) {
             None => return Ok(vcs_lints),
             Some(lints) => lints,
         };
@@ -249,7 +254,7 @@ mod tests {
         let actual = Lints::get_from_toml_or_else_vcs(
             indoc!(
                 "
-                [pb.lint]
+                [mit.lint]
                 \"pivotal-tracker-id-missing\" = true
                 "
             ),
@@ -277,7 +282,7 @@ mod tests {
         let actual = Lints::get_from_toml_or_else_vcs(
             indoc!(
                 "
-                [pb.lint]
+                [mit.lint]
                 \"duplicated-trailers\" = false
                 "
             ),
@@ -316,7 +321,7 @@ mod tests {
     #[test]
     fn try_from_vcs_disabled_duplicated_trailers() {
         let mut strings = BTreeMap::new();
-        strings.insert("pb.lint.duplicated-trailers".into(), "false".into());
+        strings.insert("mit.lint.duplicated-trailers".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -332,7 +337,7 @@ mod tests {
     #[test]
     fn try_from_vcs_enabled_duplicated_trailers() {
         let mut strings = BTreeMap::new();
-        strings.insert("pb.lint.duplicated-trailers".into(), "true".into());
+        strings.insert("mit.lint.duplicated-trailers".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 
         let mut lints = BTreeSet::new();
@@ -351,7 +356,7 @@ mod tests {
     #[test]
     fn try_from_vcs_enabled_pivotal_tracker_id() {
         let mut strings = BTreeMap::new();
-        strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
+        strings.insert("mit.lint.pivotal-tracker-id-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 
         let mut lints = BTreeSet::new();
@@ -371,7 +376,7 @@ mod tests {
     #[test]
     fn try_from_vcs_enabled_jira_issue_key_missing() {
         let mut strings = BTreeMap::new();
-        strings.insert("pb.lint.jira-issue-key-missing".into(), "true".into());
+        strings.insert("mit.lint.jira-issue-key-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 
         let mut lints = BTreeSet::new();
@@ -391,7 +396,7 @@ mod tests {
     #[test]
     fn try_from_vcs_disabled_jira_issue_key_missing() {
         let mut strings = BTreeMap::new();
-        strings.insert("pb.lint.jira-issue-key-missing".into(), "false".into());
+        strings.insert("mit.lint.jira-issue-key-missing".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");

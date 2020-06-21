@@ -19,7 +19,7 @@ pub enum Lint {
     JiraIssueKeyMissing,
 }
 
-const CONFIG_KEY_PREFIX: &str = "pb.lint";
+pub(crate) const CONFIG_KEY_PREFIX: &str = "mit.lint";
 
 impl std::convert::TryFrom<&str> for Lint {
     type Error = Error;

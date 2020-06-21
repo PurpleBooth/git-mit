@@ -69,7 +69,7 @@ mktemp > demo.txt
 git add demo.txt
 
 echo "
-[pb.lint]
+[mit.lint]
 \"pivotal-tracker-id-missing\" = true
 " > .git-mit.toml.dist
 
@@ -90,7 +90,7 @@ mktemp > demo.txt
 git add demo.txt
 
 echo "
-[pb.lint]
+[mit.lint]
 " > .git-mit.toml
 git commit -m "No ID"
 ```
@@ -104,7 +104,7 @@ mktemp > demo.txt
 git add demo.txt
 
 echo "
-[pb.lint]
+[mit.lint]
 \"duplicated-trailers\" = false
 " > .git-mit.toml
 

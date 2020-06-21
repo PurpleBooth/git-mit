@@ -96,7 +96,7 @@ fn disabled() {
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.duplicated-trailers")
+        .arg("mit.lint.duplicated-trailers")
         .arg("false")
         .output()
         .expect("failed to execute process");

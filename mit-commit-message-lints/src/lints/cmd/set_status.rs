@@ -25,7 +25,7 @@ mod tests_can_enable_lints_via_a_command {
     #[test]
     fn we_can_enable_lints() {
         let mut strings = BTreeMap::new();
-        strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "false".into());
+        strings.insert("mit.lint.pivotal-tracker-id-missing".into(), "false".into());
         let mut config = InMemory::new(&mut strings);
 
         let mut lints = BTreeSet::new();
@@ -35,7 +35,7 @@ mod tests_can_enable_lints_via_a_command {
 
         let expected = "true".to_string();
         let actual = strings
-            .get("pb.lint.pivotal-tracker-id-missing")
+            .get("mit.lint.pivotal-tracker-id-missing")
             .unwrap()
             .clone();
         assert_eq!(expected, actual);
@@ -44,7 +44,7 @@ mod tests_can_enable_lints_via_a_command {
     #[test]
     fn we_can_disable_lints() {
         let mut strings = BTreeMap::new();
-        strings.insert("pb.lint.pivotal-tracker-id-missing".into(), "true".into());
+        strings.insert("mit.lint.pivotal-tracker-id-missing".into(), "true".into());
         let mut config = InMemory::new(&mut strings);
 
         let mut lints = BTreeSet::new();
@@ -54,7 +54,7 @@ mod tests_can_enable_lints_via_a_command {
 
         let expected = "false".to_string();
         let actual = strings
-            .get("pb.lint.pivotal-tracker-id-missing")
+            .get("mit.lint.pivotal-tracker-id-missing")
             .unwrap()
             .clone();
         assert_eq!(expected, actual);
