@@ -3,13 +3,18 @@ use std::{env, fs::File, io::Write};
 use crate::cli::app;
 use crate::errors::MitPrepareCommitMessageError;
 use crate::MitPrepareCommitMessageError::MissingCommitFilePath;
+use mit_commit_message_lints::relates::vcs::get_relate_to_configuration;
 use mit_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
     external::Git2,
     lints::lib::{CommitMessage, Trailer},
+    relates::entities::RelateTo,
 };
 use std::convert::TryFrom;
 use std::path::PathBuf;
+
+mod cli;
+mod errors;
 
 fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
     let matches = app().get_matches();
@@ -24,13 +29,15 @@ fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
     let mut git_config = Git2::try_from(current_dir)?;
 
     if let Some(authors) = get_coauthor_configuration(&mut git_config)? {
-        append_coauthors_to_commit_message(commit_message_path, &authors)?
+        append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?
+    }
+
+    if let Some(relates_to) = get_relate_to_configuration(&mut git_config)? {
+        append_relate_to_trailer_to_commit_message(commit_message_path, &relates_to)?
     }
 
     Ok(())
 }
-
-mod cli;
 
 fn append_coauthors_to_commit_message(
     commit_message_path: PathBuf,
@@ -53,4 +60,15 @@ fn append_coauthors_to_commit_message(
         .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))
 }
 
-mod errors;
+fn append_relate_to_trailer_to_commit_message(
+    commit_message_path: PathBuf,
+    relates: &RelateTo,
+) -> Result<(), MitPrepareCommitMessageError> {
+    let path = String::from(commit_message_path.to_string_lossy());
+    let commit_message = CommitMessage::try_from(commit_message_path.clone())?
+        .add_trailer(&Trailer::new("Relates-to", &relates.to()));
+
+    File::create(commit_message_path)
+        .and_then(|mut file| file.write_all(format!("{}", commit_message).as_bytes()))
+        .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))
+}

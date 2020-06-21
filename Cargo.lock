@@ -166,6 +166,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "git-relates-to"
+version = "3.30.0"
+dependencies = [
+ "clap",
+ "clap_generate",
+ "git2",
+ "indoc",
+ "mit-build-tools",
+ "mit-commit-message-lints",
+ "mit-hook-test-helper",
+ "tempfile",
+ "thiserror",
+ "xdg",
+]
+
+[[package]]
 name = "git2"
 version = "0.13.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
