@@ -19,14 +19,14 @@ Arguments
 ---------
 
 ```
-{positionals}
+{positionals|unescape}
 ```
 
 Options
 -------
 
 ```
-{unified}
+{unified|unescape}
 ```
 
 BUGS

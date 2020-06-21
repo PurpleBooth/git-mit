@@ -32,7 +32,8 @@ pub fn generate(app: &App, out_dir: &PathBuf, md_template: &str) {
     tt.set_default_formatter(&formatters::format_escape);
     tt.add_template("man", &manpage_template).unwrap();
     tt.add_formatter("upper", formatters::format_upper);
-    tt.add_formatter("md_escape", formatters::format_escape);
+    tt.add_formatter("escape", formatters::format_escape);
+    tt.add_formatter("unescape", tinytemplate::format_unescaped);
 
     let context = Context::new(&app);
 
