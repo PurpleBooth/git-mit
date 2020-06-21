@@ -11,8 +11,9 @@ where
         fs::remove_dir_all(dir.clone()).unwrap();
     }
 
+    let name = app.get_bin_name().unwrap();
     let mut app = app.clone();
 
     fs::create_dir(dir.clone()).unwrap();
-    generate_to::<T, _, _>(&mut app, env!("CARGO_PKG_NAME"), &dir);
+    generate_to::<T, _, _>(&mut app, name, &dir);
 }
