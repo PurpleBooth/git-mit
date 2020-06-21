@@ -144,12 +144,12 @@ jobs:
       - shell: bash
         run: |
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
-          git checkout -b "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')-bottle"
+          git checkout -b "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
           git reset --soft HEAD~1
           git commit --amend -C HEAD
           git push -f origin "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
           brew install github/gh/gh
-          gh pr create --label bottles --base main --fill
+          gh pr create --label bottles --base main --fill || echo "this is ok, it just hasn't merged in yet"
         env:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           GIT_TAG: ${{ github.ref }}
