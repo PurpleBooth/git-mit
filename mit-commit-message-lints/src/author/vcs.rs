@@ -11,7 +11,7 @@ use crate::{author::entities::Author, external, external::Vcs};
 use std::{convert::TryInto, time::SystemTimeError};
 use thiserror::Error;
 
-const CONFIG_KEY_EXPIRES: &str = "pb.author.expires";
+const CONFIG_KEY_EXPIRES: &str = "mit.author.expires";
 
 /// Get the co-authors that are currently defined for this vcs config source
 ///
@@ -58,7 +58,7 @@ mod tests_able_to_load_config_from_git {
     fn there_is_no_author_config_if_it_has_expired() {
         let now_minus_10 = epoch_with_offset(subtract_10_seconds);
         let mut strings: BTreeMap<String, String> = BTreeMap::new();
-        strings.insert("pb.author.expires".into(), format!("{}", now_minus_10));
+        strings.insert("mit.author.expires".into(), format!("{}", now_minus_10));
         let mut vcs = InMemory::new(&mut strings);
 
         let actual = get_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
@@ -74,7 +74,7 @@ mod tests_able_to_load_config_from_git {
     fn there_is_a_config_if_the_config_has_not_expired() {
         let mut strings = BTreeMap::new();
         strings.insert(
-            "pb.author.expires".into(),
+            "mit.author.expires".into(),
             format!("{}", epoch_with_offset(add_10_seconds)),
         );
 
@@ -94,14 +94,14 @@ mod tests_able_to_load_config_from_git {
     fn we_get_author_config_back_if_there_is_any() {
         let mut strs = BTreeMap::new();
         strs.insert(
-            "pb.author.expires".into(),
+            "mit.author.expires".into(),
             format!("{}", epoch_with_offset(add_10_seconds)),
         );
         strs.insert(
-            "pb.author.coauthors.0.email".into(),
+            "mit.author.coauthors.0.email".into(),
             "annie@example.com".into(),
         );
-        strs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
+        strs.insert("mit.author.coauthors.0.name".into(), "Annie Example".into());
         let mut vcs = InMemory::new(&mut strs);
 
         let actual = get_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
@@ -134,19 +134,19 @@ mod tests_able_to_load_config_from_git {
     fn we_get_multiple_authors_back_if_there_are_multiple() {
         let mut strs = BTreeMap::new();
         strs.insert(
-            "pb.author.expires".into(),
+            "mit.author.expires".into(),
             format!("{}", epoch_with_offset(add_10_seconds)),
         );
         strs.insert(
-            "pb.author.coauthors.0.email".into(),
+            "mit.author.coauthors.0.email".into(),
             "annie@example.com".into(),
         );
-        strs.insert("pb.author.coauthors.0.name".into(), "Annie Example".into());
+        strs.insert("mit.author.coauthors.0.name".into(), "Annie Example".into());
         strs.insert(
-            "pb.author.coauthors.1.email".into(),
+            "mit.author.coauthors.1.email".into(),
             "joe@example.com".into(),
         );
-        strs.insert("pb.author.coauthors.1.name".into(), "Joe Bloggs".into());
+        strs.insert("mit.author.coauthors.1.name".into(), "Joe Bloggs".into());
 
         let mut vcs = InMemory::new(&mut strs);
 
@@ -226,7 +226,7 @@ fn get_vcs_coauthor_config<'a>(
     index: i32,
 ) -> Result<Option<&'a str>, Error> {
     config
-        .get_str(&format!("pb.author.coauthors.{}.{}", index, key))
+        .get_str(&format!("mit.author.coauthors.{}.{}", index, key))
         .map_err(Error::from)
 }
 
@@ -341,19 +341,19 @@ mod tests_can_set_author_details {
         );
         assert_eq!(
             Some(&"Somebody Else".to_string()),
-            strs.get("pb.author.coauthors.0.name")
+            strs.get("mit.author.coauthors.0.name")
         );
         assert_eq!(
             Some(&"somebody@example.com".to_string()),
-            strs.get("pb.author.coauthors.0.email")
+            strs.get("mit.author.coauthors.0.email")
         );
         assert_eq!(
             Some(&"Annie Example".to_string()),
-            strs.get("pb.author.coauthors.1.name")
+            strs.get("mit.author.coauthors.1.name")
         );
         assert_eq!(
             Some(&"annie@example.com".to_string()),
-            strs.get("pb.author.coauthors.1.email")
+            strs.get("mit.author.coauthors.1.email")
         )
     }
 
@@ -361,7 +361,7 @@ mod tests_can_set_author_details {
     fn old_co_authors_are_removed() {
         let mut strs = BTreeMap::new();
         strs.insert(
-            "pb.author.expires".into(),
+            "mit.author.expires".into(),
             format!(
                 "{}",
                 SystemTime::now()
@@ -372,9 +372,12 @@ mod tests_can_set_author_details {
         );
         strs.insert("user.name".into(), "Another Name".into());
         strs.insert("user.email".into(), "another@example.com".into());
-        strs.insert("pb.author.coauthors.0.name".into(), "Different Name".into());
         strs.insert(
-            "pb.author.coauthors.0.email".into(),
+            "mit.author.coauthors.0.name".into(),
+            "Different Name".into(),
+        );
+        strs.insert(
+            "mit.author.coauthors.0.email".into(),
             "different@example.com".into(),
         );
         let mut vcs_config = InMemory::new(&mut strs);
@@ -389,8 +392,8 @@ mod tests_can_set_author_details {
             Some(&"billie@example.com".to_string()),
             strs.get("user.email")
         );
-        assert_eq!(None, strs.get("pb.author.coauthors.0.name"));
-        assert_eq!(None, strs.get("pb.author.coauthors.0.email"));
+        assert_eq!(None, strs.get("mit.author.coauthors.0.name"));
+        assert_eq!(None, strs.get("mit.author.coauthors.0.email"));
     }
 
     #[test]
@@ -420,7 +423,7 @@ mod tests_can_set_author_details {
             .unwrap();
 
         let actual_expire_time: i64 = strs
-            .get("pb.author.expires")
+            .get("mit.author.expires")
             .and_then(|x| x.parse().ok())
             .expect("Failed to read expire");
 
@@ -455,8 +458,8 @@ fn get_defined_vcs_coauthor_keys(config: &mut dyn Vcs) -> Vec<String> {
         .take_while(|index| has_vcs_coauthor(config, *index))
         .flat_map(|index| {
             vec![
-                format!("pb.author.coauthors.{}.name", index),
-                format!("pb.author.coauthors.{}.email", index),
+                format!("mit.author.coauthors.{}.name", index),
+                format!("mit.author.coauthors.{}.email", index),
             ]
             .into_iter()
         })
@@ -480,7 +483,7 @@ fn set_vcs_coauthor(config: &mut dyn Vcs, index: usize, author: &Author) -> Resu
 
 fn set_vcs_coauthor_name(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<(), Error> {
     config.set_str(
-        &format!("pb.author.coauthors.{}.name", index),
+        &format!("mit.author.coauthors.{}.name", index),
         &author.name(),
     )?;
     Ok(())
@@ -492,7 +495,7 @@ fn set_vcs_coauthor_email(
     author: &Author,
 ) -> Result<(), Error> {
     config.set_str(
-        &format!("pb.author.coauthors.{}.email", index),
+        &format!("mit.author.coauthors.{}.email", index),
         &author.email(),
     )?;
     Ok(())
