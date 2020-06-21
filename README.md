@@ -115,6 +115,23 @@ find "$HOME" -type d -name .git -exec sh -c 'git init "$1"/..' -- {} \;
 If you want to use the author part create yourself a configuration and
 save it into a file
 
+```toml
+[ae]
+name = "Anyone Else"
+email = "anyone@example.com"
+
+[bt]
+name = "Billie Thompson"
+email = "billie@example.com"
+signingkey = "0A46826A"
+
+[se]
+name = "Someone Else"
+email = "someone@example.com"
+```
+
+you can use yaml too
+
 ``` yaml
 ---
 ae:

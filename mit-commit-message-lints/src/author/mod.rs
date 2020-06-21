@@ -1,6 +1,6 @@
 pub mod entities;
+pub mod serialize;
 pub mod vcs;
-pub mod yaml;
 
+pub use serialize::Error as YamlError;
 pub use vcs::Error as VcsError;
-pub use yaml::Error as YamlError;
