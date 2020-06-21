@@ -27,6 +27,20 @@ git mit-config lint enable duplicated-trailers
 git mit-config lint disable duplicated-trailers
 ```
 
+### Centralising lint config
+
+You can add a `.git-mit.toml` or `.git-mit.toml.dist` to the root of
+your repository and we will read it and try to enable the correct lints
+(with `.git-mit.toml` taking precedence).
+
+I recommend you commit `.git-mit.toml.dist` and `.gitignore`
+`.git-mit.toml` to allow easy local reconfiguration
+
+``` toml
+[mit.lint]
+"pivotal-tracker-id-missing" = true
+```
+
 ### Setting Authors and Co-Authors
 
 Just set the author
