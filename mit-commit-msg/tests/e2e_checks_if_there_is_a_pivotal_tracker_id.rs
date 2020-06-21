@@ -20,7 +20,7 @@ fn valid_commit() {
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.pivotal-tracker-id-missing")
+        .arg("mit.lint.pivotal-tracker-id-missing")
         .arg("true")
         .output()
         .expect("failed to execute process");
@@ -51,7 +51,7 @@ fn enabled() {
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.pivotal-tracker-id-missing")
+        .arg("mit.lint.pivotal-tracker-id-missing")
         .arg("true")
         .output()
         .expect("failed to execute process");
@@ -105,7 +105,7 @@ fn disabled() {
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.pivotal-tracker-id-missing")
+        .arg("mit.lint.pivotal-tracker-id-missing")
         .arg("false")
         .output()
         .expect("failed to execute process");

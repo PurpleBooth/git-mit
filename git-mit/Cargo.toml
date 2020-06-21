@@ -8,7 +8,7 @@ description = "Set author and Co-authored trailer."
 categories = [ "development-tools", "command-line-utilities" ]
 keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
-repository = "https://github.com/PurpleBooth/pb-git-hooks"
+repository = "https://github.com/PurpleBooth/git-mit"
 
 [build-dependencies]
 xdg = "^2.1"

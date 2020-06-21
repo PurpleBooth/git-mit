@@ -21,7 +21,7 @@ fn valid_commit() {
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.jira-issue-key-missing")
+        .arg("mit.lint.jira-issue-key-missing")
         .arg("true")
         .output()
         .expect("failed to execute process");
@@ -52,7 +52,7 @@ fn explicitly_enabled() {
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.jira-issue-key-missing")
+        .arg("mit.lint.jira-issue-key-missing")
         .arg("true")
         .output()
         .expect("failed to execute process");
@@ -99,7 +99,7 @@ fn disabled() {
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg("pb.lint.jira-issue-key-missing")
+        .arg("mit.lint.jira-issue-key-missing")
         .arg("false")
         .output()
         .expect("failed to execute process");

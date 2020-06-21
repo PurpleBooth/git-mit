@@ -7,7 +7,7 @@ license = "CC0 1.0 Universal"
 categories = [ "development-tools", "command-line-utilities" ]
 keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
-repository = "https://github.com/PurpleBooth/pb-git-hooks"
+repository = "https://github.com/PurpleBooth/git-mit"
 description = "A command for enabling and disabling git lints"
 
 [build-dependencies]
