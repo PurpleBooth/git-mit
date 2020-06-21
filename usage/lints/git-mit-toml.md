@@ -57,7 +57,6 @@ echo "git-mit.yml" > .gitignore
 git add .
 ```
 
-
 ## You can create a `.git-mit.toml.dist`
 
 This is at the root of your repository
@@ -83,7 +82,8 @@ fi
 
 ### Overriding `.git-mit.toml.dist` with `.git-mit.toml`
 
-You can also create a `.git-mit.toml` which takes precedence over `.git-mit.toml.dist`
+You can also create a `.git-mit.toml` which takes precedence over
+`.git-mit.toml.dist`
 
 ``` bash
 mktemp > demo.txt

@@ -169,4 +169,3 @@ if git commit -s ; then
     exit 1
 fi
 ```
-
