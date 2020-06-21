@@ -1,6 +1,6 @@
-# Authors
+# Relates To
 
-This is the `git mit` part of the tool.
+This is the `git relates-to` part of the tool.
 
 ## Setup
 
