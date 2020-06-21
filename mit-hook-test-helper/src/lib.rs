@@ -49,7 +49,7 @@ pub fn set_co_author(working_dir: &PathBuf, author_name: &str, author_email: &st
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg(format!("pb.author.coauthors.{}.name", index))
+        .arg(format!("mit.author.coauthors.{}.name", index))
         .arg(author_name)
         .output()
         .expect("failed to execute process");
@@ -57,7 +57,7 @@ pub fn set_co_author(working_dir: &PathBuf, author_name: &str, author_email: &st
         .current_dir(&working_dir)
         .arg("config")
         .arg("--local")
-        .arg(format!("pb.author.coauthors.{}.email", index))
+        .arg(format!("mit.author.coauthors.{}.email", index))
         .arg(author_email)
         .output()
         .expect("failed to execute process");
@@ -71,7 +71,7 @@ pub fn set_author_expires(expiration_time: Duration, working_dir: &PathBuf) {
         .arg("--local")
         .arg("--type")
         .arg("expiry-date")
-        .arg("pb.author.expires")
+        .arg("mit.author.expires")
         .arg(now)
         .output()
         .expect("failed to execute process");

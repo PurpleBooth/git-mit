@@ -79,7 +79,7 @@ fn one_initial_sets_that_initial_as_author() {
         .as_secs();
 
     let actual_expire_time = config
-        .get_str("pb.author.expires")
+        .get_str("mit.author.expires")
         .map_err(Box::from)
         .and_then(|x| -> Result<_, Box<dyn Error>> { u64::from_str(x).map_err(Box::from) })
         .expect("Failed to read expire");
@@ -144,10 +144,10 @@ fn multiple_initials_become_co_authors() {
     assert_eq!(actual_author_email, "billie@example.com");
 
     let actual_coauthor_0_name = config
-        .get_str("pb.author.coauthors.0.name")
+        .get_str("mit.author.coauthors.0.name")
         .expect("Failed to read username");
     let actual_coauthor_0_email = config
-        .get_str("pb.author.coauthors.0.email")
+        .get_str("mit.author.coauthors.0.email")
         .expect("Failed to read email");
 
     assert_eq!(actual_coauthor_0_name, "Someone Else");
@@ -165,7 +165,7 @@ fn multiple_initials_become_co_authors() {
         .as_secs();
 
     let actual_expire_time = config
-        .get_str("pb.author.expires")
+        .get_str("mit.author.expires")
         .map_err(Box::from)
         .and_then(|x| -> Result<_, Box<dyn Error>> { u64::from_str(x).map_err(Box::from) })
         .expect("Failed to read expire");
