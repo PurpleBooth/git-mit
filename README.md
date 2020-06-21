@@ -1,8 +1,7 @@
 # git-mit
 
 This started out as a reimplementation of git-duet. It was an excuse for
-me to learn Rust and I also had some irritating problems with git duet.
-It's a bit more than that now, with lints for issues.
+me to learn Rust. It's a bit more than that now, with lints for issues.
 
 ## Usage
 
@@ -13,6 +12,8 @@ It's a bit more than that now, with lints for issues.
   - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
     *Default: `disabled`*
   - **jira-issue-key-missing** - Detect missing Jira Issue Key *Default:
+    `disabled`*
+  - **github-id-missing** - Detect missing GitHub Id *Default:
     `disabled`*
 
 ### Enabling Lints
@@ -129,7 +130,7 @@ find "$HOME" -type d -name .git -exec sh -c 'git init "$1"/..' -- {} \;
 If you want to use the author part create yourself a configuration and
 save it into a file
 
-```toml
+``` toml
 [ae]
 name = "Anyone Else"
 email = "anyone@example.com"

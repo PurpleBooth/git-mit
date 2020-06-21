@@ -30,4 +30,5 @@ pub enum Code {
     DuplicatedTrailers = 3,
     PivotalTrackerIdMissing,
     JiraIssueKeyMissing,
+    GitHubIdMissing,
 }

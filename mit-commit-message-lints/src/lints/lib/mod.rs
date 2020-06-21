@@ -15,6 +15,7 @@ pub use problem::{Code, Problem};
 pub use trailer::Trailer;
 
 mod duplicate_trailers;
+mod missing_github_id;
 mod missing_jira_issue_key;
 mod missing_pivotal_tracker_id;
 mod problem;

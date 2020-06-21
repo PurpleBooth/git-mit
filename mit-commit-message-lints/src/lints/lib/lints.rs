@@ -78,6 +78,7 @@ impl Lints {
                 get_config_or_default(config, Lint::DuplicatedTrailers, true)?,
                 get_config_or_default(config, Lint::PivotalTrackerIdMissing, false)?,
                 get_config_or_default(config, Lint::JiraIssueKeyMissing, false)?,
+                get_config_or_default(config, Lint::GitHubIdMissing, false)?,
             ]
             .into_iter()
             .flatten()
@@ -151,6 +152,7 @@ mod tests {
 
     use crate::{external::InMemory, lints::Lint::DuplicatedTrailers};
 
+    use crate::lints::lib::lint::Lint::GitHubIdMissing;
     use std::convert::TryInto;
 
     #[test]
@@ -362,6 +364,26 @@ mod tests {
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
         lints.insert(PivotalTrackerIdMissing);
+        let expected = Lints::new(lints);
+
+        let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn try_from_vcs_enabled_github_id() {
+        let mut strings = BTreeMap::new();
+        strings.insert("mit.lint.github-id-missing".into(), "true".into());
+        let mut config = InMemory::new(&mut strings);
+
+        let mut lints = BTreeSet::new();
+        lints.insert(DuplicatedTrailers);
+        lints.insert(GitHubIdMissing);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
