@@ -1,6 +1,6 @@
 [package]
 name = "git-relates-to"
-version = "3.30.0"
+version = "3.38.0"
 authors = [ "Billie Thompson <billie+git-relates-to@billiecodes.com>" ]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
