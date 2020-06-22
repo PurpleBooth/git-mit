@@ -1,7 +1,9 @@
 [package]
 name = "git-mit-relates-to"
-version = "3.38.0"
-authors = [ "Billie Thompson <billie+git-mit-relates-to@billiecodes.com>" ]
+version = "3.39.0"
+authors = [
+  "Billie Thompson <billie+git-mit-relates-to@billiecodes.com>"
+]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
 description = "Set Relates-to trailer."
