@@ -225,6 +225,11 @@ jobs:
           file: "mit-prepare-commit-msg/Cargo.toml"
           key: "package.version"
           value: ${{ steps.get_current_version.outputs.VERSION }}
+      - uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "git-relates-to/Cargo.toml"
+          key: "package.version"
+          value: ${{ steps.get_current_version.outputs.VERSION }}
       - uses: actions-rs/cargo@v1
         with:
           command: check
