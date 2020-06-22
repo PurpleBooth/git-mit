@@ -166,7 +166,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "git-relates-to"
+name = "git-mit-relates-to"
 version = "3.38.0"
 dependencies = [
  "clap",
