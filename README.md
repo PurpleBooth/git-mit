@@ -9,6 +9,7 @@ me to learn Rust. It's a bit more than that now, with lints for issues.
 
   - **duplicated-trailers** - Detect duplicated `Signed-off-by` and
     `Co-authored-by` Trailers. *Default: `enabled`*
+  - **subject-not-separated-from-body** - If there is a body, enforce a gap between it and the subject. *Default: `enabled`*
   - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
     *Default: `disabled`*
   - **jira-issue-key-missing** - Detect missing Jira Issue Key *Default:

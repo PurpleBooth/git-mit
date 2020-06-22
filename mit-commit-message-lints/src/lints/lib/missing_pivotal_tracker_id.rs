@@ -4,7 +4,7 @@ use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
 use indoc::indoc;
 
-pub(crate) const CONFIG_PIVOTAL_TRACKER_ID_MISSING: &str = "pivotal-tracker-id-missing";
+pub(crate) const CONFIG: &str = "pivotal-tracker-id-missing";
 
 const REGEX_PIVOTAL_TRACKER_ID: &str =
     r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
@@ -18,7 +18,7 @@ fn has_no_pivotal_tracker_id(text: &CommitMessage) -> bool {
     !text.matches_pattern(&re)
 }
 
-pub(crate) fn lint_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> Option<Problem> {
+pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     if has_missing_pivotal_tracker_id(commit_message) {
         Some(Problem::new(
             PIVOTAL_TRACKER_HELP.into(),
@@ -72,7 +72,7 @@ mod tests_has_missing_pivotal_tracker_id {
     }
 
     fn test_has_missing_pivotal_tracker_id(message: &str, expected: &Option<Problem>) {
-        let actual = &lint_missing_pivotal_tracker_id(&CommitMessage::new(message.into()));
+        let actual = &lint(&CommitMessage::new(message.into()));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",

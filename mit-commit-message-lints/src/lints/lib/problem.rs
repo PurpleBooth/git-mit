@@ -31,4 +31,5 @@ pub enum Code {
     PivotalTrackerIdMissing,
     JiraIssueKeyMissing,
     GitHubIdMissing,
+    SubjectNotSeparateFromBody,
 }

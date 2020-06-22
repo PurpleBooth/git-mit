@@ -34,6 +34,44 @@ impl CommitMessage {
         re.is_match(&self.contents)
     }
 
+    fn content_lines(&self) -> Vec<String> {
+        let scissors = self.scissors_line();
+        self.contents
+            .lines()
+            .take_while(|line| scissors != *line)
+            .filter_map(|line| {
+                if line.starts_with(&self.comment_char) {
+                    None
+                } else {
+                    Some(line.into())
+                }
+            })
+            .collect()
+    }
+
+    #[must_use]
+    pub fn content_line_count(&self) -> usize {
+        self.content_lines().len()
+    }
+
+    #[must_use]
+    pub fn get_subject(&self) -> String {
+        self.content_lines()
+            .get(0)
+            .map(String::from)
+            .unwrap_or_default()
+    }
+
+    #[must_use]
+    pub fn get_body(&self) -> String {
+        self.content_lines()
+            .into_iter()
+            .skip(1)
+            .skip_while(std::string::String::is_empty)
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+
     #[must_use]
     pub fn get_trailer(&self, trailer_key: &str) -> Vec<Trailer> {
         self.get_all_trailers()
@@ -107,7 +145,7 @@ impl CommitMessage {
     }
 
     fn scissors_section_length(&self) -> usize {
-        let scissors_line = format!("{} {}", self.comment_char, SCISSORS_LINE);
+        let scissors_line = self.scissors_line();
 
         if self.lines().any(|line| *line == scissors_line) {
             self.lines()
@@ -117,6 +155,11 @@ impl CommitMessage {
         } else {
             0
         }
+    }
+
+    fn scissors_line(&self) -> String {
+        let scissors_line = format!("{} {}", self.comment_char, SCISSORS_LINE);
+        scissors_line
     }
 
     fn lines(&self) -> Lines {
@@ -525,6 +568,196 @@ mod test_commit_message {
             )
             .add_trailer(&Trailer::from_str("Trailer: Content").unwrap())
         );
+    }
+
+    #[test]
+    fn can_get_only_subject() {
+        let commit = CommitMessage::new(
+            indoc!(
+                "
+                Some Commit Message
+                "
+            )
+            .into(),
+        );
+        assert_eq!("Some Commit Message", commit.get_subject());
+    }
+
+    #[test]
+    fn can_get_a_commented_out_subject() {
+        // You have to pass the "allow empty commit" flag o git to achieve this
+        let commit = CommitMessage::new(
+            indoc!(
+                "
+                # Some Commit Message
+                "
+            )
+            .into(),
+        );
+        assert_eq!("", commit.get_subject());
+    }
+
+    #[test]
+    fn can_get_a_subject_with_a_first_comment_line() {
+        // You have to pass the "allow empty commit" flag o git to achieve this
+        let commit = CommitMessage::new(
+            indoc!(
+                "
+                # Some Commit Message
+                The subject
+                "
+            )
+            .into(),
+        );
+        assert_eq!("The subject", commit.get_subject());
+    }
+
+    #[test]
+    fn can_line_count() {
+        let commit = CommitMessage::new(
+            indoc!(
+                "
+                Some Commit Message
+
+                With a description.
+                "
+            )
+            .into(),
+        );
+        assert_eq!(3, commit.content_line_count());
+    }
+
+    #[test]
+    fn line_count_does_not_include_comments() {
+        let commit = CommitMessage::new(
+            indoc!(
+                "
+                Some Commit Message
+
+                # I am not counted
+                With a description.
+                And more content
+                "
+            )
+            .into(),
+        );
+        assert_eq!(4, commit.content_line_count());
+    }
+
+    #[test]
+    fn line_count_does_not_include_comments_anything_after_scissors() {
+        let commit = CommitMessage::new(
+            indoc!(
+                "
+                Some Commit Message
+
+                # I am not counted
+                With a description.
+                And more content
+
+                # On branch main
+                # Your branch is ahead of 'origin/main' by 18 commits.
+                #   (use \"git push\" to publish your local commits)
+                #
+                # Changes to be committed:
+                #	modified:   commit_message.rs
+                #
+                # ------------------------ >8 ------------------------
+                # Do not modify or remove the line above.
+                # Everything below it will be ignored.
+                diff --git a/commit_message.rs b/commit_message.rs
+                "
+            )
+            .into(),
+        );
+        assert_eq!(5, commit.content_line_count());
+    }
+
+    #[test]
+    fn can_get_body() {
+        let commit = CommitMessage::new(
+            indoc!(
+                "
+                Some Commit Message
+
+                With a description.
+                "
+            )
+            .into(),
+        );
+        assert_eq!("With a description.".to_string(), commit.get_body());
+    }
+
+    #[test]
+    fn body_does_not_include_comments() {
+        let commit = CommitMessage::new(
+            indoc!(
+                "
+                Some Commit Message
+
+                # I am not counted
+                With a description.
+                And more content
+                "
+            )
+            .into(),
+        );
+        assert_eq!(
+            indoc!(
+                "With a description.
+                And more content"
+            )
+            .to_string(),
+            commit.get_body()
+        );
+    }
+
+    #[test]
+    fn body_does_not_include_comments_anything_after_scissors() {
+        let commit = CommitMessage::new(
+            indoc!(
+                "
+                Some Commit Message
+
+                # I am not counted
+                With a description.
+                And more content
+
+                # On branch main
+                # Your branch is ahead of 'origin/main' by 18 commits.
+                #   (use \"git push\" to publish your local commits)
+                #
+                # Changes to be committed:
+                #	modified:   commit_message.rs
+                #
+                # ------------------------ >8 ------------------------
+                # Do not modify or remove the line above.
+                # Everything below it will be ignored.
+                diff --git a/commit_message.rs b/commit_message.rs
+                "
+            )
+            .into(),
+        );
+        assert_eq!(
+            indoc!(
+                "With a description.
+                And more content
+                "
+            )
+            .to_string(),
+            commit.get_body()
+        );
+    }
+    #[test]
+    fn body_still_retrieved_without_gutter() {
+        let commit = CommitMessage::new(
+            indoc!(
+                "Some Commit Message
+                With a description."
+            )
+            .into(),
+        );
+        assert_eq!("With a description.".to_string(), commit.get_body());
     }
 }
 

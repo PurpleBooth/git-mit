@@ -95,10 +95,7 @@ But you can with one
 mktemp > demo.txt
 git add demo.txt
 
-git commit -m "Enabled the lint
-
-JRA-123
-"
+git commit -m "$(printf "Enabled the lint\n\nJRA-123")"
 ```
 
 ## Disabling this specific lint

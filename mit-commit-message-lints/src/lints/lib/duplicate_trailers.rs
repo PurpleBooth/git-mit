@@ -3,7 +3,7 @@ use std::{collections::HashSet, iter::FromIterator};
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem, Trailer};
 
-pub(crate) const CONFIG_DUPLICATED_TRAILERS: &str = "duplicated-trailers";
+pub(crate) const CONFIG: &str = "duplicated-trailers";
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const FIELD_SINGULAR: &str = "field";
@@ -30,7 +30,7 @@ fn has_duplicated_trailer(commit_message: &CommitMessage, trailer_key: &str) -> 
         .unwrap()
 }
 
-pub(crate) fn lint_duplicated_trailers(commit_message: &CommitMessage) -> Option<Problem> {
+pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     let duplicated_trailers = has_duplicated_trailers(commit_message);
     if duplicated_trailers.is_empty() {
         None
@@ -150,7 +150,7 @@ mod tests_has_duplicated_trailers {
     }
 
     fn test_lint_duplicated_trailers(message: String, expected: &Option<Problem>) {
-        let actual = &lint_duplicated_trailers(&CommitMessage::new(message));
+        let actual = &lint(&CommitMessage::new(message));
         assert_eq!(
             actual, expected,
             "Expected {:?}, found {:?}",

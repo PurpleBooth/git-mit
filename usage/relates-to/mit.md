@@ -80,11 +80,9 @@ Without setting the variable nothing happens
 mktemp > demo.txt
 git add demo.txt
 
-git commit -m "Demo 1
-
-Full Demo"
+git commit -m "Demo 1 Full Demo"
 ACTUAL="$(last_commit)"
-EXPECTED="$(printf "author: Someone Else someone@example.com\nsigned: \ncommit:\nDemo 1\nFull Demo\n\n")"
+EXPECTED="$(printf "author: Someone Else someone@example.com\nsigned: \ncommit:\nDemo 1 Full Demo\n\n")"
 
 diff <(echo "$EXPECTED") <(echo "$ACTUAL")
 ```
@@ -96,11 +94,9 @@ mktemp > demo.txt
 git add demo.txt
 
 git mit-relates-to "#[#12343567]"
-git commit -m "Demo 2
-
-Full Demo"
+git commit -m "Demo 2 Full Demo"
 ACTUAL="$(last_commit)"
-EXPECTED="$(printf "author: Someone Else someone@example.com\nsigned: \ncommit:\nDemo 2\nFull Demo\n\nRelates-to: #[#12343567]\n")"
+EXPECTED="$(printf "author: Someone Else someone@example.com\nsigned: \ncommit:\nDemo 2 Full Demo\n\nRelates-to: #[#12343567]\n")"
 
 diff <(echo "$EXPECTED") <(echo "$ACTUAL")
 ```

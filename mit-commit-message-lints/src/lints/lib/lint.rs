@@ -1,13 +1,6 @@
-use crate::lints::lib::duplicate_trailers::lint_duplicated_trailers;
-
-use crate::lints::lib::missing_github_id::lint_missing_github_id;
-use crate::lints::lib::missing_jira_issue_key::lint_missing_jira_issue_key;
-use crate::lints::lib::missing_pivotal_tracker_id::lint_missing_pivotal_tracker_id;
+use crate::lints::lib;
 use crate::lints::lib::problem::Problem;
-use crate::lints::lib::{
-    duplicate_trailers, missing_github_id, missing_jira_issue_key, missing_pivotal_tracker_id,
-    CommitMessage, Lints,
-};
+use crate::lints::lib::{CommitMessage, Lints};
 use std::convert::TryInto;
 use thiserror::Error;
 
@@ -18,6 +11,7 @@ pub enum Lint {
     PivotalTrackerIdMissing,
     JiraIssueKeyMissing,
     GitHubIdMissing,
+    SubjectNotSeparateFromBody,
 }
 
 pub(crate) const CONFIG_KEY_PREFIX: &str = "mit.lint";
@@ -52,22 +46,22 @@ impl Lint {
     #[must_use]
     pub fn name(self) -> &'static str {
         match self {
-            Lint::DuplicatedTrailers => duplicate_trailers::CONFIG_DUPLICATED_TRAILERS,
-            Lint::PivotalTrackerIdMissing => {
-                missing_pivotal_tracker_id::CONFIG_PIVOTAL_TRACKER_ID_MISSING
-            }
-            Lint::JiraIssueKeyMissing => missing_jira_issue_key::CONFIG_JIRA_ISSUE_KEY_MISSING,
-            Lint::GitHubIdMissing => missing_github_id::CONFIG_GITHUB_ID_MISSING,
+            Lint::DuplicatedTrailers => lib::duplicate_trailers::CONFIG,
+            Lint::PivotalTrackerIdMissing => lib::missing_pivotal_tracker_id::CONFIG,
+            Lint::JiraIssueKeyMissing => lib::missing_jira_issue_key::CONFIG,
+            Lint::GitHubIdMissing => lib::missing_github_id::CONFIG,
+            Lint::SubjectNotSeparateFromBody => lib::subject_not_seperate_from_body::CONFIG,
         }
     }
 }
 
 impl Lint {
     pub fn iterator() -> impl Iterator<Item = Lint> {
-        static LINTS: [Lint; 3] = [
+        static LINTS: [Lint; 4] = [
             Lint::DuplicatedTrailers,
             Lint::PivotalTrackerIdMissing,
             Lint::JiraIssueKeyMissing,
+            Lint::SubjectNotSeparateFromBody,
         ];
         LINTS.iter().copied()
     }
@@ -80,10 +74,13 @@ impl Lint {
     #[must_use]
     pub fn lint(self, commit_message: &CommitMessage) -> Option<Problem> {
         match self {
-            Lint::DuplicatedTrailers => lint_duplicated_trailers(commit_message),
-            Lint::PivotalTrackerIdMissing => lint_missing_pivotal_tracker_id(commit_message),
-            Lint::JiraIssueKeyMissing => lint_missing_jira_issue_key(commit_message),
-            Lint::GitHubIdMissing => lint_missing_github_id(commit_message),
+            Lint::DuplicatedTrailers => lib::duplicate_trailers::lint(commit_message),
+            Lint::PivotalTrackerIdMissing => lib::missing_pivotal_tracker_id::lint(commit_message),
+            Lint::JiraIssueKeyMissing => lib::missing_jira_issue_key::lint(commit_message),
+            Lint::GitHubIdMissing => lib::missing_github_id::lint(commit_message),
+            Lint::SubjectNotSeparateFromBody => {
+                lib::subject_not_seperate_from_body::lint(commit_message)
+            }
         }
     }
 
