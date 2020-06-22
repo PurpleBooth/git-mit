@@ -21,5 +21,5 @@ serde_json = "1"
 serde_derive = "1.0.111"
 
   [dependencies.serde]
-  version = "1.0.111"
+  version = "1.0.114"
   features = [ "derive" ]
