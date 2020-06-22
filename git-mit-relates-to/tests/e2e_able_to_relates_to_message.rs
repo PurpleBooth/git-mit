@@ -11,14 +11,14 @@ use mit_hook_test_helper::assert_output;
 #[test]
 fn no_issue_number_fail() {
     let working_dir = mit_hook_test_helper::setup_working_dir();
-    let output = mit_hook_test_helper::run_hook(&working_dir, "git-relates-to", vec![]);
+    let output = mit_hook_test_helper::run_hook(&working_dir, "git-mit-relates-to", vec![]);
     let stderr = indoc!(
         "
         error: The following required arguments were not provided:
             <issue-number>
 
         USAGE:
-            git-relates-to <issue-number> --timeout <timeout>
+            git-mit-relates-to <issue-number> --timeout <timeout>
 
         For more information try --help
         "
@@ -31,7 +31,7 @@ fn no_issue_number_fail() {
 fn set_the_relates_to_information() {
     let working_dir = mit_hook_test_helper::setup_working_dir();
     let output =
-        mit_hook_test_helper::run_hook(&working_dir, "git-relates-to", vec!["[#12343567]"]);
+        mit_hook_test_helper::run_hook(&working_dir, "git-mit-relates-to", vec!["[#12343567]"]);
 
     let config = git2::Repository::discover(working_dir)
         .unwrap()

@@ -5,18 +5,18 @@ use xdg::BaseDirectories;
 #[test]
 fn help_returned_by_long_flag() {
     let working_dir = mit_hook_test_helper::setup_working_dir();
-    let output = mit_hook_test_helper::run_hook(&working_dir, "git-relates-to", vec!["--help"]);
+    let output = mit_hook_test_helper::run_hook(&working_dir, "git-mit-relates-to", vec!["--help"]);
     let _default_config_file = config_file_path();
 
     let expected_stdout = vec![
-        format!("git-relates-to {}", env!("CARGO_PKG_VERSION")),
+        format!("git-mit-relates-to {}", env!("CARGO_PKG_VERSION")),
         indoc!(
             "
-            Billie Thompson <billie+git-relates-to@billiecodes.com>
+            Billie Thompson <billie+git-mit-relates-to@billiecodes.com>
             Set Relates-to trailer.
 
             USAGE:
-                git-relates-to [OPTIONS] <issue-number>
+                git-mit-relates-to [OPTIONS] <issue-number>
 
             ARGS:
                 <issue-number>    The issue number or other string to place into the Relates-to trailer
@@ -38,18 +38,18 @@ fn help_returned_by_long_flag() {
 #[test]
 fn help_returned_by_short_flag() {
     let working_dir = mit_hook_test_helper::setup_working_dir();
-    let output = mit_hook_test_helper::run_hook(&working_dir, "git-relates-to", vec!["-h"]);
+    let output = mit_hook_test_helper::run_hook(&working_dir, "git-mit-relates-to", vec!["-h"]);
     let _default_config_file = config_file_path();
 
     let expected_stdout = vec![
-        format!("git-relates-to {}", env!("CARGO_PKG_VERSION")),
+        format!("git-mit-relates-to {}", env!("CARGO_PKG_VERSION")),
         indoc!(
             "
-            Billie Thompson <billie+git-relates-to@billiecodes.com>
+            Billie Thompson <billie+git-mit-relates-to@billiecodes.com>
             Set Relates-to trailer.
 
             USAGE:
-                git-relates-to [OPTIONS] <issue-number>
+                git-mit-relates-to [OPTIONS] <issue-number>
 
             ARGS:
                 <issue-number>    The issue number or other string to place into the Relates-to trailer
@@ -82,7 +82,8 @@ fn config_file_path() -> String {
 #[test]
 fn short_help_returned_when_a_wrong_message_commands_passed() {
     let working_dir = mit_hook_test_helper::setup_working_dir();
-    let output = mit_hook_test_helper::run_hook(&working_dir, "git-relates-to", vec!["--banana"]);
+    let output =
+        mit_hook_test_helper::run_hook(&working_dir, "git-mit-relates-to", vec!["--banana"]);
     let expected = indoc!(
         "
         error: Found argument '--banana' which wasn't expected, or isn't valid in this context
@@ -90,7 +91,7 @@ fn short_help_returned_when_a_wrong_message_commands_passed() {
         If you tried to supply `--banana` as a PATTERN use `-- --banana`
 
         USAGE:
-            git-relates-to [OPTIONS] <issue-number>
+            git-mit-relates-to [OPTIONS] <issue-number>
 
         For more information try --help
         "

@@ -95,7 +95,7 @@ When you set it, the relates-to trailer is set
 mktemp > demo.txt
 git add demo.txt
 
-git relates-to "#[#12343567]"
+git mit-relates-to "#[#12343567]"
 git commit -m "Demo 2
 
 Full Demo"

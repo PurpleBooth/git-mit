@@ -8,6 +8,6 @@ members = [
     "mit-commit-message-lints",
     "mit-hook-test-helper",
     "git-mit",
-    "git-relates-to",
+    "git-mit-relates-to",
     "mit-build-tools"
 ]
