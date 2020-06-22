@@ -4,7 +4,7 @@ use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
 use indoc::indoc;
 
-pub(crate) const CONFIG_GITHUB_ID_MISSING: &str = "github-id-missing";
+pub(crate) const CONFIG: &str = "github-id-missing";
 
 const GITHUB_HELP_MESSAGE: &str = indoc!(
     "
@@ -41,7 +41,7 @@ fn has_missing_github_id(commit_message: &CommitMessage) -> bool {
     !commit_message.matches_pattern(&re)
 }
 
-pub(crate) fn lint_missing_github_id(commit_message: &CommitMessage) -> Option<Problem> {
+pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     if has_missing_github_id(commit_message) {
         Some(Problem::new(
             GITHUB_HELP_MESSAGE.into(),
@@ -394,7 +394,7 @@ mod tests_has_missing_github_id {
     }
 
     fn test_has_missing_github_id(message: &str, expected: &Option<Problem>) {
-        let actual = &lint_missing_github_id(&CommitMessage::new(message.into()));
+        let actual = &lint(&CommitMessage::new(message.into()));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",

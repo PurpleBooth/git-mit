@@ -4,7 +4,7 @@ use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
 use indoc::indoc;
 
-pub(crate) const CONFIG_JIRA_ISSUE_KEY_MISSING: &str = "jira-issue-key-missing";
+pub(crate) const CONFIG: &str = "jira-issue-key-missing";
 
 const JIRA_HELP_MESSAGE: &str = indoc!(
     "
@@ -21,7 +21,7 @@ fn has_missing_jira_issue_key(commit_message: &CommitMessage) -> bool {
     !commit_message.matches_pattern(&re)
 }
 
-pub(crate) fn lint_missing_jira_issue_key(commit_message: &CommitMessage) -> Option<Problem> {
+pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     if has_missing_jira_issue_key(commit_message) {
         Some(Problem::new(
             JIRA_HELP_MESSAGE.into(),
@@ -170,7 +170,7 @@ mod tests_has_missing_jira_issue_key {
     }
 
     fn test_has_missing_jira_issue_key(message: &str, expected: &Option<Problem>) {
-        let actual = &lint_missing_jira_issue_key(&CommitMessage::new(message.into()));
+        let actual = &lint(&CommitMessage::new(message.into()));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",

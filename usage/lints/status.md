@@ -21,10 +21,12 @@ ln -s "$(command -v mit-prepare-commit-msg)" .git/hooks/prepare-commit-msg
 You can list all the available lints with a handy command
 
 ``` bash
+echo git mit-config lint available
 ACTUAL="$(git mit-config lint available)"
 EXPECTED="duplicated-trailers
 pivotal-tracker-id-missing
-jira-issue-key-missing"
+jira-issue-key-missing
+subject-not-separated-from-body"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 ```
@@ -34,8 +36,10 @@ diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 You can list all the enabled lints with a handy command
 
 ``` bash
+echo git mit-config lint enabled
 ACTUAL="$(git mit-config lint enabled)"
-EXPECTED="duplicated-trailers"
+EXPECTED="duplicated-trailers
+subject-not-separated-from-body"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 ```

@@ -76,9 +76,7 @@ You can't commit without an author set
 mktemp > demo.txt
 git add demo.txt
 
-if git commit -m "Demo 1
-
-Full Demo" ; then
+if git commit -m "$(printf "Demo 1\n\nFull Demo")" ; then
     echo "This never happens" 
     exit 1
 fi
@@ -95,17 +93,10 @@ mktemp > demo.txt
 git add demo.txt
 
 git mit ae
-git commit -m "Demo 2
-
-Full Demo"
+git commit -m "$(printf "Demo 2\n\nFull Demo")"
 
 ACTUAL="$(last_commit)"
-EXPECTED="author: Anyone Else anyone@example.com
-signed: 
-commit:
-Demo 2
-
-Full Demo"
+EXPECTED="$(printf "author: Anyone Else anyone@example.com\nsigned: \ncommit:\nDemo 2\n\nFull Demo")"
 diff <(echo "$ACTUAL") <(echo "$EXPECTED")
 ```
 
@@ -116,13 +107,11 @@ mktemp > demo.txt
 git add demo.txt
 
 git mit se ae
-git commit -m "Demo 3
-
-Full Demo"
+git commit -m "$(printf "Demo 3\n\nFull Demo\n")"
 ACTUAL="$(last_commit)"
-EXPECTED="$(printf "author: Someone Else someone@example.com\nsigned: \ncommit:\nDemo 3\nFull Demo\n\nCo-authored-by: Anyone Else <anyone@example.com>\n")"
+EXPECTED="$(printf "author: Someone Else someone@example.com\nsigned: \ncommit:\nDemo 3\n\nFull Demo\n\nCo-authored-by: Anyone Else <anyone@example.com>\n")"
 
-diff <(echo "$EXPECTED") <(echo "$ACTUAL")
+diff  <(echo "$EXPECTED") <(echo "$ACTUAL")
 ```
 
 We even support mobbing
@@ -132,11 +121,9 @@ mktemp > demo.txt
 git add demo.txt
 
 git mit bt se ae
-git commit -m "Demo 5
-
-Full Demo"
+git commit -m "$(printf "Demo 5\n\nFull Demo")"
 ACTUAL="$(last_commit)"
-EXPECTED="$(printf "author: Billie Thompson billie@example.com\nsigned: \ncommit:\nDemo 5\nFull Demo\n\nCo-authored-by: Someone Else <someone@example.com>\n\nCo-authored-by: Anyone Else <anyone@example.com>\n")"
+EXPECTED="$(printf "author: Billie Thompson billie@example.com\nsigned: \ncommit:\nDemo 5\n\nFull Demo\n\nCo-authored-by: Someone Else <someone@example.com>\n\nCo-authored-by: Anyone Else <anyone@example.com>\n")"
 
 diff <(echo "$EXPECTED") <(echo "$ACTUAL")
 ```
@@ -148,11 +135,9 @@ mktemp > demo.txt
 git add demo.txt
 
 git mit bt
-git commit -S -m "Demo 6
-
-Full Demo"
+git commit -S -m "$(printf "Demo 6\n\nFull Demo")"
 ACTUAL="$(last_commit)"
-EXPECTED="$(printf "author: Billie Thompson billie@example.com\nsigned: Billie Thompson <billie@example.com>\ncommit:\nDemo 6\nFull Demo\n\n")"
+EXPECTED="$(printf "author: Billie Thompson billie@example.com\nsigned: Billie Thompson <billie@example.com>\ncommit:\nDemo 6\n\nFull Demo\n\n")"
 
 diff <(echo "$EXPECTED") <(echo "$ACTUAL")
 ```

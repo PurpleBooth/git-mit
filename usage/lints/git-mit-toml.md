@@ -92,6 +92,7 @@ git add demo.txt
 echo "
 [mit.lint]
 " > .git-mit.toml
+
 git commit -m "No ID"
 ```
 
@@ -101,19 +102,17 @@ You can also enforce a lint being off
 
 ``` bash
 mktemp > demo.txt
-git add demo.txt
 
 echo "
 [mit.lint]
 \"duplicated-trailers\" = false
 " > .git-mit.toml
 
-echo  > message
-git commit -m "Another example
-
-Disabling this specific lint - Co-authored
-
-Co-authored-by: Someone Else <someone@example.com>
-Co-authored-by: Someone Else <someone@example.com>
+git commit -a -m "Another example\
+\
+Disabling this specific lint - Co-authored\
+\
+Co-authored-by: Someone Else <someone@example.com>\
+Co-authored-by: Someone Else <someone@example.com>\
 "
 ```

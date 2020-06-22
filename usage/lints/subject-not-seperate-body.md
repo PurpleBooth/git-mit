@@ -1,4 +1,4 @@
-# Pivotal Tracker Lints
+# Subject Not seperate from body
 
 ## Setup
 
@@ -52,67 +52,74 @@ se:
   name: Someone Else
   email: someone@example.com" > git-mit.yml
 
-git-mit -c git-mit.yml se
+git-mit -c git-mit.yml ae se
 echo "git-mit.yml" > .gitignore
 git add .
-git commit -m "Add a git ignore"
-
 ```
 
 ## Default setting
 
-Without enabling the lint can make commits without an ID
-
-``` bash
-mktemp > demo.txt
-git add .
-git commit -m "Enabling a lint"
-```
-
-## Enabling this specific lint
-
-To enable it run
-
-``` bash
-git mit-config lint enable pivotal-tracker-id-missing
-```
-
-After enabling the lint you can't commit without a issue id
+This lint is enabled by default, with it on you can't commit without a gutter between the subject and the body.
 
 ``` bash
 mktemp > demo.txt
 git add demo.txt
 
-if git commit -m "I am not made" ; then
+
+if git commit -m "Example poorly formed commit
+Notice how there's no gap here" ; then
     echo "This never happens" 
     exit 1
 fi
 ```
 
-But you can with one
+You must put a gutter in like this
 
 ``` bash
 mktemp > demo.txt
 git add demo.txt
 
-git commit -m "Enabled the lint\
-\
-[#87654321]\
-"
+
+git commit -m "$(printf "Example well formed commit\n\nNotice how there's a gap here")"
 ```
+
 
 ## Disabling this specific lint
 
 You can also disable the lint
 
 ``` bash
-git mit-config lint disable pivotal-tracker-id-missing
+git mit-config lint disable subject-not-separated-from-body
 ```
 
-You'll be able to commit without an ID
+You'll be able to commit with a poorly formed commit
 
 ``` bash
 mktemp > demo.txt
 git add demo.txt
-git commit -m "Disabling the lint"
+
+git commit -m "Example poorly formed commit\
+Notice how there's no gap here"
+```
+
+## Enabling this lint again
+
+To enable it run
+
+``` bash
+git mit-config lint enable subject-not-separated-from-body
+```
+
+Then the lints are enabled again
+
+``` bash
+mktemp > demo.txt
+git add demo.txt
+
+
+if git commit -m "Example poorly formed commit
+Notice how there's no gap here" ; then
+    echo "This never happens" 
+    exit 1
+fi
 ```

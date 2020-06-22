@@ -79,6 +79,7 @@ impl Lints {
                 get_config_or_default(config, Lint::PivotalTrackerIdMissing, false)?,
                 get_config_or_default(config, Lint::JiraIssueKeyMissing, false)?,
                 get_config_or_default(config, Lint::GitHubIdMissing, false)?,
+                get_config_or_default(config, Lint::SubjectNotSeparateFromBody, true)?,
             ]
             .into_iter()
             .flatten()
@@ -152,7 +153,7 @@ mod tests {
 
     use crate::{external::InMemory, lints::Lint::DuplicatedTrailers};
 
-    use crate::lints::lib::lint::Lint::GitHubIdMissing;
+    use crate::lints::lib::lint::Lint::{GitHubIdMissing, SubjectNotSeparateFromBody};
     use std::convert::TryInto;
 
     #[test]
@@ -238,6 +239,7 @@ mod tests {
 
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
+        lints.insert(SubjectNotSeparateFromBody);
 
         let expected = Lints::new(lints);
 
@@ -267,6 +269,7 @@ mod tests {
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
         lints.insert(PivotalTrackerIdMissing);
+        lints.insert(SubjectNotSeparateFromBody);
         let expected = Lints::new(lints);
 
         assert_eq!(
@@ -292,7 +295,8 @@ mod tests {
         )
         .expect("Failed to parse toml");
 
-        let lints = BTreeSet::new();
+        let mut lints = BTreeSet::new();
+        lints.insert(SubjectNotSeparateFromBody);
         let expected = Lints::new(lints);
 
         assert_eq!(
@@ -309,6 +313,7 @@ mod tests {
 
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
+        lints.insert(SubjectNotSeparateFromBody);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -327,7 +332,9 @@ mod tests {
         let mut config = InMemory::new(&mut strings);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
-        let expected: Lints = Lints::new(BTreeSet::new());
+        let mut lints = BTreeSet::new();
+        lints.insert(SubjectNotSeparateFromBody);
+        let expected: Lints = Lints::new(lints);
 
         assert_eq!(
             expected, actual,
@@ -344,6 +351,7 @@ mod tests {
 
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
+        lints.insert(SubjectNotSeparateFromBody);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -364,6 +372,7 @@ mod tests {
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
         lints.insert(PivotalTrackerIdMissing);
+        lints.insert(SubjectNotSeparateFromBody);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -384,6 +393,7 @@ mod tests {
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
         lints.insert(GitHubIdMissing);
+        lints.insert(SubjectNotSeparateFromBody);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -404,6 +414,7 @@ mod tests {
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
         lints.insert(JiraIssueKeyMissing);
+        lints.insert(SubjectNotSeparateFromBody);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -425,6 +436,7 @@ mod tests {
 
         let mut lints = BTreeSet::new();
         lints.insert(DuplicatedTrailers);
+        lints.insert(SubjectNotSeparateFromBody);
         let expected = Lints::new(lints);
 
         assert_eq!(
