@@ -26,6 +26,7 @@ ACTUAL="$(git mit-config lint available)"
 EXPECTED="duplicated-trailers
 pivotal-tracker-id-missing
 jira-issue-key-missing
+github-id-missing
 subject-not-separated-from-body"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")

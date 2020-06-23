@@ -57,13 +57,22 @@ impl Lint {
 
 impl Lint {
     pub fn iterator() -> impl Iterator<Item = Lint> {
-        static LINTS: [Lint; 4] = [
+        static LINTS: [Lint; 5] = [
             Lint::DuplicatedTrailers,
             Lint::PivotalTrackerIdMissing,
             Lint::JiraIssueKeyMissing,
             Lint::SubjectNotSeparateFromBody,
+            Lint::GitHubIdMissing,
         ];
         LINTS.iter().copied()
+    }
+
+    #[must_use]
+    pub fn enabled_by_default(self) -> bool {
+        static DEFAULT_ENABLED_LINTS: [Lint; 2] =
+            [Lint::DuplicatedTrailers, Lint::SubjectNotSeparateFromBody];
+
+        DEFAULT_ENABLED_LINTS.contains(&self)
     }
 
     #[must_use]
@@ -120,6 +129,30 @@ mod tests_lints {
             "pivotal-tracker-id-missing",
             &format!("{}", Lint::PivotalTrackerIdMissing)
         )
+    }
+
+    #[test]
+    fn i_can_get_all_the_lints() {
+        let all: Vec<Lint> = Lint::iterator().collect();
+        assert_eq!(
+            all,
+            vec![
+                Lint::DuplicatedTrailers,
+                Lint::PivotalTrackerIdMissing,
+                Lint::JiraIssueKeyMissing,
+                Lint::SubjectNotSeparateFromBody,
+                Lint::GitHubIdMissing,
+            ]
+        )
+    }
+
+    #[test]
+    fn i_can_get_if_a_lint_is_enabled_by_default() {
+        assert_eq!(Lint::DuplicatedTrailers.enabled_by_default(), true);
+        assert_eq!(Lint::PivotalTrackerIdMissing.enabled_by_default(), false);
+        assert_eq!(Lint::JiraIssueKeyMissing.enabled_by_default(), false);
+        assert_eq!(Lint::SubjectNotSeparateFromBody.enabled_by_default(), true);
+        assert_eq!(Lint::GitHubIdMissing.enabled_by_default(), false);
     }
 }
 
