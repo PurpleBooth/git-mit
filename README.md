@@ -48,7 +48,7 @@ I recommend you commit `.git-mit.toml.dist` and `.gitignore`
 You can append an issue number to your commits in a trailer
 
 ``` shell
-git relates-to "#21346578"
+git mit-relates-to "#21346578"
 ```
 
 Will append
