@@ -74,16 +74,11 @@ impl Lints {
     /// If reading from the VCS fails
     pub fn try_from_vcs(config: &mut dyn Vcs) -> Result<Lints, Error> {
         Ok(Lints::new(
-            vec![
-                get_config_or_default(config, Lint::DuplicatedTrailers, true)?,
-                get_config_or_default(config, Lint::PivotalTrackerIdMissing, false)?,
-                get_config_or_default(config, Lint::JiraIssueKeyMissing, false)?,
-                get_config_or_default(config, Lint::GitHubIdMissing, false)?,
-                get_config_or_default(config, Lint::SubjectNotSeparateFromBody, true)?,
-            ]
-            .into_iter()
-            .flatten()
-            .collect(),
+            Lint::iterator()
+                .flat_map(|lint| {
+                    get_config_or_default(config, lint, lint.enabled_by_default()).transpose()
+                })
+                .collect::<Result<BTreeSet<Lint>, Error>>()?,
         ))
     }
 
