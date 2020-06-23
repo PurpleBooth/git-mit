@@ -125,24 +125,12 @@ You'll be able to commit with duplicated IDs
 ``` bash
 mktemp > demo.txt
 git add demo.txt
-
-echo "Another example
-
-Disabling this specific lint - Signed-off
-
-Signed-off-by: Anyone Else <anyone@example.com>
-" > message
+printf "Another example\n\nDisabling this specific lint - Signed-off\n\nSigned-off-by: Anyone Else <anyone@example.com>\n" > message
 git commit -s
 
 mktemp > demo.txt
 git add demo.txt
-echo "Another example
-
-Disabling this specific lint - Co-authored
-
-Co-authored-by: Someone Else <someone@example.com>
-" > message
-git commit
+git commit -m "$(printf "Another example\n\nDisabling this specific lint - Co-authored\n\nCo-authored-by: Someone Else <someone@example.com>\n")"
 ```
 
 ## Enabling this lint again

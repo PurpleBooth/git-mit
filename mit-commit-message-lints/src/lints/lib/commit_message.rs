@@ -46,7 +46,14 @@ impl CommitMessage {
                     Some(line.into())
                 }
             })
-            .collect()
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev()
+            .skip_while(|line| line == "")
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev()
+            .collect::<Vec<_>>()
     }
 
     #[must_use]
@@ -670,7 +677,7 @@ mod test_commit_message {
             )
             .into(),
         );
-        assert_eq!(5, commit.content_line_count());
+        assert_eq!(4, commit.content_line_count());
     }
 
     #[test]
@@ -740,9 +747,9 @@ mod test_commit_message {
         );
         assert_eq!(
             indoc!(
-                "With a description.
-                And more content
                 "
+                With a description.
+                And more content"
             )
             .to_string(),
             commit.get_body()
