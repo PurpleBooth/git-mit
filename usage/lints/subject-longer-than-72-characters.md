@@ -1,4 +1,4 @@
-# Enabling and Disabling via git-mit.toml
+# Subject Not seperate from body
 
 ## Setup
 
@@ -57,56 +57,66 @@ echo "git-mit.yml" > .gitignore
 git add .
 ```
 
-## You can create a `.git-mit.toml.dist`
+## Default setting
 
-This is at the root of your repository
-
-### Enabling a lint
+This lint is enabled by default, with it on you can't commit if the subject is longer than 72 characters
 
 ``` bash
 mktemp > demo.txt
 git add demo.txt
 
-echo "
-[mit.lint]
-\"pivotal-tracker-id-missing\" = true
-" > .git-mit.toml.dist
 
-git-mit-config lint enabled
-
-if git commit -m "Missing ID" ; then
+if git commit -m "........................................................................." ; then
     echo "This never happens" 
     exit 1
 fi
 ```
 
-### Overriding `.git-mit.toml.dist` with `.git-mit.toml`
-
-You can also create a `.git-mit.toml` which takes precedence over
-`.git-mit.toml.dist`
+This is because git hides subjects that are longer than that when displaying the history. This is valid though.
 
 ``` bash
 mktemp > demo.txt
 git add demo.txt
 
-echo "
-[mit.lint]
-" > .git-mit.toml
 
-git commit -m "No ID"
+git commit -m "........................................................................"
 ```
 
-### Disabling a lint
 
-You can also enforce a lint being off
+## Disabling this specific lint
+
+You can also disable the lint
+
+``` bash
+git mit-config lint disable subject-longer-than-72-characters
+```
+
+You'll be able to commit with a poorly formed commit
 
 ``` bash
 mktemp > demo.txt
+git add demo.txt
 
-echo "
-[mit.lint]
-\"duplicated-trailers\" = false
-" > .git-mit.toml
+git commit -m "........................................................................"
+```
 
-git commit -a -m "$(printf "Another example\n\nDisabling this specific lint - Co-authored\nCo-authored-by: Someone Else <someone@example.com>Co-authored-by: Someone Else <someone@example.com>")"
+## Enabling this lint again
+
+To enable it run
+
+``` bash
+git mit-config lint enable subject-longer-than-72-characters
+```
+
+Then the lints are enabled again
+
+``` bash
+mktemp > demo.txt
+git add demo.txt
+
+
+if git commit -m "........................................................................." ; then
+    echo "This never happens" 
+    exit 1
+fi
 ```

@@ -27,7 +27,8 @@ EXPECTED="duplicated-trailers
 pivotal-tracker-id-missing
 jira-issue-key-missing
 github-id-missing
-subject-not-separated-from-body"
+subject-not-separated-from-body
+subject-longer-than-72-characters"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 ```
@@ -40,7 +41,8 @@ You can list all the enabled lints with a handy command
 echo git mit-config lint enabled
 ACTUAL="$(git mit-config lint enabled)"
 EXPECTED="duplicated-trailers
-subject-not-separated-from-body"
+subject-not-separated-from-body
+subject-longer-than-72-characters"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 ```

@@ -32,4 +32,5 @@ pub enum Code {
     JiraIssueKeyMissing,
     GitHubIdMissing,
     SubjectNotSeparateFromBody,
+    SubjectLongerThan72Characters,
 }
