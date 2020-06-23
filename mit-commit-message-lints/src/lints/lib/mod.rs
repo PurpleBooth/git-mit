@@ -2,6 +2,7 @@ mod commit_message;
 mod error;
 mod lint;
 mod lints;
+mod subject_longer_than_72_characters;
 mod subject_not_seperate_from_body;
 mod trailer;
 

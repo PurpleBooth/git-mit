@@ -12,6 +12,7 @@ pub enum Lint {
     JiraIssueKeyMissing,
     GitHubIdMissing,
     SubjectNotSeparateFromBody,
+    SubjectLongerThan72Characters,
 }
 
 pub(crate) const CONFIG_KEY_PREFIX: &str = "mit.lint";
@@ -51,26 +52,31 @@ impl Lint {
             Lint::JiraIssueKeyMissing => lib::missing_jira_issue_key::CONFIG,
             Lint::GitHubIdMissing => lib::missing_github_id::CONFIG,
             Lint::SubjectNotSeparateFromBody => lib::subject_not_seperate_from_body::CONFIG,
+            Lint::SubjectLongerThan72Characters => lib::subject_longer_than_72_characters::CONFIG,
         }
     }
 }
 
 impl Lint {
     pub fn iterator() -> impl Iterator<Item = Lint> {
-        static LINTS: [Lint; 5] = [
+        static LINTS: [Lint; 6] = [
             Lint::DuplicatedTrailers,
             Lint::PivotalTrackerIdMissing,
             Lint::JiraIssueKeyMissing,
             Lint::SubjectNotSeparateFromBody,
             Lint::GitHubIdMissing,
+            Lint::SubjectLongerThan72Characters,
         ];
         LINTS.iter().copied()
     }
 
     #[must_use]
     pub fn enabled_by_default(self) -> bool {
-        static DEFAULT_ENABLED_LINTS: [Lint; 2] =
-            [Lint::DuplicatedTrailers, Lint::SubjectNotSeparateFromBody];
+        static DEFAULT_ENABLED_LINTS: [Lint; 3] = [
+            Lint::DuplicatedTrailers,
+            Lint::SubjectNotSeparateFromBody,
+            Lint::SubjectLongerThan72Characters,
+        ];
 
         DEFAULT_ENABLED_LINTS.contains(&self)
     }
@@ -89,6 +95,9 @@ impl Lint {
             Lint::GitHubIdMissing => lib::missing_github_id::lint(commit_message),
             Lint::SubjectNotSeparateFromBody => {
                 lib::subject_not_seperate_from_body::lint(commit_message)
+            }
+            Lint::SubjectLongerThan72Characters => {
+                lib::subject_longer_than_72_characters::lint(commit_message)
             }
         }
     }
@@ -142,6 +151,7 @@ mod tests_lints {
                 Lint::JiraIssueKeyMissing,
                 Lint::SubjectNotSeparateFromBody,
                 Lint::GitHubIdMissing,
+                Lint::SubjectLongerThan72Characters
             ]
         )
     }
