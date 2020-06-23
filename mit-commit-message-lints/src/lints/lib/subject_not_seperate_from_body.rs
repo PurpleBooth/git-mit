@@ -84,6 +84,66 @@ mod tests {
     }
 
     #[test]
+    fn single_line_with_long_comments() {
+        test_subject_not_seperate_from_body(
+            indoc!(
+            "
+            Remove duplicated function
+            # Short (50 chars or less) summary of changes
+            #
+            # More detailed explanatory text, if necessary.  Wrap it to
+            # about 72 characters or so.  In some contexts, the first
+            # line is treated as the subject of an email and the rest of
+            # the text as the body.  The blank line separating the
+            # summary from the body is critical (unless you omit the body
+            # entirely); tools like rebase can get confused if you run
+            # the two together.
+            #
+            # Further paragraphs come after blank lines.
+            #
+            #   - Bullet points are okay, too
+            #
+            #   - Typically a hyphen or asterisk is used for the bullet,
+            #     preceded by a single space, with blank lines in
+            #     between, but conventions vary here
+
+            # Bitte geben Sie eine Commit-Beschreibung f\u{00FC}r Ihre \u{00C4}nderungen ein. Zeilen,
+            # die mit '#' beginnen, werden ignoriert, und eine leere Beschreibung
+            # bricht den Commit ab.
+            #
+            # Auf Branch character-limit
+            # Zum Commit vorgemerkte \u{00C4}nderungen:
+            #	ge\u{00E4}ndert:       mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
+            #
+            # ------------------------ >8 ------------------------
+            # \u{00C4}ndern oder entfernen Sie nicht die obige Zeile.
+            # Alles unterhalb von ihr wird ignoriert.
+            diff --git a/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs b/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
+            index 5a83784..ebaee48 100644
+            --- a/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
+            +++ b/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
+            -fn has_missing_pivotal_tracker_id(commit_message: &CommitMessage) -> bool {
+            -    has_no_pivotal_tracker_id(commit_message)
+            -}
+            -
+             fn has_no_pivotal_tracker_id(text: &CommitMessage) -> bool {
+                 let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
+                 !text.matches_pattern(&re)
+             }
+
+             pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
+            -    if has_missing_pivotal_tracker_id(commit_message) {
+            +    if has_no_pivotal_tracker_id(commit_message) {
+                     Some(Problem::new(
+                         PIVOTAL_TRACKER_HELP.into(),
+                         Code::PivotalTrackerIdMissing,
+
+
+            "
+        ), &None);
+    }
+
+    #[test]
     fn single_line() {
         test_subject_not_seperate_from_body("An example commit", &None);
     }
