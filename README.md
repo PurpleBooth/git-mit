@@ -7,9 +7,34 @@ me to learn Rust. It's a bit more than that now, with lints for issues.
 
 ### Lint list
 
+#### Trailers
+
+Lints relating to trailers
+
   - **duplicated-trailers** - Detect duplicated `Signed-off-by` and
     `Co-authored-by` Trailers. *Default: `enabled`*
-  - **subject-not-separated-from-body** - If there is a body, enforce a gap between it and the subject. *Default: `enabled`*
+
+#### Git Manual Style
+
+The style from the git manual, that directly affect the experience of
+git beyond aesthetics.
+
+  - **subject-not-separated-from-body** - If there is a body, enforce a
+    gap between it and the subject. *Default: `enabled`*
+  - **subject-longer-than-72-characters** - After 72 characters, git
+    will truncate commit messages in the history view, this prevents
+    that *Default: `enabled`*
+
+#### Git Manual Style Extended
+
+The style from the git manual, that do not affect the experience of git
+beyond aesthetics
+
+  - **subject-line-not-capitalized** - Detect a subject line that is not
+    capitalised *Default: `disabled`*
+
+#### Commit Messages
+
   - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
     *Default: `disabled`*
   - **jira-issue-key-missing** - Detect missing Jira Issue Key *Default:

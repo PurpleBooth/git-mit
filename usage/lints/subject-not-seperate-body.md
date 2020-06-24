@@ -59,7 +59,8 @@ git add .
 
 ## Default setting
 
-This lint is enabled by default, with it on you can't commit without a gutter between the subject and the body.
+This lint is enabled by default, with it on you can't commit without a
+gutter between the subject and the body.
 
 ``` bash
 mktemp > demo.txt
@@ -82,7 +83,6 @@ git add demo.txt
 
 git commit -m "$(printf "Example well formed commit\n\nNotice how there's a gap here")"
 ```
-
 
 ## Disabling this specific lint
 

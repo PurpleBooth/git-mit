@@ -28,7 +28,8 @@ pivotal-tracker-id-missing
 jira-issue-key-missing
 github-id-missing
 subject-not-separated-from-body
-subject-longer-than-72-characters"
+subject-longer-than-72-characters
+subject-line-not-capitalized"
 
 diff <(printf "$ACTUAL") <(printf "$EXPECTED")
 ```
