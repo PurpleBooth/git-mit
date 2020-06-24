@@ -59,7 +59,8 @@ git add .
 
 ## Default setting
 
-This lint is enabled by default, with it on you can't commit if the subject is longer than 72 characters
+This lint is enabled by default, with it on you can't commit if the
+subject is longer than 72 characters
 
 ``` bash
 mktemp > demo.txt
@@ -72,7 +73,8 @@ if git commit -m "..............................................................
 fi
 ```
 
-This is because git hides subjects that are longer than that when displaying the history. This is valid though.
+This is because git hides subjects that are longer than that when
+displaying the history. This is valid though.
 
 ``` bash
 mktemp > demo.txt
@@ -81,7 +83,6 @@ git add demo.txt
 
 git commit -m "........................................................................"
 ```
-
 
 ## Disabling this specific lint
 

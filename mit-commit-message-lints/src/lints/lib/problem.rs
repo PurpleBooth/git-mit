@@ -33,4 +33,5 @@ pub enum Code {
     GitHubIdMissing,
     SubjectNotSeparateFromBody,
     SubjectLongerThan72Characters,
+    SubjectLintNotCapitalized,
 }

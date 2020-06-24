@@ -13,6 +13,7 @@ pub enum Lint {
     GitHubIdMissing,
     SubjectNotSeparateFromBody,
     SubjectLongerThan72Characters,
+    SubjectNotCapitalized,
 }
 
 pub(crate) const CONFIG_KEY_PREFIX: &str = "mit.lint";
@@ -53,19 +54,21 @@ impl Lint {
             Lint::GitHubIdMissing => lib::missing_github_id::CONFIG,
             Lint::SubjectNotSeparateFromBody => lib::subject_not_seperate_from_body::CONFIG,
             Lint::SubjectLongerThan72Characters => lib::subject_longer_than_72_characters::CONFIG,
+            Lint::SubjectNotCapitalized => lib::subject_not_capitalized::CONFIG,
         }
     }
 }
 
 impl Lint {
     pub fn iterator() -> impl Iterator<Item = Lint> {
-        static LINTS: [Lint; 6] = [
+        static LINTS: [Lint; 7] = [
             Lint::DuplicatedTrailers,
             Lint::PivotalTrackerIdMissing,
             Lint::JiraIssueKeyMissing,
             Lint::SubjectNotSeparateFromBody,
             Lint::GitHubIdMissing,
             Lint::SubjectLongerThan72Characters,
+            Lint::SubjectNotCapitalized,
         ];
         LINTS.iter().copied()
     }
@@ -99,6 +102,7 @@ impl Lint {
             Lint::SubjectLongerThan72Characters => {
                 lib::subject_longer_than_72_characters::lint(commit_message)
             }
+            Lint::SubjectNotCapitalized => lib::subject_not_capitalized::lint(commit_message),
         }
     }
 
@@ -151,7 +155,8 @@ mod tests_lints {
                 Lint::JiraIssueKeyMissing,
                 Lint::SubjectNotSeparateFromBody,
                 Lint::GitHubIdMissing,
-                Lint::SubjectLongerThan72Characters
+                Lint::SubjectLongerThan72Characters,
+                Lint::SubjectNotCapitalized
             ]
         )
     }
