@@ -9,7 +9,7 @@ const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-author
 const FIELD_SINGULAR: &str = "field";
 const FIELD_PLURAL: &str = "fields";
 
-fn has_duplicated_trailers(commit_message: &CommitMessage) -> Vec<String> {
+fn get_duplicated_trailers(commit_message: &CommitMessage) -> Vec<String> {
     TRAILERS_TO_CHECK_FOR_DUPLICATES
         .iter()
         .filter_map(|trailer| filter_without_duplicates(commit_message, trailer))
@@ -31,13 +31,12 @@ fn has_duplicated_trailer(commit_message: &CommitMessage, trailer_key: &str) -> 
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    let duplicated_trailers = has_duplicated_trailers(commit_message);
+    let duplicated_trailers = get_duplicated_trailers(commit_message);
     if duplicated_trailers.is_empty() {
         None
     } else {
         let warning = format!(
-            "Your commit cannot have the same name duplicated in the \"{}\" {}\n\nYou can fix \
-             this by removing the duplicated field when you commit again\n",
+            "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"{}\" {}",
             duplicated_trailers.join("\", \""),
             if duplicated_trailers.len() > 1 {
                 FIELD_PLURAL
@@ -86,15 +85,7 @@ mod tests_has_duplicated_trailers {
             )
             .into(),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit cannot have the same name duplicated in the \"Signed-off-by\", \
-                     \"Co-authored-by\" fields
-
-                    You can fix this by removing the duplicated field when you commit again
-                    "
-                )
-                .into(),
+                "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Signed-off-by\", \"Co-authored-by\" fields".into(),
                 Code::DuplicatedTrailers,
             )),
         );
@@ -111,14 +102,7 @@ mod tests_has_duplicated_trailers {
             )
             .into(),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit cannot have the same name duplicated in the \"Signed-off-by\" field
-
-                    You can fix this by removing the duplicated field when you commit again
-                    "
-                )
-                .into(),
+                "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Signed-off-by\" field".into(),
                 Code::DuplicatedTrailers,
             )),
         );
@@ -135,15 +119,7 @@ mod tests_has_duplicated_trailers {
             )
             .into(),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit cannot have the same name duplicated in the \"Co-authored-by\" \
-                     field
-
-                    You can fix this by removing the duplicated field when you commit again
-                    "
-                )
-                .into(),
+                "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Co-authored-by\" field".into(),
                 Code::DuplicatedTrailers,
             )),
         );

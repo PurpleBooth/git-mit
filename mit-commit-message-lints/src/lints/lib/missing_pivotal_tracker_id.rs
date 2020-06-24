@@ -6,28 +6,12 @@ use indoc::indoc;
 
 pub(crate) const CONFIG: &str = "pivotal-tracker-id-missing";
 
-const REGEX_PIVOTAL_TRACKER_ID: &str =
+const REGEX: &str =
     r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
 
-fn has_no_pivotal_tracker_id(text: &CommitMessage) -> bool {
-    let re = Regex::new(REGEX_PIVOTAL_TRACKER_ID).unwrap();
-    !text.matches_pattern(&re)
-}
-
-pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_no_pivotal_tracker_id(commit_message) {
-        Some(Problem::new(
-            PIVOTAL_TRACKER_HELP.into(),
-            Code::PivotalTrackerIdMissing,
-        ))
-    } else {
-        None
-    }
-}
-
-const PIVOTAL_TRACKER_HELP: &str = indoc!(
+const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit is missing a Pivotal Tracker Id
+    Your commit message is missing a Pivotal Tracker Id
 
     You can fix this by adding the Id in one of the styles below to the commit message
     [Delivers #12345678]
@@ -39,6 +23,22 @@ const PIVOTAL_TRACKER_HELP: &str = indoc!(
     This will address [#12345884]
     "
 );
+
+fn has_problem(text: &CommitMessage) -> bool {
+    let re = Regex::new(REGEX).unwrap();
+    !text.matches_pattern(&re)
+}
+
+pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
+    if has_problem(commit_message) {
+        Some(Problem::new(
+            HELP_MESSAGE.into(),
+            Code::PivotalTrackerIdMissing,
+        ))
+    } else {
+        None
+    }
+}
 
 #[cfg(test)]
 mod tests_has_missing_pivotal_tracker_id {
@@ -362,22 +362,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 "
             ),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is missing a Pivotal Tracker Id
-
-                    You can fix this by adding the Id in one of the styles below to the commit \
-                     message
-                    [Delivers #12345678]
-                    [fixes #12345678]
-                    [finishes #12345678]
-                    [#12345884 #12345678]
-                    [#12345884,#12345678]
-                    [#12345678],[#12345884]
-                    This will address [#12345884]
-                    "
-                )
-                .into(),
+                HELP_MESSAGE.into(),
                 Code::PivotalTrackerIdMissing,
             )),
         );
@@ -394,22 +379,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 "
             ),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is missing a Pivotal Tracker Id
-
-                    You can fix this by adding the Id in one of the styles below to the commit \
-                     message
-                    [Delivers #12345678]
-                    [fixes #12345678]
-                    [finishes #12345678]
-                    [#12345884 #12345678]
-                    [#12345884,#12345678]
-                    [#12345678],[#12345884]
-                    This will address [#12345884]
-                    "
-                )
-                .into(),
+                HELP_MESSAGE.into(),
                 Code::PivotalTrackerIdMissing,
             )),
         );
@@ -425,21 +395,7 @@ mod tests_has_missing_pivotal_tracker_id {
             "
             ),
             &Some(Problem::new(
-                indoc!(
-                    "
-                Your commit is missing a Pivotal Tracker Id
-
-                You can fix this by adding the Id in one of the styles below to the commit message
-                [Delivers #12345678]
-                [fixes #12345678]
-                [finishes #12345678]
-                [#12345884 #12345678]
-                [#12345884,#12345678]
-                [#12345678],[#12345884]
-                This will address [#12345884]
-                "
-                )
-                .into(),
+                HELP_MESSAGE.into(),
                 Code::PivotalTrackerIdMissing,
             )),
         );

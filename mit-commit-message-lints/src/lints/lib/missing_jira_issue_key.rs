@@ -6,27 +6,24 @@ use indoc::indoc;
 
 pub(crate) const CONFIG: &str = "jira-issue-key-missing";
 
-const JIRA_HELP_MESSAGE: &str = indoc!(
+const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit is missing a JIRA Issue Key
+    Your commit message is missing a JIRA Issue Key
 
     You can fix this by adding a key like `JRA-123` to the commit message
     "
 );
 
-const REGEX_JIRA_ISSUE_KEY: &str = r"(?m)(^| )[A-Z]{2,}-[0-9]+( |$)";
+const REGEX: &str = r"(?m)(^| )[A-Z]{2,}-[0-9]+( |$)";
 
-fn has_missing_jira_issue_key(commit_message: &CommitMessage) -> bool {
-    let re = Regex::new(REGEX_JIRA_ISSUE_KEY).unwrap();
+fn has_problem(commit_message: &CommitMessage) -> bool {
+    let re = Regex::new(REGEX).unwrap();
     !commit_message.matches_pattern(&re)
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_missing_jira_issue_key(commit_message) {
-        Some(Problem::new(
-            JIRA_HELP_MESSAGE.into(),
-            Code::JiraIssueKeyMissing,
-        ))
+    if has_problem(commit_message) {
+        Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing))
     } else {
         None
     }
@@ -111,17 +108,7 @@ mod tests_has_missing_jira_issue_key {
                 This is an example commit
                 "
             ),
-            &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is missing a JIRA Issue Key
-
-                    You can fix this by adding a key like `JRA-123` to the commit message
-                    "
-                )
-                .into(),
-                Code::JiraIssueKeyMissing,
-            )),
+            &Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing)),
         );
         test_has_missing_jira_issue_key(
             indoc!(
@@ -133,17 +120,7 @@ mod tests_has_missing_jira_issue_key {
                 A-123
                 "
             ),
-            &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is missing a JIRA Issue Key
-
-                    You can fix this by adding a key like `JRA-123` to the commit message
-                    "
-                )
-                .into(),
-                Code::JiraIssueKeyMissing,
-            )),
+            &Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing)),
         );
         test_has_missing_jira_issue_key(
             indoc!(
@@ -155,17 +132,7 @@ mod tests_has_missing_jira_issue_key {
                 JRA-
                 "
             ),
-            &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is missing a JIRA Issue Key
-
-                    You can fix this by adding a key like `JRA-123` to the commit message
-                    "
-                )
-                .into(),
-                Code::JiraIssueKeyMissing,
-            )),
+            &Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing)),
         );
     }
 

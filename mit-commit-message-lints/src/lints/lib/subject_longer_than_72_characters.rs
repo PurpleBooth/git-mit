@@ -6,18 +6,18 @@ pub(crate) const CONFIG: &str = "subject-longer-than-72-characters";
 
 const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit is not well formed
+    Your commit message is not well formed
 
     Please keep the subject line 72 characters or under
     "
 );
 
-fn has_subject_longer_than_72_chars(commit_message: &CommitMessage) -> bool {
+fn has_problem(commit_message: &CommitMessage) -> bool {
     commit_message.get_subject().len() > 72
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_subject_longer_than_72_chars(commit_message) {
+    if has_problem(commit_message) {
         Some(Problem::new(
             HELP_MESSAGE.into(),
             Code::SubjectLongerThan72Characters,
@@ -176,14 +176,7 @@ mod tests {
         test_subject_longer_than_72_characters(
             &"x".repeat(73),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is not well formed
-
-                    Please keep the subject line 72 characters or under
-                    "
-                )
-                .into(),
+                HELP_MESSAGE.into(),
                 Code::SubjectLongerThan72Characters,
             )),
         );
@@ -194,14 +187,7 @@ mod tests {
         test_subject_longer_than_72_characters(
             &format!("{}\n", "x".repeat(73)),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is not well formed
-
-                    Please keep the subject line 72 characters or under
-                    "
-                )
-                .into(),
+                HELP_MESSAGE.into(),
                 Code::SubjectLongerThan72Characters,
             )),
         );
@@ -267,14 +253,7 @@ mod tests {
         test_subject_longer_than_72_characters(
             &format!("{}\n\n{}", "x".repeat(73), message),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is not well formed
-
-                    Please keep the subject line 72 characters or under
-                    "
-                )
-                .into(),
+                HELP_MESSAGE.into(),
                 Code::SubjectLongerThan72Characters,
             )),
         );

@@ -6,7 +6,7 @@ pub(crate) const CONFIG: &str = "subject-line-not-capitalized";
 
 const HELP_MESSAGE: &str = indoc!(
     "
-    You forgot to capitalise the subject
+    Your commit message is missing a capital letter
 
     You can fix this by capitalising the first character in the subject
     "

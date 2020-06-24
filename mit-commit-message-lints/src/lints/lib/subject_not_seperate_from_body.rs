@@ -6,22 +6,15 @@ pub(crate) const CONFIG: &str = "subject-not-separated-from-body";
 
 const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit is not well formed
+    Your commit message is missing a blank line between the subject and the body
 
     To fix this separate subject from body with a blank line
-
-    For example:
-
-    Aligns time sprondle
-
-    The time sprondle is drifting backwards in the current
-    configuration, this corrects that.
     "
 );
 
 const SIZE_OF_SUBJECT: usize = 1;
 
-fn has_subject_not_separate_from_body(commit_message: &CommitMessage) -> bool {
+fn has_problem(commit_message: &CommitMessage) -> bool {
     let line_count = commit_message.content_line_count();
 
     match line_count {
@@ -32,7 +25,7 @@ fn has_subject_not_separate_from_body(commit_message: &CommitMessage) -> bool {
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_subject_not_separate_from_body(commit_message) {
+    if has_problem(commit_message) {
         Some(Problem::new(
             HELP_MESSAGE.into(),
             Code::SubjectNotSeparateFromBody,
@@ -158,21 +151,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is not well formed
-
-                    To fix this separate subject from body with a blank line
-
-                    For example:
-
-                    Aligns time sprondle
-
-                    The time sprondle is drifting backwards in the current
-                    configuration, this corrects that.
-                    "
-                )
-                .into(),
+                HELP_MESSAGE.into(),
                 Code::SubjectNotSeparateFromBody,
             )),
         );
@@ -186,21 +165,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is not well formed
-
-                    To fix this separate subject from body with a blank line
-
-                    For example:
-
-                    Aligns time sprondle
-
-                    The time sprondle is drifting backwards in the current
-                    configuration, this corrects that.
-                    "
-                )
-                .into(),
+                HELP_MESSAGE.into(),
                 Code::SubjectNotSeparateFromBody,
             )),
         );
