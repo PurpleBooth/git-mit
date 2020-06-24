@@ -74,7 +74,7 @@ fn enabled() {
 
         ---
 
-        Your commit is missing a Pivotal Tracker Id
+        Your commit message is missing a Pivotal Tracker Id
 
         You can fix this by adding the Id in one of the styles below to the commit message
         [Delivers #12345678]

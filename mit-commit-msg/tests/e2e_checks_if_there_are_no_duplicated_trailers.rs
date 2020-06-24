@@ -43,10 +43,9 @@ fn duplicated_trailer() {
 
             ---
 
-            Your commit cannot have the same name duplicated in the \"Signed-off-by\" field
+            Your commit message has duplicated trailers
 
-            You can fix this by removing the duplicated field when you commit again
-
+            You can fix this by deleting the duplicated \"Signed-off-by\" field
             "
         ),
         false,

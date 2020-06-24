@@ -6,47 +6,32 @@ use indoc::indoc;
 
 pub(crate) const CONFIG: &str = "github-id-missing";
 
-const GITHUB_HELP_MESSAGE: &str = indoc!(
+const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit is missing a GitHub ID
+    Your commit message is missing a GitHub ID
 
-    You can fix this by adding a key like the following examples
+    You can fix this by adding a ID like the following examples:
 
-    close #642
-    closes: #642
-    Closed GH-642
-    fix #642
-    This fixes #642
-    fixed #642
-    resolve #642
-    resolves #642
-    resolved #642
-    Issue #642
-
-    GitHub also supports these alternative styles of referring to IDs
-
+    #642
     GH-642
     AnUser/git-mit#642
     AnOrganisation/git-mit#642
+    fixes #642
 
-    Be careful just putting '#123' on a line by itself, as '#' is the default comment indicator
+    Be careful just putting '#642' on a line by itself, as '#' is the default comment character
     "
 );
 
-const REGEX_GITHUB_ID_REGEX: &str =
-    r"(?m)(^| )([a-zA-Z0-9_-]{3,39}/[a-zA-Z0-9-]{1,}#|GH-|#)[0-9]{1,}( |$)";
+const REGEX: &str = r"(?m)(^| )([a-zA-Z0-9_-]{3,39}/[a-zA-Z0-9-]{1,}#|GH-|#)[0-9]{1,}( |$)";
 
-fn has_missing_github_id(commit_message: &CommitMessage) -> bool {
-    let re = Regex::new(REGEX_GITHUB_ID_REGEX).unwrap();
+fn has_problem(commit_message: &CommitMessage) -> bool {
+    let re = Regex::new(REGEX).unwrap();
     !commit_message.matches_pattern(&re)
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_missing_github_id(commit_message) {
-        Some(Problem::new(
-            GITHUB_HELP_MESSAGE.into(),
-            Code::GitHubIdMissing,
-        ))
+    if has_problem(commit_message) {
+        Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing))
     } else {
         None
     }
@@ -276,35 +261,7 @@ mod tests_has_missing_github_id {
                 This is an example commit
                 "
             ),
-            &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is missing a GitHub ID
-
-                    You can fix this by adding a key like the following examples
-
-                    close #642
-                    closes: #642
-                    Closed GH-642
-                    fix #642
-                    This fixes #642
-                    fixed #642
-                    resolve #642
-                    resolves #642
-                    resolved #642
-                    Issue #642
-
-                    GitHub also supports these alternative styles of referring to IDs
-
-                    GH-642
-                    AnUser/git-mit#642
-                    AnOrganisation/git-mit#642
-
-                    Be careful just putting '#123' on a line by itself, as '#' is the default comment indicator
-                    "
-                ).into(),
-                Code::GitHubIdMissing,
-            )),
+            &Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing)),
         );
     }
     #[test]
@@ -319,36 +276,7 @@ mod tests_has_missing_github_id {
                 H-123
                 "
             ),
-            &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is missing a GitHub ID
-
-                    You can fix this by adding a key like the following examples
-
-                    close #642
-                    closes: #642
-                    Closed GH-642
-                    fix #642
-                    This fixes #642
-                    fixed #642
-                    resolve #642
-                    resolves #642
-                    resolved #642
-                    Issue #642
-
-                    GitHub also supports these alternative styles of referring to IDs
-
-                    GH-642
-                    AnUser/git-mit#642
-                    AnOrganisation/git-mit#642
-
-                    Be careful just putting '#123' on a line by itself, as '#' is the default comment indicator
-                    "
-                )
-                .into(),
-                Code::GitHubIdMissing,
-            )),
+            &Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing)),
         );
         test_has_missing_github_id(
             indoc!(
@@ -360,36 +288,7 @@ mod tests_has_missing_github_id {
                 git-mit#123
                 "
             ),
-            &Some(Problem::new(
-                indoc!(
-                    "
-                    Your commit is missing a GitHub ID
-
-                    You can fix this by adding a key like the following examples
-
-                    close #642
-                    closes: #642
-                    Closed GH-642
-                    fix #642
-                    This fixes #642
-                    fixed #642
-                    resolve #642
-                    resolves #642
-                    resolved #642
-                    Issue #642
-
-                    GitHub also supports these alternative styles of referring to IDs
-
-                    GH-642
-                    AnUser/git-mit#642
-                    AnOrganisation/git-mit#642
-
-                    Be careful just putting '#123' on a line by itself, as '#' is the default comment indicator
-                    "
-                )
-                .into(),
-                Code::GitHubIdMissing,
-            )),
+            &Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing)),
         );
     }
 

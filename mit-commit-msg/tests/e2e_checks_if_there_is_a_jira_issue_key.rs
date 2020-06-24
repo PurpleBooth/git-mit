@@ -75,7 +75,7 @@ fn explicitly_enabled() {
 
         ---
 
-        Your commit is missing a JIRA Issue Key
+        Your commit message is missing a JIRA Issue Key
 
         You can fix this by adding a key like `JRA-123` to the commit message
 
