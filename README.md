@@ -1,7 +1,8 @@
 # git-mit
 
-This started out as a reimplementation of git-duet. It was an excuse for
-me to learn Rust. It's a bit more than that now, with lints for issues.
+*git-mit* started as a reimplementation of *git-duet*. It was an excuse
+for me to learn Rust. It's a bit more than that now, with lints for
+issues.
 
 ## Usage
 
@@ -9,15 +10,14 @@ me to learn Rust. It's a bit more than that now, with lints for issues.
 
 #### Trailers
 
-Lints relating to trailers
+Lints relating to trailers:
 
   - **duplicated-trailers** - Detect duplicated `Signed-off-by` and
     `Co-authored-by` Trailers. *Default: `enabled`*
 
 #### Git Manual Style
 
-The style from the git manual, that directly affect the experience of
-git beyond aesthetics.
+The style from the git book, that directly affects the operation of git:
 
   - **subject-not-separated-from-body** - If there is a body, enforce a
     gap between it and the subject. *Default: `enabled`*
@@ -27,8 +27,7 @@ git beyond aesthetics.
 
 #### Git Manual Style Extended
 
-The style from the git manual, that do not affect the experience of git
-beyond aesthetics
+The style from the git book:
 
   - **subject-line-not-capitalized** - Detect a subject line that is not
     capitalised *Default: `disabled`*
@@ -59,11 +58,11 @@ git mit-config lint disable duplicated-trailers
 ### Centralising lint config
 
 You can add a `.git-mit.toml` or `.git-mit.toml.dist` to the root of
-your repository and we will read it and try to enable the correct lints
+your repository, and we will read it and try to enable the correct lints
 (with `.git-mit.toml` taking precedence).
 
-I recommend you commit `.git-mit.toml.dist` and `.gitignore`
-`.git-mit.toml` to allow easy local reconfiguration
+I recommend you commit `.git-mit.toml.dist` and add `.git-mit.toml` to
+your `.gitignore` to allow easy local reconfiguration
 
 ``` toml
 [mit.lint]
@@ -82,7 +81,7 @@ Will append
 
     Relates-to: #21346578
 
-To your commit messsage
+To your commit message
 
 ### Setting Authors and Co-Authors
 
@@ -98,7 +97,7 @@ Set the author and co-author trailer
 git mit bt se
 ```
 
-If you're mobbing
+If you're working in a group
 
 ``` shell
 git mit bt se ae
@@ -106,13 +105,7 @@ git mit bt se ae
 
 ## Installing
 
-First tap my homebrew repo
-
-``` shell
-brew tap PurpleBooth/repo
-```
-
-Next install the binary
+You can install this with brew\!
 
 ``` shell
 brew install PurpleBooth/repo/git-mit
@@ -198,9 +191,9 @@ directory](https://github.com/PurpleBooth/git-mit/tree/main/usage)
 
   - **GIT\_MIT\_AUTHORS\_EXEC** A command to execute to generate the
     author configuration
-  - **GIT\_MIT\_AUTHORS\_CONFIG** The location of a author file
+  - **GIT\_MIT\_AUTHORS\_CONFIG** The location of an author file
     *Default: `$HOME/.config/git-mit/mit.yml`*
   - **GIT\_MIT\_AUTHORS\_TIMEOUT** How long to wait before you need to
-    run git mit again *Default: `60`*
+    run `git mit` again *Default: `60`*
   - **GIT\_MIT\_RELATES\_TO\_TIMEOUT** How long to wait before you need
-    to run git relates-to again *Default: `60`*
+    to run `git mit-relates-to` again *Default: `60`*
