@@ -33,7 +33,9 @@ beyond aesthetics
   - **subject-line-not-capitalized** - Detect a subject line that is not
     capitalised *Default: `disabled`*
 
-#### Commit Messages
+#### Issue ID Checks
+
+Check for the presence of issue Ids
 
   - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
     *Default: `disabled`*
