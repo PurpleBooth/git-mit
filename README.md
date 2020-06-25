@@ -120,12 +120,10 @@ it.
 ### Adding to a repository
 
 ``` shell
-ln -s "$(command -v mit-commit-msg)" .git/hooks/commit-msg
-ln -s "$(command -v mit-pre-commit)" .git/hooks/pre-commit
-ln -s "$(command -v mit-prepare-commit-msg)" .git/hooks/prepare-commit-msg
+git mit-install
 ```
 
-You can make git link these for you automatically by adding them to your
+This works by symlinking in your repositories hooks directory. You can do this automatically by adding them to your
 [init template](https://git-scm.com/docs/git-init#_template_directory).
 This is the template that git uses to create the `.git` directory when
 you run `git init`.
@@ -192,7 +190,7 @@ directory](https://github.com/PurpleBooth/git-mit/tree/main/usage)
   - **GIT\_MIT\_AUTHORS\_EXEC** A command to execute to generate the
     author configuration
   - **GIT\_MIT\_AUTHORS\_CONFIG** The location of an author file
-    *Default: `$HOME/.config/git-mit/mit.yml`*
+    *Default: `$HOME/.config/git-mit/mit.toml`*
   - **GIT\_MIT\_AUTHORS\_TIMEOUT** How long to wait before you need to
     run `git mit` again *Default: `60`*
   - **GIT\_MIT\_RELATES\_TO\_TIMEOUT** How long to wait before you need

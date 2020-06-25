@@ -57,9 +57,9 @@ bt:
   signingkey: $KEY
 se:
   name: Someone Else
-  email: someone@example.com" > git-mit.yml
+  email: someone@example.com" > git-mit.toml
 
-echo "git-mit.yml" > .gitignore
+echo "git-mit.toml" > .gitignore
 git add .
 ```
 
@@ -68,7 +68,7 @@ environment variable to its path. Or just put the config at the default
 location.
 
 ``` bash
-export GIT_MIT_AUTHORS_CONFIG="$PWD/git-mit.yml"
+export GIT_MIT_AUTHORS_CONFIG="$PWD/git-mit.toml"
 git mit se
 ```
 

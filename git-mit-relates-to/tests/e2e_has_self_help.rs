@@ -69,7 +69,7 @@ fn help_returned_by_short_flag() {
 
 fn config_file_path() -> String {
     let cargo_package_name = env!("CARGO_PKG_NAME");
-    let add_author_file = |x: BaseDirectories| x.place_config_file("mit.yml").map_err(Box::from);
+    let add_author_file = |x: BaseDirectories| x.place_config_file("mit.toml").map_err(Box::from);
 
     xdg::BaseDirectories::with_prefix(cargo_package_name.to_string())
         .map_err(Box::<dyn std::error::Error>::from)

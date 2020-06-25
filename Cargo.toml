@@ -2,6 +2,7 @@
 
 members = [
     "git-mit-config",
+    "git-mit-install",
     "mit-prepare-commit-msg",
     "mit-pre-commit",
     "mit-commit-msg",

@@ -50,10 +50,10 @@ bt:
   signingkey: $KEY
 se:
   name: Someone Else
-  email: someone@example.com" > git-mit.yml
+  email: someone@example.com" > git-mit.toml
 
-git-mit -c git-mit.yml ae se
-echo "git-mit.yml" > .gitignore
+git-mit -c git-mit.toml ae se
+echo "git-mit.toml" > .gitignore
 git add .
 ```
 
