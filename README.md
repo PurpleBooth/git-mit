@@ -182,8 +182,8 @@ se:
 
 ### More examples
 
-You can see more examples in the [usage
-directory](https://github.com/PurpleBooth/git-mit/tree/main/usage)
+You can see more examples in the [docs
+directory](https://github.com/PurpleBooth/git-mit/tree/main/docs)
 
 ### Environment Variables
 
