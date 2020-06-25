@@ -23,6 +23,8 @@ mdtest: build
 smoke-test:
 	cargo run --locked --bin git-mit -- -h
 	cargo run --locked --bin git-mit-config -- -h
+	cargo run --locked --bin git-mit-relates-to -- -h
+	cargo run --locked --bin git-mit-install -- -h
 	cargo run --locked --bin mit-commit-message-lints -- -h
 	cargo run --locked --bin mit-commit-msg -- -h
 	cargo run --locked --bin mit-hook-test-helper -- -h

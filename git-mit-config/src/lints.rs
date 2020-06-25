@@ -30,7 +30,8 @@ pub(crate) fn manage_lints(
     } else if let Some(subcommand_args) = args.subcommand_matches("status") {
         let lints = get_selected_lints(&subcommand_args)?;
 
-        let config = Lints::try_from_vcs(vcs)?;
+        let toml = external::read_toml(current_dir)?;
+        let config = Lints::get_from_toml_or_else_vcs(&toml, vcs)?;
         let status = get_config_status(lints.clone(), config);
         let names = lints.names();
 

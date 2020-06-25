@@ -166,6 +166,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "git-mit-install"
+version = "3.48.0"
+dependencies = [
+ "clap",
+ "clap_generate",
+ "git2",
+ "indoc",
+ "mit-build-tools",
+ "mit-commit-message-lints",
+ "mit-hook-test-helper",
+ "tempfile",
+ "thiserror",
+ "which",
+ "xdg",
+]
+
+[[package]]
 name = "git-mit-relates-to"
 version = "3.48.0"
 dependencies = [
@@ -875,6 +892,16 @@ name = "wasi"
 version = "0.9.0+wasi-snapshot-preview1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cccddf32554fecc6acb585f82a32a72e28b48f8c4c1883ddfeeeaa96f7d8e519"
+
+[[package]]
+name = "which"
+version = "4.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b5fe1a9cb33fe7cf77d431070d0223e544b1e4e7f7764bad0a3e691a6678a131"
+dependencies = [
+ "libc",
+ "thiserror",
+]
 
 [[package]]
 name = "winapi"

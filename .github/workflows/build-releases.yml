@@ -49,6 +49,10 @@ jobs:
         with:
           name: git-mit-${{ matrix.target }}
           path: ./target/release/git-mit${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: git-mit-install${{ matrix.target }}
+          path: ./target/release/git-mit-install${{ matrix.suffix }}
 
     strategy:
       matrix:
@@ -145,6 +149,14 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
+          asset_path: ./git-mit-x86_64-unknown-linux-gnu/git-mit-install
+          asset_name: git-mit-install-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          upload_url: "${{ steps.create_release.outputs.upload_url }}"
           asset_path: ./mit-pre-commit-x86_64-apple-darwin/mit-pre-commit
           asset_name: mit-pre-commit-x86_64-apple-darwin
           asset_content_type: application/octet-stream
@@ -179,4 +191,12 @@ jobs:
           upload_url: "${{ steps.create_release.outputs.upload_url }}"
           asset_path: ./git-mit-x86_64-apple-darwin/git-mit
           asset_name: git-mit-x86_64-apple-darwin
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          upload_url: "${{ steps.create_release.outputs.upload_url }}"
+          asset_path: ./git-mit-x86_64-apple-darwin/git-mit-install
+          asset_name: git-mit-install-x86_64-apple-darwin
           asset_content_type: application/octet-stream

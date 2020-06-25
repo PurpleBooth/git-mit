@@ -136,8 +136,8 @@ fn config_path(cargo_package_name: &str) -> Result<String, GitMitError> {
 
 fn authors_config_file(config_directory: &BaseDirectories) -> Result<PathBuf, GitMitError> {
     config_directory
-        .place_config_file("mit.yml")
-        .map_err(|error| GitMitError::new_io("<config_dir>/author.yml".into(), &error))
+        .place_config_file("mit.toml")
+        .map_err(|error| GitMitError::new_io("<config_dir>/mit.toml".into(), &error))
 }
 
 mod errors;
