@@ -13,10 +13,10 @@ show-help:
 test:
 	unset GIT_MIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test --locked
 
-.PHONY: mdtest
-## Test the markdown in the usage directory
-mdtest: build
-	./bin/mdtest ./usage/**/*.md
+.PHONY: specdown
+## Test the markdown in the docs directory
+specdown: build
+	./bin/specdown ./docs/**.md ./docs/**/*.md
 
 .PHONY: smoke-test
 ## Run a smoke test and see if the app runs

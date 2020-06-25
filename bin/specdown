@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function safe_specdown() {
+    if [ -f "$1" ]; then
+        MARKDOWN_PATH="$(
+            cd "$(dirname "$1")"
+            pwd -P
+        )/$(basename "$1")"
+
+        (
+            unset GNUPGHOME
+            unset EDITOR
+            unset VISUAL
+
+            unset XDG_CACHE_HOME
+            unset XDG_CONFIG_HOME
+            unset XDG_DATA_HOME
+            unset XDG_RUNTIME_DIR
+
+            unset GIT_MIT_AUTHORS_EXEC
+            unset GIT_MIT_AUTHORS_CONFIG
+
+            REPOSITORY_DIR="$PWD"
+            TEMPORARY_DIR="$(mktemp -d)"
+            cd "$TEMPORARY_DIR"
+
+            GNUPGHOME="$TEMPORARY_DIR/gpg"
+            export GNUPGHOME
+            mkdir "$GNUPGHOME"
+            cd "$GNUPGHOME"
+
+            cat >batchfile <<EOF
+%echo Generating a basic OpenPGP key
+%no-protection
+Key-Type: DSA
+Key-Length: 1024
+Subkey-Type: ELG-E
+Subkey-Length: 1024
+Name-Real: Billie Thompson
+Name-Email: billie@example.com
+Expire-Date: 0
+# Do a commit here, so that we can later print "done" :-)
+%commit
+%echo done
+EOF
+            gpg --batch --generate-key batchfile 2>/dev/null
+            chmod o-rwx "$GNUPGHOME"
+            chmod g-rwx "$GNUPGHOME"
+            KEY="$(gpg --with-colons --fingerprint billie@example.com 2>/dev/null | awk -F: '$1 == "fpr" {print $10;}' | head -n 1)"
+            export KEY
+            rm batchfile
+
+            cat >"$TEMPORARY_DIR/git-mit.toml" <<EOF
+[ae]
+name = "Anyone Else"
+email = "anyone@example.com"
+
+[bt]
+name = "Billie Thompson"
+email = "billie@example.com"
+signingkey = "$KEY"
+
+[se]
+name = "Someone Else"
+email = "someone@example.com"
+
+
+EOF
+
+            mkdir -p "$TEMPORARY_DIR/.config/git-mit/"
+            cp "$TEMPORARY_DIR/git-mit.toml" "$TEMPORARY_DIR/.config/git-mit/mit.toml"
+
+            mkdir "$TEMPORARY_DIR/repo"
+
+            cd "$TEMPORARY_DIR/repo"
+            export PATH="$REPOSITORY_DIR/target/release/:$PATH"
+            export HOME="$TEMPORARY_DIR"
+            export GIT_MIT_AUTHORS_CONFIG="$TEMPORARY_DIR/git-mit.toml"
+            specdown run "$MARKDOWN_PATH"
+        )
+    else
+        echo "$1 is not valid"
+        exit 1
+    fi
+}
+
+for ARG in "${@:1}"; do
+    safe_specdown "$ARG"
+done
