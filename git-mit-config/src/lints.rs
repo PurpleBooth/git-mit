@@ -14,23 +14,29 @@ pub(crate) fn manage_lints(
     vcs: &mut dyn Vcs,
     current_dir: PathBuf,
 ) -> Result<(), GitMitConfigError> {
+    let toml = external::read_toml(current_dir)?;
     if let Some(subcommand_args) = args.subcommand_matches("enable") {
+        if !toml.is_empty() {
+            eprintln!("Warning: your config is overridden by a repository config file");
+        }
+
         set_lint_status(vcs, &subcommand_args, true)
     } else if let Some(subcommand_args) = args.subcommand_matches("disable") {
+        if !toml.is_empty() {
+            eprintln!("Warning: your config is overridden by a repository config file");
+        }
+
         set_lint_status(vcs, &subcommand_args, false)
     } else if args.subcommand_matches("available").is_some() {
         let all_lints = Lints::new(Lint::iterator().collect());
         println!("{}", all_lints.names().join("\n"));
         Ok(())
     } else if args.subcommand_matches("enabled").is_some() {
-        let toml = external::read_toml(current_dir)?;
         let lints = Lints::get_from_toml_or_else_vcs(&toml, vcs)?;
         println!("{}", lints.names().join("\n"));
         Ok(())
     } else if let Some(subcommand_args) = args.subcommand_matches("status") {
         let lints = get_selected_lints(&subcommand_args)?;
-
-        let toml = external::read_toml(current_dir)?;
         let config = Lints::get_from_toml_or_else_vcs(&toml, vcs)?;
         let status = get_config_status(lints.clone(), config);
         let names = lints.names();
