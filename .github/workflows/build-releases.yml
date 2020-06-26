@@ -51,7 +51,7 @@ jobs:
           path: ./target/release/git-mit${{ matrix.suffix }}
       - uses: actions/upload-artifact@v2
         with:
-          name: git-mit-install${{ matrix.target }}
+          name: git-mit-install-${{ matrix.target }}
           path: ./target/release/git-mit-install${{ matrix.suffix }}
 
     strategy:
