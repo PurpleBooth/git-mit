@@ -15,7 +15,7 @@ const HELP_MESSAGE: &str = indoc!(
 );
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    let commit: &NgCommitMessage = &format!("{}", commit_message).into();
+    let commit: &NgCommitMessage = &commit_message.into();
     if commit.get_subject().len() > 72 {
         Some(Problem::new(
             HELP_MESSAGE.into(),
