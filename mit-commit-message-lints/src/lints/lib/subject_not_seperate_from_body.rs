@@ -2,6 +2,7 @@ use indoc::indoc;
 
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
+use mit_commit::CommitMessage as NgCommitMessage;
 
 pub(crate) const CONFIG: &str = "subject-not-separated-from-body";
 
@@ -13,20 +14,15 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-const SIZE_OF_SUBJECT: usize = 1;
-
-fn has_problem(commit_message: &CommitMessage) -> bool {
-    let line_count = commit_message.content_line_count();
-
-    match line_count {
-        1 => false,
-        2 => true,
-        _ => commit_message.get_body().lines().count() + SIZE_OF_SUBJECT == line_count,
-    }
+fn has_problem(commit_message: &NgCommitMessage) -> bool {
+    commit_message
+        .get_subject()
+        .chars()
+        .any(|char| '\n' == char)
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_problem(commit_message) {
+    if has_problem(&commit_message.into()) {
         Some(Problem::new(
             HELP_MESSAGE.into(),
             Code::SubjectNotSeparateFromBody,
