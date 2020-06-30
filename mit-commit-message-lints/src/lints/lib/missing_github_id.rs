@@ -1,9 +1,9 @@
+use indoc::indoc;
+use mit_commit::CommitMessage as NgCommitMessage;
 use regex::Regex;
 
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
-use indoc::indoc;
-use mit_commit::CommitMessage as NgCommitMessage;
 
 pub(crate) const CONFIG: &str = "github-id-missing";
 
@@ -23,11 +23,9 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-const REGEX: &str = r"(?m)(^| )([a-zA-Z0-9_-]{3,39}/[a-zA-Z0-9-]{1,}#|GH-|#)[0-9]{1,}( |$)";
-
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     let mit_commit: NgCommitMessage = commit_message.into();
-    let re = Regex::new(REGEX).unwrap();
+    let re = Regex::new(r"(?m)(^| )([a-zA-Z0-9_-]{3,39}/[a-zA-Z0-9-]+#|GH-|#)[0-9]+( |$)").unwrap();
     if mit_commit.matches_pattern(&re) {
         None
     } else {
@@ -123,6 +121,7 @@ mod tests_has_missing_github_id {
             &None,
         );
     }
+
     #[test]
     fn id_and_resolve() {
         test_has_missing_github_id(
@@ -162,6 +161,7 @@ mod tests_has_missing_github_id {
             &None,
         );
     }
+
     #[test]
     fn issue() {
         test_has_missing_github_id(
@@ -189,6 +189,7 @@ mod tests_has_missing_github_id {
             &None,
         );
     }
+
     #[test]
     fn gh_id_variant() {
         test_has_missing_github_id(
@@ -204,6 +205,7 @@ mod tests_has_missing_github_id {
             &None,
         );
     }
+
     #[test]
     fn hash_alone_variant() {
         test_has_missing_github_id(
@@ -263,6 +265,7 @@ mod tests_has_missing_github_id {
             &Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing)),
         );
     }
+
     #[test]
     fn id_malformed() {
         test_has_missing_github_id(
