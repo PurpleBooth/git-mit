@@ -3,6 +3,7 @@ use regex::Regex;
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
 use indoc::indoc;
+use mit_commit::CommitMessage as NgCommitMessage;
 
 pub(crate) const CONFIG: &str = "github-id-missing";
 
@@ -24,16 +25,13 @@ const HELP_MESSAGE: &str = indoc!(
 
 const REGEX: &str = r"(?m)(^| )([a-zA-Z0-9_-]{3,39}/[a-zA-Z0-9-]{1,}#|GH-|#)[0-9]{1,}( |$)";
 
-fn has_problem(commit_message: &CommitMessage) -> bool {
-    let re = Regex::new(REGEX).unwrap();
-    !commit_message.matches_pattern(&re)
-}
-
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_problem(commit_message) {
-        Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing))
-    } else {
+    let mit_commit: NgCommitMessage = commit_message.into();
+    let re = Regex::new(REGEX).unwrap();
+    if mit_commit.matches_pattern(&re) {
         None
+    } else {
+        Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing))
     }
 }
 
@@ -216,6 +214,7 @@ mod tests_has_missing_github_id {
                 This is an example commit
 
                 #642
+                ; Comment character is set to something else like ';'
                 "
             ),
             &None,
