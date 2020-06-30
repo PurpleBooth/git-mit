@@ -1,5 +1,6 @@
-use crate::external::{Error, Vcs};
 use std::{collections::BTreeMap, string::String};
+
+use crate::external::{Error, Vcs};
 
 pub struct InMemory<'a> {
     store: &'a mut BTreeMap<String, String>,

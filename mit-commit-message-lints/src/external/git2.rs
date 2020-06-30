@@ -1,7 +1,9 @@
-use crate::external::{Error, Vcs};
+use std::path::PathBuf;
+
 use git2::{Config, Repository};
 use serde::export::TryFrom;
-use std::path::PathBuf;
+
+use crate::external::{Error, Vcs};
 
 pub struct Git2 {
     config_snapshot: git2::Config,

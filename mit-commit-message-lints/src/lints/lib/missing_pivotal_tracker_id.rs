@@ -1,9 +1,9 @@
+use indoc::indoc;
+use mit_commit::CommitMessage as NgCommitMessage;
 use regex::Regex;
 
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
-use indoc::indoc;
-use mit_commit::CommitMessage as NgCommitMessage;
 
 pub(crate) const CONFIG: &str = "pivotal-tracker-id-missing";
 
@@ -45,10 +45,10 @@ pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
 mod tests_has_missing_pivotal_tracker_id {
     #![allow(clippy::wildcard_imports)]
 
+    use indoc::indoc;
     use pretty_assertions::assert_eq;
 
     use crate::lints::CommitMessage;
-    use indoc::indoc;
 
     use super::*;
 

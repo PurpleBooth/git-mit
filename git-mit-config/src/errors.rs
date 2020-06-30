@@ -1,5 +1,6 @@
-use mit_commit_message_lints::{author, external, lints};
 use thiserror::Error;
+
+use mit_commit_message_lints::{author, external, lints};
 
 #[derive(Error, Debug)]
 pub enum GitMitConfigError {

@@ -1,6 +1,8 @@
-use mit_commit_message_lints::{author, external};
 use std::string;
+
 use thiserror::Error;
+
+use mit_commit_message_lints::{author, external};
 
 #[derive(Error, Debug)]
 pub enum GitMitError {

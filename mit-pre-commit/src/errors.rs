@@ -1,5 +1,6 @@
-use mit_commit_message_lints::{author, external};
 use thiserror::Error;
+
+use mit_commit_message_lints::{author, external};
 
 #[derive(Error, Debug)]
 pub(crate) enum MitPreCommitError {

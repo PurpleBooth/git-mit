@@ -1,6 +1,7 @@
 extern crate mit_commit_message_lints;
 
 use std::env;
+use std::{convert::TryFrom, path::PathBuf};
 
 use mit_commit_message_lints::{
     external,
@@ -9,7 +10,6 @@ use mit_commit_message_lints::{
 
 use crate::cli::app;
 use crate::errors::MitCommitMsgError;
-use std::{convert::TryFrom, path::PathBuf};
 
 fn main() -> Result<(), MitCommitMsgError> {
     let matches = app().get_matches();

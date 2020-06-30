@@ -1,3 +1,4 @@
+use std::{convert::TryInto, time::SystemTimeError};
 use std::{
     num,
     ops::Add,
@@ -7,11 +8,12 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use super::entities::RelateTo;
+use thiserror::Error;
+
 use crate::external;
 use crate::external::Vcs;
-use std::{convert::TryInto, time::SystemTimeError};
-use thiserror::Error;
+
+use super::entities::RelateTo;
 
 const CONFIG_KEY_EXPIRES: &str = "mit.relate.expires";
 

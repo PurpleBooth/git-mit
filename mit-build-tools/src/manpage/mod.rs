@@ -1,5 +1,5 @@
-mod generate;
-
 pub use generate::generate;
+
+mod generate;
 
 mod formatters;

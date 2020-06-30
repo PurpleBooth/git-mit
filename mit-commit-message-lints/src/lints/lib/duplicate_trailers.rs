@@ -1,9 +1,11 @@
-use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem};
-use mit_commit::CommitMessage as NgCommitMessage;
-use mit_commit::Trailer as NgTrailer;
 use std::collections::BTreeMap;
 use std::ops::Add;
+
+use mit_commit::CommitMessage as NgCommitMessage;
+use mit_commit::Trailer as NgTrailer;
+
+use crate::lints::lib::problem::Code;
+use crate::lints::lib::{CommitMessage, Problem};
 
 pub(crate) const CONFIG: &str = "duplicated-trailers";
 
@@ -88,6 +90,7 @@ mod tests_has_duplicated_trailers {
             &None,
         );
     }
+
     #[test]
     fn two_duplicates() {
         test_lint_duplicated_trailers(
@@ -109,6 +112,7 @@ mod tests_has_duplicated_trailers {
             )),
         );
     }
+
     #[test]
     fn signed_off_by() {
         test_lint_duplicated_trailers(
@@ -128,6 +132,7 @@ mod tests_has_duplicated_trailers {
             )),
         );
     }
+
     #[test]
     fn co_authored_by() {
         test_lint_duplicated_trailers(
@@ -140,8 +145,7 @@ mod tests_has_duplicated_trailers {
                 Co-authored-by: Billie Thompson <email@example.com>
                 Co-authored-by: Billie Thompson <email@example.com>
                 "
-            )
-            .into(),
+            ).into(),
             &Some(Problem::new(
                 "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Co-authored-by\" field".into(),
                 Code::DuplicatedTrailers,
@@ -183,11 +187,11 @@ mod tests_has_duplicated_trailers {
                  You can fix this by deleting the duplicated \"Signed-off-by\", \"Co-authored-by\" fields
                 +
                 "
-            )
-            .into(),
+            ).into(),
             &None,
         );
     }
+
     #[test]
     fn other_trailers() {
         test_lint_duplicated_trailers(

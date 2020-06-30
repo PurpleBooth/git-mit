@@ -1,3 +1,4 @@
+use std::{convert::TryInto, time::SystemTimeError};
 use std::{
     num,
     ops::Add,
@@ -7,9 +8,9 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use crate::{author::entities::Author, external, external::Vcs};
-use std::{convert::TryInto, time::SystemTimeError};
 use thiserror::Error;
+
+use crate::{author::entities::Author, external, external::Vcs};
 
 const CONFIG_KEY_EXPIRES: &str = "mit.author.expires";
 

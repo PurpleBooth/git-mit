@@ -1,13 +1,14 @@
-use clap_generate::generators::{Bash, Elvish, Fish};
-
-use mit_commit_message_lints::lints::Lint;
 use std::env;
 use std::path::PathBuf;
 
-#[path = "src/cli.rs"]
-mod cli;
+use clap_generate::generators::{Bash, Elvish, Fish};
+
 use mit_build_tools::completion;
 use mit_build_tools::manpage;
+use mit_commit_message_lints::lints::Lint;
+
+#[path = "src/cli.rs"]
+mod cli;
 
 fn main() {
     let lint_names: Vec<_> = Lint::iterator()

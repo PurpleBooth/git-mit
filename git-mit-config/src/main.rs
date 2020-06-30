@@ -1,14 +1,14 @@
+use std::convert::TryInto;
 use std::env;
 
 use git2::{Config, Repository};
 
-use crate::errors::GitMitConfigError;
-use crate::lints::manage_lints;
-
-use crate::cli::app;
 use mit_commit_message_lints::lints::Lint;
 use mit_commit_message_lints::{author::entities::Authors, external::Git2};
-use std::convert::TryInto;
+
+use crate::cli::app;
+use crate::errors::GitMitConfigError;
+use crate::lints::manage_lints;
 
 fn main() -> Result<(), GitMitConfigError> {
     let lint_names: Vec<&str> = Lint::iterator()
