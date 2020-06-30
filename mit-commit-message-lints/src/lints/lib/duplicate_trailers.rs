@@ -148,6 +148,46 @@ mod tests_has_duplicated_trailers {
             )),
         );
     }
+
+    #[test]
+    fn trailer_like_duplicates_in_the_scissors_section() {
+        test_lint_duplicated_trailers(
+            indoc!(
+                "
+                Move to specdown
+                # Bitte geben Sie eine Commit-Beschreibung fur Ihre Anderungen ein. Zeilen,
+                # die mit '#' beginnen, werden ignoriert, und eine leere Beschreibung
+
+                # ------------------------ >8 ------------------------
+                # Andern oder entfernen Sie nicht die obige Zeile.
+                # Alles unterhalb von ihr wird ignoriert.
+                diff --git a/Makefile b/Makefile
+                index 0d3fc98..38a2784 100644
+                --- a/Makefile
+                +++ b/Makefile
+                +
+                 This is a commit message that has trailers and is invalid
+
+                -Signed-off-by: Someone Else <someone@example.com>
+                -Signed-off-by: Someone Else <someone@example.com>
+                 Co-authored-by: Billie Thompson <billie@example.com>
+                 Co-authored-by: Billie Thompson <billie@example.com>
+                +Signed-off-by: Someone Else <someone@example.com>
+                +Signed-off-by: Someone Else <someone@example.com>
+
+
+                 ---
+                @@ -82,6 +82,7 @@ Co-authored-by: Billie Thompson <billie@example.com>
+                 Your commit message has duplicated trailers
+
+                 You can fix this by deleting the duplicated \"Signed-off-by\", \"Co-authored-by\" fields
+                +
+                "
+            )
+            .into(),
+            &None,
+        );
+    }
     #[test]
     fn other_trailers() {
         test_lint_duplicated_trailers(
