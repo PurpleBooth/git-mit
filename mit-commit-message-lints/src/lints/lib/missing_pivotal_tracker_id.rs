@@ -1,9 +1,9 @@
 use indoc::indoc;
-use mit_commit::CommitMessage as NgCommitMessage;
+use mit_commit::CommitMessage;
 use regex::Regex;
 
 use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem};
+use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "pivotal-tracker-id-missing";
 
@@ -22,8 +22,7 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    let commit: NgCommitMessage = commit_message.into();
+pub(crate) fn lint(commit: &CommitMessage) -> Option<Problem> {
     let re = Regex::new(
         r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]",
     )
@@ -45,8 +44,6 @@ mod tests_has_missing_pivotal_tracker_id {
     use indoc::indoc;
     use pretty_assertions::assert_eq;
 
-    use crate::lints::CommitMessage;
-
     use super::*;
 
     #[test]
@@ -67,7 +64,7 @@ mod tests_has_missing_pivotal_tracker_id {
     }
 
     fn test_has_missing_pivotal_tracker_id(message: &str, expected: &Option<Problem>) {
-        let actual = &lint(&CommitMessage::new(message.into()));
+        let actual = &lint(&CommitMessage::from(message));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",

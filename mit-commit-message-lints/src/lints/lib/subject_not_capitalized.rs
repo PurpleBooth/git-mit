@@ -1,8 +1,8 @@
 use indoc::indoc;
-use mit_commit::CommitMessage as NgCommitMessage;
+use mit_commit::CommitMessage;
 
 use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem};
+use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "subject-line-not-capitalized";
 
@@ -14,7 +14,7 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-fn has_problem(commit_message: &NgCommitMessage) -> bool {
+fn has_problem(commit_message: &CommitMessage) -> bool {
     if let Some(character) = commit_message.get_subject().chars().next() {
         character.to_string() != character.to_uppercase().to_string()
     } else {
@@ -23,7 +23,7 @@ fn has_problem(commit_message: &NgCommitMessage) -> bool {
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_problem(&commit_message.into()) {
+    if has_problem(&commit_message) {
         Some(Problem::new(
             HELP_MESSAGE.into(),
             Code::SubjectLintNotCapitalized,
@@ -82,7 +82,7 @@ mod tests {
     }
 
     fn run_test(message: &str, expected: &Option<Problem>) {
-        let actual = &lint(&CommitMessage::new(message.into()));
+        let actual = &lint(&CommitMessage::from(message));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",

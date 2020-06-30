@@ -1,11 +1,11 @@
 use std::collections::BTreeMap;
 use std::ops::Add;
 
-use mit_commit::CommitMessage as NgCommitMessage;
+use mit_commit::CommitMessage;
 use mit_commit::Trailer as NgTrailer;
 
 use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem};
+use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "duplicated-trailers";
 
@@ -13,7 +13,7 @@ const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-author
 const FIELD_SINGULAR: &str = "field";
 const FIELD_PLURAL: &str = "fields";
 
-fn get_duplicated_trailers(commit_message: &NgCommitMessage) -> Vec<String> {
+fn get_duplicated_trailers(commit_message: &CommitMessage) -> Vec<String> {
     commit_message
         .get_trailers()
         .iter()
@@ -42,9 +42,7 @@ fn get_duplicated_trailers(commit_message: &NgCommitMessage) -> Vec<String> {
         .collect::<Vec<_>>()
 }
 
-pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    let commit = &NgCommitMessage::from(format!("{}", commit_message));
-
+pub(crate) fn lint(commit: &CommitMessage) -> Option<Problem> {
     let duplicated_trailers = get_duplicated_trailers(commit);
     if duplicated_trailers.is_empty() {
         None
@@ -75,6 +73,7 @@ mod tests_has_duplicated_trailers {
     use pretty_assertions::assert_eq;
 
     use super::*;
+    use mit_commit::CommitMessage;
 
     #[test]
     fn commit_without_trailers() {
@@ -211,7 +210,7 @@ mod tests_has_duplicated_trailers {
     }
 
     fn test_lint_duplicated_trailers(message: String, expected: &Option<Problem>) {
-        let actual = &lint(&CommitMessage::new(message));
+        let actual = &lint(&CommitMessage::from(message));
         assert_eq!(
             actual, expected,
             "Expected {:?}, found {:?}",

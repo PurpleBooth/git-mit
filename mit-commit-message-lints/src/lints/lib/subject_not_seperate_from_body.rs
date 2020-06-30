@@ -1,8 +1,8 @@
 use indoc::indoc;
+use mit_commit::CommitMessage;
 
 use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem};
-use mit_commit::CommitMessage as NgCommitMessage;
+use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "subject-not-separated-from-body";
 
@@ -14,7 +14,7 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-fn has_problem(commit_message: &NgCommitMessage) -> bool {
+fn has_problem(commit_message: &CommitMessage) -> bool {
     commit_message
         .get_subject()
         .chars()
@@ -22,7 +22,7 @@ fn has_problem(commit_message: &NgCommitMessage) -> bool {
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_problem(&commit_message.into()) {
+    if has_problem(&commit_message) {
         Some(Problem::new(
             HELP_MESSAGE.into(),
             Code::SubjectNotSeparateFromBody,
@@ -169,7 +169,7 @@ mod tests {
     }
 
     fn test_subject_not_seperate_from_body(message: &str, expected: &Option<Problem>) {
-        let actual = &lint(&CommitMessage::new(message.into()));
+        let actual = &lint(&CommitMessage::from(message));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",

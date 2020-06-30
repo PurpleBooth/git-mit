@@ -1,4 +1,5 @@
-use crate::lints::lib::{CommitMessage, Lints, Problem};
+use crate::lints::lib::{Lints, Problem};
+use mit_commit::CommitMessage;
 
 #[must_use]
 pub fn lint(commit_message: &CommitMessage, lints: Lints) -> Vec<Problem> {

@@ -28,7 +28,7 @@ fn main() -> Result<(), MitCommitMsgError> {
     let mut git_config = external::Git2::try_from(current_dir)?;
     let lint_config = Lints::get_from_toml_or_else_vcs(&toml, &mut git_config)?;
 
-    let lint_problems = lint(&commit_message, lint_config);
+    let lint_problems = lint(&commit_message.clone().into(), lint_config);
     let output = format_lint_problems(&commit_message, lint_problems);
 
     if let Some((message, exit_code)) = output {

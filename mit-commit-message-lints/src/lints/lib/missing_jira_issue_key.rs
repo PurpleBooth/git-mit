@@ -1,8 +1,9 @@
 use indoc::indoc;
+use mit_commit::CommitMessage;
 use regex::Regex;
 
 use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem};
+use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "jira-issue-key-missing";
 
@@ -131,7 +132,7 @@ mod tests_has_missing_jira_issue_key {
     }
 
     fn test_has_missing_jira_issue_key(message: &str, expected: &Option<Problem>) {
-        let actual = &lint(&CommitMessage::new(message.into()));
+        let actual = &lint(&CommitMessage::from(message));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",
