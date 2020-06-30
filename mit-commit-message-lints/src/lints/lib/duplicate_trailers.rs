@@ -75,7 +75,7 @@ mod tests_has_duplicated_trailers {
     use super::*;
 
     #[test]
-    fn duplicated_trailers() {
+    fn commit_without_trailers() {
         test_lint_duplicated_trailers(
             indoc!(
                 "
@@ -87,6 +87,9 @@ mod tests_has_duplicated_trailers {
             .into(),
             &None,
         );
+    }
+    #[test]
+    fn two_duplicates() {
         test_lint_duplicated_trailers(
             indoc!(
                 "
@@ -99,13 +102,15 @@ mod tests_has_duplicated_trailers {
                 Co-authored-by: Billie Thompson <email@example.com>
                 Co-authored-by: Billie Thompson <email@example.com>
                 "
-            )
-            .into(),
+            ).into(),
             &Some(Problem::new(
                 "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Co-authored-by\", \"Signed-off-by\" fields".into(),
                 Code::DuplicatedTrailers,
             )),
         );
+    }
+    #[test]
+    fn signed_off_by() {
         test_lint_duplicated_trailers(
             indoc!(
                 "
@@ -116,13 +121,15 @@ mod tests_has_duplicated_trailers {
                 Signed-off-by: Billie Thompson <email@example.com>
                 Signed-off-by: Billie Thompson <email@example.com>
                 "
-            )
-            .into(),
+            ).into(),
             &Some(Problem::new(
                 "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Signed-off-by\" field".into(),
                 Code::DuplicatedTrailers,
             )),
         );
+    }
+    #[test]
+    fn co_authored_by() {
         test_lint_duplicated_trailers(
             indoc!(
                 "
@@ -140,6 +147,9 @@ mod tests_has_duplicated_trailers {
                 Code::DuplicatedTrailers,
             )),
         );
+    }
+    #[test]
+    fn other_trailers() {
         test_lint_duplicated_trailers(
             indoc!(
                 "
