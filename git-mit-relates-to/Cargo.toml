@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-relates-to"
-version = "3.58.0"
+version = "3.59.0"
 authors = [
   "Billie Thompson <billie+git-mit-relates-to@billiecodes.com>"
 ]
