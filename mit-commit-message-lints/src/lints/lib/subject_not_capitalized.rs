@@ -1,4 +1,5 @@
 use indoc::indoc;
+use mit_commit::CommitMessage as NgCommitMessage;
 
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
@@ -13,16 +14,16 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-fn has_problem(commit_message: &CommitMessage) -> bool {
+fn has_problem(commit_message: &NgCommitMessage) -> bool {
     if let Some(character) = commit_message.get_subject().chars().next() {
-        return character.to_string() != character.to_uppercase().to_string();
+        character.to_string() != character.to_uppercase().to_string()
+    } else {
+        false
     }
-
-    false
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_problem(commit_message) {
+    if has_problem(&commit_message.into()) {
         Some(Problem::new(
             HELP_MESSAGE.into(),
             Code::SubjectLintNotCapitalized,
