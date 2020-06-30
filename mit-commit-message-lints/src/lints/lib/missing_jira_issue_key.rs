@@ -14,18 +14,12 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-const REGEX: &str = r"(?m)(^| )[A-Z]{2,}-[0-9]+( |$)";
-
-fn has_problem(commit_message: &CommitMessage) -> bool {
-    let re = Regex::new(REGEX).unwrap();
-    !commit_message.matches_pattern(&re)
-}
-
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_problem(commit_message) {
-        Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing))
-    } else {
+    let re = Regex::new(r"(?m)(^| )[A-Z]{2,}-[0-9]+( |$)").unwrap();
+    if commit_message.matches_pattern(&re) {
         None
+    } else {
+        Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing))
     }
 }
 
