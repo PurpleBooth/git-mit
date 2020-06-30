@@ -1,6 +1,7 @@
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
 use indoc::indoc;
+use mit_commit::CommitMessage as NgCommitMessage;
 
 pub(crate) const CONFIG: &str = "subject-longer-than-72-characters";
 
@@ -12,12 +13,9 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-fn has_problem(commit_message: &CommitMessage) -> bool {
-    commit_message.get_subject().len() > 72
-}
-
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_problem(commit_message) {
+    let commit: &NgCommitMessage = &format!("{}", commit_message).into();
+    if commit.get_subject().len() > 72 {
         Some(Problem::new(
             HELP_MESSAGE.into(),
             Code::SubjectLongerThan72Characters,
