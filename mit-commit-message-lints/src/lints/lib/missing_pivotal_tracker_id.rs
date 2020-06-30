@@ -3,11 +3,9 @@ use regex::Regex;
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
 use indoc::indoc;
+use mit_commit::CommitMessage as NgCommitMessage;
 
 pub(crate) const CONFIG: &str = "pivotal-tracker-id-missing";
-
-const REGEX: &str =
-    r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]";
 
 const HELP_MESSAGE: &str = indoc!(
     "
@@ -24,20 +22,23 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-fn has_problem(text: &CommitMessage) -> bool {
-    let re = Regex::new(REGEX).unwrap();
-    !text.matches_pattern(&re)
-}
-
-pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_problem(commit_message) {
+pub(crate) fn nglint(commit_message: &NgCommitMessage) -> Option<Problem> {
+    let re = Regex::new(
+        r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]",
+    )
+    .unwrap();
+    if commit_message.matches_pattern(&re) {
+        None
+    } else {
         Some(Problem::new(
             HELP_MESSAGE.into(),
             Code::PivotalTrackerIdMissing,
         ))
-    } else {
-        None
     }
+}
+
+pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
+    nglint(&commit_message.into())
 }
 
 #[cfg(test)]
@@ -61,6 +62,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [#12345678]
+                # Some comment
                 "
             ),
             &None,
@@ -86,6 +88,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [#12345678,#87654321]
+                # some comment
                 "
             ),
             &None,
@@ -98,6 +101,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [#12345678,#87654321,#11223344]
+                # some comment
                 "
             ),
             &None,
@@ -110,6 +114,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [#12345678 #87654321 #11223344]
+                # some comment
                 "
             ),
             &None,
@@ -126,6 +131,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [fix #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -138,6 +144,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [FIX #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -150,6 +157,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [Fix #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -162,6 +170,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [fixed #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -174,6 +183,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [fixes #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -190,6 +200,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [complete #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -203,6 +214,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [completed #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -216,6 +228,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [Completed #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -229,6 +242,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [completes #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -245,6 +259,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [finish #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -258,6 +273,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [finished #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -270,6 +286,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [finishes #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -286,6 +303,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [deliver #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -299,6 +317,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [delivered #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -311,6 +330,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [delivers #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -327,6 +347,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [fix #12345678 #12345678]
+                # some comment
                 "
             ),
             &None,
@@ -359,6 +380,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 This is an example commit
 
                 [fake #12345678]
+                # some comment
                 "
             ),
             &Some(Problem::new(
@@ -392,6 +414,7 @@ mod tests_has_missing_pivotal_tracker_id {
             This is an example commit
 
             [#]
+            # some comment
             "
             ),
             &Some(Problem::new(

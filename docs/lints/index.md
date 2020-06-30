@@ -349,6 +349,7 @@ Demonstration Commit Message
 This is a commit message that is valid
 
 [#12345884]
+# some comment
 ```
 
 Committing will succeed
