@@ -22,3 +22,5 @@ mod missing_github_id;
 mod missing_jira_issue_key;
 mod missing_pivotal_tracker_id;
 mod problem;
+
+mod ng_commit_message;

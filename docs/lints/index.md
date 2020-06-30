@@ -91,7 +91,7 @@ Signed-off-by: Someone Else <someone@example.com>
 
 Your commit message has duplicated trailers
 
-You can fix this by deleting the duplicated "Signed-off-by", "Co-authored-by" fields
+You can fix this by deleting the duplicated "Co-authored-by", "Signed-off-by" fields
 ```
 
 #### Git Manual Style

@@ -1,7 +1,9 @@
-use std::{collections::HashSet, iter::FromIterator};
-
 use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem, Trailer};
+use crate::lints::lib::{CommitMessage, Problem};
+use mit_commit::CommitMessage as NgCommitMessage;
+use mit_commit::Trailer as NgTrailer;
+use std::collections::BTreeMap;
+use std::ops::Add;
 
 pub(crate) const CONFIG: &str = "duplicated-trailers";
 
@@ -9,43 +11,58 @@ const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-author
 const FIELD_SINGULAR: &str = "field";
 const FIELD_PLURAL: &str = "fields";
 
-fn get_duplicated_trailers(commit_message: &CommitMessage) -> Vec<String> {
-    TRAILERS_TO_CHECK_FOR_DUPLICATES
+fn get_duplicated_trailers(commit_message: &NgCommitMessage) -> Vec<String> {
+    commit_message
+        .get_trailers()
         .iter()
-        .filter_map(|trailer| filter_without_duplicates(commit_message, trailer))
-        .collect::<Vec<String>>()
-}
+        .fold(
+            BTreeMap::new(),
+            |acc: BTreeMap<&NgTrailer, usize>, trailer| {
+                let mut next = acc.clone();
+                match acc.get(trailer) {
+                    Some(count) => next.insert(trailer, count.add(1)),
+                    None => next.insert(trailer, 1),
+                };
 
-fn filter_without_duplicates(commit_message: &CommitMessage, trailer_key: &str) -> Option<String> {
-    Some(trailer_key)
-        .map(String::from)
-        .filter(|trailer| has_duplicated_trailer(commit_message, trailer))
-}
+                next
+            },
+        )
+        .into_iter()
+        .filter_map(|(trailer, usize)| {
+            let key: &str = &trailer.get_key();
 
-fn has_duplicated_trailer(commit_message: &CommitMessage, trailer_key: &str) -> bool {
-    Some(commit_message.get_trailer(trailer_key))
-        .map(|trailers| (trailers.clone(), trailers))
-        .map(|(commit, unique)| (commit, HashSet::<Trailer>::from_iter(unique)))
-        .map(|(commit, unique)| commit.len() != unique.len())
-        .unwrap()
+            if usize > 1 && TRAILERS_TO_CHECK_FOR_DUPLICATES.contains(&key) {
+                Some(trailer.get_key())
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>()
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    let duplicated_trailers = get_duplicated_trailers(commit_message);
+    let commit = &NgCommitMessage::from(format!("{}", commit_message));
+
+    let duplicated_trailers = get_duplicated_trailers(commit);
     if duplicated_trailers.is_empty() {
         None
     } else {
-        let warning = format!(
-            "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"{}\" {}",
-            duplicated_trailers.join("\", \""),
-            if duplicated_trailers.len() > 1 {
-                FIELD_PLURAL
-            } else {
-                FIELD_SINGULAR
-            }
-        );
+        let warning = warning(&duplicated_trailers);
         Some(Problem::new(warning, Code::DuplicatedTrailers))
     }
+}
+
+fn warning(duplicated_trailers: &[String]) -> String {
+    let warning = format!(
+        "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"{}\" {}",
+        duplicated_trailers.join("\", \""),
+        if duplicated_trailers.len() > 1 {
+            FIELD_PLURAL
+        } else {
+            FIELD_SINGULAR
+        }
+    );
+    warning
 }
 
 #[cfg(test)]
@@ -85,7 +102,7 @@ mod tests_has_duplicated_trailers {
             )
             .into(),
             &Some(Problem::new(
-                "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Signed-off-by\", \"Co-authored-by\" fields".into(),
+                "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Co-authored-by\", \"Signed-off-by\" fields".into(),
                 Code::DuplicatedTrailers,
             )),
         );
@@ -123,6 +140,20 @@ mod tests_has_duplicated_trailers {
                 Code::DuplicatedTrailers,
             )),
         );
+        test_lint_duplicated_trailers(
+            indoc!(
+                "
+                An example commit
+
+                This is an example commit without any duplicate trailers
+
+                Anything: Billie Thompson <email@example.com>
+                Anything: Billie Thompson <email@example.com>
+                "
+            )
+            .into(),
+            &None,
+        );
     }
 
     fn test_lint_duplicated_trailers(message: String, expected: &Option<Problem>) {
@@ -131,126 +162,6 @@ mod tests_has_duplicated_trailers {
             actual, expected,
             "Expected {:?}, found {:?}",
             expected, actual
-        );
-    }
-}
-
-#[cfg(test)]
-mod tests_has_duplicated_trailer {
-    use crate::lints::lib::duplicate_trailers::has_duplicated_trailer;
-    use crate::lints::CommitMessage;
-    use indoc::indoc;
-
-    fn test_has_duplicated_trailer(message: &str, trailer: &str, expected: bool) {
-        let actual = has_duplicated_trailer(&CommitMessage::new(message.into()), trailer);
-        assert_eq!(
-            actual, expected,
-            "Message {:?} with trailer {:?} should have returned {:?}, found {:?}",
-            message, trailer, expected, actual
-        );
-    }
-
-    #[test]
-    fn no_trailer() {
-        test_has_duplicated_trailer(
-            indoc!(
-                "
-                An example commit
-
-                This is an example commit without any duplicate trailers
-                "
-            ),
-            "Signed-off-by",
-            false,
-        );
-    }
-
-    #[test]
-    fn duplicated_trailer() {
-        test_has_duplicated_trailer(
-            indoc!(
-                "
-                An example commit
-
-                This is an example commit with duplicate trailers
-
-                Signed-off-by: Billie Thompson <email@example.com>
-                Signed-off-by: Billie Thompson <email@example.com>
-                "
-            ),
-            "Signed-off-by",
-            true,
-        );
-    }
-
-    #[test]
-    fn two_trailers_but_no_duplicates() {
-        test_has_duplicated_trailer(
-            indoc!(
-                "
-                An example commit
-
-                This is an example commit without any duplicate trailers
-
-                Signed-off-by: Billie Thompson <billie@example.com>
-                Signed-off-by: Ada Lovelace <ada@example.com>
-                "
-            ),
-            "Signed-off-by",
-            false,
-        );
-    }
-
-    #[test]
-    fn one_trailer() {
-        test_has_duplicated_trailer(
-            indoc!(
-                "
-                An example commit
-
-                This is an example commit without any duplicate trailers
-
-                Signed-off-by: Billie Thompson <email@example.com>
-                "
-            ),
-            "Signed-off-by",
-            false,
-        );
-    }
-
-    #[test]
-    fn missing_colon_in_trailer() {
-        test_has_duplicated_trailer(
-            indoc!(
-                "
-                An example commit
-
-                This is an example commit without any duplicate trailers
-
-                Signed-off-by Billie Thompson <email@example.com>
-                Signed-off-by Billie Thompson <email@example.com>
-                "
-            ),
-            "Signed-off-by",
-            false,
-        );
-    }
-
-    #[test]
-    fn customised_trailer() {
-        test_has_duplicated_trailer(
-            indoc!(
-                "
-                An example commit
-
-                This is an example commit with duplicate trailers
-
-                Anything: Billie Thompson <email@example.com>
-                Anything: Billie Thompson <email@example.com>
-                "
-            ),
-            "Anything",
-            true,
         );
     }
 }

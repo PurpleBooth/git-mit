@@ -382,11 +382,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "mit-commit"
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7472a9b25f4e7cdd53428d7752a0eac63f3ae1d26b7180fe2393ba2a433bd6a"
+dependencies = [
+ "indoc",
+ "regex",
+ "thiserror",
+]
+
+[[package]]
 name = "mit-commit-message-lints"
 version = "3.59.0"
 dependencies = [
  "git2",
  "indoc",
+ "mit-commit",
  "mit-hook-test-helper",
  "pretty_assertions",
  "regex",
@@ -406,6 +418,7 @@ dependencies = [
  "git2",
  "indoc",
  "mit-build-tools",
+ "mit-commit",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "pretty_assertions",
@@ -435,6 +448,7 @@ dependencies = [
  "git2",
  "indoc",
  "mit-build-tools",
+ "mit-commit",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "pretty_assertions",
@@ -454,6 +468,7 @@ dependencies = [
  "git2",
  "indoc",
  "mit-build-tools",
+ "mit-commit",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "pretty_assertions",
