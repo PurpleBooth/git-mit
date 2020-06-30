@@ -22,12 +22,13 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-pub(crate) fn nglint(commit_message: &NgCommitMessage) -> Option<Problem> {
+pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
+    let commit: NgCommitMessage = commit_message.into();
     let re = Regex::new(
         r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]",
     )
     .unwrap();
-    if commit_message.matches_pattern(&re) {
+    if commit.matches_pattern(&re) {
         None
     } else {
         Some(Problem::new(
@@ -35,10 +36,6 @@ pub(crate) fn nglint(commit_message: &NgCommitMessage) -> Option<Problem> {
             Code::PivotalTrackerIdMissing,
         ))
     }
-}
-
-pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    nglint(&commit_message.into())
 }
 
 #[cfg(test)]
