@@ -1,9 +1,9 @@
 use indoc::indoc;
-use mit_commit::CommitMessage as NgCommitMessage;
+use mit_commit::CommitMessage;
 use regex::Regex;
 
 use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem};
+use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "github-id-missing";
 
@@ -23,8 +23,7 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    let mit_commit: NgCommitMessage = commit_message.into();
+pub(crate) fn lint(mit_commit: &CommitMessage) -> Option<Problem> {
     let re = Regex::new(r"(?m)(^| )([a-zA-Z0-9_-]{3,39}/[a-zA-Z0-9-]+#|GH-|#)[0-9]+( |$)").unwrap();
     if mit_commit.matches_pattern(&re) {
         None
@@ -295,7 +294,7 @@ mod tests_has_missing_github_id {
     }
 
     fn test_has_missing_github_id(message: &str, expected: &Option<Problem>) {
-        let actual = &lint(&CommitMessage::new(message.into()));
+        let actual = &lint(&CommitMessage::from(message));
         assert_eq!(
             actual, expected,
             "Message {:?} should have returned {:?}, found {:?}",

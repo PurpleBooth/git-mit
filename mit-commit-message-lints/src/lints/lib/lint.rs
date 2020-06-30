@@ -1,10 +1,11 @@
 use std::convert::TryInto;
 
+use mit_commit::CommitMessage;
 use thiserror::Error;
 
 use crate::lints::lib;
 use crate::lints::lib::problem::Problem;
-use crate::lints::lib::{CommitMessage, Lints};
+use crate::lints::lib::Lints;
 
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash, Ord, PartialOrd)]
