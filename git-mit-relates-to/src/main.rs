@@ -2,15 +2,15 @@ use std::{convert::TryFrom, env, time::Duration};
 
 use clap::ArgMatches;
 
-mod cli;
-mod errors;
-
 use mit_commit_message_lints::{
     external::Git2,
     relates::{entities::RelateTo, vcs::set_relates_to},
 };
 
 use crate::errors::GitRelatesTo;
+
+mod cli;
+mod errors;
 
 fn main() -> Result<(), errors::GitRelatesTo> {
     let matches = cli::app().get_matches();

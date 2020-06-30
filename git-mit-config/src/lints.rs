@@ -1,13 +1,16 @@
-use crate::errors::GitMitConfigError;
-use crate::errors::GitMitConfigError::LintNameNotGiven;
+use std::convert::TryInto;
+use std::path::PathBuf;
+
 use clap::ArgMatches;
+
 use mit_commit_message_lints::external;
 use mit_commit_message_lints::external::Vcs;
 use mit_commit_message_lints::lints::set_status;
 use mit_commit_message_lints::lints::Lint;
 use mit_commit_message_lints::lints::Lints;
-use std::convert::TryInto;
-use std::path::PathBuf;
+
+use crate::errors::GitMitConfigError;
+use crate::errors::GitMitConfigError::LintNameNotGiven;
 
 pub(crate) fn manage_lints(
     args: &ArgMatches,

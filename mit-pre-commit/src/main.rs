@@ -1,9 +1,10 @@
+use std::convert::TryFrom;
 use std::{env, process};
+
+use mit_commit_message_lints::{author::vcs::get_coauthor_configuration, external::Git2};
 
 use crate::cli::app;
 use crate::errors::MitPreCommitError;
-use mit_commit_message_lints::{author::vcs::get_coauthor_configuration, external::Git2};
-use std::convert::TryFrom;
 
 #[repr(i32)]
 enum ExitCode {

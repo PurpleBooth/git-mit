@@ -1,7 +1,8 @@
-use crate::lints::lib::problem::Code;
-use crate::lints::lib::{CommitMessage, Problem};
 use indoc::indoc;
 use mit_commit::CommitMessage as NgCommitMessage;
+
+use crate::lints::lib::problem::Code;
+use crate::lints::lib::{CommitMessage, Problem};
 
 pub(crate) const CONFIG: &str = "subject-longer-than-72-characters";
 

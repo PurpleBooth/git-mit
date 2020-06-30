@@ -1,7 +1,9 @@
-use crate::external::Error;
-use git2::Repository;
 use std::fs;
 use std::path::PathBuf;
+
+use git2::Repository;
+
+use crate::external::Error;
 
 /// Find and read the correct toml config
 ///

@@ -1,7 +1,8 @@
-use clap::App;
-use clap_generate::{generate_to, Generator};
 use std::fs;
 use std::path::PathBuf;
+
+use clap::App;
+use clap_generate::{generate_to, Generator};
 
 pub fn generate<T>(app: &App, dir: &PathBuf)
 where

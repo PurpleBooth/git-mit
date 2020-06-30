@@ -1,8 +1,7 @@
+use std::convert::TryFrom;
+use std::path::PathBuf;
 use std::{env, fs::File, io::Write};
 
-use crate::cli::app;
-use crate::errors::MitPrepareCommitMessageError;
-use crate::MitPrepareCommitMessageError::MissingCommitFilePath;
 use mit_commit_message_lints::relates::vcs::get_relate_to_configuration;
 use mit_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
@@ -10,8 +9,10 @@ use mit_commit_message_lints::{
     lints::lib::{CommitMessage, Trailer},
     relates::entities::RelateTo,
 };
-use std::convert::TryFrom;
-use std::path::PathBuf;
+
+use crate::cli::app;
+use crate::errors::MitPrepareCommitMessageError;
+use crate::MitPrepareCommitMessageError::MissingCommitFilePath;
 
 mod cli;
 mod errors;

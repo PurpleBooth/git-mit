@@ -1,5 +1,8 @@
-mod cli;
 use std::{env, fs, io};
+
+use thiserror::Error;
+
+mod cli;
 
 fn main() -> Result<(), GitMitInstallError> {
     cli::app().get_matches();
@@ -23,7 +26,6 @@ fn main() -> Result<(), GitMitInstallError> {
 
     Ok(())
 }
-use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum GitMitInstallError {

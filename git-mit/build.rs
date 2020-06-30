@@ -1,12 +1,13 @@
-use clap_generate::generators::{Bash, Elvish, Fish, Zsh};
-
 use std::env;
 use std::path::PathBuf;
 
-#[path = "src/cli.rs"]
-mod cli;
+use clap_generate::generators::{Bash, Elvish, Fish, Zsh};
+
 use mit_build_tools::completion;
 use mit_build_tools::manpage;
+
+#[path = "src/cli.rs"]
+mod cli;
 
 fn main() {
     let cargo_package_name = env!("CARGO_PKG_NAME");

@@ -1,8 +1,8 @@
+use indoc::indoc;
 use regex::Regex;
 
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
-use indoc::indoc;
 
 pub(crate) const CONFIG: &str = "jira-issue-key-missing";
 

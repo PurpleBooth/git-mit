@@ -1,12 +1,14 @@
-use crate::external;
-use crate::external::Vcs;
-use crate::lints::lib::{lint, Lint};
 use std::borrow::Borrow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::convert::{TryFrom, TryInto};
 use std::iter::FromIterator;
 use std::vec::IntoIter;
+
 use thiserror::Error;
+
+use crate::external;
+use crate::external::Vcs;
+use crate::lints::lib::{lint, Lint};
 
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Lints {
@@ -138,20 +140,18 @@ fn get_config_or_default(
 
 #[cfg(test)]
 mod tests {
-    use crate::lints::lib::lints::{Error, Lints};
-    use indoc::indoc;
-
-    use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
-    use pretty_assertions::assert_eq;
-
     use std::collections::{BTreeMap, BTreeSet};
+    use std::convert::TryInto;
 
-    use crate::{external::InMemory, lints::Lint::DuplicatedTrailers};
+    use indoc::indoc;
+    use pretty_assertions::assert_eq;
 
     use crate::lints::lib::lint::Lint::{
         GitHubIdMissing, SubjectLongerThan72Characters, SubjectNotSeparateFromBody,
     };
-    use std::convert::TryInto;
+    use crate::lints::lib::lints::{Error, Lints};
+    use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
+    use crate::{external::InMemory, lints::Lint::DuplicatedTrailers};
 
     #[test]
     fn it_returns_an_error_if_one_of_the_names_is_wrong() {
@@ -220,6 +220,7 @@ mod tests {
 
         assert_eq!(expected, actual);
     }
+
     #[test]
     fn try_from_toml_defaults() {
         let mut store = BTreeMap::new();
@@ -477,6 +478,7 @@ mod tests {
             expected, actual
         )
     }
+
     #[test]
     fn when_merging_overlapping_does_not_lead_to_duplication() {
         let mut set_a_lints = BTreeSet::new();
@@ -502,6 +504,7 @@ mod tests {
             expected, actual
         )
     }
+
     #[test]
     fn we_can_subtract_lints_from_the_lint_list() {
         let mut set_a_lints = BTreeSet::new();

@@ -1,6 +1,8 @@
-use mit_commit_message_lints::{external, relates};
 use std::{io, num, string};
+
 use thiserror::Error;
+
+use mit_commit_message_lints::{external, relates};
 
 #[derive(Error, Debug)]
 pub enum GitRelatesTo {

@@ -1,6 +1,7 @@
+use indoc::indoc;
+
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::{CommitMessage, Problem};
-use indoc::indoc;
 
 pub(crate) const CONFIG: &str = "subject-not-separated-from-body";
 

@@ -1,4 +1,3 @@
-use regex::{Regex, RegexBuilder};
 use std::{
     convert::TryFrom,
     fmt::Display,
@@ -8,6 +7,9 @@ use std::{
     path::PathBuf,
     str::{FromStr, Lines},
 };
+
+use mit_commit::CommitMessage as NgCommitMessage;
+use regex::{Regex, RegexBuilder};
 use thiserror::Error;
 
 use super::Trailer;
@@ -205,8 +207,6 @@ impl Display for CommitMessage {
     }
 }
 
-use mit_commit::CommitMessage as NgCommitMessage;
-
 impl From<CommitMessage> for NgCommitMessage {
     fn from(old: CommitMessage) -> Self {
         NgCommitMessage::from(format!("{}", old))
@@ -227,8 +227,14 @@ impl From<NgCommitMessage> for CommitMessage {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
+    use indoc::indoc;
     use mit_commit::CommitMessage as NgCommitMessage;
     use pretty_assertions::assert_eq;
+    use regex::Regex;
+
+    use super::{CommitMessage, Trailer};
 
     #[test]
     fn can_convert_from_a_old_commit_to_a_new_one() {
@@ -281,13 +287,6 @@ mod tests {
             )
         );
     }
-
-    use regex::Regex;
-    use std::str::FromStr;
-
-    use indoc::indoc;
-
-    use super::{CommitMessage, Trailer};
 
     #[test]
     fn with_trailers() {
@@ -829,6 +828,7 @@ mod tests {
             commit.get_body()
         );
     }
+
     #[test]
     fn body_still_retrieved_without_gutter() {
         let commit = CommitMessage::new(

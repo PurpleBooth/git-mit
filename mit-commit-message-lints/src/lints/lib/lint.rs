@@ -1,8 +1,10 @@
+use std::convert::TryInto;
+
+use thiserror::Error;
+
 use crate::lints::lib;
 use crate::lints::lib::problem::Problem;
 use crate::lints::lib::{CommitMessage, Lints};
-use std::convert::TryInto;
-use thiserror::Error;
 
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash, Ord, PartialOrd)]

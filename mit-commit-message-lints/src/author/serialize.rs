@@ -1,6 +1,8 @@
-use crate::author::entities::Authors;
 use std::convert::TryFrom;
+
 use thiserror::Error;
+
+use crate::author::entities::Authors;
 
 impl TryFrom<&str> for Authors {
     type Error = Error;
@@ -25,12 +27,14 @@ impl TryFrom<Authors> for String {
 
 #[cfg(test)]
 mod tests {
-    use crate::author::entities::{Author, Authors};
-    use indoc::indoc;
-    use pretty_assertions::assert_eq;
     use std::collections::BTreeMap;
     use std::convert::TryFrom;
     use std::convert::TryInto;
+
+    use indoc::indoc;
+    use pretty_assertions::assert_eq;
+
+    use crate::author::entities::{Author, Authors};
 
     #[test]
     fn must_be_valid_yaml() {

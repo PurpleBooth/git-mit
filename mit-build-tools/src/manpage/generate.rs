@@ -1,4 +1,13 @@
+use std::fs;
+use std::fs::File;
+use std::io::Write;
+use std::path::PathBuf;
+
+use clap::App;
 use serde::Serialize;
+use tinytemplate::TinyTemplate;
+
+use crate::manpage::formatters;
 
 #[derive(Serialize)]
 struct Context {
@@ -16,15 +25,6 @@ struct Context {
     after_help: String,
     before_help: String,
 }
-
-use crate::manpage::formatters;
-use clap::App;
-
-use std::fs;
-use std::fs::File;
-use std::io::Write;
-use std::path::PathBuf;
-use tinytemplate::TinyTemplate;
 
 pub fn generate(app: &App, out_dir: &PathBuf, md_template: &str) {
     let mut tt = TinyTemplate::new();
