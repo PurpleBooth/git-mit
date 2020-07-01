@@ -108,7 +108,6 @@ author: [Anyone Else anyone@example.com] signed-by: []
 Initial Commit
 
 Co-authored-by: Billie Thompson <billie@example.com>
-
 Co-authored-by: Someone Else <someone@example.com>
 ```
 

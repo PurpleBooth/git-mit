@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-use mit_commit_message_lints::lints::CommitMessageError;
+use mit_commit::CommitMessageError;
 use mit_commit_message_lints::{author, external, relates};
 
 #[derive(Error, Debug)]
