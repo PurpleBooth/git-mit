@@ -4,8 +4,6 @@ use mit_commit_message_lints::{author, external, lints};
 
 #[derive(Error, Debug)]
 pub enum GitMitConfigError {
-    #[error("Lint not found: {0}")]
-    CommitMessageReadError(#[from] lints::CommitMessageError),
     #[error("lint name not given")]
     LintNameNotGiven,
     #[error("failed to parse author yaml {0}")]
