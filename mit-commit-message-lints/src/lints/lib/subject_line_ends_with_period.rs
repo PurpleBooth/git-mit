@@ -4,19 +4,19 @@ use mit_commit::CommitMessage;
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::Problem;
 
-pub(crate) const CONFIG: &str = "subject-line-not-capitalized";
+pub(crate) const CONFIG: &str = "subject-line-ends-with-period";
 
 const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit message is missing a capital letter
+    Your commit message ends with a period
 
-    You can fix this by capitalising the first character in the subject
+    You can fix this by removing the period
     "
 );
 
 fn has_problem(commit_message: &CommitMessage) -> bool {
-    if let Some(character) = commit_message.get_subject().chars().next() {
-        character.to_string() != character.to_uppercase().to_string()
+    if let Some('.') = commit_message.get_subject().chars().rev().next() {
+        true
     } else {
         false
     }
@@ -26,7 +26,7 @@ pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     if has_problem(&commit_message) {
         Some(Problem::new(
             HELP_MESSAGE.into(),
-            Code::SubjectNotCapitalized,
+            Code::SubjectEndsWithPeriod,
         ))
     } else {
         None
@@ -43,7 +43,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn capitalised() {
+    fn subject_does_not_end_with_period() {
         run_test(
             indoc!(
                 "
@@ -55,29 +55,32 @@ mod tests {
     }
 
     #[test]
-    fn lower_case() {
+    fn subject_ends_with_period() {
         run_test(
             indoc!(
                 "
-                subject line
+                Subject Line.
                 "
             ),
             &Some(Problem::new(
                 HELP_MESSAGE.into(),
-                Code::SubjectNotCapitalized,
+                Code::SubjectEndsWithPeriod,
             )),
         );
     }
 
     #[test]
-    fn numbers_are_fine() {
+    fn subject_has_period_then_whitespace() {
         run_test(
             indoc!(
                 "
-                1234567
+                Subject Line.
                 "
             ),
-            &None,
+            &Some(Problem::new(
+                HELP_MESSAGE.into(),
+                Code::SubjectEndsWithPeriod,
+            )),
         );
     }
 

@@ -311,6 +311,87 @@ git mit-config lint disable subject-line-not-capitalized
 ```
 
 
+
+##### subject-line-ends-with-period
+
+Detect a subject line that is not capitalised
+ 
+###### Default status
+
+On an empty repository
+
+```shell,script(name="subject-line-ends-with-period-default", expected_exit_code=0)
+git mit-config lint status subject-line-ends-with-period
+```
+
+
+```text,verify(script_name="subject-line-ends-with-period-default", stream=stdout)
+subject-line-ends-with-period	disabled
+```
+
+###### Enabling 
+
+Enable it with
+
+```shell,script(name="1", expected_exit_code=0)
+git mit-config lint enable subject-line-ends-with-period
+```
+
+###### Valid
+
+Using message
+```shell,file(path="message")
+Demonstration Commit Message
+
+This is a commit message that is valid
+```
+
+Committing will succeed
+```shell,script(name="1", expected_exit_code=0)
+echo $RANDOM > changes
+git add changes
+git commit --message="$(cat message)"
+```
+
+###### Invalid
+
+Using message
+```shell,file(path="message")
+Demonstration Commit Message.
+
+This is a commit message that is invalid
+```
+Committing will fail
+```shell,script(name="1", expected_exit_code=1)
+echo $RANDOM > changes
+git add changes
+git commit --message="$(cat message)"
+```
+
+
+```text,verify(script_name="1", stream=stderr)
+Demonstration Commit Message.
+
+This is a commit message that is invalid
+
+
+---
+
+Your commit message ends with a period
+
+You can fix this by removing the period
+
+```
+
+###### Disabling 
+
+Disable it with
+
+```shell,script(name="1", expected_exit_code=0)
+git mit-config lint disable subject-line-ends-with-period
+```
+
+
 #### Issue ID Checks
 
 Check for the presence of issue Ids
