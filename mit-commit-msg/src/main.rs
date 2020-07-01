@@ -3,9 +3,11 @@ extern crate mit_commit_message_lints;
 use std::env;
 use std::{convert::TryFrom, path::PathBuf};
 
+use mit_commit::CommitMessage;
+
 use mit_commit_message_lints::{
     external,
-    lints::{lib::CommitMessage, lib::Lints, lint, Code, Problem},
+    lints::{lib::Lints, lint, Code, Problem},
 };
 
 use crate::cli::app;
@@ -28,7 +30,7 @@ fn main() -> Result<(), MitCommitMsgError> {
     let mut git_config = external::Git2::try_from(current_dir)?;
     let lint_config = Lints::get_from_toml_or_else_vcs(&toml, &mut git_config)?;
 
-    let lint_problems = lint(&commit_message.clone().into(), lint_config);
+    let lint_problems = lint(&commit_message, lint_config);
     let output = format_lint_problems(&commit_message, lint_problems);
 
     if let Some((message, exit_code)) = output {
@@ -55,7 +57,7 @@ fn format_lint_problems(
                         item.code(),
                     )),
                     None => Some((
-                        vec![commit_message.to_string(), item.to_string()].join("\n\n---\n\n"),
+                        vec![commit_message.clone().into(), item.to_string()].join("\n\n---\n\n"),
                         item.code(),
                     )),
                 },

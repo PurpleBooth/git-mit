@@ -70,10 +70,10 @@ mod tests_has_duplicated_trailers {
     #![allow(clippy::wildcard_imports)]
 
     use indoc::indoc;
+    use mit_commit::CommitMessage;
     use pretty_assertions::assert_eq;
 
     use super::*;
-    use mit_commit::CommitMessage;
 
     #[test]
     fn commit_without_trailers() {
