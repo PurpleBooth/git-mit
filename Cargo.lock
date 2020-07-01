@@ -383,9 +383,9 @@ dependencies = [
 
 [[package]]
 name = "mit-commit"
-version = "0.17.0"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7472a9b25f4e7cdd53428d7752a0eac63f3ae1d26b7180fe2393ba2a433bd6a"
+checksum = "29ae6ec44be28ff115e3a0a58dffc068a8c78d7f749a21b6e4b95d9fca18734b"
 dependencies = [
  "indoc",
  "regex",

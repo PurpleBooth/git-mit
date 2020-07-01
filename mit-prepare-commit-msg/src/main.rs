@@ -2,11 +2,12 @@ use std::convert::TryFrom;
 use std::path::PathBuf;
 use std::{env, fs::File, io::Write};
 
+use mit_commit::CommitMessage;
+use mit_commit::Trailer;
 use mit_commit_message_lints::relates::vcs::get_relate_to_configuration;
 use mit_commit_message_lints::{
     author::{entities::Author, vcs::get_coauthor_configuration},
     external::Git2,
-    lints::lib::{CommitMessage, Trailer},
     relates::entities::RelateTo,
 };
 
@@ -47,17 +48,12 @@ fn append_coauthors_to_commit_message(
     let path = String::from(commit_message_path.to_string_lossy());
     let commit_message = CommitMessage::try_from(commit_message_path.clone())?;
 
-    let message = format!(
-        "{}",
-        authors
-            .iter()
-            .map(|x| Trailer::new("Co-authored-by", &format!("{} <{}>", x.name(), x.email())))
-            .fold(commit_message, |message, trailer| message
-                .add_trailer(&trailer))
-    );
-
+    let new_message = authors
+        .iter()
+        .map(|x| Trailer::new("Co-authored-by", &format!("{} <{}>", x.name(), x.email())))
+        .fold(commit_message, |acc, trailer| acc.add_trailer(trailer));
     File::create(commit_message_path)
-        .and_then(|mut file| file.write_all(message.as_bytes()))
+        .and_then(|mut file| file.write_all(String::from(new_message).as_bytes()))
         .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))
 }
 
@@ -67,9 +63,9 @@ fn append_relate_to_trailer_to_commit_message(
 ) -> Result<(), MitPrepareCommitMessageError> {
     let path = String::from(commit_message_path.to_string_lossy());
     let commit_message = CommitMessage::try_from(commit_message_path.clone())?
-        .add_trailer(&Trailer::new("Relates-to", &relates.to()));
+        .add_trailer(Trailer::new("Relates-to", &relates.to()));
 
     File::create(commit_message_path)
-        .and_then(|mut file| file.write_all(format!("{}", commit_message).as_bytes()))
+        .and_then(|mut file| file.write_all(String::from(commit_message).as_bytes()))
         .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))
 }
