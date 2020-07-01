@@ -1,7 +1,8 @@
+use mit_commit::CommitMessageError;
 use thiserror::Error;
 
 use mit_commit_message_lints::external;
-use mit_commit_message_lints::lints::{CommitMessageError, LintsError};
+use mit_commit_message_lints::lints::LintsError;
 
 #[derive(Error, Debug)]
 pub(crate) enum MitCommitMsgError {
