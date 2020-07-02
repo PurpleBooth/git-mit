@@ -98,7 +98,7 @@ jobs:
       - env:
           GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
         id: create_release
-        uses: actions/create-release@v1.1.1
+        uses: actions/create-release@v1.1.2
         with:
           draft: false
           prerelease: false
