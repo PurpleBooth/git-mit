@@ -93,9 +93,6 @@ jobs:
           if ! git diff-index --quiet HEAD -- ; then
             git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION"
             git commit -m "Update $REPOSITORY_NAME to $(echo $GIT_TAG | sed 's/^refs\/tags\///')"
-            brew install github/gh/gh
-            git push -f origin "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
-            gh pr create --label releases --base main --fill
           fi
         env:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
