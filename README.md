@@ -6,120 +6,12 @@ issues.
 
 ## Usage
 
-### Lint list
+### Preparing the repository
 
-#### Trailers
+This works via git hooks, so you need these hooks to be present in the git repository you're using to use them.
 
-Lints relating to trailers:
-
-  - **duplicated-trailers** - Detect duplicated `Signed-off-by` and
-    `Co-authored-by` Trailers. *Default: `enabled`*
-
-#### Git Manual Style
-
-The style from the git book, that directly affects the operation of git:
-
-  - **subject-not-separated-from-body** - If there is a body, enforce a
-    gap between it and the subject. *Default: `enabled`*
-  - **subject-longer-than-72-characters** - After 72 characters, git
-    will truncate commit messages in the history view, this prevents
-    that *Default: `enabled`*
-
-#### Git Manual Style Extended
-
-The style from the git book:
-
-  - **subject-line-not-capitalized** - Detect a subject line that is not
-    capitalised *Default: `disabled`*
-
-#### Issue ID Checks
-
-Check for the presence of issue Ids
-
-  - **pivotal-tracker-id-missing** - Detect missing Pivotal Tracker Id
-    *Default: `disabled`*
-  - **jira-issue-key-missing** - Detect missing Jira Issue Key *Default:
-    `disabled`*
-  - **github-id-missing** - Detect missing GitHub Id *Default:
-    `disabled`*
-
-### Enabling Lints
-
-``` shell
-git mit-config lint enable duplicated-trailers
-```
-
-### Disabling Lints
-
-``` shell
-git mit-config lint disable duplicated-trailers
-```
-
-### Centralising lint config
-
-You can add a `.git-mit.toml` or `.git-mit.toml.dist` to the root of
-your repository, and we will read it and try to enable the correct lints
-(with `.git-mit.toml` taking precedence).
-
-I recommend you commit `.git-mit.toml.dist` and add `.git-mit.toml` to
-your `.gitignore` to allow easy local reconfiguration
-
-``` toml
-[mit.lint]
-"pivotal-tracker-id-missing" = true
-```
-
-### Append issue number
-
-You can append an issue number to your commits in a trailer
-
-``` shell
-git mit-relates-to "#21346578"
-```
-
-Will append
-
-    Relates-to: #21346578
-
-To your commit message
-
-### Setting Authors and Co-Authors
-
-Just set the author
-
-``` shell
-git mit bt
-```
-
-Set the author and co-author trailer
-
-``` shell
-git mit bt se
-```
-
-If you're working in a group
-
-``` shell
-git mit bt se ae
-```
-
-## Installing
-
-You can install this with brew\!
-
-``` shell
-brew install PurpleBooth/repo/git-mit
-```
-
-You can also download the [latest
-release](https://github.com/PurpleBooth/git-mit/releases/latest) and run
-it.
-
-## Configuration
-
-### Adding to a repository
-
-``` shell
+```shell,script(name="1", expected_exit_code=0)
+git init .
 git mit-install
 ```
 
@@ -128,7 +20,7 @@ This works by symlinking in your repositories hooks directory. You can do this a
 This is the template that git uses to create the `.git` directory when
 you run `git init`.
 
-``` shell
+```shell,skip()
 mkdir -p "$HOME/.config/git/init-template/hooks"
 ln -s "$(command -v mit-commit-msg)" "$HOME/.config/git/init-template/hooks/commit-msg"
 ln -s "$(command -v mit-pre-commit)" "$HOME/.config/git/init-template/hooks/pre-commit"
@@ -140,16 +32,114 @@ You can also run this on an existing repository, to set up an already
 checked out repository. You can re-initialise all of your repositories,
 recursively from the home directory using this command.
 
-``` shell
+```shell,skip()
 find "$HOME" -type d -name .git -exec sh -c 'git init "$1"/..' -- {} \;
 ```
 
-### Authors Configuration
+### Lint list
 
-If you want to use the author part create yourself a configuration and
-save it into a file
+```shell,script(name="lint-list", expected_exit_code=0)
+git mit-config lint available
+```
 
-``` toml
+```text,verify(script_name="lint-list", stream=stdout)
+duplicated-trailers
+pivotal-tracker-id-missing
+jira-issue-key-missing
+github-id-missing
+subject-not-separated-from-body
+subject-longer-than-72-characters
+subject-line-not-capitalized
+subject-line-ends-with-period
+body-wider-than-72-characters
+```
+
+You can read more details about this, with examples on the [lints page](docs/lints/index.md)
+
+### Centralising lint config
+
+You can add a `.git-mit.toml` or `.git-mit.toml.dist` to the root of
+your repository, and we will read it and try to enable the correct lints
+(with `.git-mit.toml` taking precedence).
+
+I recommend you commit `.git-mit.toml.dist` and add `.git-mit.toml` to
+your `.gitignore` to allow easy local reconfiguration
+
+For example
+
+```toml,file(path=".git-mit.toml.dist")
+[mit.lint]
+"pivotal-tracker-id-missing" = true
+```
+
+With this you can enable lints
+
+```shell,script(name="7", expected_exit_code=0)
+git mit-config lint status pivotal-tracker-id-missing
+```
+
+```text,verify(script_name="7", stream=stdout)
+pivotal-tracker-id-missing	enabled
+```
+
+You can read more about this on the [configuring page](docs/lints/configuring.md)
+
+### Append issue number
+
+In projects it nice to help out your co-workers by linking the commits you're making back to issues in the backlog. This can get a bit tedious to remember though, so here's a command to reduce the amount of typing.
+
+Say you've just made this awesome `README.md` for Pivotal Tracker ID `[#12321513]`
+
+```markdown,file(path="README.md")
+# The Best Readme
+
+This is the best readme
+```
+
+If you run 
+
+```shell,script(name="2", expected_exit_code=0)
+git mit-relates-to "[#12321513]"
+```
+
+Next time you commit
+
+```shell,script(name="3", expected_exit_code=0)
+git add README.md
+git mit bt
+git commit -m "Wrote a great README"
+```
+
+the commit message will contain the ID
+
+```shell,script(name="4", expected_exit_code=0)
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+```text,verify(script_name="4", stream=stdout)
+author: [Billie Thompson billie@example.com] signed-by: [] 
+---
+Wrote a great README
+
+Relates-to: [#12321513]
+```
+
+Read more about this at the [relates to page](docs/mit-relates-to.md)
+
+### Setting Authors and Co-Authors
+
+Pairing is a great way to program, and it's even better when you give credit, you can give credit with the mit command
+
+Configure your authors like the example
+
+
+```shell,script(name="3")
+git-mit-config mit example
+```
+
+```toml,verify(script_name="3", stream=stdout)
 [ae]
 name = "Anyone Else"
 email = "anyone@example.com"
@@ -162,36 +152,56 @@ signingkey = "0A46826A"
 [se]
 name = "Someone Else"
 email = "someone@example.com"
+
 ```
 
-you can use yaml too
+And you can run
 
-``` yaml
+```shell,script(name="6", expected_exit_code=0)
+git mit ae bt se
+```
+
+Then next when you make a commit the `Co-authored-by` trailers will be 
+set of the author initials you selected.
+
+```shell,script(name="7", expected_exit_code=0)
+echo "# Hello, world!" > README.md
+
+git add .
+git commit --message="Initial Commit" --quiet
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
-ae:
-  name: Anyone Else
-  email: anyone@example.com
-bt:
-  name: Billie Thompson
-  email: billie@example.com
-  signingkey: 0A46826A
-se:
-  name: Someone Else
-  email: someone@example.com
+%B' -q
 ```
 
-### More examples
+```text,verify(script_name="7", stream=stdout)
+author: [Anyone Else anyone@example.com] signed-by: [] 
+---
+Initial Commit
 
-You can see more examples in the [docs
-directory](https://github.com/PurpleBooth/git-mit/tree/main/docs)
+Co-authored-by: Billie Thompson <billie@example.com>
+Co-authored-by: Someone Else <someone@example.com>
+Relates-to: [#12321513]
+```
 
-### Environment Variables
+Notice how the "Relates-to" tag is here even though we didn't trigger it? It's from the example higher on the page, git-mit remembers your author and ticket number for 60 min
 
-  - **GIT\_MIT\_AUTHORS\_EXEC** A command to execute to generate the
-    author configuration
-  - **GIT\_MIT\_AUTHORS\_CONFIG** The location of an author file
-    *Default: `$HOME/.config/git-mit/mit.toml`*
-  - **GIT\_MIT\_AUTHORS\_TIMEOUT** How long to wait before you need to
-    run `git mit` again *Default: `60`*
-  - **GIT\_MIT\_RELATES\_TO\_TIMEOUT** How long to wait before you need
-    to run `git mit-relates-to` again *Default: `60`*
+For more information on this see the [mit page](docs/mit.md)
+
+## Installing
+
+You can install this with brew\!
+
+```shell,skip()
+brew install PurpleBooth/repo/git-mit
+```
+
+You can also download the [latest
+release](https://github.com/PurpleBooth/git-mit/releases/latest) and run
+it.
+
+### Completions
+
+We generate completions for `fish`,`zsh`, `bash`, and `elvish`. They're installed with the homebrew package. You don't need to do anything to activate them.
+
+

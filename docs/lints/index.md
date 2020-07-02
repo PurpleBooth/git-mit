@@ -18,6 +18,26 @@ git mit bt
 
 ### Lint list
 
+You can see the full available lint list at any time by running
+
+
+```shell,script(name="lint-list", expected_exit_code=0)
+git mit-config lint available
+```
+
+```text,verify(script_name="lint-list", stream=stdout)
+duplicated-trailers
+pivotal-tracker-id-missing
+jira-issue-key-missing
+github-id-missing
+subject-not-separated-from-body
+subject-longer-than-72-characters
+subject-line-not-capitalized
+subject-line-ends-with-period
+body-wider-than-72-characters
+```
+
+
 #### Trailers
 
 Lints relating to trailers:
