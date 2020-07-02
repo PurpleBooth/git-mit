@@ -35,4 +35,5 @@ pub enum Code {
     SubjectLongerThan72Characters,
     SubjectNotCapitalized,
     SubjectEndsWithPeriod,
+    BodyWiderThan72Characters,
 }
