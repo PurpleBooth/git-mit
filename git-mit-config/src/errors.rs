@@ -1,3 +1,5 @@
+use std::io;
+
 use thiserror::Error;
 
 use mit_commit_message_lints::{author, external, lints};
@@ -8,8 +10,6 @@ pub enum GitMitConfigError {
     LintNameNotGiven,
     #[error("failed to parse author yaml {0}")]
     AuthorYaml(#[from] author::YamlError),
-    #[error("failed to read config from `{0}`: {1}")]
-    Io(String, String),
     #[error("failed to open git repository {0}")]
     Git2(#[from] git2::Error),
     #[error("{0}")]
@@ -22,10 +22,6 @@ pub enum GitMitConfigError {
     SetStatus(#[from] lints::SetStatusError),
     #[error("{0}")]
     External(#[from] external::Error),
-}
-
-impl GitMitConfigError {
-    pub(crate) fn new_io(source: String, error: &std::io::Error) -> GitMitConfigError {
-        GitMitConfigError::Io(source, format!("{}", error))
-    }
+    #[error("{0}")]
+    Io(#[from] io::Error),
 }
