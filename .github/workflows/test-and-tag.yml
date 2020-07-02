@@ -172,7 +172,7 @@ jobs:
           # This part is also where you can pass other options, for example:
           prettier_options: --check **/*.{yml,yaml}
   merge-and-push:
-    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'Release v')
+    if: github.ref == 'refs/heads/cmd' && !contains(github.event.head_commit.message, 'Release v')
     needs:
       - version
       - specdown
@@ -265,5 +265,5 @@ jobs:
         with:
           github_token: "${{ secrets.COMMITTER_TOKEN }}"
           pr_label: "releases"
-          destination_branch: "main"
+          destination_branch: "cmd"
           source_branch: "release-${{ steps.get_current_version.outputs.V_VERSION }}"
