@@ -147,7 +147,8 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::lints::lib::lint::Lint::{
-        GitHubIdMissing, SubjectLongerThan72Characters, SubjectNotSeparateFromBody,
+        BodyWiderThan72Characters, GitHubIdMissing, SubjectLongerThan72Characters,
+        SubjectNotSeparateFromBody,
     };
     use crate::lints::lib::lints::{Error, Lints};
     use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
@@ -239,6 +240,7 @@ mod tests {
         lints.insert(DuplicatedTrailers);
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
 
         let expected = Lints::new(lints);
 
@@ -270,6 +272,7 @@ mod tests {
         lints.insert(PivotalTrackerIdMissing);
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
         let expected = Lints::new(lints);
 
         assert_eq!(
@@ -298,6 +301,7 @@ mod tests {
         let mut lints = BTreeSet::new();
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
         let expected = Lints::new(lints);
 
         assert_eq!(
@@ -316,6 +320,7 @@ mod tests {
         lints.insert(DuplicatedTrailers);
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -337,6 +342,7 @@ mod tests {
         let mut lints = BTreeSet::new();
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
         let expected: Lints = Lints::new(lints);
 
         assert_eq!(
@@ -356,6 +362,7 @@ mod tests {
         lints.insert(DuplicatedTrailers);
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -378,6 +385,7 @@ mod tests {
         lints.insert(PivotalTrackerIdMissing);
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -400,6 +408,7 @@ mod tests {
         lints.insert(GitHubIdMissing);
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -422,6 +431,7 @@ mod tests {
         lints.insert(JiraIssueKeyMissing);
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
         let expected = Lints::new(lints);
 
         let actual = Lints::try_from_vcs(&mut config).expect("Failed to read lints from VCS");
@@ -445,6 +455,7 @@ mod tests {
         lints.insert(DuplicatedTrailers);
         lints.insert(SubjectNotSeparateFromBody);
         lints.insert(SubjectLongerThan72Characters);
+        lints.insert(BodyWiderThan72Characters);
         let expected = Lints::new(lints);
 
         assert_eq!(

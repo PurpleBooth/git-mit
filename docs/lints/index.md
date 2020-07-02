@@ -227,6 +227,74 @@ Please keep the subject line 72 characters or under
 
 ```
 
+
+##### body-wider-than-72-characters
+
+After 72 characters, git will truncate commit messages in the history view, this prevents that
+ 
+###### Default status
+
+On an empty repository
+
+```shell,script(name="body-wider-than-72-characters-default", expected_exit_code=0)
+git mit-config lint status body-wider-than-72-characters
+```
+
+
+```text,verify(script_name="body-wider-than-72-characters-default", stream=stdout)
+body-wider-than-72-characters	enabled
+```
+
+
+###### Valid
+
+Using message
+```shell,file(path="message")
+Demonstration Commit Message
+
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+This is a commit message that is valid
+```
+
+Committing will succeed
+```shell,script(name="1", expected_exit_code=0)
+echo $RANDOM > changes
+git add changes
+git commit --message="$(cat message)"
+```
+
+###### Invalid
+
+Using message
+```shell,file(path="message")
+Demonstration Commit Message
+
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+This is a commit message that is invalid
+```
+Committing will fail
+```shell,script(name="1", expected_exit_code=1)
+echo $RANDOM > changes
+git add changes
+git commit --message="$(cat message)"
+```
+
+
+```text,verify(script_name="1", stream=stderr)
+Demonstration Commit Message
+
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+This is a commit message that is invalid
+
+
+---
+
+Your commit message is not well formed
+
+Please keep the width of the body 72 characters or under
+
+```
+
 #### Git Manual Style Extended
 
 The style from the git book, but that doesn't effect using git

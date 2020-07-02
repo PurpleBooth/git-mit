@@ -18,6 +18,7 @@ pub enum Lint {
     SubjectLongerThan72Characters,
     SubjectNotCapitalized,
     SubjectEndsWithPeriod,
+    BodyWiderThan72Characters,
 }
 
 pub(crate) const CONFIG_KEY_PREFIX: &str = "mit.lint";
@@ -60,13 +61,14 @@ impl Lint {
             Lint::SubjectLongerThan72Characters => lib::subject_longer_than_72_characters::CONFIG,
             Lint::SubjectNotCapitalized => lib::subject_not_capitalized::CONFIG,
             Lint::SubjectEndsWithPeriod => lib::subject_line_ends_with_period::CONFIG,
+            Lint::BodyWiderThan72Characters => lib::body_wider_than_72_characters::CONFIG,
         }
     }
 }
 
 impl Lint {
     pub fn iterator() -> impl Iterator<Item = Lint> {
-        static LINTS: [Lint; 8] = [
+        static LINTS: [Lint; 9] = [
             Lint::DuplicatedTrailers,
             Lint::PivotalTrackerIdMissing,
             Lint::JiraIssueKeyMissing,
@@ -75,16 +77,18 @@ impl Lint {
             Lint::SubjectLongerThan72Characters,
             Lint::SubjectNotCapitalized,
             Lint::SubjectEndsWithPeriod,
+            Lint::BodyWiderThan72Characters,
         ];
         LINTS.iter().copied()
     }
 
     #[must_use]
     pub fn enabled_by_default(self) -> bool {
-        static DEFAULT_ENABLED_LINTS: [Lint; 3] = [
+        static DEFAULT_ENABLED_LINTS: [Lint; 4] = [
             Lint::DuplicatedTrailers,
             Lint::SubjectNotSeparateFromBody,
             Lint::SubjectLongerThan72Characters,
+            Lint::BodyWiderThan72Characters,
         ];
 
         DEFAULT_ENABLED_LINTS.contains(&self)
@@ -110,6 +114,9 @@ impl Lint {
             }
             Lint::SubjectNotCapitalized => lib::subject_not_capitalized::lint(commit_message),
             Lint::SubjectEndsWithPeriod => lib::subject_line_ends_with_period::lint(commit_message),
+            Lint::BodyWiderThan72Characters => {
+                lib::body_wider_than_72_characters::lint(commit_message)
+            }
         }
     }
 
@@ -164,7 +171,8 @@ mod tests_lints {
                 Lint::GitHubIdMissing,
                 Lint::SubjectLongerThan72Characters,
                 Lint::SubjectNotCapitalized,
-                Lint::SubjectEndsWithPeriod
+                Lint::SubjectEndsWithPeriod,
+                Lint::BodyWiderThan72Characters,
             ]
         )
     }

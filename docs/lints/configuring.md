@@ -26,6 +26,7 @@ You can see what's enabled by default.
 duplicated-trailers
 subject-not-separated-from-body
 subject-longer-than-72-characters
+body-wider-than-72-characters
 ```
 
 ## Toggling lints
@@ -99,6 +100,7 @@ duplicated-trailers
 pivotal-tracker-id-missing
 subject-not-separated-from-body
 subject-longer-than-72-characters
+body-wider-than-72-characters
 ```
 
 I'd recommend you commit this file, then locally if someone wants to tweak something, that they then create a `.git-mit.toml` and add it to the `.gitignore`.
