@@ -18,7 +18,7 @@ git mit-install
 
 ## Configuring
 
-For this example we'll be using the same configuration as you can 
+For this example we'll be using the same configuration as you can
 generate from the example command.
 
 You can see this configuration yourself by running
@@ -59,8 +59,6 @@ se:
   email: someone@example.com
 ```
 
- 
-
 ## Running the command
 
 We can then use this by passing `-c` to the `git-mit` command.
@@ -75,7 +73,6 @@ It's exactly the same for a YAML configuration
 git mit -c "git-mit.yml" ae bt se
 ```
 
-
 Or you can use the environment variables
 
 ```shell,script(name="5", expected_exit_code=0)
@@ -89,7 +86,7 @@ Or just put it at the default location
 git mit ae bt se
 ```
 
-Then next when you make a commit the `Co-authored-by` trailers will be 
+Then next when you make a commit the `Co-authored-by` trailers will be
 set of the author initials you selected.
 
 ```shell,script(name="7", expected_exit_code=0)
@@ -111,8 +108,8 @@ Co-authored-by: Billie Thompson <billie@example.com>
 Co-authored-by: Someone Else <someone@example.com>
 ```
 
-You don't need to constantly pass the config everywhere though, you 
-can set an environment variable.
+You don't need to constantly pass the config everywhere though, you can
+set an environment variable.
 
 ```shell,script(name="8", expected_exit_code=0)
 export GIT_MIT_AUTHORS_CONFIG="$HOME/git-mit.toml"
@@ -163,4 +160,3 @@ author: [Billie Thompson billie@example.com] signed-by: [Billie Thompson <billie
 ---
 Third Commit
 ```
-
