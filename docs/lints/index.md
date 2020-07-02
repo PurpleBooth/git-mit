@@ -2,24 +2,23 @@
 
 ## Setup
 
-As always we need a working it repository the, with the hooks installed to run these lints
+As always we need a working it repository the, with the hooks installed
+to run these lints
 
 ```shell,script(name="1", expected_exit_code=0)
 git init .
 git mit-install
 ```
 
-I'm going to assume you've run a `git mit` recently 
+I'm going to assume you've run a `git mit` recently
 
 ```shell,script(name="1", expected_exit_code=0)
 git mit bt
 ```
 
-
 ### Lint list
 
 You can see the full available lint list at any time by running
-
 
 ```shell,script(name="lint-list", expected_exit_code=0)
 git mit-config lint available
@@ -37,14 +36,13 @@ subject-line-ends-with-period
 body-wider-than-72-characters
 ```
 
-
 #### Trailers
 
 Lints relating to trailers:
 
 ##### duplicated-trailers
 
-Detect duplicated `Signed-off-by` and `Co-authored-by` Trailers. 
+Detect duplicated `Signed-off-by` and `Co-authored-by` Trailers.
 
 ###### Default status
 
@@ -61,6 +59,7 @@ duplicated-trailers	enabled
 ###### Valid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
@@ -69,7 +68,9 @@ This is a commit message that has trailers and is valid
 Co-authored-by: Billie Thompson <billie@example.com>
 Signed-off-by: Someone Else <someone@example.com>
 ```
+
 Committing will succeed
+
 ```shell,script(name="1", expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
@@ -79,6 +80,7 @@ git commit --message="$(cat message)"
 ###### Invalid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
@@ -89,7 +91,9 @@ Co-authored-by: Billie Thompson <billie@example.com>
 Signed-off-by: Someone Else <someone@example.com>
 Signed-off-by: Someone Else <someone@example.com>
 ```
+
 Committing will fail.
+
 ```shell,script(name="1", expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
@@ -120,8 +124,7 @@ The style from the git book, that directly affects the operation of git:
 
 ##### subject-not-separated-from-body
 
-If there is a body, enforce a gap between it and the subject. 
- 
+If there is a body, enforce a gap between it and the subject.
 
 ###### Default status
 
@@ -136,16 +139,18 @@ git mit-config lint status subject-not-separated-from-body
 subject-not-separated-from-body	enabled
 ```
 
-
 ###### Valid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that is valid
 ```
+
 Committing will succeed
+
 ```shell,script(name="1", expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
@@ -155,17 +160,19 @@ git commit --message="$(cat message)"
 ###### Invalid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 This is a commit message that is invalid
 ```
+
 Committing will fail
+
 ```shell,script(name="1", expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
-
 
 ```text,verify(script_name="1", stream=stderr)
 Demonstration Commit Message
@@ -182,8 +189,9 @@ To fix this separate subject from body with a blank line
 
 ##### subject-longer-than-72-characters
 
-After 72 characters, git will truncate commit messages in the history view, this prevents that
- 
+After 72 characters, git will truncate commit messages in the history
+view, this prevents that
+
 ###### Default status
 
 On an empty repository
@@ -197,10 +205,10 @@ git mit-config lint status subject-longer-than-72-characters
 subject-longer-than-72-characters	enabled
 ```
 
-
 ###### Valid
 
 Using message
+
 ```shell,file(path="message")
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
@@ -209,6 +217,7 @@ This is a commit message that is valid
 ```
 
 Committing will succeed
+
 ```shell,script(name="1", expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
@@ -218,19 +227,21 @@ git commit --message="$(cat message)"
 ###### Invalid
 
 Using message
+
 ```shell,file(path="message")
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 Demonstration Commit Message
 This is a commit message that is invalid
 ```
+
 Committing will fail
+
 ```shell,script(name="1", expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
-
 
 ```text,verify(script_name="1", stream=stderr)
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -247,11 +258,11 @@ Please keep the subject line 72 characters or under
 
 ```
 
-
 ##### body-wider-than-72-characters
 
-After 72 characters, git will truncate commit messages in the history view, this prevents that
- 
+After 72 characters, git will truncate commit messages in the history
+view, this prevents that
+
 ###### Default status
 
 On an empty repository
@@ -260,15 +271,14 @@ On an empty repository
 git mit-config lint status body-wider-than-72-characters
 ```
 
-
 ```text,verify(script_name="body-wider-than-72-characters-default", stream=stdout)
 body-wider-than-72-characters	enabled
 ```
 
-
 ###### Valid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
@@ -277,6 +287,7 @@ This is a commit message that is valid
 ```
 
 Committing will succeed
+
 ```shell,script(name="1", expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
@@ -286,19 +297,21 @@ git commit --message="$(cat message)"
 ###### Invalid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 This is a commit message that is invalid
 ```
+
 Committing will fail
+
 ```shell,script(name="1", expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
-
 
 ```text,verify(script_name="1", stream=stderr)
 Demonstration Commit Message
@@ -322,7 +335,7 @@ The style from the git book, but that doesn't effect using git
 ##### subject-line-not-capitalized
 
 Detect a subject line that is not capitalised
- 
+
 ###### Default status
 
 On an empty repository
@@ -331,12 +344,11 @@ On an empty repository
 git mit-config lint status subject-line-not-capitalized
 ```
 
-
 ```text,verify(script_name="subject-line-not-capitalized-default", stream=stdout)
 subject-line-not-capitalized	disabled
 ```
 
-###### Enabling 
+###### Enabling
 
 Enable it with
 
@@ -347,6 +359,7 @@ git mit-config lint enable subject-line-not-capitalized
 ###### Valid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
@@ -354,6 +367,7 @@ This is a commit message that is valid
 ```
 
 Committing will succeed
+
 ```shell,script(name="1", expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
@@ -363,18 +377,20 @@ git commit --message="$(cat message)"
 ###### Invalid
 
 Using message
+
 ```shell,file(path="message")
 demonstration Commit Message
 
 This is a commit message that is invalid
 ```
+
 Committing will fail
+
 ```shell,script(name="1", expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
-
 
 ```text,verify(script_name="1", stream=stderr)
 demonstration Commit Message
@@ -390,7 +406,7 @@ You can fix this by capitalising the first character in the subject
 
 ```
 
-###### Disabling 
+###### Disabling
 
 Disable it with
 
@@ -398,12 +414,10 @@ Disable it with
 git mit-config lint disable subject-line-not-capitalized
 ```
 
-
-
 ##### subject-line-ends-with-period
 
 Detect a subject line that is not capitalised
- 
+
 ###### Default status
 
 On an empty repository
@@ -412,12 +426,11 @@ On an empty repository
 git mit-config lint status subject-line-ends-with-period
 ```
 
-
 ```text,verify(script_name="subject-line-ends-with-period-default", stream=stdout)
 subject-line-ends-with-period	disabled
 ```
 
-###### Enabling 
+###### Enabling
 
 Enable it with
 
@@ -428,6 +441,7 @@ git mit-config lint enable subject-line-ends-with-period
 ###### Valid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
@@ -435,6 +449,7 @@ This is a commit message that is valid
 ```
 
 Committing will succeed
+
 ```shell,script(name="1", expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
@@ -444,18 +459,20 @@ git commit --message="$(cat message)"
 ###### Invalid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message.
 
 This is a commit message that is invalid
 ```
+
 Committing will fail
+
 ```shell,script(name="1", expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
-
 
 ```text,verify(script_name="1", stream=stderr)
 Demonstration Commit Message.
@@ -471,14 +488,13 @@ You can fix this by removing the period
 
 ```
 
-###### Disabling 
+###### Disabling
 
 Disable it with
 
 ```shell,script(name="1", expected_exit_code=0)
 git mit-config lint disable subject-line-ends-with-period
 ```
-
 
 #### Issue ID Checks
 
@@ -487,7 +503,7 @@ Check for the presence of issue Ids
 ##### pivotal-tracker-id-missing
 
 Check for the presence of a Pivotal Tracker ID
- 
+
 ###### Default status
 
 On an empty repository
@@ -496,12 +512,11 @@ On an empty repository
 git mit-config lint status pivotal-tracker-id-missing
 ```
 
-
 ```text,verify(script_name="pivotal-tracker-id-missing-default", stream=stdout)
 pivotal-tracker-id-missing	disabled
 ```
 
-###### Enabling 
+###### Enabling
 
 Enable it with
 
@@ -512,6 +527,7 @@ git mit-config lint enable pivotal-tracker-id-missing
 ###### Valid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
@@ -522,6 +538,7 @@ This is a commit message that is valid
 ```
 
 Committing will succeed
+
 ```shell,script(name="1", expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
@@ -531,18 +548,20 @@ git commit --message="$(cat message)"
 ###### Invalid
 
 Using message
+
 ```shell,file(path="message")
 demonstration Commit Message
 
 This is a commit message that is invalid
 ```
+
 Committing will fail
+
 ```shell,script(name="1", expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
-
 
 ```text,verify(script_name="1", stream=stderr)
 demonstration Commit Message
@@ -565,7 +584,7 @@ This will address [#12345884]
 
 ```
 
-###### Disabling 
+###### Disabling
 
 Disable it with
 
@@ -573,11 +592,10 @@ Disable it with
 git mit-config lint disable pivotal-tracker-id-missing
 ```
 
-
 ##### jira-issue-key-missing
 
 Check for the presence of a JIRA Issue Key
- 
+
 ###### Default status
 
 On an empty repository
@@ -586,12 +604,11 @@ On an empty repository
 git mit-config lint status jira-issue-key-missing
 ```
 
-
 ```text,verify(script_name="jira-issue-key-missing-default", stream=stdout)
 jira-issue-key-missing	disabled
 ```
 
-###### Enabling 
+###### Enabling
 
 Enable it with
 
@@ -602,6 +619,7 @@ git mit-config lint enable jira-issue-key-missing
 ###### Valid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
@@ -611,6 +629,7 @@ JRA-123
 ```
 
 Committing will succeed
+
 ```shell,script(name="1", expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
@@ -620,18 +639,20 @@ git commit --message="$(cat message)"
 ###### Invalid
 
 Using message
+
 ```shell,file(path="message")
 demonstration Commit Message
 
 This is a commit message that is invalid
 ```
+
 Committing will fail
+
 ```shell,script(name="1", expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
-
 
 ```text,verify(script_name="1", stream=stderr)
 demonstration Commit Message
@@ -647,7 +668,7 @@ You can fix this by adding a key like `JRA-123` to the commit message
 
 ```
 
-###### Disabling 
+###### Disabling
 
 Disable it with
 
@@ -655,12 +676,10 @@ Disable it with
 git mit-config lint disable jira-issue-key-missing
 ```
 
-
-
 ##### github-id-missing
 
 Check for the presence of a GitHub ID
- 
+
 ###### Default status
 
 On an empty repository
@@ -669,12 +688,11 @@ On an empty repository
 git mit-config lint status github-id-missing
 ```
 
-
 ```text,verify(script_name="github-id-missing-default", stream=stdout)
 github-id-missing	disabled
 ```
 
-###### Enabling 
+###### Enabling
 
 Enable it with
 
@@ -685,6 +703,7 @@ git mit-config lint enable github-id-missing
 ###### Valid
 
 Using message
+
 ```shell,file(path="message")
 Demonstration Commit Message
 
@@ -694,6 +713,7 @@ GH-123
 ```
 
 Committing will succeed
+
 ```shell,script(name="1", expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
@@ -703,18 +723,20 @@ git commit --message="$(cat message)"
 ###### Invalid
 
 Using message
+
 ```shell,file(path="message")
 demonstration Commit Message
 
 This is a commit message that is invalid
 ```
+
 Committing will fail
+
 ```shell,script(name="1", expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
-
 
 ```text,verify(script_name="1", stream=stderr)
 demonstration Commit Message
@@ -738,7 +760,7 @@ Be careful just putting '#642' on a line by itself, as '#' is the default commen
 
 ```
 
-###### Disabling 
+###### Disabling
 
 Disable it with
 
