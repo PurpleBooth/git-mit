@@ -26,6 +26,7 @@ fn main() -> Result<(), GitMitConfigError> {
         cmd::lint_available::run_on_match,
         cmd::lint_enabled::run_on_match,
         cmd::lint_status::run_on_match,
+        cmd::lint_generate::run_on_match,
     ]
     .iter()
     .find_map(|x| x(&matches));

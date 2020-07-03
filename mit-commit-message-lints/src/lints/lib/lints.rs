@@ -106,6 +106,41 @@ impl std::iter::IntoIterator for Lints {
     }
 }
 
+impl TryFrom<Lints> for String {
+    type Error = Error;
+
+    fn try_from(lints: Lints) -> Result<Self, Self::Error> {
+        let enabled: Vec<_> = lints.into();
+
+        let config: BTreeMap<String, bool> = Lint::iterator()
+            .map(|x| (x, enabled.contains(&x)))
+            .fold(BTreeMap::new(), |mut acc, (lint, state)| {
+                acc.insert(lint.to_string(), state);
+                acc
+            });
+
+        let mut inner: BTreeMap<String, BTreeMap<String, bool>> = BTreeMap::new();
+        inner.insert("lint".into(), config);
+        let mut output: BTreeMap<String, BTreeMap<String, BTreeMap<String, bool>>> =
+            BTreeMap::new();
+        output.insert("mit".into(), inner);
+
+        Ok(toml::to_string(&output)?)
+    }
+}
+
+impl From<Vec<Lint>> for Lints {
+    fn from(lints: Vec<Lint>) -> Self {
+        Lints::new(BTreeSet::from_iter(lints.into_iter()))
+    }
+}
+
+impl From<Lints> for Vec<Lint> {
+    fn from(lints: Lints) -> Self {
+        lints.into_iter().collect()
+    }
+}
+
 impl TryFrom<Vec<&str>> for Lints {
     type Error = Error;
 
@@ -141,7 +176,7 @@ fn get_config_or_default(
 #[cfg(test)]
 mod tests {
     use std::collections::{BTreeMap, BTreeSet};
-    use std::convert::TryInto;
+    use std::convert::{TryFrom, TryInto};
 
     use indoc::indoc;
     use pretty_assertions::assert_eq;
@@ -151,6 +186,7 @@ mod tests {
         SubjectNotSeparateFromBody,
     };
     use crate::lints::lib::lints::{Error, Lints};
+    use crate::lints::Lint;
     use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
     use crate::{external::InMemory, lints::Lint::DuplicatedTrailers};
 
@@ -189,6 +225,19 @@ mod tests {
 
         let expected = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
         let actual = input.into_iter().collect::<Vec<_>>();
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn it_can_convert_into_a_vec() {
+        let mut lints = BTreeSet::new();
+        lints.insert(PivotalTrackerIdMissing);
+        lints.insert(JiraIssueKeyMissing);
+        let input = Lints::new(lints);
+
+        let expected = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
+        let actual: Vec<Lint> = input.into();
 
         assert_eq!(expected, actual);
     }
@@ -243,6 +292,40 @@ mod tests {
         lints.insert(BodyWiderThan72Characters);
 
         let expected = Lints::new(lints);
+
+        assert_eq!(
+            expected, actual,
+            "Expected the list of lint identifiers to be {:?}, instead got {:?}",
+            expected, actual
+        )
+    }
+
+    #[test]
+    fn get_toml() {
+        let mut store = BTreeMap::new();
+        let _vcs = InMemory::new(&mut store);
+
+        let mut lints_on = BTreeSet::new();
+        lints_on.insert(DuplicatedTrailers);
+        lints_on.insert(SubjectNotSeparateFromBody);
+        lints_on.insert(SubjectLongerThan72Characters);
+        lints_on.insert(BodyWiderThan72Characters);
+        lints_on.insert(PivotalTrackerIdMissing);
+        let actual = String::try_from(Lints::new(lints_on)).expect("Failed to serialise");
+        let expected = indoc!(
+            "
+            [mit.lint]
+            body-wider-than-72-characters = true
+            duplicated-trailers = true
+            github-id-missing = false
+            jira-issue-key-missing = false
+            pivotal-tracker-id-missing = true
+            subject-line-ends-with-period = false
+            subject-line-not-capitalized = false
+            subject-longer-than-72-characters = true
+            subject-not-separated-from-body = true
+            "
+        );
 
         assert_eq!(
             expected, actual,
@@ -551,4 +634,6 @@ pub enum Error {
     VcsIo(#[from] external::Error),
     #[error("Failed to parse lint config file: {0}")]
     TomlParse(#[from] toml::de::Error),
+    #[error("Failed to read lint config file: {0}")]
+    TomlSerialize(#[from] toml::ser::Error),
 }
