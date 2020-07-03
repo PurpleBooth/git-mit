@@ -22,6 +22,10 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
         .subcommand(
             App::new("lint")
                 .about("Manage active lints")
+                .subcommand(
+                    App::new("generate")
+                        .about("Generate the config file for your current settings"),
+                )
                 .subcommand(App::new("available").about("List the available lints"))
                 .subcommand(App::new("enabled").about("List the enabled lints"))
                 .subcommand(

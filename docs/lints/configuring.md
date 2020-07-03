@@ -92,6 +92,27 @@ git mit-config lint status pivotal-tracker-id-missing
 pivotal-tracker-id-missing	enabled
 ```
 
+You can generate this file for your current settings by running
+
+```shell,script(name="7", expected_exit_code=0)
+git mit-config lint generate
+```
+
+```toml,verify(script_name="7", stream=stdout)
+[mit.lint]
+body-wider-than-72-characters = true
+duplicated-trailers = true
+github-id-missing = false
+jira-issue-key-missing = false
+pivotal-tracker-id-missing = true
+subject-line-ends-with-period = false
+subject-line-not-capitalized = false
+subject-longer-than-72-characters = true
+subject-not-separated-from-body = true
+
+```
+
+
 Alternatively you can see this in the enabled command from the start
 
 ```shell,script(name="2", expected_exit_code=0)
