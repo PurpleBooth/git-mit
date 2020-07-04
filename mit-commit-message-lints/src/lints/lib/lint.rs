@@ -19,6 +19,7 @@ pub enum Lint {
     SubjectNotCapitalized,
     SubjectEndsWithPeriod,
     BodyWiderThan72Characters,
+    NotConventionalCommit,
 }
 
 pub(crate) const CONFIG_KEY_PREFIX: &str = "mit.lint";
@@ -62,13 +63,14 @@ impl Lint {
             Lint::SubjectNotCapitalized => lib::subject_not_capitalized::CONFIG,
             Lint::SubjectEndsWithPeriod => lib::subject_line_ends_with_period::CONFIG,
             Lint::BodyWiderThan72Characters => lib::body_wider_than_72_characters::CONFIG,
+            Lint::NotConventionalCommit => lib::not_conventional_commit::CONFIG,
         }
     }
 }
 
 impl Lint {
     pub fn iterator() -> impl Iterator<Item = Lint> {
-        static LINTS: [Lint; 9] = [
+        static LINTS: [Lint; 10] = [
             Lint::DuplicatedTrailers,
             Lint::PivotalTrackerIdMissing,
             Lint::JiraIssueKeyMissing,
@@ -78,6 +80,7 @@ impl Lint {
             Lint::SubjectNotCapitalized,
             Lint::SubjectEndsWithPeriod,
             Lint::BodyWiderThan72Characters,
+            Lint::NotConventionalCommit,
         ];
         LINTS.iter().copied()
     }
@@ -117,6 +120,7 @@ impl Lint {
             Lint::BodyWiderThan72Characters => {
                 lib::body_wider_than_72_characters::lint(commit_message)
             }
+            Lint::NotConventionalCommit => lib::not_conventional_commit::lint(commit_message),
         }
     }
 
@@ -173,6 +177,7 @@ mod tests_lints {
                 Lint::SubjectNotCapitalized,
                 Lint::SubjectEndsWithPeriod,
                 Lint::BodyWiderThan72Characters,
+                Lint::NotConventionalCommit,
             ]
         )
     }

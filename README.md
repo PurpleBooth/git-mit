@@ -54,6 +54,7 @@ subject-longer-than-72-characters
 subject-line-not-capitalized
 subject-line-ends-with-period
 body-wider-than-72-characters
+not-conventional-commit
 ```
 
 With only lints that ensure git will work properly enabled by default
