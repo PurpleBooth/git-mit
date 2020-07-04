@@ -35,6 +35,7 @@ subject-line-not-capitalized
 subject-line-ends-with-period
 body-wider-than-72-characters
 not-conventional-commit
+not-emoji-log
 ```
 
 #### Trailers

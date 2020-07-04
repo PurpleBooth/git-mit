@@ -20,6 +20,7 @@ pub enum Lint {
     SubjectEndsWithPeriod,
     BodyWiderThan72Characters,
     NotConventionalCommit,
+    NotEmojiLog,
 }
 
 pub(crate) const CONFIG_KEY_PREFIX: &str = "mit.lint";
@@ -64,13 +65,14 @@ impl Lint {
             Lint::SubjectEndsWithPeriod => lib::subject_line_ends_with_period::CONFIG,
             Lint::BodyWiderThan72Characters => lib::body_wider_than_72_characters::CONFIG,
             Lint::NotConventionalCommit => lib::not_conventional_commit::CONFIG,
+            Lint::NotEmojiLog => lib::not_emoji_log::CONFIG,
         }
     }
 }
 
 impl Lint {
     pub fn iterator() -> impl Iterator<Item = Lint> {
-        static LINTS: [Lint; 10] = [
+        static LINTS: [Lint; 11] = [
             Lint::DuplicatedTrailers,
             Lint::PivotalTrackerIdMissing,
             Lint::JiraIssueKeyMissing,
@@ -81,6 +83,7 @@ impl Lint {
             Lint::SubjectEndsWithPeriod,
             Lint::BodyWiderThan72Characters,
             Lint::NotConventionalCommit,
+            Lint::NotEmojiLog,
         ];
         LINTS.iter().copied()
     }
@@ -121,6 +124,7 @@ impl Lint {
                 lib::body_wider_than_72_characters::lint(commit_message)
             }
             Lint::NotConventionalCommit => lib::not_conventional_commit::lint(commit_message),
+            Lint::NotEmojiLog => lib::not_emoji_log::lint(commit_message),
         }
     }
 
@@ -178,6 +182,7 @@ mod tests_lints {
                 Lint::SubjectEndsWithPeriod,
                 Lint::BodyWiderThan72Characters,
                 Lint::NotConventionalCommit,
+                Lint::NotEmojiLog,
             ]
         )
     }

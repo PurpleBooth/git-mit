@@ -320,6 +320,7 @@ mod tests {
             github-id-missing = false
             jira-issue-key-missing = false
             not-conventional-commit = false
+            not-emoji-log = false
             pivotal-tracker-id-missing = true
             subject-line-ends-with-period = false
             subject-line-not-capitalized = false

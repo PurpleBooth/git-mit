@@ -55,6 +55,7 @@ subject-line-not-capitalized
 subject-line-ends-with-period
 body-wider-than-72-characters
 not-conventional-commit
+not-emoji-log
 ```
 
 With only lints that ensure git will work properly enabled by default
