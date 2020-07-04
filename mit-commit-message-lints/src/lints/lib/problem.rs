@@ -37,4 +37,5 @@ pub enum Code {
     SubjectEndsWithPeriod,
     BodyWiderThan72Characters,
     NotConventionalCommit,
+    NotEmojiLog,
 }
