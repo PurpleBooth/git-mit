@@ -107,6 +107,32 @@ jobs:
         with:
           args: " --locked"
           command: test
+  bench:
+    runs-on: "${{ matrix.os }}"
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+          - os: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.1
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          default: true
+      - uses: actions-rs/cargo@v1
+        with:
+          args: " --locked"
+          command: bench
   specdown:
     runs-on: "${{ matrix.os }}"
     strategy:
@@ -165,7 +191,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: "--all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo"
+          args: "--all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple-crate-versions"
       - name: Prettify code
         uses: creyD/prettier_action@v3.0
         with:
@@ -176,6 +202,7 @@ jobs:
     needs:
       - version
       - specdown
+      - bench
       - test
       - lints
       - check

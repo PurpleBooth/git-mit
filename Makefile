@@ -18,6 +18,11 @@ test:
 specdown: build
 	./bin/specdown ./docs/**.md ./docs/**/*.md ./README.md
 
+.PHONY: bench
+## Benchmark
+bench:
+	cargo bench --locked
+
 .PHONY: smoke-test
 ## Run a smoke test and see if the app runs
 smoke-test: build
@@ -38,7 +43,7 @@ build:
 ## Lint it
 lint:
 	cargo fmt --all -- --check
-	cargo clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
+	cargo clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple-crate-versions
 	cargo check
 	cargo audit
 	npx prettier --check **.yml

@@ -28,6 +28,15 @@ mit-commit = "1.4.0"
 
 [dev-dependencies]
 pretty_assertions = "0.6.1"
+criterion = "0.3.3"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
+
+[[bench]]
+name = "linting"
+harness = false
+
+[[bench]]
+name = "trailers"
+harness = false
