@@ -20,18 +20,18 @@ clap_generate = "3.0.0-beta.1"
   path = "../mit-build-tools"
 
 [dependencies]
-thiserror = "1.0"
+thiserror = "1.0.20"
 clap = "3.0.0-beta.1"
-xdg = "^2.1"
-git2 = "0.13"
+xdg = "2.2.0"
+git2 = "0.13.6"
 clap_generate = "3.0.0-beta.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
 
 [dev-dependencies]
-indoc = "0.3"
-tempfile = "3"
+indoc = "0.3.6"
+tempfile = "3.1.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
