@@ -36,4 +36,5 @@ pub enum Code {
     SubjectNotCapitalized,
     SubjectEndsWithPeriod,
     BodyWiderThan72Characters,
+    NotConventionalCommit,
 }

@@ -34,6 +34,7 @@ subject-longer-than-72-characters
 subject-line-not-capitalized
 subject-line-ends-with-period
 body-wider-than-72-characters
+not-conventional-commit
 ```
 
 #### Trailers
@@ -495,6 +496,105 @@ Disable it with
 ```shell,script(name="1", expected_exit_code=0)
 git mit-config lint disable subject-line-ends-with-period
 ```
+
+#### Conventional Commits
+
+
+##### not-conventional-commit
+
+The conventional changelog is a scheme of commit messages used t
+
+###### Default status
+
+On an empty repository
+
+```shell,script(name="not-conventional-commits-default", expected_exit_code=0)
+git mit-config lint status not-conventional-commit
+```
+
+```text,verify(script_name="not-conventional-commits-default", stream=stdout)
+not-conventional-commit	disabled
+```
+
+###### Enabling
+
+Enable it with
+
+```shell,script(name="1", expected_exit_code=0)
+git mit-config lint enable not-conventional-commit
+```
+
+###### Valid
+
+Using message
+
+```shell,file(path="message")
+fix: correct minor typos in code
+
+see the issue for details
+
+on typos fixed.
+
+Reviewed-by: Z
+Refs #133
+```
+
+Committing will succeed
+
+```shell,script(name="1", expected_exit_code=0)
+echo $RANDOM > changes
+git add changes
+git commit --message="$(cat message)"
+```
+
+###### Invalid
+
+Using message
+
+```shell,file(path="message")
+Demonstration Commit Message
+
+This is a commit message that is invalid
+```
+
+Committing will fail
+
+```shell,script(name="1", expected_exit_code=1)
+echo $RANDOM > changes
+git add changes
+git commit --message="$(cat message)"
+```
+
+```text,verify(script_name="1", stream=stderr)
+Demonstration Commit Message
+
+This is a commit message that is invalid
+
+
+---
+
+Your commit message isn't conventional
+
+You can fix it by following style
+
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+
+You can read more at https://www.conventionalcommits.org/
+
+```
+
+###### Disabling
+
+Disable it with
+
+```shell,script(name="1", expected_exit_code=0)
+git mit-config lint disable not-conventional-commit
+```
+
 
 #### Issue ID Checks
 
