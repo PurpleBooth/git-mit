@@ -13,14 +13,14 @@ repository = "https://github.com/PurpleBooth/git-mit"
 description = "Check the correctness of a specific commit message. Designed to be used in tools providing commit-msg style hooks"
 
 [dependencies]
-thiserror = "1.0"
-git2 = "0.13"
-regex = "1"
+thiserror = "1.0.20"
+git2 = "0.13.6"
+regex = "1.3.9"
 serde_yaml = "0.8.13"
-serde_derive = "1.0.110"
-indoc = "0.3"
+serde_derive = "1.0.114"
+indoc = "0.3.6"
 toml = "0.5.6"
-mit-commit = "1.4.0"
+mit-commit = "1.5.0"
 lazy_static = "1.4.0"
 
   [dependencies.serde]
