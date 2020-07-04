@@ -23,11 +23,14 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
+lazy_static! {
+    static ref RE: Regex = Regex::new("^[^()\\s]+(\\(\\w+\\))?!?: ").unwrap();
+}
+
 fn has_problem(commit_message: &CommitMessage) -> bool {
-    let regex = Regex::new("^[^()\\s]+(\\(\\w+\\))?!?: ").unwrap();
     let subject: String = commit_message.get_subject().into();
 
-    !regex.is_match(&subject)
+    !RE.is_match(&subject)
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {

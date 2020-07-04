@@ -594,6 +594,7 @@ dependencies = [
  "criterion",
  "git2",
  "indoc",
+ "lazy_static",
  "mit-commit",
  "mit-hook-test-helper",
  "pretty_assertions",

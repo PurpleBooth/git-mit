@@ -21,6 +21,7 @@ serde_derive = "1.0.110"
 indoc = "0.3"
 toml = "0.5.6"
 mit-commit = "1.4.0"
+lazy_static = "1.4.0"
 
   [dependencies.serde]
   version = "1.0.114"

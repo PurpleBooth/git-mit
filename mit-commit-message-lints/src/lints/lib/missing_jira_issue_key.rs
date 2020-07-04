@@ -15,9 +15,12 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
+lazy_static! {
+    static ref RE: Regex = Regex::new(r"(?m)(^| )[A-Z]{2,}-[0-9]+( |$)").unwrap();
+}
+
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    let re = Regex::new(r"(?m)(^| )[A-Z]{2,}-[0-9]+( |$)").unwrap();
-    if commit_message.matches_pattern(&re) {
+    if commit_message.matches_pattern(&RE) {
         None
     } else {
         Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing))

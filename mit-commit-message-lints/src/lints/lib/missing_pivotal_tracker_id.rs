@@ -22,12 +22,15 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-pub(crate) fn lint(commit: &CommitMessage) -> Option<Problem> {
-    let re = Regex::new(
-        r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]",
+lazy_static! {
+    static ref RE: Regex = Regex::new(
+        r"(?i)\[(((finish|fix)(ed|es)?|complete[ds]?|deliver(s|ed)?) )?#\d+([, ]#\d+)*]"
     )
     .unwrap();
-    if commit.matches_pattern(&re) {
+}
+
+pub(crate) fn lint(commit: &CommitMessage) -> Option<Problem> {
+    if commit.matches_pattern(&RE) {
         None
     } else {
         Some(Problem::new(
