@@ -1,6 +1,6 @@
 [package]
 name = "mit-commit-msg"
-version = "3.78.0"
+version = "3.79.0"
 authors = [ "Billie Thompson <billie+mit-commit-msg@billiecodes.com>" ]
 edition = "2018"
 license = "Creative Commons Zero v1.0 Universal"
