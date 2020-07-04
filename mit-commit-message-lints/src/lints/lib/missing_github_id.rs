@@ -23,9 +23,13 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
+lazy_static! {
+    static ref RE: Regex =
+        Regex::new(r"(?m)(^| )([a-zA-Z0-9_-]{3,39}/[a-zA-Z0-9-]+#|GH-|#)[0-9]+( |$)").unwrap();
+}
+
 pub(crate) fn lint(mit_commit: &CommitMessage) -> Option<Problem> {
-    let re = Regex::new(r"(?m)(^| )([a-zA-Z0-9_-]{3,39}/[a-zA-Z0-9-]+#|GH-|#)[0-9]+( |$)").unwrap();
-    if mit_commit.matches_pattern(&re) {
+    if mit_commit.matches_pattern(&RE) {
         None
     } else {
         Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing))

@@ -70,33 +70,35 @@ impl Lint {
     }
 }
 
+lazy_static! {
+    static ref ALL_LINTS: [Lint; 11] = [
+        Lint::DuplicatedTrailers,
+        Lint::PivotalTrackerIdMissing,
+        Lint::JiraIssueKeyMissing,
+        Lint::SubjectNotSeparateFromBody,
+        Lint::GitHubIdMissing,
+        Lint::SubjectLongerThan72Characters,
+        Lint::SubjectNotCapitalized,
+        Lint::SubjectEndsWithPeriod,
+        Lint::BodyWiderThan72Characters,
+        Lint::NotConventionalCommit,
+        Lint::NotEmojiLog,
+    ];
+    static ref DEFAULT_ENABLED_LINTS: [Lint; 4] = [
+        Lint::DuplicatedTrailers,
+        Lint::SubjectNotSeparateFromBody,
+        Lint::SubjectLongerThan72Characters,
+        Lint::BodyWiderThan72Characters,
+    ];
+}
+
 impl Lint {
     pub fn iterator() -> impl Iterator<Item = Lint> {
-        static LINTS: [Lint; 11] = [
-            Lint::DuplicatedTrailers,
-            Lint::PivotalTrackerIdMissing,
-            Lint::JiraIssueKeyMissing,
-            Lint::SubjectNotSeparateFromBody,
-            Lint::GitHubIdMissing,
-            Lint::SubjectLongerThan72Characters,
-            Lint::SubjectNotCapitalized,
-            Lint::SubjectEndsWithPeriod,
-            Lint::BodyWiderThan72Characters,
-            Lint::NotConventionalCommit,
-            Lint::NotEmojiLog,
-        ];
-        LINTS.iter().copied()
+        ALL_LINTS.iter().copied()
     }
 
     #[must_use]
     pub fn enabled_by_default(self) -> bool {
-        static DEFAULT_ENABLED_LINTS: [Lint; 4] = [
-            Lint::DuplicatedTrailers,
-            Lint::SubjectNotSeparateFromBody,
-            Lint::SubjectLongerThan72Characters,
-            Lint::BodyWiderThan72Characters,
-        ];
-
         DEFAULT_ENABLED_LINTS.contains(&self)
     }
 
