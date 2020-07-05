@@ -202,7 +202,6 @@ jobs:
     needs:
       - version
       - specdown
-      - bench
       - test
       - lints
       - check
