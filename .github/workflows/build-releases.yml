@@ -71,6 +71,7 @@ jobs:
       - uses: actions/checkout@v2.3.1
         with:
           lfs: true
+          fetch-depth: 0
       - uses: actions/cache@v2
         with:
           key: "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
@@ -87,6 +88,13 @@ jobs:
           toolchain: stable
       - uses: actions-rs/cargo@v1
         with:
+          command: install
+          args: clog-cli
+      - id: get_previous_version
+        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort | tail -n 2 | head -n 1)
+        shell: bash
+      - uses: actions-rs/cargo@v1
+        with:
           args: toml-cli
           command: install
       - id: get_repository_name
@@ -95,6 +103,12 @@ jobs:
       - id: get_version
         run: "echo ::set-output name=VERSION::v$(toml get git-mit/Cargo.toml package.version | tail -c +2 | head -c -2)"
         shell: bash
+      - run: |
+          clog --from "$PREVIOUS_VERSION" --to "$VERSION" > CHANGELOG.md
+        shell: bash
+        env:
+          PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
+          VERSION: "${{ steps.get_version.outputs.VERSION }}"
       - env:
           GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
         id: create_release
@@ -102,6 +116,7 @@ jobs:
         with:
           draft: false
           prerelease: false
+          body_path: ./CHANGELOG.md
           release_name: "Release ${{ steps.get_version.outputs.VERSION }}"
           tag_name: "${{ steps.get_version.outputs.VERSION }}"
       - uses: actions/upload-release-asset@v1.0.2
