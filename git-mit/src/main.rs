@@ -1,3 +1,4 @@
+use console::style;
 use std::{
     convert::TryFrom,
     env, fs,
@@ -58,15 +59,15 @@ fn main() -> Result<(), errors::GitMitError> {
 }
 
 fn exit_initial_not_matched_to_author(initials_without_authors: &[&str]) {
-    eprintln!(
-        r#"
-Could not find the initials {}.
-
-You can fix this by checking the initials are in the configuration file.
-"#,
-        initials_without_authors.join(", "),
-    );
-
+    let error = style(format!(
+        "Could not find the initials {}.",
+        initials_without_authors.join(", ")
+    ))
+    .red()
+    .bold();
+    let help =
+        style("You can fix this by checking the initials are in the configuration file.").italic();
+    eprintln!("{}\n\n{}", error, help);
     std::process::exit(InitialNotMatchedToAuthor as i32);
 }
 
