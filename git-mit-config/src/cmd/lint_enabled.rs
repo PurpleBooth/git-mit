@@ -5,6 +5,7 @@ use mit_commit_message_lints::lints::Lints;
 
 use crate::errors::GitMitConfigError;
 use crate::{current_dir, get_vcs};
+use comfy_table::Table;
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
     matches
@@ -20,6 +21,15 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let toml = external::read_toml(current_dir)?;
 
     let lints = Lints::get_from_toml_or_else_vcs(&toml, &mut vcs)?;
-    println!("{}", lints.names().join("\n"));
+    let mut table = Table::new();
+    table.set_header(vec!["Lint", "Status"]);
+
+    let rows: Table = lints.into_iter().fold(table, |mut table, lint| {
+        table.add_row(vec![lint.name(), "enabled"]);
+        table
+    });
+
+    println!("{}", rows);
+
     Ok(())
 }

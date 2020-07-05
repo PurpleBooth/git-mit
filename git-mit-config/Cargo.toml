@@ -33,6 +33,7 @@ git2 = "0.13.6"
 clap = "3.0.0-beta.1"
 clap_generate = "3.0.0-beta.1"
 console = "0.11.3"
+comfy-table = "0.1.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"

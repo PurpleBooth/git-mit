@@ -15,10 +15,22 @@ pub struct Lints {
     lints: BTreeSet<Lint>,
 }
 
+lazy_static! {
+    static ref AVAILABLE: Lints = {
+        let set = BTreeSet::from_iter(Lint::iterator());
+        Lints::new(set)
+    };
+}
+
 impl Lints {
     #[must_use]
     pub fn new(lints: BTreeSet<Lint>) -> Lints {
         Lints { lints }
+    }
+
+    #[must_use]
+    pub fn available() -> &'static Lints {
+        &AVAILABLE
     }
 
     #[must_use]
@@ -189,6 +201,7 @@ mod tests {
     use crate::lints::Lint;
     use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
     use crate::{external::InMemory, lints::Lint::DuplicatedTrailers};
+    use std::iter::FromIterator;
 
     #[test]
     fn it_returns_an_error_if_one_of_the_names_is_wrong() {
@@ -269,6 +282,19 @@ mod tests {
         let actual = input.config_keys();
 
         assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn can_get_all() {
+        let actual = Lints::available();
+        let lints = BTreeSet::from_iter(Lint::iterator());
+        let expected = &Lints::new(lints);
+
+        assert_eq!(
+            expected, actual,
+            "Expected all the lints to be {:?}, instead got {:?}",
+            expected, actual
+        )
     }
 
     #[test]
