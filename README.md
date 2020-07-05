@@ -45,17 +45,31 @@ git mit-config lint available
 ```
 
 ```text,verify(script_name="lint-list", stream=stdout)
-duplicated-trailers
-pivotal-tracker-id-missing
-jira-issue-key-missing
-github-id-missing
-subject-not-separated-from-body
-subject-longer-than-72-characters
-subject-line-not-capitalized
-subject-line-ends-with-period
-body-wider-than-72-characters
-not-conventional-commit
-not-emoji-log
++-----------------------------------+----------+
+| Lint                              | Status   |
++==============================================+
+| duplicated-trailers               | enabled  |
+|-----------------------------------+----------|
+| pivotal-tracker-id-missing        | disabled |
+|-----------------------------------+----------|
+| jira-issue-key-missing            | disabled |
+|-----------------------------------+----------|
+| subject-not-separated-from-body   | enabled  |
+|-----------------------------------+----------|
+| github-id-missing                 | disabled |
+|-----------------------------------+----------|
+| subject-longer-than-72-characters | enabled  |
+|-----------------------------------+----------|
+| subject-line-not-capitalized      | disabled |
+|-----------------------------------+----------|
+| subject-line-ends-with-period     | disabled |
+|-----------------------------------+----------|
+| body-wider-than-72-characters     | enabled  |
+|-----------------------------------+----------|
+| not-conventional-commit           | disabled |
+|-----------------------------------+----------|
+| not-emoji-log                     | disabled |
++-----------------------------------+----------+
 ```
 
 With only lints that ensure git will work properly enabled by default
@@ -65,10 +79,17 @@ git mit-config lint enabled
 ```
 
 ```text,verify(script_name="lint-list", stream=stdout)
-duplicated-trailers
-subject-not-separated-from-body
-subject-longer-than-72-characters
-body-wider-than-72-characters
++-----------------------------------+---------+
+| Lint                              | Status  |
++=============================================+
+| duplicated-trailers               | enabled |
+|-----------------------------------+---------|
+| subject-not-separated-from-body   | enabled |
+|-----------------------------------+---------|
+| subject-longer-than-72-characters | enabled |
+|-----------------------------------+---------|
+| body-wider-than-72-characters     | enabled |
++-----------------------------------+---------+
 ```
 
 You can read more details about this, with examples on the [lints
@@ -97,7 +118,11 @@ git mit-config lint status pivotal-tracker-id-missing
 ```
 
 ```text,verify(script_name="7", stream=stdout)
-pivotal-tracker-id-missing	enabled
++----------------------------+---------+
+| Lint                       | Status  |
++======================================+
+| pivotal-tracker-id-missing | enabled |
++----------------------------+---------+
 ```
 
 You can read more about this on the [configuring

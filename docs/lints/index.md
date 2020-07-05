@@ -25,17 +25,31 @@ git mit-config lint available
 ```
 
 ```text,verify(script_name="lint-list", stream=stdout)
-duplicated-trailers
-pivotal-tracker-id-missing
-jira-issue-key-missing
-github-id-missing
-subject-not-separated-from-body
-subject-longer-than-72-characters
-subject-line-not-capitalized
-subject-line-ends-with-period
-body-wider-than-72-characters
-not-conventional-commit
-not-emoji-log
++-----------------------------------+----------+
+| Lint                              | Status   |
++==============================================+
+| duplicated-trailers               | enabled  |
+|-----------------------------------+----------|
+| pivotal-tracker-id-missing        | disabled |
+|-----------------------------------+----------|
+| jira-issue-key-missing            | disabled |
+|-----------------------------------+----------|
+| subject-not-separated-from-body   | enabled  |
+|-----------------------------------+----------|
+| github-id-missing                 | disabled |
+|-----------------------------------+----------|
+| subject-longer-than-72-characters | enabled  |
+|-----------------------------------+----------|
+| subject-line-not-capitalized      | disabled |
+|-----------------------------------+----------|
+| subject-line-ends-with-period     | disabled |
+|-----------------------------------+----------|
+| body-wider-than-72-characters     | enabled  |
+|-----------------------------------+----------|
+| not-conventional-commit           | disabled |
+|-----------------------------------+----------|
+| not-emoji-log                     | disabled |
++-----------------------------------+----------+
 ```
 
 #### Trailers
@@ -55,7 +69,11 @@ git mit-config lint status duplicated-trailers
 ```
 
 ```text,verify(script_name="duplicated-trailers-default", stream=stdout)
-duplicated-trailers	enabled
++---------------------+---------+
+| Lint                | Status  |
++===============================+
+| duplicated-trailers | enabled |
++---------------------+---------+
 ```
 
 ###### Valid
@@ -138,7 +156,11 @@ git mit-config lint status subject-not-separated-from-body
 
 
 ```text,verify(script_name="subject-not-separated-from-body-default", stream=stdout)
-subject-not-separated-from-body	enabled
++---------------------------------+---------+
+| Lint                            | Status  |
++===========================================+
+| subject-not-separated-from-body | enabled |
++---------------------------------+---------+
 ```
 
 ###### Valid
@@ -203,7 +225,11 @@ git mit-config lint status subject-longer-than-72-characters
 
 
 ```text,verify(script_name="subject-longer-than-72-characters-default", stream=stdout)
-subject-longer-than-72-characters	enabled
++-----------------------------------+---------+
+| Lint                              | Status  |
++=============================================+
+| subject-longer-than-72-characters | enabled |
++-----------------------------------+---------+
 ```
 
 ###### Valid
@@ -272,7 +298,11 @@ git mit-config lint status body-wider-than-72-characters
 ```
 
 ```text,verify(script_name="body-wider-than-72-characters-default", stream=stdout)
-body-wider-than-72-characters	enabled
++-------------------------------+---------+
+| Lint                          | Status  |
++=========================================+
+| body-wider-than-72-characters | enabled |
++-------------------------------+---------+
 ```
 
 ###### Valid
@@ -344,7 +374,11 @@ git mit-config lint status subject-line-not-capitalized
 ```
 
 ```text,verify(script_name="subject-line-not-capitalized-default", stream=stdout)
-subject-line-not-capitalized	disabled
++------------------------------+----------+
+| Lint                         | Status   |
++=========================================+
+| subject-line-not-capitalized | disabled |
++------------------------------+----------+
 ```
 
 ###### Enabling
@@ -425,7 +459,11 @@ git mit-config lint status subject-line-ends-with-period
 ```
 
 ```text,verify(script_name="subject-line-ends-with-period-default", stream=stdout)
-subject-line-ends-with-period	disabled
++-------------------------------+----------+
+| Lint                          | Status   |
++==========================================+
+| subject-line-ends-with-period | disabled |
++-------------------------------+----------+
 ```
 
 ###### Enabling
@@ -509,7 +547,11 @@ git mit-config lint status not-conventional-commit
 ```
 
 ```text,verify(script_name="not-conventional-commits-default", stream=stdout)
-not-conventional-commit	disabled
++-------------------------+----------+
+| Lint                    | Status   |
++====================================+
+| not-conventional-commit | disabled |
++-------------------------+----------+
 ```
 
 ###### Enabling
@@ -608,7 +650,11 @@ git mit-config lint status pivotal-tracker-id-missing
 ```
 
 ```text,verify(script_name="pivotal-tracker-id-missing-default", stream=stdout)
-pivotal-tracker-id-missing	disabled
++----------------------------+----------+
+| Lint                       | Status   |
++=======================================+
+| pivotal-tracker-id-missing | disabled |
++----------------------------+----------+
 ```
 
 ###### Enabling
@@ -699,7 +745,11 @@ git mit-config lint status jira-issue-key-missing
 ```
 
 ```text,verify(script_name="jira-issue-key-missing-default", stream=stdout)
-jira-issue-key-missing	disabled
++------------------------+----------+
+| Lint                   | Status   |
++===================================+
+| jira-issue-key-missing | disabled |
++------------------------+----------+
 ```
 
 ###### Enabling
@@ -782,7 +832,11 @@ git mit-config lint status github-id-missing
 ```
 
 ```text,verify(script_name="github-id-missing-default", stream=stdout)
-github-id-missing	disabled
++-------------------+----------+
+| Lint              | Status   |
++==============================+
+| github-id-missing | disabled |
++-------------------+----------+
 ```
 
 ###### Enabling

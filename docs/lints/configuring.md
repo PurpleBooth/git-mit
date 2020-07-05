@@ -25,10 +25,17 @@ git mit-config lint enabled
 You can see what's enabled by default.
 
 ```text,verify(script_name="2", stream=stdout)
-duplicated-trailers
-subject-not-separated-from-body
-subject-longer-than-72-characters
-body-wider-than-72-characters
++-----------------------------------+---------+
+| Lint                              | Status  |
++=============================================+
+| duplicated-trailers               | enabled |
+|-----------------------------------+---------|
+| subject-not-separated-from-body   | enabled |
+|-----------------------------------+---------|
+| subject-longer-than-72-characters | enabled |
+|-----------------------------------+---------|
+| body-wider-than-72-characters     | enabled |
++-----------------------------------+---------+
 ```
 
 ## Toggling lints
@@ -48,7 +55,11 @@ git mit-config lint status subject-longer-than-72-characters
 We will see that it's now disabled
 
 ```text,verify(script_name="5", stream=stdout)
-subject-longer-than-72-characters	disabled
++-----------------------------------+----------+
+| Lint                              | Status   |
++==============================================+
+| subject-longer-than-72-characters | disabled |
++-----------------------------------+----------+
 ```
 
 If we run
@@ -64,7 +75,11 @@ git mit-config lint status subject-longer-than-72-characters
 ```
 
 ```text,verify(script_name="6", stream=stdout)
-subject-longer-than-72-characters	enabled
++-----------------------------------+---------+
+| Lint                              | Status  |
++=============================================+
+| subject-longer-than-72-characters | enabled |
++-----------------------------------+---------+
 ```
 
 This are written to the `./.git/config` file.
@@ -89,7 +104,11 @@ git mit-config lint status pivotal-tracker-id-missing
 ```
 
 ```text,verify(script_name="7", stream=stdout)
-pivotal-tracker-id-missing	enabled
++----------------------------+---------+
+| Lint                       | Status  |
++======================================+
+| pivotal-tracker-id-missing | enabled |
++----------------------------+---------+
 ```
 
 You can generate this file for your current settings by running
@@ -114,23 +133,6 @@ subject-not-separated-from-body = true
 
 ```
 
-
-Alternatively you can see this in the enabled command from the start
-
-```shell,script(name="2", expected_exit_code=0)
-git mit-config lint enabled
-```
-
-You can see what's enabled by default.
-
-```text,verify(script_name="2", stream=stdout)
-duplicated-trailers
-pivotal-tracker-id-missing
-subject-not-separated-from-body
-subject-longer-than-72-characters
-body-wider-than-72-characters
-```
-
 I'd recommend you commit this file, then locally if someone wants to
 tweak something, that they then create a `.git-mit.toml` and add it to
 the `.gitignore`.
@@ -147,5 +149,9 @@ git mit-config lint status pivotal-tracker-id-missing
 ```
 
 ```text,verify(script_name="8", stream=stdout)
-pivotal-tracker-id-missing	disabled
++----------------------------+----------+
+| Lint                       | Status   |
++=======================================+
+| pivotal-tracker-id-missing | disabled |
++----------------------------+----------+
 ```

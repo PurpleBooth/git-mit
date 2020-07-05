@@ -1,6 +1,7 @@
 use std::convert::TryInto;
 
 use clap::ArgMatches;
+use comfy_table::Table;
 
 use mit_commit_message_lints::external;
 use mit_commit_message_lints::lints::Lints;
@@ -21,7 +22,6 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
         .subcommand_matches("lint")
         .and_then(|x| x.subcommand_matches("status"))
         .unwrap();
-
     let is_local = Some("local") == matches.value_of("scope");
     let current_dir = current_dir()?;
     let mut vcs = get_vcs(is_local, &current_dir)?;
@@ -32,15 +32,19 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let status = get_config_status(lints.clone(), config);
     let names = lints.names();
 
-    println!(
-        "{}",
-        names
-            .iter()
-            .zip(status)
-            .map(|(name, status)| format!("{}\t{}", name, status))
-            .collect::<Vec<_>>()
-            .join("\n")
-    );
+    let mut table = Table::new();
+    table.set_header(vec!["Lint", "Status"]);
+
+    table = names
+        .into_iter()
+        .zip(status)
+        .fold(table, |mut table, (name, status_name)| {
+            table.add_row(vec![name, status_name]);
+            table
+        });
+
+    println!("{}", table);
+
     Ok(())
 }
 
@@ -60,11 +64,9 @@ fn get_config_status<'a>(lints: Lints, config: Lints) -> Vec<&'a str> {
 }
 
 fn get_selected_lints(args: &ArgMatches) -> Result<Lints, GitMitConfigError> {
-    let names: Vec<_> = args
+    Ok(args
         .values_of("lint")
         .ok_or_else(|| LintNameNotGiven)?
-        .collect();
-    let lints = names.try_into()?;
-
-    Ok(lints)
+        .collect::<Vec<_>>()
+        .try_into()?)
 }
