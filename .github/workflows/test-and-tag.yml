@@ -52,7 +52,11 @@ jobs:
           args: what-bump
       - run: mkdir -p ./version
       - run: what-bump "${PREVIOUS_VERSION}" --from "${PREVIOUS_VERSION:1}" > ./version/no_v_version
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'Release v')
+        env:
+          PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
+      - run: echo "${PREVIOUS_VERSION:1}" > ./version/no_v_version
+        if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'Release v')
         env:
           PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
       - run: what-bump "origin/main" --from "${PREVIOUS_VERSION:1}" > ./version/no_v_version
