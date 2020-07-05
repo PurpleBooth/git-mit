@@ -93,7 +93,7 @@ jobs:
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
           if ! git diff-index --quiet HEAD -- ; then
             git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION"
-            git commit -m "Update $REPOSITORY_NAME to $(echo $GIT_TAG | sed 's/^refs\/tags\///')"
+            git commit -m "fix: Update $REPOSITORY_NAME to $(echo $GIT_TAG | sed 's/^refs\/tags\///')"
           fi
         env:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
