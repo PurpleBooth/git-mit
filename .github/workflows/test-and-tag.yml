@@ -36,27 +36,30 @@ jobs:
             ~/.cargo/bin
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - run: git fetch origin +refs/tags/*:refs/tags/*
+      - run: git fetch origin
       - id: get_previous_version
         run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort | tail -n 1)
         shell: bash
-      - id: semvers
-        uses: WyriHaximus/github-action-next-semvers@master
+      - uses: actions-rs/toolchain@v1
         with:
-          version: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
+          profile: minimal
+          toolchain: stable
+          default: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: what-bump
       - run: mkdir -p ./version
-      - if: "!contains(github.event.head_commit.message, 'BC BREAK') && !contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
-        run: echo "$VERSION" >./version/version
+      - run: what-bump "${PREVIOUS_VERSION}" --from "${PREVIOUS_VERSION:1}" > ./version/no_v_version
+        if: github.ref == 'refs/heads/main'
         env:
-          VERSION: ${{ steps.semvers.outputs.v_minor }}
-      - if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
-        run: echo "$VERSION" >./version/version
+          PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
+      - run: what-bump "origin/main" --from "${PREVIOUS_VERSION:1}" > ./version/no_v_version
+        if: github.ref != 'refs/heads/main'
         env:
-          VERSION: ${{ steps.semvers.outputs.v_patch }}
-      - run: echo "$VERSION" > ./version/version
-        env:
-          VERSION: ${{ steps.semvers.outputs.v_major }}
-        if: "contains(github.event.head_commit.message, 'BC BREAK')"
+          PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
+      - run: echo "v$(./version/no_v_version)" > ./version/version
       - uses: actions/upload-artifact@v2
         with:
           name: version
