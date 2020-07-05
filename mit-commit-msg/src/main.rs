@@ -3,6 +3,7 @@ extern crate mit_commit_message_lints;
 use std::env;
 use std::{convert::TryFrom, path::PathBuf};
 
+use console::style;
 use mit_commit::CommitMessage;
 
 use mit_commit_message_lints::{
@@ -48,17 +49,32 @@ fn format_lint_problems(
 ) -> Option<(String, Code)> {
     let (_, message_and_code) = lint_problems.into_iter().fold(
         (original_message, None),
-        |(commit_message, output), item| {
+        |(commit_message, output), problem| {
             (
                 commit_message,
                 match output {
                     Some((existing_output, _)) => Some((
-                        vec![existing_output, item.to_string()].join("\n\n"),
-                        item.code(),
+                        {
+                            let error = style(problem.error()).red().bold();
+                            let tip = style(problem.tip()).italic();
+
+                            format!("{}\n\n{}\n\n{}", existing_output, error, tip)
+                        },
+                        *(problem.code()),
                     )),
                     None => Some((
-                        vec![commit_message.clone().into(), item.to_string()].join("\n\n---\n\n"),
-                        item.code(),
+                        {
+                            let error = style(problem.error()).red().bold();
+                            let tip = style(problem.tip()).italic();
+
+                            format!(
+                                "{}\n\n---\n\n{}\n\n{}",
+                                String::from(commit_message.clone()),
+                                error,
+                                tip
+                            )
+                        },
+                        *(problem.code()),
                     )),
                 },
             )

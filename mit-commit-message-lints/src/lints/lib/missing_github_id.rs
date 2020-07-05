@@ -9,8 +9,6 @@ pub(crate) const CONFIG: &str = "github-id-missing";
 
 const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit message is missing a GitHub ID
-
     You can fix this by adding a ID like the following examples:
 
     #642
@@ -19,9 +17,10 @@ const HELP_MESSAGE: &str = indoc!(
     AnOrganisation/git-mit#642
     fixes #642
 
-    Be careful just putting '#642' on a line by itself, as '#' is the default comment character
-    "
+    Be careful just putting '#642' on a line by itself, as '#' is the default comment character"
 );
+
+const ERROR: &str = "Your commit message is missing a GitHub ID";
 
 lazy_static! {
     static ref RE: Regex =
@@ -29,10 +28,14 @@ lazy_static! {
 }
 
 pub(crate) fn lint(mit_commit: &CommitMessage) -> Option<Problem> {
-    if mit_commit.matches_pattern(&RE) {
+    if mit_commit.matches_pattern(&*RE) {
         None
     } else {
-        Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing))
+        Some(Problem::new(
+            ERROR.into(),
+            HELP_MESSAGE.into(),
+            Code::GitHubIdMissing,
+        ))
     }
 }
 
@@ -265,7 +268,11 @@ mod tests_has_missing_github_id {
                 This is an example commit
                 "
             ),
-            &Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing)),
+            &Some(Problem::new(
+                ERROR.into(),
+                HELP_MESSAGE.into(),
+                Code::GitHubIdMissing,
+            )),
         );
     }
 
@@ -281,7 +288,11 @@ mod tests_has_missing_github_id {
                 H-123
                 "
             ),
-            &Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing)),
+            &Some(Problem::new(
+                ERROR.into(),
+                HELP_MESSAGE.into(),
+                Code::GitHubIdMissing,
+            )),
         );
         test_has_missing_github_id(
             indoc!(
@@ -293,7 +304,11 @@ mod tests_has_missing_github_id {
                 git-mit#123
                 "
             ),
-            &Some(Problem::new(HELP_MESSAGE.into(), Code::GitHubIdMissing)),
+            &Some(Problem::new(
+                ERROR.into(),
+                HELP_MESSAGE.into(),
+                Code::GitHubIdMissing,
+            )),
         );
     }
 

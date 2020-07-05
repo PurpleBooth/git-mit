@@ -1,26 +1,27 @@
-use std::fmt::Display;
-
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Problem {
-    help: String,
+    error: String,
+    tip: String,
     code: Code,
 }
 
 impl Problem {
     #[must_use]
-    pub fn new(help: String, code: Code) -> Problem {
-        Problem { help, code }
+    pub fn new(error: String, tip: String, code: Code) -> Problem {
+        Problem { error, tip, code }
     }
 
     #[must_use]
-    pub fn code(self) -> Code {
-        self.code
+    pub fn code(&self) -> &Code {
+        &self.code
     }
-}
-
-impl Display for Problem {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.help)
+    #[must_use]
+    pub fn error(&self) -> &str {
+        &self.error
+    }
+    #[must_use]
+    pub fn tip(&self) -> &str {
+        &self.tip
     }
 }
 
@@ -38,4 +39,29 @@ pub enum Code {
     BodyWiderThan72Characters,
     NotConventionalCommit,
     NotEmojiLog,
+}
+
+#[cfg(test)]
+mod tests {
+    use pretty_assertions::assert_eq;
+
+    use crate::lints::{Code, Problem};
+
+    #[test]
+    fn test_has_error() {
+        let problem = Problem::new("Some error".into(), "".into(), Code::NotConventionalCommit);
+        assert_eq!(problem.error(), "Some error")
+    }
+
+    #[test]
+    fn test_has_has_tip() {
+        let problem = Problem::new("".into(), "Some tip".into(), Code::NotConventionalCommit);
+        assert_eq!(problem.tip(), "Some tip")
+    }
+
+    #[test]
+    fn test_has_has_code() {
+        let problem = Problem::new("".into(), "".into(), Code::NotConventionalCommit);
+        assert_eq!(problem.code(), &Code::NotConventionalCommit)
+    }
 }

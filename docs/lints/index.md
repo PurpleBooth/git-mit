@@ -186,7 +186,6 @@ This is a commit message that is invalid
 Your commit message is missing a blank line between the subject and the body
 
 To fix this separate subject from body with a blank line
-
 ```
 
 ##### subject-longer-than-72-characters
@@ -257,7 +256,6 @@ This is a commit message that is invalid
 Your commit message is not well formed
 
 Please keep the subject line 72 characters or under
-
 ```
 
 ##### body-wider-than-72-characters
@@ -327,7 +325,6 @@ This is a commit message that is invalid
 Your commit message is not well formed
 
 Please keep the width of the body 72 characters or under
-
 ```
 
 #### Git Manual Style Extended
@@ -405,7 +402,6 @@ This is a commit message that is invalid
 Your commit message is missing a capital letter
 
 You can fix this by capitalising the first character in the subject
-
 ```
 
 ###### Disabling
@@ -487,7 +483,6 @@ This is a commit message that is invalid
 Your commit message ends with a period
 
 You can fix this by removing the period
-
 ```
 
 ###### Disabling
@@ -585,7 +580,6 @@ You can fix it by following style
 [optional footer(s)]
 
 You can read more at https://www.conventionalcommits.org/
-
 ```
 
 ###### Disabling
@@ -682,7 +676,6 @@ You can fix this by adding the Id in one of the styles below to the commit messa
 [#12345884,#12345678]
 [#12345678],[#12345884]
 This will address [#12345884]
-
 ```
 
 ###### Disabling
@@ -766,7 +759,6 @@ This is a commit message that is invalid
 Your commit message is missing a JIRA Issue Key
 
 You can fix this by adding a key like `JRA-123` to the commit message
-
 ```
 
 ###### Disabling
@@ -858,7 +850,6 @@ AnOrganisation/git-mit#642
 fixes #642
 
 Be careful just putting '#642' on a line by itself, as '#' is the default comment character
-
 ```
 
 ###### Disabling

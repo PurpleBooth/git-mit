@@ -9,8 +9,6 @@ pub(crate) const CONFIG: &str = "pivotal-tracker-id-missing";
 
 const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit message is missing a Pivotal Tracker Id
-
     You can fix this by adding the Id in one of the styles below to the commit message
     [Delivers #12345678]
     [fixes #12345678]
@@ -18,9 +16,10 @@ const HELP_MESSAGE: &str = indoc!(
     [#12345884 #12345678]
     [#12345884,#12345678]
     [#12345678],[#12345884]
-    This will address [#12345884]
-    "
+    This will address [#12345884]"
 );
+
+const ERROR: &str = "Your commit message is missing a Pivotal Tracker Id";
 
 lazy_static! {
     static ref RE: Regex = Regex::new(
@@ -34,6 +33,7 @@ pub(crate) fn lint(commit: &CommitMessage) -> Option<Problem> {
         None
     } else {
         Some(Problem::new(
+            ERROR.into(),
             HELP_MESSAGE.into(),
             Code::PivotalTrackerIdMissing,
         ))
@@ -381,6 +381,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::PivotalTrackerIdMissing,
             )),
@@ -398,6 +399,7 @@ mod tests_has_missing_pivotal_tracker_id {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::PivotalTrackerIdMissing,
             )),
@@ -415,6 +417,7 @@ mod tests_has_missing_pivotal_tracker_id {
             "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::PivotalTrackerIdMissing,
             )),

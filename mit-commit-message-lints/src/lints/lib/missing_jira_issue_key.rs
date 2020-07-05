@@ -1,4 +1,3 @@
-use indoc::indoc;
 use mit_commit::CommitMessage;
 use regex::Regex;
 
@@ -6,14 +5,8 @@ use crate::lints::lib::problem::Code;
 use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "jira-issue-key-missing";
-
-const HELP_MESSAGE: &str = indoc!(
-    "
-    Your commit message is missing a JIRA Issue Key
-
-    You can fix this by adding a key like `JRA-123` to the commit message
-    "
-);
+const HELP_MESSAGE: &str = "You can fix this by adding a key like `JRA-123` to the commit message";
+const ERROR: &str = "Your commit message is missing a JIRA Issue Key";
 
 lazy_static! {
     static ref RE: Regex = Regex::new(r"(?m)(^| )[A-Z]{2,}-[0-9]+( |$)").unwrap();
@@ -23,7 +16,11 @@ pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     if commit_message.matches_pattern(&RE) {
         None
     } else {
-        Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing))
+        Some(Problem::new(
+            ERROR.into(),
+            HELP_MESSAGE.into(),
+            Code::JiraIssueKeyMissing,
+        ))
     }
 }
 
@@ -106,7 +103,11 @@ mod tests_has_missing_jira_issue_key {
                 This is an example commit
                 "
             ),
-            &Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing)),
+            &Some(Problem::new(
+                ERROR.into(),
+                HELP_MESSAGE.into(),
+                Code::JiraIssueKeyMissing,
+            )),
         );
         test_has_missing_jira_issue_key(
             indoc!(
@@ -118,7 +119,11 @@ mod tests_has_missing_jira_issue_key {
                 A-123
                 "
             ),
-            &Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing)),
+            &Some(Problem::new(
+                ERROR.into(),
+                HELP_MESSAGE.into(),
+                Code::JiraIssueKeyMissing,
+            )),
         );
         test_has_missing_jira_issue_key(
             indoc!(
@@ -130,7 +135,11 @@ mod tests_has_missing_jira_issue_key {
                 JRA-
                 "
             ),
-            &Some(Problem::new(HELP_MESSAGE.into(), Code::JiraIssueKeyMissing)),
+            &Some(Problem::new(
+                ERROR.into(),
+                HELP_MESSAGE.into(),
+                Code::JiraIssueKeyMissing,
+            )),
         );
     }
 

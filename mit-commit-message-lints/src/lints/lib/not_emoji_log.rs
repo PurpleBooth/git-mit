@@ -8,8 +8,6 @@ pub(crate) const CONFIG: &str = "not-emoji-log";
 
 const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit message isn't in emoji log
-
     You can fix it using one of the prefixes:
 
     \u{1f4e6} NEW:
@@ -23,6 +21,8 @@ const HELP_MESSAGE: &str = indoc!(
     You can read more at https://github.com/ahmadawais/Emoji-Log
     "
 );
+
+const ERROR: &str = "Your commit message isn't in emoji log";
 
 const PREFIXES: &[&str] = &[
     "\u{1f4e6} NEW: ",
@@ -41,7 +41,11 @@ pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     {
         None
     } else {
-        Some(Problem::new(HELP_MESSAGE.into(), Code::NotEmojiLog))
+        Some(Problem::new(
+            ERROR.into(),
+            HELP_MESSAGE.into(),
+            Code::NotEmojiLog,
+        ))
     }
 }
 
@@ -162,7 +166,11 @@ mod test {
                 This is an example commit
                 "
             ),
-            &Some(Problem::new(HELP_MESSAGE.into(), Code::NotEmojiLog)),
+            &Some(Problem::new(
+                ERROR.into(),
+                HELP_MESSAGE.into(),
+                Code::NotEmojiLog,
+            )),
         );
     }
 
@@ -176,7 +184,11 @@ mod test {
                 This is an example commit
                 "
             ),
-            &Some(Problem::new(HELP_MESSAGE.into(), Code::NotEmojiLog)),
+            &Some(Problem::new(
+                ERROR.into(),
+                HELP_MESSAGE.into(),
+                Code::NotEmojiLog,
+            )),
         );
     }
 
@@ -190,7 +202,11 @@ mod test {
                 This is an example commit
                 "
             ),
-            &Some(Problem::new(HELP_MESSAGE.into(), Code::NotEmojiLog)),
+            &Some(Problem::new(
+                ERROR.into(),
+                HELP_MESSAGE.into(),
+                Code::NotEmojiLog,
+            )),
         );
     }
 

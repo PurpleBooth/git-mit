@@ -1,4 +1,3 @@
-use indoc::indoc;
 use mit_commit::CommitMessage;
 
 use crate::lints::lib::problem::Code;
@@ -6,13 +5,8 @@ use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "subject-not-separated-from-body";
 
-const HELP_MESSAGE: &str = indoc!(
-    "
-    Your commit message is missing a blank line between the subject and the body
-
-    To fix this separate subject from body with a blank line
-    "
-);
+const ERROR: &str = "Your commit message is missing a blank line between the subject and the body";
+const HELP_MESSAGE: &str = "To fix this separate subject from body with a blank line";
 
 fn has_problem(commit_message: &CommitMessage) -> bool {
     commit_message
@@ -24,6 +18,7 @@ fn has_problem(commit_message: &CommitMessage) -> bool {
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     if has_problem(&commit_message) {
         Some(Problem::new(
+            ERROR.into(),
             HELP_MESSAGE.into(),
             Code::SubjectNotSeparateFromBody,
         ))
@@ -148,6 +143,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::SubjectNotSeparateFromBody,
             )),
@@ -162,6 +158,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::SubjectNotSeparateFromBody,
             )),
