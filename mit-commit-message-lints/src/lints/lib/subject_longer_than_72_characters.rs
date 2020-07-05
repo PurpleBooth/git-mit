@@ -1,4 +1,3 @@
-use indoc::indoc;
 use mit_commit::CommitMessage;
 
 use crate::lints::lib::problem::Code;
@@ -6,17 +5,13 @@ use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "subject-longer-than-72-characters";
 
-const HELP_MESSAGE: &str = indoc!(
-    "
-    Your commit message is not well formed
-
-    Please keep the subject line 72 characters or under
-    "
-);
+const HELP_MESSAGE: &str = "Please keep the subject line 72 characters or under";
+const ERROR: &str = "Your commit message is not well formed";
 
 pub(crate) fn lint(commit: &CommitMessage) -> Option<Problem> {
     if commit.get_subject().len() > 72 {
         Some(Problem::new(
+            ERROR.into(),
             HELP_MESSAGE.into(),
             Code::SubjectLongerThan72Characters,
         ))
@@ -174,6 +169,7 @@ mod tests {
         test_subject_longer_than_72_characters(
             &"x".repeat(73),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::SubjectLongerThan72Characters,
             )),
@@ -185,6 +181,7 @@ mod tests {
         test_subject_longer_than_72_characters(
             &format!("{}\n", "x".repeat(73)),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::SubjectLongerThan72Characters,
             )),
@@ -251,6 +248,7 @@ mod tests {
         test_subject_longer_than_72_characters(
             &format!("{}\n\n{}", "x".repeat(73), message),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::SubjectLongerThan72Characters,
             )),

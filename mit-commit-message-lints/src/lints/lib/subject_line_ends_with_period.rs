@@ -1,4 +1,3 @@
-use indoc::indoc;
 use mit_commit::CommitMessage;
 
 use crate::lints::lib::problem::Code;
@@ -6,13 +5,8 @@ use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "subject-line-ends-with-period";
 
-const HELP_MESSAGE: &str = indoc!(
-    "
-    Your commit message ends with a period
-
-    You can fix this by removing the period
-    "
-);
+const ERROR: &str = "Your commit message ends with a period";
+const HELP_MESSAGE: &str = "You can fix this by removing the period";
 
 fn has_problem(commit_message: &CommitMessage) -> bool {
     if let Some('.') = commit_message.get_subject().chars().rev().next() {
@@ -25,6 +19,7 @@ fn has_problem(commit_message: &CommitMessage) -> bool {
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     if has_problem(&commit_message) {
         Some(Problem::new(
+            ERROR.into(),
             HELP_MESSAGE.into(),
             Code::SubjectEndsWithPeriod,
         ))
@@ -63,6 +58,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::SubjectEndsWithPeriod,
             )),
@@ -78,6 +74,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::SubjectEndsWithPeriod,
             )),

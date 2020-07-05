@@ -1,4 +1,3 @@
-use indoc::indoc;
 use mit_commit::CommitMessage;
 
 use crate::lints::lib::problem::Code;
@@ -6,13 +5,8 @@ use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "subject-line-not-capitalized";
 
-const HELP_MESSAGE: &str = indoc!(
-    "
-    Your commit message is missing a capital letter
-
-    You can fix this by capitalising the first character in the subject
-    "
-);
+const HELP_MESSAGE: &str = "You can fix this by capitalising the first character in the subject";
+const ERROR: &str = "Your commit message is missing a capital letter";
 
 fn has_problem(commit_message: &CommitMessage) -> bool {
     if let Some(character) = commit_message.get_subject().chars().next() {
@@ -25,6 +19,7 @@ fn has_problem(commit_message: &CommitMessage) -> bool {
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     if has_problem(&commit_message) {
         Some(Problem::new(
+            ERROR.into(),
             HELP_MESSAGE.into(),
             Code::SubjectNotCapitalized,
         ))
@@ -63,6 +58,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::SubjectNotCapitalized,
             )),

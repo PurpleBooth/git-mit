@@ -1,4 +1,3 @@
-use indoc::indoc;
 use mit_commit::CommitMessage;
 
 use crate::lints::lib::problem::Code;
@@ -6,13 +5,8 @@ use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "body-wider-than-72-characters";
 
-const HELP_MESSAGE: &str = indoc!(
-    "
-    Your commit message is not well formed
-
-    Please keep the width of the body 72 characters or under
-    "
-);
+const HELP_MESSAGE: &str = "Please keep the width of the body 72 characters or under";
+const ERROR: &str = "Your commit message is not well formed";
 
 fn has_problem(commit: &CommitMessage) -> bool {
     commit
@@ -30,6 +24,7 @@ fn has_problem(commit: &CommitMessage) -> bool {
 pub(crate) fn lint(commit: &CommitMessage) -> Option<Problem> {
     if has_problem(commit) {
         Some(Problem::new(
+            ERROR.into(),
             HELP_MESSAGE.into(),
             Code::BodyWiderThan72Characters,
         ))
@@ -124,6 +119,7 @@ mod tests {
         test_body_wider_than_72_characters(
             &format!("Subject\n\n{}", "x".repeat(73)),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::BodyWiderThan72Characters,
             )),
@@ -135,6 +131,7 @@ mod tests {
         test_body_wider_than_72_characters(
             &format!("Subject\n\nx\n{}\nx\n", "x".repeat(73)),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::BodyWiderThan72Characters,
             )),

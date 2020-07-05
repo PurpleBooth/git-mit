@@ -11,6 +11,8 @@ pub(crate) const CONFIG: &str = "duplicated-trailers";
 
 const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
 const FIELD_SINGULAR: &str = "field";
+const ERROR: &str = "Your commit message has duplicated trailers";
+
 const FIELD_PLURAL: &str = "fields";
 
 fn get_duplicated_trailers(commit_message: &CommitMessage) -> Vec<String> {
@@ -48,13 +50,17 @@ pub(crate) fn lint(commit: &CommitMessage) -> Option<Problem> {
         None
     } else {
         let warning = warning(&duplicated_trailers);
-        Some(Problem::new(warning, Code::DuplicatedTrailers))
+        Some(Problem::new(
+            ERROR.into(),
+            warning,
+            Code::DuplicatedTrailers,
+        ))
     }
 }
 
 fn warning(duplicated_trailers: &[String]) -> String {
     let warning = format!(
-        "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"{}\" {}",
+        "You can fix this by deleting the duplicated \"{}\" {}",
         duplicated_trailers.join("\", \""),
         if duplicated_trailers.len() > 1 {
             FIELD_PLURAL
@@ -105,9 +111,9 @@ mod tests_has_duplicated_trailers {
                 Co-authored-by: Billie Thompson <email@example.com>
                 "
             ).into(),
-            &Some(Problem::new(
-                "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Co-authored-by\", \"Signed-off-by\" fields".into(),
-                Code::DuplicatedTrailers,
+            &Some(Problem::new(ERROR.into(),
+                               "You can fix this by deleting the duplicated \"Co-authored-by\", \"Signed-off-by\" fields".into(),
+                               Code::DuplicatedTrailers,
             )),
         );
     }
@@ -124,9 +130,11 @@ mod tests_has_duplicated_trailers {
                 Signed-off-by: Billie Thompson <email@example.com>
                 Signed-off-by: Billie Thompson <email@example.com>
                 "
-            ).into(),
+            )
+            .into(),
             &Some(Problem::new(
-                "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Signed-off-by\" field".into(),
+                ERROR.into(),
+                "You can fix this by deleting the duplicated \"Signed-off-by\" field".into(),
                 Code::DuplicatedTrailers,
             )),
         );
@@ -144,9 +152,11 @@ mod tests_has_duplicated_trailers {
                 Co-authored-by: Billie Thompson <email@example.com>
                 Co-authored-by: Billie Thompson <email@example.com>
                 "
-            ).into(),
+            )
+            .into(),
             &Some(Problem::new(
-                "Your commit message has duplicated trailers\n\nYou can fix this by deleting the duplicated \"Co-authored-by\" field".into(),
+                ERROR.into(),
+                "You can fix this by deleting the duplicated \"Co-authored-by\" field".into(),
                 Code::DuplicatedTrailers,
             )),
         );

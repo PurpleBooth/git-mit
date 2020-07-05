@@ -1,16 +1,14 @@
 use indoc::indoc;
 use mit_commit::CommitMessage;
+use regex::Regex;
 
 use crate::lints::lib::problem::Code;
 use crate::lints::lib::Problem;
-use regex::Regex;
 
 pub(crate) const CONFIG: &str = "not-conventional-commit";
 
 const HELP_MESSAGE: &str = indoc!(
     "
-    Your commit message isn't conventional
-
     You can fix it by following style
 
     <type>[optional scope]: <description>
@@ -19,9 +17,10 @@ const HELP_MESSAGE: &str = indoc!(
 
     [optional footer(s)]
 
-    You can read more at https://www.conventionalcommits.org/
-    "
+    You can read more at https://www.conventionalcommits.org/"
 );
+
+const ERROR: &str = "Your commit message isn't conventional";
 
 lazy_static! {
     static ref RE: Regex = Regex::new("^[^()\\s]+(\\(\\w+\\))?!?: ").unwrap();
@@ -36,6 +35,7 @@ fn has_problem(commit_message: &CommitMessage) -> bool {
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
     if has_problem(&commit_message) {
         Some(Problem::new(
+            ERROR.into(),
             HELP_MESSAGE.into(),
             Code::NotConventionalCommit,
         ))
@@ -163,6 +163,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::NotConventionalCommit,
             )),
@@ -180,6 +181,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::NotConventionalCommit,
             )),
@@ -197,6 +199,7 @@ mod tests {
                 "
             ),
             &Some(Problem::new(
+                ERROR.into(),
                 HELP_MESSAGE.into(),
                 Code::NotConventionalCommit,
             )),
