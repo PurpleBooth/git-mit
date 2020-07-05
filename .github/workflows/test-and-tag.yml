@@ -41,6 +41,9 @@ jobs:
       - id: get_previous_version
         run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort | tail -n 1)
         shell: bash
+      - id: get_previous_previous_version
+        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort | tail -n 2 | head -n 1)
+        shell: bash
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -51,10 +54,12 @@ jobs:
           command: install
           args: what-bump
       - run: mkdir -p ./version
-      - run: what-bump "${PREVIOUS_VERSION}" --from "${PREVIOUS_VERSION:1}" > ./version/no_v_version
+      - run: |
+          what-bump "${PREVIOUS_VERSION}" --from "${PREVIOUS_VERSION:1}" > ./version/no_v_version || what-bump "${PREVIOUS_PREVIOUS_VERSION}" --from "${PREVIOUS_VERSION:1}"
         if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'Release v')
         env:
           PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
+          PREVIOUS_PREVIOUS_VERSION: "${{ steps.get_previous_previous_version.outputs.PREVIOUS_VERSION }}"
       - run: echo "${PREVIOUS_VERSION:1}" > ./version/no_v_version
         if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'Release v')
         env:
