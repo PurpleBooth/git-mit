@@ -54,11 +54,12 @@ jobs:
           args: what-bump
       - run: mkdir -p ./version
       - run: |
-          what-bump "${LAST_COMMON_COMMIT}" --from "${PREVIOUS_VERSION:1}" > ./version/no_v_version
+          what-bump "${LAST_COMMON_COMMIT}" --from "${PREVIOUS_VERSION:1}" > ./version/no_prefix_version
+          echo "v" > ./version/prefix
+          cat ./version/prefix ./version/no_prefix_version | tr  -d '\n' > ./version/version
         env:
           PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
           LAST_COMMON_COMMIT: "${{ steps.get_last_common_commit.outputs.LAST_COMMON_COMMIT }}"
-      - run: echo "v$(./version/no_v_version)" > ./version/version
       - uses: actions/upload-artifact@v2
         with:
           name: version
