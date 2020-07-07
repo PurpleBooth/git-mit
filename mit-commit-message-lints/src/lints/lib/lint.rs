@@ -3,9 +3,9 @@ use std::convert::TryInto;
 use mit_commit::CommitMessage;
 use thiserror::Error;
 
-use crate::lints::lib;
-use crate::lints::lib::problem::Problem;
+use crate::lints::checks;
 use crate::lints::lib::Lints;
+use crate::lints::lib::Problem;
 
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash, Ord, PartialOrd)]
@@ -55,17 +55,19 @@ impl Lint {
     #[must_use]
     pub fn name(self) -> &'static str {
         match self {
-            Lint::DuplicatedTrailers => lib::duplicate_trailers::CONFIG,
-            Lint::PivotalTrackerIdMissing => lib::missing_pivotal_tracker_id::CONFIG,
-            Lint::JiraIssueKeyMissing => lib::missing_jira_issue_key::CONFIG,
-            Lint::GitHubIdMissing => lib::missing_github_id::CONFIG,
-            Lint::SubjectNotSeparateFromBody => lib::subject_not_seperate_from_body::CONFIG,
-            Lint::SubjectLongerThan72Characters => lib::subject_longer_than_72_characters::CONFIG,
-            Lint::SubjectNotCapitalized => lib::subject_not_capitalized::CONFIG,
-            Lint::SubjectEndsWithPeriod => lib::subject_line_ends_with_period::CONFIG,
-            Lint::BodyWiderThan72Characters => lib::body_wider_than_72_characters::CONFIG,
-            Lint::NotConventionalCommit => lib::not_conventional_commit::CONFIG,
-            Lint::NotEmojiLog => lib::not_emoji_log::CONFIG,
+            Lint::DuplicatedTrailers => checks::duplicate_trailers::CONFIG,
+            Lint::PivotalTrackerIdMissing => checks::missing_pivotal_tracker_id::CONFIG,
+            Lint::JiraIssueKeyMissing => checks::missing_jira_issue_key::CONFIG,
+            Lint::GitHubIdMissing => checks::missing_github_id::CONFIG,
+            Lint::SubjectNotSeparateFromBody => checks::subject_not_seperate_from_body::CONFIG,
+            Lint::SubjectLongerThan72Characters => {
+                checks::subject_longer_than_72_characters::CONFIG
+            }
+            Lint::SubjectNotCapitalized => checks::subject_not_capitalized::CONFIG,
+            Lint::SubjectEndsWithPeriod => checks::subject_line_ends_with_period::CONFIG,
+            Lint::BodyWiderThan72Characters => checks::body_wider_than_72_characters::CONFIG,
+            Lint::NotConventionalCommit => checks::not_conventional_commit::CONFIG,
+            Lint::NotEmojiLog => checks::not_emoji_log::CONFIG,
         }
     }
 }
@@ -110,23 +112,27 @@ impl Lint {
     #[must_use]
     pub fn lint(self, commit_message: &CommitMessage) -> Option<Problem> {
         match self {
-            Lint::DuplicatedTrailers => lib::duplicate_trailers::lint(commit_message),
-            Lint::PivotalTrackerIdMissing => lib::missing_pivotal_tracker_id::lint(commit_message),
-            Lint::JiraIssueKeyMissing => lib::missing_jira_issue_key::lint(commit_message),
-            Lint::GitHubIdMissing => lib::missing_github_id::lint(commit_message),
+            Lint::DuplicatedTrailers => checks::duplicate_trailers::lint(commit_message),
+            Lint::PivotalTrackerIdMissing => {
+                checks::missing_pivotal_tracker_id::lint(commit_message)
+            }
+            Lint::JiraIssueKeyMissing => checks::missing_jira_issue_key::lint(commit_message),
+            Lint::GitHubIdMissing => checks::missing_github_id::lint(commit_message),
             Lint::SubjectNotSeparateFromBody => {
-                lib::subject_not_seperate_from_body::lint(commit_message)
+                checks::subject_not_seperate_from_body::lint(commit_message)
             }
             Lint::SubjectLongerThan72Characters => {
-                lib::subject_longer_than_72_characters::lint(commit_message)
+                checks::subject_longer_than_72_characters::lint(commit_message)
             }
-            Lint::SubjectNotCapitalized => lib::subject_not_capitalized::lint(commit_message),
-            Lint::SubjectEndsWithPeriod => lib::subject_line_ends_with_period::lint(commit_message),
+            Lint::SubjectNotCapitalized => checks::subject_not_capitalized::lint(commit_message),
+            Lint::SubjectEndsWithPeriod => {
+                checks::subject_line_ends_with_period::lint(commit_message)
+            }
             Lint::BodyWiderThan72Characters => {
-                lib::body_wider_than_72_characters::lint(commit_message)
+                checks::body_wider_than_72_characters::lint(commit_message)
             }
-            Lint::NotConventionalCommit => lib::not_conventional_commit::lint(commit_message),
-            Lint::NotEmojiLog => lib::not_emoji_log::lint(commit_message),
+            Lint::NotConventionalCommit => checks::not_conventional_commit::lint(commit_message),
+            Lint::NotEmojiLog => checks::not_emoji_log::lint(commit_message),
         }
     }
 

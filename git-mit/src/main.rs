@@ -1,4 +1,3 @@
-use console::style;
 use std::{
     convert::TryFrom,
     env, fs,
@@ -8,19 +7,18 @@ use std::{
 };
 
 use clap::ArgMatches;
+use console::style;
 use xdg::BaseDirectories;
 
 use mit_commit_message_lints::{
-    author::{
-        entities::{Author, Authors},
-        vcs::set_authors,
-    },
     external::Git2,
+    mit::{set_commit_authors, Author, Authors},
 };
 
 use crate::errors::GitMitError;
 use crate::errors::GitMitError::{NoAuthorInitialsProvided, NoTimeoutSet};
 use crate::ExitCode::InitialNotMatchedToAuthor;
+use mit_commit_message_lints::mit::get_config_authors;
 
 #[repr(i32)]
 enum ExitCode {
@@ -30,12 +28,18 @@ enum ExitCode {
 const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
 
 fn main() -> Result<(), errors::GitMitError> {
-    let path = config_path(env!("CARGO_PKG_NAME"))?;
-    let matches = cli::app(&path).get_matches();
+    let matches = cli::app().get_matches();
     let users_config = get_users_config(&matches)?;
     let authors_initials = get_author_initials(&matches).ok_or_else(|| NoAuthorInitialsProvided)?;
 
-    let all_authors = Authors::try_from(users_config.as_str())?;
+    let current_dir =
+        env::current_dir().map_err(|error| GitMitError::new_io("$PWD".into(), &error))?;
+
+    let mut git_config = Git2::try_from(current_dir)?;
+
+    let all_authors =
+        Authors::try_from(users_config.as_str())?.merge(&get_config_authors(&git_config)?);
+
     let selected_authors = all_authors.get(&authors_initials);
     let initials_without_authors = find_initials_missing(authors_initials, &selected_authors);
 
@@ -43,13 +47,8 @@ fn main() -> Result<(), errors::GitMitError> {
         exit_initial_not_matched_to_author(&initials_without_authors);
     }
 
-    let current_dir =
-        env::current_dir().map_err(|error| GitMitError::new_io("$PWD".into(), &error))?;
-
-    let mut git_config = Git2::try_from(current_dir)?;
-
     let authors = selected_authors.into_iter().flatten().collect::<Vec<_>>();
-    set_authors(
+    set_commit_authors(
         &mut git_config,
         &authors,
         Duration::from_secs(get_timeout(&matches)? * 60),
@@ -112,8 +111,12 @@ fn get_author_config_from_exec(command: &str) -> Result<String, GitMitError> {
 fn get_author_config_from_file(matches: &ArgMatches) -> Result<String, GitMitError> {
     get_author_file_path(&matches)
         .ok_or_else(|| GitMitError::AuthorFileNotSet)
+        .and_then(|path| match path {
+            "$HOME/.config/git-mit/mit.yml" => config_path(env!("CARGO_PKG_NAME")),
+            _ => Ok(path.into()),
+        })
         .and_then(|path| {
-            fs::read_to_string(path).map_err(|error| GitMitError::new_io(path.into(), &error))
+            fs::read_to_string(&path).map_err(|error| GitMitError::new_io(path, &error))
         })
 }
 

@@ -48,7 +48,7 @@ impl<'a> Context {
         Context {
             bin: existing::existing(&app, "{bin}"),
             version: existing::existing(&app, "{version}"),
-            author: existing::existing(&app, "{author}"),
+            author: existing::existing(&app, "{mit}"),
             usage: existing::existing(&app, "{usage}"),
             all_args: existing::existing(&app, "{all-args}"),
             unified: existing::existing(&app, "{unified}"),

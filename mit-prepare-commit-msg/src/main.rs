@@ -6,8 +6,8 @@ use mit_commit::CommitMessage;
 use mit_commit::Trailer;
 use mit_commit_message_lints::relates::vcs::get_relate_to_configuration;
 use mit_commit_message_lints::{
-    author::{entities::Author, vcs::get_coauthor_configuration},
     external::Git2,
+    mit::{get_commit_coauthor_configuration, Author},
     relates::entities::RelateTo,
 };
 
@@ -30,7 +30,7 @@ fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
 
     let mut git_config = Git2::try_from(current_dir)?;
 
-    if let Some(authors) = get_coauthor_configuration(&mut git_config)? {
+    if let Some(authors) = get_commit_coauthor_configuration(&mut git_config)? {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?
     }
 

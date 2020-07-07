@@ -10,13 +10,9 @@ use mit_build_tools::manpage;
 mod cli;
 
 fn main() {
-    let cargo_package_name = env!("CARGO_PKG_NAME");
-    let base = xdg::BaseDirectories::with_prefix(cargo_package_name.to_string()).unwrap();
-    let config_file = base.place_config_file("mit.yml").unwrap();
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
-    let config_path_str = config_file.to_str().unwrap();
 
-    let app = cli::app(&config_path_str);
+    let app = cli::app();
 
     completion::generate::<Elvish>(&app, &out_dir.join("elvish_completion"));
     completion::generate::<Fish>(&app, &out_dir.join("fish_completion"));

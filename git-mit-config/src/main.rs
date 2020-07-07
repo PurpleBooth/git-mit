@@ -21,6 +21,8 @@ fn main() -> Result<(), GitMitConfigError> {
 
     let possible: Option<Result<(), GitMitConfigError>> = [
         cmd::author_example::run_on_match,
+        cmd::author_set::run_on_match,
+        cmd::author_generate::run_on_match,
         cmd::lint_enable::run_on_match,
         cmd::lint_disable::run_on_match,
         cmd::lint_available::run_on_match,

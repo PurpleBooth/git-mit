@@ -1,18 +1,18 @@
 use thiserror::Error;
 
 use mit_commit::CommitMessageError;
-use mit_commit_message_lints::{author, external, relates};
+use mit_commit_message_lints::{external, mit, relates};
 
 #[derive(Error, Debug)]
 pub(crate) enum MitPrepareCommitMessageError {
     #[error("{0}")]
     MitCommitMessageLintsError(#[from] CommitMessageError),
-    #[error("Failed to read author config from `{0}`:\n{1}")]
+    #[error("Failed to read mit config from `{0}`:\n{1}")]
     Io(String, String),
     #[error("Expected commit file path")]
     MissingCommitFilePath,
     #[error("{0}")]
-    AuthorWrite(#[from] author::VcsError),
+    AuthorWrite(#[from] mit::VcsError),
     #[error("{0}")]
     RelatesToWrite(#[from] relates::VcsError),
     #[error("{0}")]

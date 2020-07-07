@@ -1,0 +1,11 @@
+pub(crate) mod body_wider_than_72_characters;
+pub(crate) mod duplicate_trailers;
+pub(crate) mod missing_github_id;
+pub(crate) mod missing_jira_issue_key;
+pub(crate) mod missing_pivotal_tracker_id;
+pub(crate) mod not_conventional_commit;
+pub(crate) mod not_emoji_log;
+pub(crate) mod subject_line_ends_with_period;
+pub(crate) mod subject_longer_than_72_characters;
+pub(crate) mod subject_not_capitalized;
+pub(crate) mod subject_not_seperate_from_body;

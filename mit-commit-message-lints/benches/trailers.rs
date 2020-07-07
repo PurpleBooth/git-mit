@@ -5,9 +5,9 @@ use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use indoc::indoc;
 use mit_commit::{CommitMessage, Trailer};
 
-use mit_commit_message_lints::author::entities::Author;
-use mit_commit_message_lints::author::vcs::{get_coauthor_configuration, set_authors};
 use mit_commit_message_lints::external;
+use mit_commit_message_lints::mit::Author;
+use mit_commit_message_lints::mit::{get_commit_coauthor_configuration, set_commit_authors};
 use mit_commit_message_lints::relates::entities::RelateTo;
 use mit_commit_message_lints::relates::vcs::{get_relate_to_configuration, set_relates_to};
 
@@ -77,7 +77,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
                 )
                 .unwrap();
 
-                set_authors(
+                set_commit_authors(
                     &mut vcs,
                     &[
                         &Author::new("Someone Else", "someone@example.com", None),
@@ -92,7 +92,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
                         "Relates-to",
                         &get_relate_to_configuration(&mut vcs).unwrap().unwrap().to(),
                     ));
-                get_coauthor_configuration(&mut vcs)
+                get_commit_coauthor_configuration(&mut vcs)
                     .unwrap()
                     .unwrap()
                     .iter()

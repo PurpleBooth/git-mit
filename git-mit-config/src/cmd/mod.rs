@@ -1,4 +1,6 @@
 pub(crate) mod author_example;
+pub(crate) mod author_generate;
+pub(crate) mod author_set;
 pub(crate) mod lint_available;
 pub(crate) mod lint_disable;
 pub(crate) mod lint_enable;

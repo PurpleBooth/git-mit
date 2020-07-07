@@ -4,7 +4,7 @@ use std::ops::Add;
 use mit_commit::CommitMessage;
 use mit_commit::Trailer as NgTrailer;
 
-use crate::lints::lib::problem::Code;
+use crate::lints::lib::Code;
 use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "duplicated-trailers";

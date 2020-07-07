@@ -1,6 +1,6 @@
 use mit_commit::CommitMessage;
 
-use crate::lints::lib::problem::Code;
+use crate::lints::lib::Code;
 use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "subject-longer-than-72-characters";

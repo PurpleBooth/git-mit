@@ -2,14 +2,17 @@ use std::io;
 
 use thiserror::Error;
 
-use mit_commit_message_lints::{author, external, lints};
+use mit_commit_message_lints::mit::VcsError;
+use mit_commit_message_lints::{external, lints, mit};
 
 #[derive(Error, Debug)]
 pub enum GitMitConfigError {
     #[error("lint name not given")]
     LintNameNotGiven,
-    #[error("failed to parse author yaml {0}")]
-    AuthorYaml(#[from] author::YamlError),
+    #[error("author file not set")]
+    AuthorFileNotSet,
+    #[error("failed to parse mit yaml {0}")]
+    AuthorYaml(#[from] mit::YamlError),
     #[error("failed to open git repository {0}")]
     Git2(#[from] git2::Error),
     #[error("{0}")]
@@ -24,4 +27,10 @@ pub enum GitMitConfigError {
     External(#[from] external::Error),
     #[error("{0}")]
     Io(#[from] io::Error),
+    #[error("{0}")]
+    Vcs(#[from] VcsError),
+    #[error("{0}")]
+    Xdg(#[from] xdg::BaseDirectoriesError),
+    #[error("{0}")]
+    Utf8(#[from] std::string::FromUtf8Error),
 }
