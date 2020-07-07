@@ -28,6 +28,17 @@ impl Git2 {
 }
 
 impl Vcs for Git2 {
+    fn entries(&self, glob: Option<&str>) -> Result<Vec<String>, Error> {
+        let mut entries = vec![];
+        for entry in &self.config_snapshot.entries(glob)? {
+            if let Some(name) = entry?.name() {
+                entries.push(name.into());
+            }
+        }
+
+        Ok(entries)
+    }
+
     fn get_bool(&self, name: &str) -> Result<Option<bool>, Error> {
         if self.config_defined(name)? {
             Ok(Some(self.config_snapshot.get_bool(name)?))

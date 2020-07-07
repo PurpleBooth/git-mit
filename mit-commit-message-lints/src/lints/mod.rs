@@ -8,5 +8,6 @@ pub use lib::Lints;
 pub use lib::LintsError;
 pub use lib::Problem;
 
-pub mod cmd;
-pub mod lib;
+mod checks;
+mod cmd;
+mod lib;

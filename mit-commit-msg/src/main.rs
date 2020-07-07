@@ -8,7 +8,7 @@ use mit_commit::CommitMessage;
 
 use mit_commit_message_lints::{
     external,
-    lints::{lib::Lints, lint, Code, Problem},
+    lints::{lint, Code, Lints, Problem},
 };
 
 use crate::cli::app;

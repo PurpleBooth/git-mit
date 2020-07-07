@@ -59,6 +59,58 @@ se:
   email: someone@example.com
 ```
 
+To make keeping this file up to date easier there's some commands
+to adding and removing users to your git repository, that can 
+then be output into a more permanent configuration file. 
+
+You can quickly add a new author by running
+
+```shell,script(name="3", expected_exit_code=0)
+git mit-config mit set jd "Jane Doe" "jd@example.com"
+```
+
+Over override an existing user temporarily
+
+```shell,script(name="3", expected_exit_code=0)
+git mit-config mit set se "Someone Else" "se@example.com"
+```
+
+You can use these straight away, you don't have to update your 
+authors file.
+
+```shell,script(name="6", expected_exit_code=0)
+git mit jd
+```
+
+However, if you want to make it more permanent, you can output 
+the configuration with these added authors by running the 
+generate command
+
+```shell,script(name="3", expected_exit_code=0)
+git mit-config mit generate
+```
+
+```toml,skip()
+[ae]
+name = "Anyone Else"
+email = "anyone@example.com"
+
+[bt]
+name = "Billie Thompson"
+email = "billie@example.com"
+signingkey = "0A46826A"
+
+[jd]
+name = "Jane Doe"
+email = "jd@example.com"
+
+[se]
+name = "Someone Else"
+email = "se@example.com"
+
+```
+
+
 ## Running the command
 
 We can then use this by passing `-c` to the `git-mit` command.
@@ -105,7 +157,7 @@ author: [Anyone Else anyone@example.com] signed-by: []
 Initial Commit
 
 Co-authored-by: Billie Thompson <billie@example.com>
-Co-authored-by: Someone Else <someone@example.com>
+Co-authored-by: Someone Else <se@example.com>
 ```
 
 You don't need to constantly pass the config everywhere though, you can
@@ -130,7 +182,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 The author configuration will be updated like this
 
 ```text,verify(script_name="9", stream=stdout)
-author: [Someone Else someone@example.com] signed-by: [] 
+author: [Someone Else se@example.com] signed-by: [] 
 ---
 Second Commit
 

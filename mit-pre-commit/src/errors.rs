@@ -1,13 +1,13 @@
 use thiserror::Error;
 
-use mit_commit_message_lints::{author, external};
+use mit_commit_message_lints::{external, mit};
 
 #[derive(Error, Debug)]
 pub(crate) enum MitPreCommitError {
     #[error("{0}")]
     MitCommitMessageLintsError(#[from] external::Error),
     #[error("{0}")]
-    MitCommitMessageAuthorError(#[from] author::VcsError),
+    MitCommitMessageAuthorError(#[from] mit::VcsError),
     #[error("Failed to read config from `{0}`:\n{1}")]
     Io(String, String),
 }

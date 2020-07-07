@@ -51,7 +51,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: install
-          args: what-bump
+          args: what-bump --force
       - run: mkdir -p ./version
       - run: |
           what-bump "${LAST_COMMON_COMMIT}" --from "${PREVIOUS_VERSION:1}" > ./version/no_prefix_version

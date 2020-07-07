@@ -1,6 +1,6 @@
 use clap::{crate_authors, crate_version, App, Arg};
 
-pub fn app(config_file_path: &str) -> App {
+pub fn app() -> App<'static> {
     App::new(String::from(env!("CARGO_PKG_NAME")))
         .bin_name(String::from(env!("CARGO_PKG_NAME")))
         .version(crate_version!())
@@ -8,7 +8,7 @@ pub fn app(config_file_path: &str) -> App {
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::with_name("initials")
-                .about("Initials of the author to put in the commit")
+                .about("Initials of the mit to put in the commit")
                 .multiple(true)
                 .required(true)
                 .min_values(1),
@@ -17,16 +17,16 @@ pub fn app(config_file_path: &str) -> App {
             Arg::with_name("file")
                 .short('c')
                 .long("config")
-                .about("Path to a file where author initials, emails and names can be found")
+                .about("Path to a file where mit initials, emails and names can be found")
                 .env("GIT_MIT_AUTHORS_CONFIG")
-                .default_value(config_file_path),
+                .default_value("$HOME/.config/git-mit/mit.yml"),
         )
         .arg(
             Arg::with_name("command")
                 .short('e')
                 .long("exec")
                 .about(
-                    "Execute a command to generate the author configuration, stdout will be \
+                    "Execute a command to generate the mit configuration, stdout will be \
                  captured and used instead of the file, if both this and the file is present, \
                  this takes precedence",
                 )

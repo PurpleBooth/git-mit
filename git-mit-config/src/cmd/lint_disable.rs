@@ -41,7 +41,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
         .collect::<Vec<_>>()
         .try_into()?;
 
-    mit_commit_message_lints::lints::cmd::set_status(lints, &mut vcs, false)?;
+    mit_commit_message_lints::lints::set_status(lints, &mut vcs, false)?;
 
     Ok(())
 }

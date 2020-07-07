@@ -28,6 +28,7 @@ serde_derive = "1.0.114"
   path = "../mit-commit-message-lints"
 
 [dependencies]
+xdg = "2.2.0"
 thiserror = "1.0.20"
 git2 = "0.13.6"
 clap = "3.0.0-beta.1"

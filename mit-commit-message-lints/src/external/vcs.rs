@@ -4,6 +4,10 @@ pub trait Vcs {
     /// # Errors
     ///
     /// If we can't read the config, or it's not parsable into a bool
+    fn entries(&self, glob: Option<&str>) -> Result<Vec<String>, Error>;
+    /// # Errors
+    ///
+    /// If we can't read the config, or it's not parsable into a bool
     fn get_bool(&self, name: &str) -> Result<Option<bool>, Error>;
     /// # Errors
     ///
@@ -37,4 +41,6 @@ pub enum Error {
     InMemoryParseBool(#[from] std::str::ParseBoolError),
     #[error("failed to read git-mit config")]
     Io(#[from] std::io::Error),
+    #[error("failed to parse glob {0}")]
+    Glov(#[from] glob::PatternError),
 }

@@ -484,6 +484,7 @@ dependencies = [
  "serde_json",
  "thiserror",
  "tinytemplate",
+ "xdg",
 ]
 
 [[package]]
@@ -541,6 +542,12 @@ name = "glob"
 version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8be18de09a56b60ed0edf84bc9df007e30040691af7acd1c41874faac5895bfb"
+
+[[package]]
+name = "glob"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9b919933a397b79c37e33b77bb2aa3dc8eb6e165ad809e58ff75bc7db2e34574"
 
 [[package]]
 name = "half"
@@ -837,6 +844,7 @@ dependencies = [
  "console",
  "criterion",
  "git2",
+ "glob 0.3.0",
  "indoc",
  "lazy_static",
  "mit-commit",
@@ -1406,7 +1414,7 @@ dependencies = [
  "bytecount",
  "cargo_metadata",
  "error-chain",
- "glob",
+ "glob 0.2.11",
  "pulldown-cmark",
  "serde_json",
  "tempdir",

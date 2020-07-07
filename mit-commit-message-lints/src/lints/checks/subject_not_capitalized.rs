@@ -1,16 +1,16 @@
 use mit_commit::CommitMessage;
 
-use crate::lints::lib::problem::Code;
+use crate::lints::lib::Code;
 use crate::lints::lib::Problem;
 
-pub(crate) const CONFIG: &str = "subject-line-ends-with-period";
+pub(crate) const CONFIG: &str = "subject-line-not-capitalized";
 
-const ERROR: &str = "Your commit message ends with a period";
-const HELP_MESSAGE: &str = "You can fix this by removing the period";
+const HELP_MESSAGE: &str = "You can fix this by capitalising the first character in the subject";
+const ERROR: &str = "Your commit message is missing a capital letter";
 
 fn has_problem(commit_message: &CommitMessage) -> bool {
-    if let Some('.') = commit_message.get_subject().chars().rev().next() {
-        true
+    if let Some(character) = commit_message.get_subject().chars().next() {
+        character.to_string() != character.to_uppercase().to_string()
     } else {
         false
     }
@@ -21,7 +21,7 @@ pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
         Some(Problem::new(
             ERROR.into(),
             HELP_MESSAGE.into(),
-            Code::SubjectEndsWithPeriod,
+            Code::SubjectNotCapitalized,
         ))
     } else {
         None
@@ -38,7 +38,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn subject_does_not_end_with_period() {
+    fn capitalised() {
         run_test(
             indoc!(
                 "
@@ -50,34 +50,30 @@ mod tests {
     }
 
     #[test]
-    fn subject_ends_with_period() {
+    fn lower_case() {
         run_test(
             indoc!(
                 "
-                Subject Line.
+                subject line
                 "
             ),
             &Some(Problem::new(
                 ERROR.into(),
                 HELP_MESSAGE.into(),
-                Code::SubjectEndsWithPeriod,
+                Code::SubjectNotCapitalized,
             )),
         );
     }
 
     #[test]
-    fn subject_has_period_then_whitespace() {
+    fn numbers_are_fine() {
         run_test(
             indoc!(
                 "
-                Subject Line.
+                1234567
                 "
             ),
-            &Some(Problem::new(
-                ERROR.into(),
-                HELP_MESSAGE.into(),
-                Code::SubjectEndsWithPeriod,
-            )),
+            &None,
         );
     }
 

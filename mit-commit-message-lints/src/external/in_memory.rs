@@ -1,6 +1,6 @@
-use std::{collections::BTreeMap, string::String};
-
 use crate::external::{Error, Vcs};
+use glob::Pattern;
+use std::{collections::BTreeMap, string::String};
 
 pub struct InMemory<'a> {
     store: &'a mut BTreeMap<String, String>,
@@ -14,6 +14,21 @@ impl InMemory<'_> {
 }
 
 impl Vcs for InMemory<'_> {
+    fn entries(&self, glob: Option<&str>) -> Result<Vec<String>, Error> {
+        let mut keys: Vec<String> = self.store.keys().map(String::from).collect();
+
+        if let Some(pattern) = glob {
+            let compiled_glob = glob::Pattern::new(pattern)?;
+
+            keys = keys
+                .into_iter()
+                .filter(|value| Pattern::matches(&compiled_glob, value))
+                .collect()
+        }
+
+        Ok(keys)
+    }
+
     fn get_bool(&self, name: &str) -> Result<Option<bool>, Error> {
         match self.store.get(name) {
             None => Ok(None),
