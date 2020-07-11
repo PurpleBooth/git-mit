@@ -13,6 +13,11 @@ mod cli;
 mod cmd;
 mod errors;
 
+#[repr(i32)]
+enum ExitCode {
+    UnparsableAuthorFile = 4,
+}
+
 fn main() -> Result<(), GitMitConfigError> {
     let lint_names: Vec<&str> = Lint::iterator()
         .map(mit_commit_message_lints::lints::Lint::name)

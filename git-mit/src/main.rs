@@ -17,12 +17,14 @@ use mit_commit_message_lints::{
 
 use crate::errors::GitMitError;
 use crate::errors::GitMitError::{NoAuthorInitialsProvided, NoTimeoutSet};
-use crate::ExitCode::InitialNotMatchedToAuthor;
+use crate::ExitCode::{InitialNotMatchedToAuthor, UnparsableAuthorFile};
 use mit_commit_message_lints::mit::get_config_authors;
+use mit_commit_message_lints::mit::AuthorConfigParseError;
 
 #[repr(i32)]
 enum ExitCode {
     InitialNotMatchedToAuthor = 3,
+    UnparsableAuthorFile,
 }
 
 const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
@@ -36,9 +38,13 @@ fn main() -> Result<(), errors::GitMitError> {
         env::current_dir().map_err(|error| GitMitError::new_io("$PWD".into(), &error))?;
 
     let mut git_config = Git2::try_from(current_dir)?;
+    let config_authors = Authors::try_from(users_config.as_str());
 
-    let all_authors =
-        Authors::try_from(users_config.as_str())?.merge(&get_config_authors(&git_config)?);
+    if let Err(error) = &config_authors {
+        exit_unparsable_exit_code(error);
+    }
+
+    let all_authors = config_authors?.merge(&get_config_authors(&git_config)?);
 
     let selected_authors = all_authors.get(&authors_initials);
     let initials_without_authors = find_initials_missing(authors_initials, &selected_authors);
@@ -55,6 +61,14 @@ fn main() -> Result<(), errors::GitMitError> {
     )?;
 
     Ok(())
+}
+
+fn exit_unparsable_exit_code(parse_err: &AuthorConfigParseError) {
+    let error = style("Unable to parse the author config").red().bold();
+    let tip = style(format!("You can fix this by correcting the file so it's parsable\n\nYou can see a parsable example by running:\ngit mit-config mit example\n\nHere's the technical details, that might help you track down the source of the problem\n\n{}", parse_err)).italic();
+
+    eprintln!("{}\n\n{}", error, tip);
+    std::process::exit(UnparsableAuthorFile as i32);
 }
 
 fn exit_initial_not_matched_to_author(initials_without_authors: &[&str]) {

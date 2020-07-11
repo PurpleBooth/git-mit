@@ -24,8 +24,8 @@ pub enum GitMitError {
     Exec(String, String),
     #[error("failed to calculate config directory {0}")]
     Xdg(#[from] xdg::BaseDirectoriesError),
-    #[error("failed to parse mit yaml {0}")]
-    AuthorYaml(#[from] mit::YamlError),
+    #[error("failed to parse mit author config {0}")]
+    AuthorConfigParse(#[from] mit::AuthorConfigParseError),
     #[error("failed to set mit in vcs {0}")]
     AuthorVcs(#[from] mit::VcsError),
 }

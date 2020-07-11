@@ -11,8 +11,8 @@ pub enum GitMitConfigError {
     LintNameNotGiven,
     #[error("author file not set")]
     AuthorFileNotSet,
-    #[error("failed to parse mit yaml {0}")]
-    AuthorYaml(#[from] mit::YamlError),
+    #[error("failed to parse mit author config {0}")]
+    AuthorConfigParse(#[from] mit::AuthorConfigParseError),
     #[error("failed to open git repository {0}")]
     Git2(#[from] git2::Error),
     #[error("{0}")]

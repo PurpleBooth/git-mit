@@ -56,20 +56,21 @@ impl Authors {
 }
 
 impl TryFrom<&str> for Authors {
-    type Error = Error;
+    type Error = ConfigParseError;
 
     fn try_from(input: &str) -> Result<Self, Self::Error> {
         serde_yaml::from_str(input)
             .or_else(|yaml_error| {
-                toml::from_str(input).map_err(|toml_error| Error::Parse(yaml_error, toml_error))
+                toml::from_str(input)
+                    .map_err(|toml_error| ConfigParseError::Parse(yaml_error, toml_error))
             })
-            .map_err(Error::from)
+            .map_err(ConfigParseError::from)
             .map(Authors::new)
     }
 }
 
 #[derive(Error, Debug)]
-pub enum Error {
+pub enum ConfigParseError {
     #[error("failed to parse authors as toml {0} or as yaml {1}")]
     Parse(serde_yaml::Error, toml::de::Error),
     #[error("failed to serialise toml {0}")]
@@ -77,10 +78,10 @@ pub enum Error {
 }
 
 impl TryFrom<Authors> for String {
-    type Error = Error;
+    type Error = ConfigParseError;
 
     fn try_from(value: Authors) -> Result<Self, Self::Error> {
-        toml::to_string(&value.authors).map_err(Error::from)
+        toml::to_string(&value.authors).map_err(ConfigParseError::from)
     }
 }
 
