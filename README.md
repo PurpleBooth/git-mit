@@ -11,7 +11,7 @@ issues.
 This works via git hooks, so you need these hooks to be present in the
 git repository you're using to use them.
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git init .
 git mit-install
 ```
@@ -22,7 +22,7 @@ template](https://git-scm.com/docs/git-init#_template_directory). This
 is the template that git uses to create the `.git` directory when you
 run `git init`.
 
-```shell,skip()
+``` shell,skip()
 git mit-install --scope=global
 ```
 
@@ -30,17 +30,17 @@ You can also run this on an existing repository, to set up an already
 checked out repository. You can re-initialise all of your repositories,
 recursively from the home directory using this command.
 
-```shell,skip()
+``` shell,skip()
 find "$HOME" -type d -name .git -exec sh -c 'git init "$1"/..' -- {} \;
 ```
 
 ### Lint list
 
-```shell,script(name="lint-list", expected_exit_code=0)
+``` shell,script(name="lint-list",expected_exit_code=0)
 git mit-config lint available
 ```
 
-```text,verify(script_name="lint-list", stream=stdout)
+``` text,verify(script_name="lint-list",stream=stdout)
 +-----------------------------------+----------+
 | Lint                              | Status   |
 +==============================================+
@@ -70,11 +70,11 @@ git mit-config lint available
 
 With only lints that ensure git will work properly enabled by default
 
-```shell,script(name="lint-list", expected_exit_code=0)
+``` shell,script(name="lint-list",expected_exit_code=0)
 git mit-config lint enabled
 ```
 
-```text,verify(script_name="lint-list", stream=stdout)
+``` text,verify(script_name="lint-list",stream=stdout)
 +-----------------------------------+---------+
 | Lint                              | Status  |
 +=============================================+
@@ -102,18 +102,18 @@ your `.gitignore` to allow easy local reconfiguration
 
 For example
 
-```toml,file(path=".git-mit.toml.dist")
+``` toml,file(path=".git-mit.toml.dist")
 [mit.lint]
 "pivotal-tracker-id-missing" = true
 ```
 
 With this you can enable lints
 
-```shell,script(name="7", expected_exit_code=0)
+``` shell,script(name="7",expected_exit_code=0)
 git mit-config lint status pivotal-tracker-id-missing
 ```
 
-```text,verify(script_name="7", stream=stdout)
+``` text,verify(script_name="7",stream=stdout)
 +----------------------------+---------+
 | Lint                       | Status  |
 +======================================+
@@ -133,7 +133,7 @@ to remember though, so here's a command to reduce the amount of typing.
 Say you've just made this awesome `README.md` for Pivotal Tracker ID
 `[#12321513]`
 
-```markdown,file(path="README.md")
+``` markdown,file(path="README.md")
 # The Best Readme
 
 This is the best readme
@@ -141,13 +141,13 @@ This is the best readme
 
 If you run
 
-```shell,script(name="2", expected_exit_code=0)
+``` shell,script(name="2",expected_exit_code=0)
 git mit-relates-to "[#12321513]"
 ```
 
 Next time you commit
 
-```shell,script(name="3", expected_exit_code=0)
+``` shell,script(name="3",expected_exit_code=0)
 git add README.md
 git mit bt
 git commit -m "Wrote a great README"
@@ -155,13 +155,13 @@ git commit -m "Wrote a great README"
 
 the commit message will contain the ID
 
-```shell,script(name="4", expected_exit_code=0)
+``` shell,script(name="4",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-```text,verify(script_name="4", stream=stdout)
+``` text,verify(script_name="4",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Wrote a great README
@@ -176,15 +176,14 @@ Read more about this at the [relates to page](docs/mit-relates-to.md)
 Pairing is a great way to program, and it's even better when you give
 credit, you can give credit with the mit command
 
-Configure your authors like the example by creating a config at 
+Configure your authors like the example by creating a config at
 `$HOME/.config/git-mit/mit.toml`
 
-
-```shell,script(name="3")
+``` shell,script(name="3")
 git-mit-config mit example
 ```
 
-```toml,verify(script_name="3", stream=stdout)
+``` toml,verify(script_name="3",stream=stdout)
 [ae]
 name = "Anyone Else"
 email = "anyone@example.com"
@@ -202,14 +201,14 @@ email = "someone@example.com"
 
 And you can run
 
-```shell,script(name="6", expected_exit_code=0)
+``` shell,script(name="6",expected_exit_code=0)
 git mit ae bt se
 ```
 
 Then next when you make a commit the `Co-authored-by` trailers will be
 set of the author initials you selected.
 
-```shell,script(name="7", expected_exit_code=0)
+``` shell,script(name="7",expected_exit_code=0)
 echo "# Hello, world!" > README.md
 
 git add .
@@ -219,7 +218,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 %B' -q
 ```
 
-```text,verify(script_name="7", stream=stdout)
+``` text,verify(script_name="7",stream=stdout)
 author: [Anyone Else anyone@example.com] signed-by: [] 
 ---
 Initial Commit
@@ -239,7 +238,7 @@ For more information on this see the [mit page](docs/mit.md)
 
 You can install this with brew\!
 
-```shell,skip()
+``` shell,skip()
 brew install PurpleBooth/repo/git-mit
 ```
 
