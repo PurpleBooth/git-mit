@@ -14,9 +14,12 @@ use mit_commit_message_lints::{
 use crate::cli::app;
 use crate::errors::MitPrepareCommitMessageError;
 use crate::MitPrepareCommitMessageError::MissingCommitFilePath;
+use std::process::{Command, Stdio};
 
 mod cli;
 mod errors;
+
+const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
 
 fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
     let matches = app().get_matches();
@@ -34,7 +37,12 @@ fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?
     }
 
-    if let Some(relates_to) = get_relate_to_configuration(&mut git_config)? {
+    if let Some(exec) = matches.value_of("relates-to-exec") {
+        append_relate_to_trailer_to_commit_message(
+            commit_message_path,
+            &get_relates_to_from_exec(exec)?,
+        )?
+    } else if let Some(relates_to) = get_relate_to_configuration(&mut git_config)? {
         append_relate_to_trailer_to_commit_message(commit_message_path, &relates_to)?
     }
 
@@ -100,4 +108,19 @@ fn add_trailer_if_not_existing(
     } else {
         Ok(())
     }
+}
+
+fn get_relates_to_from_exec(command: &str) -> Result<RelateTo, MitPrepareCommitMessageError> {
+    let shell = env::var("SHELL").unwrap_or_else(|_| PROBABLY_SAFE_FALLBACK_SHELL.into());
+    Command::new(shell)
+        .stderr(Stdio::inherit())
+        .arg("-c")
+        .arg(command)
+        .output()
+        .map_err(|error| MitPrepareCommitMessageError::new_exec(command.into(), &error))
+        .and_then(|x| {
+            Ok(RelateTo::new(
+                &String::from_utf8(x.stdout).map_err(MitPrepareCommitMessageError::from)?,
+            ))
+        })
 }
