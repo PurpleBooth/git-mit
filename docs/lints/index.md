@@ -58,7 +58,7 @@ Lints relating to trailers:
 
 ##### duplicated-trailers
 
-Detect duplicated `Signed-off-by` and `Co-authored-by` Trailers.
+Detect duplicated `Signed-off-by`, `Co-authored-by`, and `Relates-to` Trailers.
 
 ###### Default status
 
@@ -110,6 +110,8 @@ Co-authored-by: Billie Thompson <billie@example.com>
 Co-authored-by: Billie Thompson <billie@example.com>
 Signed-off-by: Someone Else <someone@example.com>
 Signed-off-by: Someone Else <someone@example.com>
+Relates-to: #315
+Relates-to: #315
 ```
 
 Committing will fail.
@@ -129,13 +131,15 @@ Co-authored-by: Billie Thompson <billie@example.com>
 Co-authored-by: Billie Thompson <billie@example.com>
 Signed-off-by: Someone Else <someone@example.com>
 Signed-off-by: Someone Else <someone@example.com>
+Relates-to: #315
+Relates-to: #315
 
 
 ---
 
 Your commit message has duplicated trailers
 
-You can fix this by deleting the duplicated "Co-authored-by", "Signed-off-by" fields
+You can fix this by deleting the duplicated "Co-authored-by", "Relates-to", "Signed-off-by" fields
 ```
 
 #### Git Manual Style
