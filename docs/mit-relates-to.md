@@ -135,11 +135,11 @@ in a file at the root of your repository called
 `.pivotal_tracker_project`
 
 ``` shell,skip()
-curl --silent -X GET -H "X-TrackerToken: $PIVOTAL_TRACKER_TOKEN" "https://www.pivotaltracker.com/services/v5/projects/$(cat .pivotal_tracker_project)/stories?filter=state:started+owner:$(curl --silent "https://www.pivotaltracker.com/services/v5/me?fields=%3Adefault" -H "X-TrackerToken: $PIVOTAL_TRACKER_TOKEN" | jq -r .initials)" | jq .[0].id
+echo "[#$(curl --silent -X GET -H "X-TrackerToken: $PIVOTAL_TRACKER_TOKEN" "https://www.pivotaltracker.com/services/v5/projects/$(cat .pivotal_tracker_project)/stories?filter=state:started+owner:$(curl --silent "https://www.pivotaltracker.com/services/v5/me?fields=%3Adefault" -H "X-TrackerToken: $PIVOTAL_TRACKER_TOKEN" | jq -r .initials)" | jq .[0].id)]"
 ```
 
 This would become
 
 ``` shell,skip()
-export GIT_MIT_RELATES_TO_EXEC="curl --silent -X GET -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" \"https://www.pivotaltracker.com/services/v5/projects/\$(cat .pivotal_tracker_project)/stories?filter=state:started+owner:\$(curl --silent \"https://www.pivotaltracker.com/services/v5/me?fields=%3Adefault\" -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" | jq -r .initials)\" | jq .[0].id"
+export GIT_MIT_RELATES_TO_EXEC="echo \"[#\$(curl --silent -X GET -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" \"https://www.pivotaltracker.com/services/v5/projects/\$(cat .pivotal_tracker_project)/stories?filter=state:started+owner:\$(curl --silent \"https://www.pivotaltracker.com/services/v5/me?fields=%3Adefault\" -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" | jq -r .initials)\" | jq .[0].id)]\""
 ```
