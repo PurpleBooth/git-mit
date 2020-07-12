@@ -5,14 +5,14 @@
 As always we need a working it repository the, with the hooks installed
 to run these lints
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git init .
 git mit-install
 ```
 
 I'm going to assume you've run a `git mit` recently
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit bt
 ```
 
@@ -20,11 +20,11 @@ git mit bt
 
 You can see the full available lint list at any time by running
 
-```shell,script(name="lint-list", expected_exit_code=0)
+``` shell,script(name="lint-list",expected_exit_code=0)
 git mit-config lint available
 ```
 
-```text,verify(script_name="lint-list", stream=stdout)
+``` text,verify(script_name="lint-list",stream=stdout)
 +-----------------------------------+----------+
 | Lint                              | Status   |
 +==============================================+
@@ -58,17 +58,18 @@ Lints relating to trailers:
 
 ##### duplicated-trailers
 
-Detect duplicated `Signed-off-by`, `Co-authored-by`, and `Relates-to` Trailers.
+Detect duplicated `Signed-off-by`, `Co-authored-by`, and `Relates-to`
+Trailers.
 
 ###### Default status
 
 On an empty repository
 
-```shell,script(name="duplicated-trailers-default", expected_exit_code=0)
+``` shell,script(name="duplicated-trailers-default",expected_exit_code=0)
 git mit-config lint status duplicated-trailers
 ```
 
-```text,verify(script_name="duplicated-trailers-default", stream=stdout)
+``` text,verify(script_name="duplicated-trailers-default",stream=stdout)
 +---------------------+---------+
 | Lint                | Status  |
 +===============================+
@@ -80,7 +81,7 @@ git mit-config lint status duplicated-trailers
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that has trailers and is valid
@@ -91,7 +92,7 @@ Signed-off-by: Someone Else <someone@example.com>
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -101,7 +102,7 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that has trailers and is invalid
@@ -116,13 +117,13 @@ Relates-to: #315
 
 Committing will fail.
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 Demonstration Commit Message
 
 This is a commit message that has trailers and is invalid
@@ -154,12 +155,11 @@ If there is a body, enforce a gap between it and the subject.
 
 On an empty repository
 
-```shell,script(name="subject-not-separated-from-body-default", expected_exit_code=0)
+``` shell,script(name="subject-not-separated-from-body-default",expected_exit_code=0)
 git mit-config lint status subject-not-separated-from-body
 ```
 
-
-```text,verify(script_name="subject-not-separated-from-body-default", stream=stdout)
+``` text,verify(script_name="subject-not-separated-from-body-default",stream=stdout)
 +---------------------------------+---------+
 | Lint                            | Status  |
 +===========================================+
@@ -171,7 +171,7 @@ git mit-config lint status subject-not-separated-from-body
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that is valid
@@ -179,7 +179,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -189,20 +189,20 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 This is a commit message that is invalid
 ```
 
 Committing will fail
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 Demonstration Commit Message
 This is a commit message that is invalid
 
@@ -223,12 +223,11 @@ view, this prevents that
 
 On an empty repository
 
-```shell,script(name="subject-longer-than-72-characters-default", expected_exit_code=0)
+``` shell,script(name="subject-longer-than-72-characters-default",expected_exit_code=0)
 git mit-config lint status subject-longer-than-72-characters
 ```
 
-
-```text,verify(script_name="subject-longer-than-72-characters-default", stream=stdout)
+``` text,verify(script_name="subject-longer-than-72-characters-default",stream=stdout)
 +-----------------------------------+---------+
 | Lint                              | Status  |
 +=============================================+
@@ -240,7 +239,7 @@ git mit-config lint status subject-longer-than-72-characters
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 Demonstration Commit Message
@@ -249,7 +248,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -259,7 +258,7 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 Demonstration Commit Message
@@ -268,13 +267,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 Demonstration Commit Message
@@ -297,11 +296,11 @@ view, this prevents that
 
 On an empty repository
 
-```shell,script(name="body-wider-than-72-characters-default", expected_exit_code=0)
+``` shell,script(name="body-wider-than-72-characters-default",expected_exit_code=0)
 git mit-config lint status body-wider-than-72-characters
 ```
 
-```text,verify(script_name="body-wider-than-72-characters-default", stream=stdout)
+``` text,verify(script_name="body-wider-than-72-characters-default",stream=stdout)
 +-------------------------------+---------+
 | Lint                          | Status  |
 +=========================================+
@@ -313,7 +312,7 @@ git mit-config lint status body-wider-than-72-characters
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -322,7 +321,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -332,7 +331,7 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -341,13 +340,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 Demonstration Commit Message
 
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -373,11 +372,11 @@ Detect a subject line that is not capitalised
 
 On an empty repository
 
-```shell,script(name="subject-line-not-capitalized-default", expected_exit_code=0)
+``` shell,script(name="subject-line-not-capitalized-default",expected_exit_code=0)
 git mit-config lint status subject-line-not-capitalized
 ```
 
-```text,verify(script_name="subject-line-not-capitalized-default", stream=stdout)
+``` text,verify(script_name="subject-line-not-capitalized-default",stream=stdout)
 +------------------------------+----------+
 | Lint                         | Status   |
 +=========================================+
@@ -389,7 +388,7 @@ git mit-config lint status subject-line-not-capitalized
 
 Enable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint enable subject-line-not-capitalized
 ```
 
@@ -397,7 +396,7 @@ git mit-config lint enable subject-line-not-capitalized
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that is valid
@@ -405,7 +404,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -415,7 +414,7 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 demonstration Commit Message
 
 This is a commit message that is invalid
@@ -423,13 +422,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 demonstration Commit Message
 
 This is a commit message that is invalid
@@ -446,7 +445,7 @@ You can fix this by capitalising the first character in the subject
 
 Disable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint disable subject-line-not-capitalized
 ```
 
@@ -458,11 +457,11 @@ Detect a subject line that is not capitalised
 
 On an empty repository
 
-```shell,script(name="subject-line-ends-with-period-default", expected_exit_code=0)
+``` shell,script(name="subject-line-ends-with-period-default",expected_exit_code=0)
 git mit-config lint status subject-line-ends-with-period
 ```
 
-```text,verify(script_name="subject-line-ends-with-period-default", stream=stdout)
+``` text,verify(script_name="subject-line-ends-with-period-default",stream=stdout)
 +-------------------------------+----------+
 | Lint                          | Status   |
 +==========================================+
@@ -474,7 +473,7 @@ git mit-config lint status subject-line-ends-with-period
 
 Enable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint enable subject-line-ends-with-period
 ```
 
@@ -482,7 +481,7 @@ git mit-config lint enable subject-line-ends-with-period
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that is valid
@@ -490,7 +489,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -500,7 +499,7 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message.
 
 This is a commit message that is invalid
@@ -508,13 +507,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 Demonstration Commit Message.
 
 This is a commit message that is invalid
@@ -531,12 +530,11 @@ You can fix this by removing the period
 
 Disable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint disable subject-line-ends-with-period
 ```
 
 #### Conventional Commits
-
 
 ##### not-conventional-commit
 
@@ -546,11 +544,11 @@ The conventional changelog is a scheme of commit messages used t
 
 On an empty repository
 
-```shell,script(name="not-conventional-commits-default", expected_exit_code=0)
+``` shell,script(name="not-conventional-commits-default",expected_exit_code=0)
 git mit-config lint status not-conventional-commit
 ```
 
-```text,verify(script_name="not-conventional-commits-default", stream=stdout)
+``` text,verify(script_name="not-conventional-commits-default",stream=stdout)
 +-------------------------+----------+
 | Lint                    | Status   |
 +====================================+
@@ -562,7 +560,7 @@ git mit-config lint status not-conventional-commit
 
 Enable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint enable not-conventional-commit
 ```
 
@@ -570,7 +568,7 @@ git mit-config lint enable not-conventional-commit
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 fix: correct minor typos in code
 
 see the issue for details
@@ -583,7 +581,7 @@ Refs #133
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -593,7 +591,7 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that is invalid
@@ -601,13 +599,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 Demonstration Commit Message
 
 This is a commit message that is invalid
@@ -632,10 +630,9 @@ You can read more at https://www.conventionalcommits.org/
 
 Disable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint disable not-conventional-commit
 ```
-
 
 #### Issue ID Checks
 
@@ -649,11 +646,11 @@ Check for the presence of a Pivotal Tracker ID
 
 On an empty repository
 
-```shell,script(name="pivotal-tracker-id-missing-default", expected_exit_code=0)
+``` shell,script(name="pivotal-tracker-id-missing-default",expected_exit_code=0)
 git mit-config lint status pivotal-tracker-id-missing
 ```
 
-```text,verify(script_name="pivotal-tracker-id-missing-default", stream=stdout)
+``` text,verify(script_name="pivotal-tracker-id-missing-default",stream=stdout)
 +----------------------------+----------+
 | Lint                       | Status   |
 +=======================================+
@@ -665,7 +662,7 @@ git mit-config lint status pivotal-tracker-id-missing
 
 Enable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint enable pivotal-tracker-id-missing
 ```
 
@@ -673,7 +670,7 @@ git mit-config lint enable pivotal-tracker-id-missing
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that is valid
@@ -684,7 +681,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -694,7 +691,7 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 demonstration Commit Message
 
 This is a commit message that is invalid
@@ -702,13 +699,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 demonstration Commit Message
 
 This is a commit message that is invalid
@@ -732,7 +729,7 @@ This will address [#12345884]
 
 Disable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint disable pivotal-tracker-id-missing
 ```
 
@@ -744,11 +741,11 @@ Check for the presence of a JIRA Issue Key
 
 On an empty repository
 
-```shell,script(name="jira-issue-key-missing-default", expected_exit_code=0)
+``` shell,script(name="jira-issue-key-missing-default",expected_exit_code=0)
 git mit-config lint status jira-issue-key-missing
 ```
 
-```text,verify(script_name="jira-issue-key-missing-default", stream=stdout)
+``` text,verify(script_name="jira-issue-key-missing-default",stream=stdout)
 +------------------------+----------+
 | Lint                   | Status   |
 +===================================+
@@ -760,7 +757,7 @@ git mit-config lint status jira-issue-key-missing
 
 Enable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint enable jira-issue-key-missing
 ```
 
@@ -768,7 +765,7 @@ git mit-config lint enable jira-issue-key-missing
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that is valid
@@ -778,7 +775,7 @@ JRA-123
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -788,7 +785,7 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 demonstration Commit Message
 
 This is a commit message that is invalid
@@ -796,13 +793,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 demonstration Commit Message
 
 This is a commit message that is invalid
@@ -819,7 +816,7 @@ You can fix this by adding a key like `JRA-123` to the commit message
 
 Disable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint disable jira-issue-key-missing
 ```
 
@@ -831,11 +828,11 @@ Check for the presence of a GitHub ID
 
 On an empty repository
 
-```shell,script(name="github-id-missing-default", expected_exit_code=0)
+``` shell,script(name="github-id-missing-default",expected_exit_code=0)
 git mit-config lint status github-id-missing
 ```
 
-```text,verify(script_name="github-id-missing-default", stream=stdout)
+``` text,verify(script_name="github-id-missing-default",stream=stdout)
 +-------------------+----------+
 | Lint              | Status   |
 +==============================+
@@ -847,7 +844,7 @@ git mit-config lint status github-id-missing
 
 Enable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint enable github-id-missing
 ```
 
@@ -855,7 +852,7 @@ git mit-config lint enable github-id-missing
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 Demonstration Commit Message
 
 This is a commit message that is valid
@@ -865,7 +862,7 @@ GH-123
 
 Committing will succeed
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -875,7 +872,7 @@ git commit --message="$(cat message)"
 
 Using message
 
-```shell,file(path="message")
+``` shell,file(path="message")
 demonstration Commit Message
 
 This is a commit message that is invalid
@@ -883,13 +880,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-```shell,script(name="1", expected_exit_code=1)
+``` shell,script(name="1",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-```text,verify(script_name="1", stream=stderr)
+``` text,verify(script_name="1",stream=stderr)
 demonstration Commit Message
 
 This is a commit message that is invalid
@@ -914,6 +911,6 @@ Be careful just putting '#642' on a line by itself, as '#' is the default commen
 
 Disable it with
 
-```shell,script(name="1", expected_exit_code=0)
+``` shell,script(name="1",expected_exit_code=0)
 git mit-config lint disable github-id-missing
 ```
