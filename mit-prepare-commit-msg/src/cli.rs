@@ -30,4 +30,11 @@ pub fn app() -> App<'static> {
                 .index(3)
                 .required(false),
         )
+        .arg(
+            Arg::with_name("relates-to-exec")
+                .long("relates-to-exec")
+                .about("A command to execute to get the value for the relates to trailer")
+                .env("GIT_MIT_RELATES_TO_EXEC")
+                .required(false),
+        )
 }
