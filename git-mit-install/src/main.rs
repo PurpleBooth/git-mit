@@ -6,11 +6,30 @@ use thiserror::Error;
 mod cli;
 
 fn main() -> Result<(), GitMitInstallError> {
-    cli::app().get_matches();
+    let matches = cli::app().get_matches();
 
-    let hooks = git2::Repository::discover(env::current_dir()?)?
-        .path()
-        .join("hooks");
+    let hooks = if let Some("global") = matches.value_of("scope") {
+        let mut config = git2::Config::open_default()?;
+
+        if let Ok(path) = config.snapshot()?.get_path("init.templatedir") {
+            let hooks = path.join("hooks");
+            fs::create_dir_all(&hooks)?;
+            hooks
+        } else {
+            let init_template = PathBuf::from(env!("HOME"))
+                .join(".config")
+                .join("git")
+                .join("init-template");
+            let hooks = init_template.join("hooks");
+            fs::create_dir_all(&hooks)?;
+            config.set_str("init.templatedir", "~/.config/git/init-template")?;
+            hooks
+        }
+    } else {
+        git2::Repository::discover(env::current_dir()?)?
+            .path()
+            .join("hooks")
+    };
 
     if !hooks.exists() {
         fs::create_dir(&hooks)?;

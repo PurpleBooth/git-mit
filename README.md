@@ -23,11 +23,7 @@ is the template that git uses to create the `.git` directory when you
 run `git init`.
 
 ```shell,skip()
-mkdir -p "$HOME/.config/git/init-template/hooks"
-ln -s "$(command -v mit-commit-msg)" "$HOME/.config/git/init-template/hooks/commit-msg"
-ln -s "$(command -v mit-pre-commit)" "$HOME/.config/git/init-template/hooks/pre-commit"
-ln -s "$(command -v mit-prepare-commit-msg)" "$HOME/.config/git/init-template/hooks/prepare-commit-msg"
-git config --global init.templatedir "$HOME/.config/git/init-template"
+git mit-install --scope=global
 ```
 
 You can also run this on an existing repository, to set up an already

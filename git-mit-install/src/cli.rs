@@ -1,4 +1,4 @@
-use clap::{crate_authors, crate_version, App};
+use clap::{crate_authors, crate_version, App, Arg};
 
 pub fn app() -> App<'static> {
     App::new(String::from(env!("CARGO_PKG_NAME")))
@@ -6,4 +6,11 @@ pub fn app() -> App<'static> {
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
+        .arg(
+            Arg::with_name("scope")
+                .long("scope")
+                .short('s')
+                .possible_values(&["local", "global"])
+                .default_value("local"),
+        )
 }
