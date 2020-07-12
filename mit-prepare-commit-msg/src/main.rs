@@ -1,6 +1,6 @@
 use std::convert::TryFrom;
 use std::path::PathBuf;
-use std::{env, fs::File, io::Write};
+use std::{env, fs::File, io, io::Write};
 
 use mit_commit::CommitMessage;
 use mit_commit::Trailer;
@@ -46,14 +46,26 @@ fn append_coauthors_to_commit_message(
     authors: &[Author],
 ) -> Result<(), MitPrepareCommitMessageError> {
     let path = String::from(commit_message_path.to_string_lossy());
-    let commit_message = CommitMessage::try_from(commit_message_path.clone())?;
+    let mut commit_message = CommitMessage::try_from(commit_message_path.clone())?;
 
-    let new_message = authors
+    let trailers = authors
         .iter()
         .map(|x| Trailer::new("Co-authored-by", &format!("{} <{}>", x.name(), x.email())))
-        .fold(commit_message, |acc, trailer| acc.add_trailer(trailer));
+        .collect::<Vec<_>>();
+
+    for trailer in trailers {
+        if commit_message
+            .get_trailers()
+            .iter()
+            .find(|existing_trailer| &&trailer == existing_trailer)
+            .is_none()
+        {
+            commit_message = commit_message.add_trailer(trailer);
+        }
+    }
+
     File::create(commit_message_path)
-        .and_then(|mut file| file.write_all(String::from(new_message).as_bytes()))
+        .and_then(|mut file| file.write_all(String::from(commit_message).as_bytes()))
         .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))
 }
 
@@ -62,10 +74,30 @@ fn append_relate_to_trailer_to_commit_message(
     relates: &RelateTo,
 ) -> Result<(), MitPrepareCommitMessageError> {
     let path = String::from(commit_message_path.to_string_lossy());
-    let commit_message = CommitMessage::try_from(commit_message_path.clone())?
-        .add_trailer(Trailer::new("Relates-to", &relates.to()));
+    let commit_message = CommitMessage::try_from(commit_message_path.clone())?;
 
-    File::create(commit_message_path)
-        .and_then(|mut file| file.write_all(String::from(commit_message).as_bytes()))
-        .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))
+    let trailer = Trailer::new("Relates-to", &relates.to());
+    add_trailer_if_not_existing(commit_message_path, &commit_message, &trailer)
+        .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))?;
+
+    Ok(())
+}
+
+fn add_trailer_if_not_existing(
+    commit_message_path: PathBuf,
+    commit_message: &CommitMessage,
+    trailer: &Trailer,
+) -> Result<(), io::Error> {
+    if commit_message
+        .get_trailers()
+        .iter()
+        .find(|existing_trailer| &trailer == existing_trailer)
+        .is_none()
+    {
+        File::create(commit_message_path).and_then(|mut file| {
+            file.write_all(String::from(commit_message.add_trailer(trailer.clone())).as_bytes())
+        })
+    } else {
+        Ok(())
+    }
 }

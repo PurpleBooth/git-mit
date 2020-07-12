@@ -61,6 +61,35 @@ Wrote a great README
 Relates-to: [#12321513]
 ```
 
+We don't duplicate the ID if you manually type in the trailer
+
+```shell,script(name="3", expected_exit_code=0)
+echo "Some change" >> README.md
+git add README.md
+git mit bt
+git commit -m "Wrote a great README
+
+Relates-to: [#12321513]
+"
+```
+
+the commit message will contain the ID
+
+```shell,script(name="4", expected_exit_code=0)
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+```text,verify(script_name="4", stream=stdout)
+author: [Billie Thompson billie@example.com] signed-by: [] 
+---
+Wrote a great README
+
+Relates-to: [#12321513]
+```
+
+
 This times out after 60 minuites, and is configurable with the
 `GIT_MIT_RELATES_TO_TIMEOUT` by environment variable.
 

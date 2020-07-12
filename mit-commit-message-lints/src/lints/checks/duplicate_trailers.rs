@@ -9,7 +9,8 @@ use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "duplicated-trailers";
 
-const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 2] = ["Signed-off-by", "Co-authored-by"];
+const TRAILERS_TO_CHECK_FOR_DUPLICATES: [&str; 3] =
+    ["Signed-off-by", "Co-authored-by", "Relates-to"];
 const FIELD_SINGULAR: &str = "field";
 const ERROR: &str = "Your commit message has duplicated trailers";
 
@@ -157,6 +158,28 @@ mod tests_has_duplicated_trailers {
             &Some(Problem::new(
                 ERROR.into(),
                 "You can fix this by deleting the duplicated \"Co-authored-by\" field".into(),
+                Code::DuplicatedTrailers,
+            )),
+        );
+    }
+
+    #[test]
+    fn relates_to() {
+        test_lint_duplicated_trailers(
+            indoc!(
+                "
+                An example commit
+
+                This is an example commit without any duplicate trailers
+
+                Relates-to: #315
+                Relates-to: #315
+                "
+            )
+            .into(),
+            &Some(Problem::new(
+                ERROR.into(),
+                "You can fix this by deleting the duplicated \"Relates-to\" field".into(),
                 Code::DuplicatedTrailers,
             )),
         );
