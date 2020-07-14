@@ -16,7 +16,7 @@ jobs:
         env:
           GIT_REPO: ${{ github.repository }}
           GIT_TAG: ${{ github.ref }}
-      - uses: cuchi/jinja2-action@v1.1.0
+      - uses: cuchi/jinja2-action@v1.2.0
         with:
           template: homebrew/formula.rb.j2
           output_file: formula.rb
