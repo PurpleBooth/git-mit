@@ -52,11 +52,16 @@ fn install_hook(hook_path: &PathBuf, hook_name: &str) -> Result<(), GitMitInstal
     }
 
     if install_path.exists() {
-        eprintln!("Couldn't create hook at {}, it already exists, you need to remove this before continuing", install_path.to_string_lossy());
-
+        let mut tip = format!("Couldn't create hook at {}, it already exists, you need to remove this before continuing", install_path.to_string_lossy());
         if let Ok(dest) = install_path.read_link() {
-            eprintln!("looks like it's a symlink to {}", dest.to_string_lossy());
+            tip = format!(
+                "{}\nlooks like it's a symlink to {}",
+                tip,
+                dest.to_string_lossy()
+            );
         }
+
+        mit_commit_message_lints::console::style::problem("couldn't install hook", &tip);
 
         return Err(GitMitInstallError::ExistingHook);
     }

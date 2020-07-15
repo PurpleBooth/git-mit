@@ -9,7 +9,6 @@ use mit_commit_message_lints::lints::Lints;
 use crate::errors::GitMitConfigError;
 use crate::errors::GitMitConfigError::LintNameNotGiven;
 use crate::get_vcs;
-use console::style;
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
     matches
@@ -29,10 +28,9 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let mut vcs = get_vcs(is_local, &current_dir)?;
     let toml = external::read_toml(current_dir)?;
     if !toml.is_empty() {
-        eprintln!(
-            "{}",
-            style("Warning: your config is overridden by a repository config file").bold()
-        );
+        mit_commit_message_lints::console::style::warning(
+            "Warning: your config is overridden by a repository config file",
+        )
     }
 
     let lints: Lints = subcommand

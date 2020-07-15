@@ -3,6 +3,7 @@ use std::convert::TryInto;
 use clap::ArgMatches;
 
 use crate::errors::GitMitConfigError;
+use mit_commit_message_lints::console::style::to_be_piped;
 use mit_commit_message_lints::mit::Authors;
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
@@ -14,7 +15,7 @@ pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConf
 
 fn run() -> Result<(), GitMitConfigError> {
     let example: String = Authors::example().try_into()?;
-    println!("{}", example);
+    to_be_piped(&example);
 
     Ok(())
 }
