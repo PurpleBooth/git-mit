@@ -6,11 +6,11 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
     commit-message:
-      prefix: "chore"
+      prefix: "fix"
   - package-ecosystem: cargo
     directory: "/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
     commit-message:
-      prefix: "chore"
+      prefix: "fix"
