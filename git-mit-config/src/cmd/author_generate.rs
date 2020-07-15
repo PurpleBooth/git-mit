@@ -6,12 +6,11 @@ use std::{env, fs};
 use clap::ArgMatches;
 use xdg::BaseDirectories;
 
-use mit_commit_message_lints::mit::{get_config_authors, AuthorConfigParseError, Authors};
+use mit_commit_message_lints::mit::{get_config_authors, Authors};
 
 use crate::errors::GitMitConfigError;
 use crate::get_vcs;
-use crate::ExitCode::UnparsableAuthorFile;
-use console::style;
+
 use std::convert::{TryFrom, TryInto};
 
 const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
@@ -33,7 +32,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let all_authors = Authors::try_from(users_config.as_str());
 
     if let Err(error) = &all_authors {
-        exit_unparsable_exit_code(error)
+        mit_commit_message_lints::console::exit_unparsable_author(error)
     }
 
     let is_local = Some("local") == matches.value_of("scope");
@@ -44,7 +43,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
 
     let toml: String = all_authors?.merge(&vcs_authors).try_into()?;
 
-    println!("{}", toml);
+    mit_commit_message_lints::console::style::to_be_piped(&toml);
     Ok(())
 }
 
@@ -88,12 +87,4 @@ fn config_path(cargo_package_name: &str) -> Result<String, GitMitConfigError> {
 
 fn authors_config_file(config_directory: &BaseDirectories) -> Result<PathBuf, GitMitConfigError> {
     Ok(config_directory.place_config_file("mit.toml")?)
-}
-
-fn exit_unparsable_exit_code(parse_err: &AuthorConfigParseError) {
-    let error = style("Unable to parse the author config").red().bold();
-    let tip = style(format!("You can fix this by correcting the file so it's parsable\n\nYou can see a parsable example by running:\ngit mit-config mit example\n\nHere's the technical details, that might help you track down the source of the problem\n\n{}", parse_err)).italic();
-
-    eprintln!("{}\n\n{}", error, tip);
-    std::process::exit(UnparsableAuthorFile as i32);
 }

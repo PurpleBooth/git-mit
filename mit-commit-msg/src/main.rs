@@ -3,16 +3,16 @@ extern crate mit_commit_message_lints;
 use std::env;
 use std::{convert::TryFrom, path::PathBuf};
 
-use console::style;
 use mit_commit::CommitMessage;
 
 use mit_commit_message_lints::{
     external,
-    lints::{lint, Code, Lints, Problem},
+    lints::{lint, Lints},
 };
 
 use crate::cli::app;
 use crate::errors::MitCommitMsgError;
+use mit_commit_message_lints::console::exit_lint_problem;
 
 fn main() -> Result<(), MitCommitMsgError> {
     let matches = app().get_matches();
@@ -32,61 +32,13 @@ fn main() -> Result<(), MitCommitMsgError> {
     let lint_config = Lints::get_from_toml_or_else_vcs(&toml, &mut git_config)?;
 
     let lint_problems = lint(&commit_message, lint_config);
-    let output = format_lint_problems(&commit_message, lint_problems);
-
-    if let Some((message, exit_code)) = output {
-        display_lint_err_and_exit(&message, exit_code)
+    if !lint_problems.is_empty() {
+        exit_lint_problem(&commit_message, lint_problems)
     }
 
     Ok(())
 }
 
 mod cli;
-
-fn format_lint_problems(
-    original_message: &CommitMessage,
-    lint_problems: Vec<Problem>,
-) -> Option<(String, Code)> {
-    let (_, message_and_code) = lint_problems.into_iter().fold(
-        (original_message, None),
-        |(commit_message, output), problem| {
-            (
-                commit_message,
-                match output {
-                    Some((existing_output, _)) => Some((
-                        {
-                            let error = style(problem.error()).red().bold();
-                            let tip = style(problem.tip()).italic();
-
-                            format!("{}\n\n{}\n\n{}", existing_output, error, tip)
-                        },
-                        *(problem.code()),
-                    )),
-                    None => Some((
-                        {
-                            let error = style(problem.error()).red().bold();
-                            let tip = style(problem.tip()).italic();
-
-                            format!(
-                                "{}\n\n---\n\n{}\n\n{}",
-                                String::from(commit_message.clone()),
-                                error,
-                                tip
-                            )
-                        },
-                        *(problem.code()),
-                    )),
-                },
-            )
-        },
-    );
-    message_and_code
-}
-
-fn display_lint_err_and_exit(commit_message: &str, exit_code: Code) {
-    eprintln!("{}", commit_message);
-
-    std::process::exit(exit_code as i32);
-}
 
 mod errors;

@@ -22,11 +22,7 @@ pub(crate) fn has_vcs_coauthor(config: &dyn Vcs, index: i32) -> bool {
     let email = get_vcs_coauthor_config(config, "email", index);
     let name = get_vcs_coauthor_config(config, "name", index);
 
-    if let (Ok(Some(_)), Ok(Some(_))) = (name, email) {
-        true
-    } else {
-        false
-    }
+    matches!((name, email), (Ok(Some(_)), Ok(Some(_))))
 }
 
 pub(crate) fn get_vcs_coauthor_config<'a>(

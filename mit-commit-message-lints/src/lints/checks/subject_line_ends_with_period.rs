@@ -1,6 +1,6 @@
 use mit_commit::CommitMessage;
 
-use crate::lints::lib::Code;
+use crate::console::exit::Code;
 use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "subject-line-ends-with-period";
@@ -9,11 +9,7 @@ const ERROR: &str = "Your commit message ends with a period";
 const HELP_MESSAGE: &str = "You can fix this by removing the period";
 
 fn has_problem(commit_message: &CommitMessage) -> bool {
-    if let Some('.') = commit_message.get_subject().chars().rev().next() {
-        true
-    } else {
-        false
-    }
+    matches!(commit_message.get_subject().chars().rev().next(), Some('.'))
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {

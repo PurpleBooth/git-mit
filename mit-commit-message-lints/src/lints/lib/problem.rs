@@ -1,3 +1,5 @@
+use crate::console::exit::Code;
+
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Problem {
     error: String,
@@ -25,27 +27,12 @@ impl Problem {
     }
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug)]
-#[repr(i32)]
-pub enum Code {
-    DuplicatedTrailers = 3,
-    PivotalTrackerIdMissing,
-    JiraIssueKeyMissing,
-    GitHubIdMissing,
-    SubjectNotSeparateFromBody,
-    SubjectLongerThan72Characters,
-    SubjectNotCapitalized,
-    SubjectEndsWithPeriod,
-    BodyWiderThan72Characters,
-    NotConventionalCommit,
-    NotEmojiLog,
-}
-
 #[cfg(test)]
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::lints::{Code, Problem};
+    use crate::console::exit::Code;
+    use crate::lints::Problem;
 
     #[test]
     fn test_has_error() {

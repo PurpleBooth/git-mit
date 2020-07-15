@@ -841,6 +841,7 @@ dependencies = [
 name = "mit-commit-message-lints"
 version = "3.93.4"
 dependencies = [
+ "comfy-table",
  "console",
  "criterion",
  "git2",

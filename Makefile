@@ -52,7 +52,7 @@ lint:
 ## Format what can be formatted
 fmt:
 	cargo fix --allow-dirty
-	cargo clippy --allow-dirty --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
+	cargo +nightly clippy --allow-dirty --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
 	cargo fmt --all
 	npx prettier --write **.yml
 

@@ -1,6 +1,6 @@
 use mit_commit::CommitMessage;
 
-use crate::lints::lib::Code;
+use crate::console::exit::Code;
 use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "subject-not-separated-from-body";

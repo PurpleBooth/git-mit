@@ -2,7 +2,7 @@ use indoc::indoc;
 use mit_commit::CommitMessage;
 use regex::Regex;
 
-use crate::lints::lib::Code;
+use crate::console::exit::Code;
 use crate::lints::lib::Problem;
 
 pub(crate) const CONFIG: &str = "not-conventional-commit";

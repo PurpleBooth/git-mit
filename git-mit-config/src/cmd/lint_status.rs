@@ -1,7 +1,6 @@
 use std::convert::TryInto;
 
 use clap::ArgMatches;
-use comfy_table::Table;
 
 use mit_commit_message_lints::external;
 use mit_commit_message_lints::lints::Lints;
@@ -29,38 +28,10 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
 
     let lints = get_selected_lints(&subcommand_args)?;
     let config = Lints::get_from_toml_or_else_vcs(&toml, &mut vcs)?;
-    let status = get_config_status(lints.clone(), config);
-    let names = lints.names();
 
-    let mut table = Table::new();
-    table.set_header(vec!["Lint", "Status"]);
-
-    table = names
-        .into_iter()
-        .zip(status)
-        .fold(table, |mut table, (name, status_name)| {
-            table.add_row(vec![name, status_name]);
-            table
-        });
-
-    println!("{}", table);
+    mit_commit_message_lints::console::style::lint_table(&lints, &config);
 
     Ok(())
-}
-
-fn get_config_status<'a>(lints: Lints, config: Lints) -> Vec<&'a str> {
-    let enabled_lints: Vec<_> = config.into_iter().collect();
-
-    lints
-        .into_iter()
-        .map(|lint| {
-            if enabled_lints.contains(&lint) {
-                "enabled"
-            } else {
-                "disabled"
-            }
-        })
-        .collect::<Vec<_>>()
 }
 
 fn get_selected_lints(args: &ArgMatches) -> Result<Lints, GitMitConfigError> {

@@ -34,9 +34,9 @@ git mit-config lint available
 |-----------------------------------+----------|
 | jira-issue-key-missing            | disabled |
 |-----------------------------------+----------|
-| subject-not-separated-from-body   | enabled  |
-|-----------------------------------+----------|
 | github-id-missing                 | disabled |
+|-----------------------------------+----------|
+| subject-not-separated-from-body   | enabled  |
 |-----------------------------------+----------|
 | subject-longer-than-72-characters | enabled  |
 |-----------------------------------+----------|
