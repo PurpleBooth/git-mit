@@ -88,6 +88,8 @@ jobs:
       - shell: bash
         run: |
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git checkout -b "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
 
           cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
@@ -96,6 +98,7 @@ jobs:
             git commit -m "fix: Update $REPOSITORY_NAME to $(echo $GIT_TAG | sed 's/^refs\/tags\///')"
           fi
         env:
+          GITHUB_ACTOR: ${{ github.actor }}
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           GIT_TAG: ${{ github.ref }}
           FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
