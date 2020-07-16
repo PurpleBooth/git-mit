@@ -9,6 +9,10 @@ pub(crate) const CONFIG: &str = "not-conventional-commit";
 
 const HELP_MESSAGE: &str = indoc!(
     "
+    It's important to follow the conventional commit style when creating your commit message. By \
+    using this style we can automatically calculate the version of software using deployment \
+    pipelines, and also generate changelogs and other useful information without human interaction.
+
     You can fix it by following style
 
     <type>[optional scope]: <description>
@@ -20,7 +24,7 @@ const HELP_MESSAGE: &str = indoc!(
     You can read more at https://www.conventionalcommits.org/"
 );
 
-const ERROR: &str = "Your commit message isn't conventional";
+const ERROR: &str = "Your commit message isn't in conventional style";
 
 lazy_static! {
     static ref RE: Regex = Regex::new("^[^()\\s]+(\\(\\w+\\))?!?: ").unwrap();

@@ -9,6 +9,8 @@ pub(crate) const CONFIG: &str = "github-id-missing";
 
 const HELP_MESSAGE: &str = indoc!(
     "
+    It's important to add the issue ID because it allows us to link code back to the motivations for doing it, and because we can help people exploring the repository link their issues to specific bits of code.
+
     You can fix this by adding a ID like the following examples:
 
     #642
