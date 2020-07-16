@@ -1,4 +1,5 @@
 use clap::{crate_authors, crate_version, App, Arg};
+use indoc::indoc;
 
 pub fn app() -> App<'static> {
     App::new(String::from(env!("CARGO_PKG_NAME")))
@@ -6,6 +7,31 @@ pub fn app() -> App<'static> {
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
+        .after_help(indoc!(
+            "
+            COMMON TASKS:
+                You can install git-mit into a new repository using
+
+                    git mit-install
+
+                You can add a new author to that repository by running
+
+                    git mit-config mit set eg \"Egg Sample\" egg.sample@example.com
+
+                You can save that author permanently by running
+
+                    git mit-config mit set eg \"Egg Sample\" egg.sample@example.com
+                    git mit-config mit generate > $HOME/.config/git-mit/mit.yml
+
+                You can disable a lint by running
+
+                    git mit-config lint disable jira-issue-key-missing
+
+                You can install the example authors file to the default location with
+
+                    git mit-config mit example > $HOME/.config/git-mit/mit.yml
+            "
+        ))
         .arg(
             Arg::with_name("initials")
                 .about("Initials of the mit to put in the commit")
