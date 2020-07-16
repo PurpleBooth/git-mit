@@ -71,7 +71,11 @@ jobs:
           path: ${{ steps.get-brew-cache.outputs.dir }}
           key: ${{ runner.os }}-brew-${{ hashFiles('**/formula.rb.j2') }}
       - shell: bash
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
         run: |
+          git config --global user.name "$GITHUB_ACTOR"
+          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
           brew update
           brew upgrade
       - shell: bash
