@@ -8,6 +8,9 @@ pub(crate) const CONFIG: &str = "not-emoji-log";
 
 const HELP_MESSAGE: &str = indoc!(
     "
+    It's important to follow the emoji log style when creating your commit message. By using this \
+    style we can automatically generate changelogs.
+
     You can fix it using one of the prefixes:
 
     \u{1f4e6} NEW:
@@ -22,7 +25,7 @@ const HELP_MESSAGE: &str = indoc!(
     "
 );
 
-const ERROR: &str = "Your commit message isn't in emoji log";
+const ERROR: &str = "Your commit message isn't in emoji log style";
 
 const PREFIXES: &[&str] = &[
     "\u{1f4e6} NEW: ",

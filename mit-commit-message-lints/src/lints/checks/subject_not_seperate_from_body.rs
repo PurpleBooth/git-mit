@@ -6,7 +6,10 @@ use crate::lints::lib::Problem;
 pub(crate) const CONFIG: &str = "subject-not-separated-from-body";
 
 const ERROR: &str = "Your commit message is missing a blank line between the subject and the body";
-const HELP_MESSAGE: &str = "To fix this separate subject from body with a blank line";
+const HELP_MESSAGE: &str = "Most tools that render and parse commit messages, expect commit \
+messages to be in the form of subject and body. This includes git itself in tools like \
+git-format-patch. If you don't include this you may see strange behaviour from git and any related \
+tools.\n\nTo fix this separate subject from body with a blank line";
 
 fn has_problem(commit_message: &CommitMessage) -> bool {
     commit_message
