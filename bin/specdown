@@ -77,6 +77,7 @@ EOF
             cd "$TEMPORARY_DIR/repo"
             export PATH="$REPOSITORY_DIR/target/release/:$PATH"
             export HOME="$TEMPORARY_DIR"
+            export GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD=false
             export GIT_MIT_AUTHORS_CONFIG="$TEMPORARY_DIR/git-mit.toml"
             echo "$MARKDOWN_PATH"
             specdown run "$MARKDOWN_PATH"

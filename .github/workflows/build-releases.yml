@@ -6,6 +6,9 @@ jobs:
   build:
     runs-on: "${{ matrix.os }}"
     steps:
+      - run: ${{ matrix.install }}
+        env:
+          DEBIAN_FRONTEND: noninteractive
       - uses: actions/checkout@v2.3.1
         with:
           lfs: true
@@ -53,16 +56,17 @@ jobs:
         with:
           name: git-mit-install-${{ matrix.target }}
           path: ./target/release/git-mit-install${{ matrix.suffix }}
-
     strategy:
       matrix:
         include:
           - os: macos-latest
             suffix: ""
             target: x86_64-apple-darwin
+            install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
           - os: ubuntu-latest
             suffix: ""
             target: x86_64-unknown-linux-gnu
+            install: echo nothing to install
   release:
     needs:
       - build

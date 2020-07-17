@@ -12,7 +12,9 @@ use mit_commit_message_lints::{
 
 use crate::cli::app;
 use crate::errors::MitCommitMsgError;
+use copypasta::{ClipboardContext, ClipboardProvider};
 use mit_commit_message_lints::console::exit_lint_problem;
+use std::str::FromStr;
 
 fn main() -> Result<(), MitCommitMsgError> {
     let matches = app().get_matches();
@@ -33,7 +35,30 @@ fn main() -> Result<(), MitCommitMsgError> {
 
     let lint_problems = lint(&commit_message, lint_config);
     if !lint_problems.is_empty() {
-        exit_lint_problem(&commit_message, lint_problems)
+        let clipboard_used =
+            if !FromStr::from_str(matches.value_of("copy-message-to-clipboard").unwrap())
+                .unwrap_or_else(|_| true)
+            {
+                false
+            } else if let Ok(mut clipboard) = ClipboardContext::new() {
+                let body = commit_message.get_body().to_string().trim().to_string();
+                let trimmed_commit = if body.is_empty() {
+                    format!("{}", commit_message.get_subject())
+                } else {
+                    format!(
+                        "{}\n{}",
+                        commit_message.get_subject(),
+                        commit_message.get_body()
+                    )
+                };
+
+                clipboard.set_contents(trimmed_commit)?;
+                true
+            } else {
+                false
+            };
+
+        exit_lint_problem(&commit_message, lint_problems, clipboard_used)
     }
 
     Ok(())

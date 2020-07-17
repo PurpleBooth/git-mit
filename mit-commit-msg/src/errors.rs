@@ -3,6 +3,7 @@ use thiserror::Error;
 
 use mit_commit_message_lints::external;
 use mit_commit_message_lints::lints::LintsError;
+use std::error;
 
 #[derive(Error, Debug)]
 pub(crate) enum MitCommitMsgError {
@@ -16,6 +17,8 @@ pub(crate) enum MitCommitMsgError {
     MitCommitMessage(#[from] CommitMessageError),
     #[error("{0}")]
     External(#[from] external::Error),
+    #[error("{0}")]
+    Clipboard(#[from] Box<dyn error::Error>),
 }
 
 impl MitCommitMsgError {
