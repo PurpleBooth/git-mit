@@ -15,4 +15,11 @@ pub fn app() -> App<'static> {
                 .index(1)
                 .required(true),
         )
+        .arg(
+            Arg::with_name("copy-message-to-clipboard")
+                .long("copy-message-to-clipboard")
+                .about("On lint failure copy the message to clipboard")
+                .env("GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD")
+                .default_value("true"),
+        )
 }

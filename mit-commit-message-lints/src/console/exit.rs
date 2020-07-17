@@ -1,10 +1,11 @@
 use std::error::Error;
+use std::process;
+
+use console::style;
+use mit_commit::CommitMessage;
 
 use crate::console::exit::Code::{InitialNotMatchedToAuthor, UnparsableAuthorFile};
 use crate::lints::Problem;
-use console::style;
-use mit_commit::CommitMessage;
-use std::process;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(i32)]
@@ -87,15 +88,25 @@ fn format_lint_problems(
     message_and_code
 }
 
-pub fn lint_problem(commit_message: &CommitMessage, lint_problems: Vec<Problem>) {
+pub fn lint_problem(commit_message: &CommitMessage, lint_problems: Vec<Problem>, clipboard: bool) {
     let output = format_lint_problems(&commit_message, lint_problems);
 
     if let Some((message, exit_code)) = output {
-        display_lint_err_and_exit(&message, exit_code)
+        display_lint_err_and_exit(&message, exit_code, clipboard)
     }
 }
-fn display_lint_err_and_exit(commit_message: &str, exit_code: Code) {
+
+fn display_lint_err_and_exit(commit_message: &str, exit_code: Code, clipboard: bool) {
     eprintln!("{}", commit_message);
+
+    if clipboard {
+        eprintln!(
+            "\n{}",
+            style("Your previous commit message has been copied to the clipboard")
+                .bold()
+                .blue()
+        );
+    }
 
     std::process::exit(exit_code as i32);
 }
