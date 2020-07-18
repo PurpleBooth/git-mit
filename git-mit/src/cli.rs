@@ -30,6 +30,14 @@ pub fn app() -> App<'static> {
                 You can install the example authors file to the default location with
 
                     git mit-config mit example > $HOME/.config/git-mit/mit.yml
+
+                You can set the current author, and Co-authors by running
+
+                    git mit ae se
+
+                You can populate the `Relates-to` trailer using
+
+                    git mit-relates-to \"[#12345678]\"
             "
         ))
         .arg(
