@@ -55,33 +55,45 @@ Common Tasks
 
 You can install git-mit into a new repository using
 
-```shell script
+```shell
 git mit-install
 ```
 
 You can add a new author to that repository by running
 
-```shell script
+```shell
 git mit-config mit set eg "Egg Sample" egg.sample@example.com
 ```
 
 You can save that author permanently by running
 
-```shell script
+```shell
 git mit-config mit set eg "Egg Sample" egg.sample@example.com
 git mit-config mit generate > $HOME/.config/git-mit/mit.yml
 ```
 
 You can disable a lint by running
 
-```shell script
+```shell
 git mit-config lint disable jira-issue-key-missing
 ```
 
 You can install the example authors file to the default location with
 
-```shell script
+```shell
 git mit-config mit example > $HOME/.config/git-mit/mit.yml
+```
+
+You can set the current author, and Co-authors by running
+
+```shell
+git mit ae se
+```
+
+You can populate the `Relates-to` trailer using
+
+```shell
+git mit-relates-to "[#12345678]"
 ```
 
 BUGS
