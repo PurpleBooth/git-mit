@@ -30,7 +30,7 @@ serde_derive = "1.0.114"
 [dependencies]
 xdg = "2.2.0"
 thiserror = "1.0.20"
-git2 = "0.13.6"
+git2 = "0.13.8"
 clap = "3.0.0-beta.1"
 clap_generate = "3.0.0-beta.1"
 console = "0.11.3"

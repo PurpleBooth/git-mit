@@ -22,7 +22,7 @@ which = "4.0.1"
 thiserror = "1.0.20"
 clap = "3.0.0-beta.1"
 xdg = "2.2.0"
-git2 = "0.13.6"
+git2 = "0.13.8"
 clap_generate = "3.0.0-beta.1"
 console = "0.11.3"
 
