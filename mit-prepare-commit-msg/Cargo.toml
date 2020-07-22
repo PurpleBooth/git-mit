@@ -29,7 +29,7 @@ serde_derive = "1.0.114"
 [dependencies]
 thiserror = "1.0.20"
 clap = "3.0.0-beta.1"
-git2 = "0.13.6"
+git2 = "0.13.8"
 mit-commit = "1.7.0"
 console = "0.11.3"
 
