@@ -62,11 +62,11 @@ jobs:
           - os: macos-latest
             suffix: ""
             target: x86_64-apple-darwin
-            install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+            install: echo nothing to install
           - os: ubuntu-latest
             suffix: ""
             target: x86_64-unknown-linux-gnu
-            install: echo nothing to install
+            install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
   release:
     needs:
       - build
