@@ -40,7 +40,7 @@ comfy-table = "1.0.0"
   path = "../mit-commit-message-lints"
 
 [dev-dependencies]
-indoc = "0.3.6"
+indoc = "1.0.1"
 pretty_assertions = "0.6.1"
 
   [dev-dependencies.mit-hook-test-helper]
