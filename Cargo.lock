@@ -484,7 +484,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.1",
+ "indoc 1.0.2",
  "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -502,7 +502,7 @@ dependencies = [
  "comfy-table",
  "console",
  "git2",
- "indoc 1.0.1",
+ "indoc 1.0.2",
  "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -523,7 +523,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.1",
+ "indoc 1.0.2",
  "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -541,7 +541,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.1",
+ "indoc 1.0.2",
  "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -633,9 +633,9 @@ dependencies = [
 
 [[package]]
 name = "indoc"
-version = "1.0.1"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "52749eda30449f5db7fc0b73c2c988b66d10f0577d06e85601a918afa3171b88"
+checksum = "644defcefee68d7805653a682e99a2e2a5014a1fc3cc9be7059a215844eeea6f"
 dependencies = [
  "unindent",
 ]
@@ -885,7 +885,7 @@ dependencies = [
  "criterion",
  "git2",
  "glob 0.3.0",
- "indoc 1.0.1",
+ "indoc 1.0.2",
  "lazy_static",
  "mit-commit",
  "mit-hook-test-helper",
@@ -907,7 +907,7 @@ dependencies = [
  "console",
  "copypasta",
  "git2",
- "indoc 1.0.1",
+ "indoc 1.0.2",
  "mit-build-tools",
  "mit-commit",
  "mit-commit-message-lints",
@@ -939,7 +939,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.1",
+ "indoc 1.0.2",
  "mit-build-tools",
  "mit-commit",
  "mit-commit-message-lints",
@@ -960,7 +960,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.1",
+ "indoc 1.0.2",
  "mit-build-tools",
  "mit-commit",
  "mit-commit-message-lints",
