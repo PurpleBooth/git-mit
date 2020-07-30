@@ -484,7 +484,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.2",
+ "indoc",
  "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -502,7 +502,7 @@ dependencies = [
  "comfy-table",
  "console",
  "git2",
- "indoc 1.0.2",
+ "indoc",
  "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -523,7 +523,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.2",
+ "indoc",
  "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -541,7 +541,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.2",
+ "indoc",
  "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -623,33 +623,10 @@ dependencies = [
 
 [[package]]
 name = "indoc"
-version = "0.3.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "47741a8bc60fb26eb8d6e0238bbb26d8575ff623fdc97b1a2c00c050b9684ed8"
-dependencies = [
- "indoc-impl",
- "proc-macro-hack",
-]
-
-[[package]]
-name = "indoc"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "644defcefee68d7805653a682e99a2e2a5014a1fc3cc9be7059a215844eeea6f"
 dependencies = [
- "unindent",
-]
-
-[[package]]
-name = "indoc-impl"
-version = "0.3.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce046d161f000fffde5f432a0d034d0341dc152643b2598ed5bfce44c4f3a8f0"
-dependencies = [
- "proc-macro-hack",
- "proc-macro2",
- "quote",
- "syn",
  "unindent",
 ]
 
@@ -866,11 +843,11 @@ dependencies = [
 
 [[package]]
 name = "mit-commit"
-version = "1.7.0"
+version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "534f4e2f316c575558a09aba788ac44e8d55a9ff1408b9893e902239db5de7fc"
+checksum = "1d9f57ca7a57193d4b9f2f5155969a13fcb5faaa2077c6db230b7f37cca71c93"
 dependencies = [
- "indoc 0.3.6",
+ "indoc",
  "lazy_static",
  "regex",
  "thiserror",
@@ -885,7 +862,7 @@ dependencies = [
  "criterion",
  "git2",
  "glob 0.3.0",
- "indoc 1.0.2",
+ "indoc",
  "lazy_static",
  "mit-commit",
  "mit-hook-test-helper",
@@ -907,7 +884,7 @@ dependencies = [
  "console",
  "copypasta",
  "git2",
- "indoc 1.0.2",
+ "indoc",
  "mit-build-tools",
  "mit-commit",
  "mit-commit-message-lints",
@@ -939,7 +916,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.2",
+ "indoc",
  "mit-build-tools",
  "mit-commit",
  "mit-commit-message-lints",
@@ -960,7 +937,7 @@ dependencies = [
  "clap_generate",
  "console",
  "git2",
- "indoc 1.0.2",
+ "indoc",
  "mit-build-tools",
  "mit-commit",
  "mit-commit-message-lints",
@@ -1197,12 +1174,6 @@ dependencies = [
  "syn-mid",
  "version_check",
 ]
-
-[[package]]
-name = "proc-macro-hack"
-version = "0.5.16"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e0456befd48169b9f13ef0f0ad46d492cf9d2dbb918bcf38e01eed4ce3ec5e4"
 
 [[package]]
 name = "proc-macro2"
