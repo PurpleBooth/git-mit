@@ -70,6 +70,15 @@ pub fn criterion_benchmark(c: &mut Criterion) {
             },
         );
     });
+
+    let all_lints = Lints::available();
+    c.bench_with_input(
+        BenchmarkId::new("commit_with_all_features", "all"),
+        &(COMMIT_WITH_ALL_FEATURES, all_lints.clone()),
+        |b, (message, all_lints)| {
+            b.iter(|| lint(&CommitMessage::from(*message), all_lints.clone()))
+        },
+    );
 }
 
 criterion_group!(benches, criterion_benchmark);
