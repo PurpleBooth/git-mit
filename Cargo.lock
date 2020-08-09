@@ -877,6 +877,7 @@ dependencies = [
  "mit-commit",
  "mit-hook-test-helper",
  "pretty_assertions",
+ "rayon",
  "regex",
  "serde",
  "serde_derive",
