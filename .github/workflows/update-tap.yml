@@ -4,9 +4,11 @@
       - "*"
 jobs:
   generate-formula:
+    name: Generate Homebrew Formula
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.1
+        name: Checkout this repository
       - run: |
           curl -Lo file.tar.gz "https://github.com/$GIT_REPO/archive/$GIT_TAG.tar.gz"
           sha256sum -b file.tar.gz | awk '{ print $1 }' > hash
@@ -16,6 +18,7 @@ jobs:
         env:
           GIT_REPO: ${{ github.repository }}
           GIT_TAG: ${{ github.ref }}
+        name: Calculate the binary hash
       - uses: cuchi/jinja2-action@v1.2.0
         with:
           template: homebrew/formula.rb.j2
@@ -24,20 +27,95 @@ jobs:
             github_repo=${{ github.repository }}
             git_tag=${{ github.ref }}
             file_sha=${{ steps.hash.outputs.SHA256 }}
+        name: Generate the template
       - uses: actions/upload-artifact@v2
         with:
           name: formula
           path: ./formula.rb
+        name: Store the formula
       - uses: actions/upload-artifact@v2
         with:
           name: hash
           path: ./hash
+        name: Store the hash of the binary
   build:
+    name: Update custom tap
     needs:
       - generate-formula
     runs-on: macos-latest
     steps:
+      - id: get_repository_name
+        name: Work out repository name
+        run: echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
+        shell: bash
+      - uses: actions/download-artifact@v2
+        name: Get the updated formula
+      - uses: actions/checkout@v2.3.1
+        with:
+          repository: PurpleBooth/homebrew-repo
+          token: ${{ secrets.COMMITTER_TOKEN }}
+          path: homebrew-repo
+          ref: "main"
+        name: Checkout the custom tap
+      - uses: actions/checkout@v2.3.1
+        with:
+          token: ${{ secrets.COMMITTER_TOKEN }}
+          path: source-repo
+        name: Checkout the this repository
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: Cache Homebrew Bundler RubyGems
+        id: cache
+        uses: actions/cache@master
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ runner.os }}-rubygems-
+      - name: Install Homebrew Bundler RubyGems
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: brew install-bundler-gems
+      - name: Test the formula
+        shell: bash
+        run: |
+          brew update-reset
+          brew test-bot --cleanup --only-cleanup-before
+          brew tap purplebooth/repo
+          cp formula/formula.rb "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo/Formula/$REPOSITORY_NAME.rb"
+          brew install "purplebooth/repo/$REPOSITORY_NAME"
+          unset GITHUB_ACTIONS
+          brew test-bot \
+            --bintray-org="$BINTRAY_ORG" \
+            --root-url="$BINTRAY_DL_URL" \
+            --tap=purplebooth/repo \
+            --git-name="$GITHUB_ACTOR" \
+            --git-email="$GITHUB_ACTOR@users.noreply.github.com" \
+            "purplebooth/repo/$REPOSITORY_NAME"
+        env:
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+          BINTRAY_DL_URL: https://dl.bintray.com/purplebooth/bottles-repo
+          BINTRAY_ORG: purplebooth
       - shell: bash
+        name: Build binaries for the formula
+        run: |
+          unset GITHUB_ACTIONS
+          brew test-bot \
+            --ci-upload \
+            --bintray-org="$BINTRAY_ORG" \
+            --root-url="$BINTRAY_DL_URL" \
+            --tap=purplebooth/repo \
+            --git-name="$GITHUB_ACTOR" \
+            --git-email="$GITHUB_ACTOR@users.noreply.github.com" \
+            --publish \
+            "purplebooth/repo/$REPOSITORY_NAME"
+        env:
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+          HOMEBREW_BINTRAY_USER: purplebooth
+          HOMEBREW_BINTRAY_KEY: "${{ secrets.HOMEBREW_BINTRAY_KEY }}"
+          BINTRAY_DL_URL: https://dl.bintray.com/purplebooth/bottles-repo
+          BINTRAY_ORG: purplebooth
+      - shell: bash
+        name: Open a PR on the custom tap repository
         run: |
           mkdir -p $HOME/.config/gh/
           cat > $HOME/.config/gh/config.yml <<EOF
@@ -46,116 +124,15 @@ jobs:
              oauth_token: "$GITHUB_TOKEN"
           EOF
           brew install github/gh/gh
+
+          git -C homebrew-repo remote add tap "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
+          git -C homebrew-repo switch -c "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
+          git -C homebrew-repo fetch tap
+          git -C homebrew-repo merge --no-ff tap/main
+          (cd homebrew-repo && gh pr create --label bottles --base main --fill)
         env:
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+          GIT_TAG: ${{ github.ref }}
+          FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
           GH_USERNAME: ${{ github.repository_owner }}
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-      - id: get_repository_name
-        run: echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
-        shell: bash
-      - uses: actions/download-artifact@v2
-      - uses: actions/checkout@v2.3.1
-        with:
-          repository: PurpleBooth/homebrew-repo
-          token: ${{ secrets.COMMITTER_TOKEN }}
-          path: homebrew-repo
-          ref: "main"
-      - uses: actions/checkout@v2.3.1
-        with:
-          token: ${{ secrets.COMMITTER_TOKEN }}
-          path: source-repo
-      - id: get-brew-cache
-        run: |
-          echo "::set-output name=dir::$(brew --cache)"
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.get-brew-cache.outputs.dir }}
-          key: ${{ runner.os }}-brew-${{ hashFiles('**/formula.rb.j2') }}
-      - shell: bash
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-        run: |
-          git config --global user.name "$GITHUB_ACTOR"
-          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          brew update
-          brew upgrade
-      - shell: bash
-        run: |
-          if [ ! -f "$FORMULA_LOCATION" ] || ! grep -q "$(cat ./hash/hash)" "$FORMULA_LOCATION" ; then
-            cp formula/formula.rb "$FORMULA_LOCATION"
-          fi
-        env:
-          FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
-      - shell: bash
-        run: |
-          mkdir -p "$(brew --repo)/Library/Taps/purplebooth"
-          cp -r ./homebrew-repo/. "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
-      - shell: bash
-        run: |
-          cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git checkout -b "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
-
-          cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
-          if ! git diff-index --quiet HEAD -- ; then
-            git add "$(brew --repo)/Library/Taps/purplebooth/$FORMULA_LOCATION"
-            git commit -m "fix: Update $REPOSITORY_NAME to $(echo $GIT_TAG | sed 's/^refs\/tags\///')"
-          fi
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-          GIT_TAG: ${{ github.ref }}
-          FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
-          GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
-      - shell: bash
-        run: |
-          brew test-bot \
-            --bintray-org="$BINTRAY_ORG" \
-            --root-url="$BINTRAY_DL_URL" \
-            --tap purplebooth/homebrew-repo \
-            "purplebooth/repo/$REPOSITORY_NAME"
-        env:
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-          BINTRAY_DL_URL: https://dl.bintray.com/purplebooth/bottles-repo
-          BINTRAY_ORG: purplebooth
-      - shell: bash
-        run: |
-          curl \
-            "$BINTRAY_API_URL/packages/$BINTRAY_ORG/$REPOSITORY_NAME" \
-            -u "$HOMEBREW_BINTRAY_USER:$HOMEBREW_BINTRAY_KEY" \
-            -X POST \
-            -H 'Content-Type: application/json' \
-            -d "{ \"name\": \"$REPOSITORY_NAME\", \"vcs_url\": \"https://github.com/PurpleBooth/$REPOSITORY_NAME.git\", \"github_repo\": \"PurpleBooth/$REPOSITORY_NAME\", \"public_download_numbers\": true, \"public_stats\": true }" ||
-            echo "Package probably already exists..."
-        env:
-          HOMEBREW_BINTRAY_USER: purplebooth
-          HOMEBREW_BINTRAY_KEY: "${{ secrets.HOMEBREW_BINTRAY_KEY }}"
-          BINTRAY_API_URL: https://api.bintray.com
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-          BINTRAY_ORG: purplebooth
-      - shell: bash
-        run: |
-          brew test-bot \
-            --ci-upload \
-            --bintray-org="$BINTRAY_ORG" \
-            --root-url="$BINTRAY_DL_URL" \
-            --tap purplebooth/homebrew-repo \
-            --publish
-        env:
-          HOMEBREW_BINTRAY_USER: purplebooth
-          HOMEBREW_BINTRAY_KEY: "${{ secrets.HOMEBREW_BINTRAY_KEY }}"
-          BINTRAY_DL_URL: https://dl.bintray.com/purplebooth/bottles-repo
-          BINTRAY_ORG: purplebooth
-      - shell: bash
-        run: |
-          cd "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
-          git reset --soft HEAD~1
-          git commit --amend -C HEAD
-          git push -f origin "$REPOSITORY_NAME-$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
-          brew install github/gh/gh
-          gh pr create --label bottles --base main --fill || echo "this is ok, it just hasn't merged in yet"
-        env:
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-          GIT_TAG: ${{ github.ref }}
-          FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}.rb
-          GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
