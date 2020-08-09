@@ -478,7 +478,7 @@ checksum = "aaf91faf136cb47367fa430cd46e37a788775e7fa104f8b4bcb3861dc389b724"
 
 [[package]]
 name = "git-mit"
-version = "3.96.10"
+version = "3.97.0"
 dependencies = [
  "clap 3.0.0-beta.1",
  "clap_generate",
@@ -495,7 +495,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-config"
-version = "3.96.10"
+version = "3.97.0"
 dependencies = [
  "clap 3.0.0-beta.1",
  "clap_generate",
@@ -517,7 +517,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-install"
-version = "3.96.10"
+version = "3.97.0"
 dependencies = [
  "clap 3.0.0-beta.1",
  "clap_generate",
@@ -535,7 +535,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-relates-to"
-version = "3.96.10"
+version = "3.97.0"
 dependencies = [
  "clap 3.0.0-beta.1",
  "clap_generate",
@@ -865,7 +865,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-message-lints"
-version = "3.96.10"
+version = "3.97.0"
 dependencies = [
  "comfy-table",
  "console",
@@ -888,7 +888,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-msg"
-version = "3.96.10"
+version = "3.97.0"
 dependencies = [
  "clap 3.0.0-beta.1",
  "clap_generate",
@@ -911,7 +911,7 @@ dependencies = [
 
 [[package]]
 name = "mit-hook-test-helper"
-version = "3.96.10"
+version = "3.97.0"
 dependencies = [
  "console",
  "git2",
@@ -921,7 +921,7 @@ dependencies = [
 
 [[package]]
 name = "mit-pre-commit"
-version = "3.96.10"
+version = "3.97.0"
 dependencies = [
  "clap 3.0.0-beta.1",
  "clap_generate",
@@ -942,7 +942,7 @@ dependencies = [
 
 [[package]]
 name = "mit-prepare-commit-msg"
-version = "3.96.10"
+version = "3.97.0"
 dependencies = [
  "clap 3.0.0-beta.1",
  "clap_generate",
