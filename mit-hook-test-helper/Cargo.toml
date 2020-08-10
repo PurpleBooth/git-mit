@@ -1,6 +1,6 @@
 [package]
 name = "mit-hook-test-helper"
-version = "3.97.0"
+version = "3.97.1"
 authors = [
   "Billie Thompson <billie+mit-hook-test-helper@billiecodes.com>"
 ]
