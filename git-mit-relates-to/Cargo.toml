@@ -14,6 +14,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 
 [build-dependencies]
 clap = "3.0.0-beta.1"
+clap_derive = "3.0.0-beta.1"
 clap_generate = "3.0.0-beta.1"
 
   [build-dependencies.mit-build-tools]
@@ -22,9 +23,10 @@ clap_generate = "3.0.0-beta.1"
 [dependencies]
 thiserror = "1.0.20"
 clap = "3.0.0-beta.1"
+clap_generate = "3.0.0-beta.1"
+clap_derive = "3.0.0-beta.1"
 xdg = "2.2.0"
 git2 = "0.13.8"
-clap_generate = "3.0.0-beta.1"
 console = "0.12.0"
 
   [dependencies.mit-commit-message-lints]

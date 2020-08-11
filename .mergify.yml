@@ -56,4 +56,3 @@ pull_request_rules:
       merge:
         strict: smart+fasttrack
         method: merge
-

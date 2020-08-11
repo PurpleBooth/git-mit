@@ -151,9 +151,9 @@ checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
 name = "clap"
-version = "2.33.1"
+version = "2.33.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bdfa80d47f954d53a35a64987ca1422f495b8d6483c0fe9f7117b36c2a792129"
+checksum = "10040cdf04294b565d9e0319955430099ec3813a64c952b86a41200ad714ae48"
 dependencies = [
  "bitflags",
  "textwrap",
@@ -271,7 +271,7 @@ checksum = "70daa7ceec6cf143990669a04c7df13391d55fb27bd4079d252fca774ba244d8"
 dependencies = [
  "atty",
  "cast",
- "clap 2.33.1",
+ "clap 2.33.2",
  "criterion-plot",
  "csv",
  "itertools",
@@ -433,9 +433,9 @@ checksum = "134951f4028bdadb9b84baf4232681efbf277da25144b9b0ad65df75946c422b"
 
 [[package]]
 name = "either"
-version = "1.5.3"
+version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb1f6b1ce1c140482ea30ddd3335fc0024ac7ee112895426e0a629a6c20adfe3"
+checksum = "cd56b59865bce947ac5958779cfa508f6c3b9497cc762b7e24a12d11ccde2c4f"
 
 [[package]]
 name = "encode_unicode"
@@ -445,9 +445,9 @@ checksum = "a357d28ed41a50f9c765dbfe56cbc04a64e53e5fc58ba79fbc34c10ef3df831f"
 
 [[package]]
 name = "error-chain"
-version = "0.12.2"
+version = "0.12.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d371106cc88ffdfb1eabd7111e432da544f16f3e2d7bf1dfe8bf575f1df045cd"
+checksum = "2d2f06b9cac1506ece98fe3231e3cc9c4410ec3d5b1f24ae1c8946f0742cdefc"
 dependencies = [
  "backtrace",
  "version_check",
@@ -481,6 +481,7 @@ name = "git-mit"
 version = "3.97.2"
 dependencies = [
  "clap 3.0.0-beta.1",
+ "clap_derive",
  "clap_generate",
  "console",
  "git2",
@@ -498,6 +499,7 @@ name = "git-mit-config"
 version = "3.97.2"
 dependencies = [
  "clap 3.0.0-beta.1",
+ "clap_derive",
  "clap_generate",
  "comfy-table",
  "console",
@@ -520,6 +522,7 @@ name = "git-mit-install"
 version = "3.97.2"
 dependencies = [
  "clap 3.0.0-beta.1",
+ "clap_derive",
  "clap_generate",
  "console",
  "git2",
@@ -538,6 +541,7 @@ name = "git-mit-relates-to"
 version = "3.97.2"
 dependencies = [
  "clap 3.0.0-beta.1",
+ "clap_derive",
  "clap_generate",
  "console",
  "git2",
@@ -585,9 +589,9 @@ checksum = "d36fab90f82edc3c747f9d438e06cf0a491055896f2a279638bb5beed6c40177"
 
 [[package]]
 name = "hashbrown"
-version = "0.8.1"
+version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34f595585f103464d8d2f6e9864682d74c1601fed5e07d62b1c9058dba8246fb"
+checksum = "e91b62f79061a0bc2e046024cb7ba44b08419ed238ecbd9adbd787434b9e8c25"
 dependencies = [
  "autocfg",
 ]
@@ -623,9 +627,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "1.5.0"
+version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b88cd59ee5f71fea89a62248fc8f387d44400cefe05ef548466d61ced9029a7"
+checksum = "86b45e59b16c76b11bf9738fd5d38879d3bd28ad292d7b313608becb17ae2df9"
 dependencies = [
  "autocfg",
  "hashbrown",
@@ -842,6 +846,7 @@ name = "mit-build-tools"
 version = "3.17.0"
 dependencies = [
  "clap 3.0.0-beta.1",
+ "clap_derive",
  "clap_generate",
  "console",
  "serde",
@@ -891,6 +896,7 @@ name = "mit-commit-msg"
 version = "3.97.2"
 dependencies = [
  "clap 3.0.0-beta.1",
+ "clap_derive",
  "clap_generate",
  "console",
  "copypasta",
@@ -924,6 +930,7 @@ name = "mit-pre-commit"
 version = "3.97.2"
 dependencies = [
  "clap 3.0.0-beta.1",
+ "clap_derive",
  "clap_generate",
  "console",
  "git2",
@@ -945,6 +952,7 @@ name = "mit-prepare-commit-msg"
 version = "3.97.2"
 dependencies = [
  "clap 3.0.0-beta.1",
+ "clap_derive",
  "clap_generate",
  "console",
  "git2",
@@ -1081,9 +1089,9 @@ dependencies = [
 
 [[package]]
 name = "os_str_bytes"
-version = "2.3.1"
+version = "2.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06de47b848347d8c4c94219ad8ecd35eb90231704b067e67e6ae2e36ee023510"
+checksum = "2ac6fe3538f701e339953a3ebbe4f39941aababa8a3f6964635b24ab526daeac"
 
 [[package]]
 name = "output_vt100"
@@ -1482,9 +1490,9 @@ dependencies = [
 
 [[package]]
 name = "signal-hook-registry"
-version = "1.2.0"
+version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94f478ede9f64724c5d173d7bb56099ec3e2d9fc2774aac65d34b8b890405f41"
+checksum = "a3e12110bc539e657a646068aaf5eb5b63af9d0c1f7b29c97113fad80e15f035"
 dependencies = [
  "arc-swap",
  "libc",
@@ -1578,9 +1586,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "1.0.36"
+version = "1.0.38"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4cdb98bcb1f9d81d07b536179c269ea15999b5d14ea958196413869445bb5250"
+checksum = "e69abc24912995b3038597a7a593be5053eb0fb44f3cc5beec0deb421790c1f4"
 dependencies = [
  "proc-macro2",
  "quote",
