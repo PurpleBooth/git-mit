@@ -1,0 +1,58 @@
+pull_request_rules:
+  - name: automatic squash merge for main when tests pass
+    conditions:
+      - status-success=validate-commits
+      - "status-success=lints"
+      - "status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-..."
+      - "status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x..."
+      - "status-success=bench (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev)"
+      - "status-success=bench (macos-latest, echo nothing-to-install)"
+      - "status-success=version"
+      - "status-success=test (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev)"
+      - "status-success=test (macos-latest, echo nothing-to-install)"
+      - "status-success=security-audit"
+      - "status-success=check"
+      - base=main
+      - label=automerge-squash
+    actions:
+      merge:
+        strict: smart+fasttrack
+        method: squash
+  - name: automatic rebase for main when tests pass
+    conditions:
+      - status-success=validate-commits
+      - "status-success=lints"
+      - "status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-..."
+      - "status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x..."
+      - "status-success=bench (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev)"
+      - "status-success=bench (macos-latest, echo nothing-to-install)"
+      - "status-success=version"
+      - "status-success=test (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev)"
+      - "status-success=test (macos-latest, echo nothing-to-install)"
+      - "status-success=security-audit"
+      - "status-success=check"
+      - base=main
+      - label=automerge-rebase
+    actions:
+      merge:
+        strict: smart+fasttrack
+        method: rebase
+  - name: automatic rebase for releases
+    conditions:
+      - status-success=validate-commits
+      - "status-success=lints"
+      - "status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-..."
+      - "status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x..."
+      - "status-success=bench (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev)"
+      - "status-success=bench (macos-latest, echo nothing-to-install)"
+      - "status-success=version"
+      - "status-success=test (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev)"
+      - "status-success=test (macos-latest, echo nothing-to-install)"
+      - "status-success=security-audit"
+      - "status-success=check"
+      - base=main
+      - label=releases
+    actions:
+      merge:
+        strict: smart+fasttrack
+        method: merge
