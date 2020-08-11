@@ -30,7 +30,7 @@ serde_derive = "1.0.114"
 thiserror = "1.0.20"
 clap = "3.0.0-beta.1"
 git2 = "0.13.8"
-mit-commit = "1.10.0"
+mit-commit = "1.11.0"
 console = "0.12.0"
 
   [dependencies.mit-commit-message-lints]
