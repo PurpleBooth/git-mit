@@ -37,7 +37,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
 fn get_selected_lints(args: &ArgMatches) -> Result<Lints, GitMitConfigError> {
     Ok(args
         .values_of("lint")
-        .ok_or_else(|| LintNameNotGiven)?
+        .ok_or(LintNameNotGiven)?
         .collect::<Vec<_>>()
         .try_into()?)
 }

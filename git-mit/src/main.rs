@@ -27,7 +27,7 @@ const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
 fn main() -> Result<(), errors::GitMitError> {
     let matches = cli::app().get_matches();
     let users_config = get_users_config(&matches)?;
-    let authors_initials = get_author_initials(&matches).ok_or_else(|| NoAuthorInitialsProvided)?;
+    let authors_initials = get_author_initials(&matches).ok_or(NoAuthorInitialsProvided)?;
 
     let current_dir =
         env::current_dir().map_err(|error| GitMitError::new_io("$PWD".into(), &error))?;
@@ -98,7 +98,7 @@ fn get_author_config_from_exec(command: &str) -> Result<String, GitMitError> {
 
 fn get_author_config_from_file(matches: &ArgMatches) -> Result<String, GitMitError> {
     get_author_file_path(&matches)
-        .ok_or_else(|| GitMitError::AuthorFileNotSet)
+        .ok_or(GitMitError::AuthorFileNotSet)
         .and_then(|path| match path {
             "$HOME/.config/git-mit/mit.yml" => config_path(env!("CARGO_PKG_NAME")),
             _ => Ok(path.into()),
@@ -115,7 +115,7 @@ fn get_author_file_path(matches: &ArgMatches) -> Option<&str> {
 fn get_timeout(matches: &ArgMatches) -> Result<u64, GitMitError> {
     matches
         .value_of("timeout")
-        .ok_or_else(|| NoTimeoutSet)
+        .ok_or(NoTimeoutSet)
         .and_then(|x| x.parse().map_err(GitMitError::from))
 }
 

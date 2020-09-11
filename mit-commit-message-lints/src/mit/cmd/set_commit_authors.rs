@@ -19,9 +19,7 @@ pub fn set_commit_authors(
     authors: &[&Author],
     expires_in: Duration,
 ) -> Result<(), VcsError> {
-    let (first_author, others) = authors
-        .split_first()
-        .ok_or_else(|| VcsError::NoAuthorsToSet)?;
+    let (first_author, others) = authors.split_first().ok_or(VcsError::NoAuthorsToSet)?;
 
     remove_coauthors(config)?;
     set_vcs_user(config, first_author)?;

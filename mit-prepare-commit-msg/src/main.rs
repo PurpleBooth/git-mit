@@ -27,7 +27,7 @@ fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
     let commit_message_path = matches
         .value_of("commit-message-path")
         .map(PathBuf::from)
-        .ok_or_else(|| MissingCommitFilePath)?;
+        .ok_or(MissingCommitFilePath)?;
     let current_dir = env::current_dir()
         .map_err(|err| MitPrepareCommitMessageError::new_io("$PWD".into(), &err))?;
 
