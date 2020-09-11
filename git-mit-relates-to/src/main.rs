@@ -17,7 +17,7 @@ fn main() -> Result<(), errors::GitRelatesTo> {
 
     let relates_to = matches
         .value_of("issue-number")
-        .ok_or_else(|| GitRelatesTo::NoRelatesToMessageSet)?;
+        .ok_or(GitRelatesTo::NoRelatesToMessageSet)?;
 
     let current_dir = env::current_dir()?;
     let mut vcs = Git2::try_from(current_dir)?;
@@ -33,6 +33,6 @@ fn main() -> Result<(), errors::GitRelatesTo> {
 fn get_timeout(matches: &ArgMatches) -> Result<u64, GitRelatesTo> {
     matches
         .value_of("timeout")
-        .ok_or_else(|| GitRelatesTo::NoTimeoutSet)
+        .ok_or(GitRelatesTo::NoTimeoutSet)
         .and_then(|x| x.parse().map_err(GitRelatesTo::from))
 }

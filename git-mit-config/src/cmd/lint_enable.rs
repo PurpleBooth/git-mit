@@ -35,7 +35,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
 
     let lints: Lints = subcommand
         .values_of("lint")
-        .ok_or_else(|| LintNameNotGiven)?
+        .ok_or(LintNameNotGiven)?
         .collect::<Vec<_>>()
         .try_into()?;
 

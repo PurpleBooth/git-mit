@@ -66,7 +66,7 @@ fn get_author_config_from_exec(command: &str) -> Result<String, GitMitConfigErro
 
 fn get_author_config_from_file(matches: &ArgMatches) -> Result<String, GitMitConfigError> {
     get_author_file_path(&matches)
-        .ok_or_else(|| GitMitConfigError::AuthorFileNotSet)
+        .ok_or(GitMitConfigError::AuthorFileNotSet)
         .and_then(|path| match path {
             "$HOME/.config/git-mit/mit.yml" => config_path(env!("CARGO_PKG_NAME")),
             _ => Ok(path.into()),

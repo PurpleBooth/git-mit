@@ -22,7 +22,7 @@ fn main() -> Result<(), MitCommitMsgError> {
     let commit_file_path = matches
         .value_of("commit-file-path")
         .map(PathBuf::from)
-        .ok_or_else(|| errors::MitCommitMsgError::CommitPathMissing)?;
+        .ok_or(errors::MitCommitMsgError::CommitPathMissing)?;
 
     let commit_message = CommitMessage::try_from(commit_file_path)?;
 
@@ -37,7 +37,7 @@ fn main() -> Result<(), MitCommitMsgError> {
     if !lint_problems.is_empty() {
         let clipboard_used =
             if !FromStr::from_str(matches.value_of("copy-message-to-clipboard").unwrap())
-                .unwrap_or_else(|_| true)
+                .unwrap_or(true)
             {
                 false
             } else if let Ok(mut clipboard) = ClipboardContext::new() {
