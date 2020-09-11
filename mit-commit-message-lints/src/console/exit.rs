@@ -43,7 +43,7 @@ pub fn initial_not_matched_to_author(initials_without_authors: &[&str]) {
 }
 
 pub fn stale_author() {
-    crate::console::style::problem("The details of the mit of this commit are stale", "Can you confirm who's currently coding?\n\nIt's nice to get and give the right credit.\n\nYou can fix this by running `git mit` then the initials of whoever is coding for example:\ngit mit bt\ngit mit bt se\n");
+    crate::console::style::problem("The details of the author of this commit are stale", "Can you confirm who's currently coding?\n\nIt's nice to get and give the right credit.\n\nYou can fix this by running `git mit` then the initials of whoever is coding for example:\ngit mit bt\ngit mit bt se\n");
 
     process::exit(Code::StaleAuthor as i32);
 }
