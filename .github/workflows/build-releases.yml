@@ -9,7 +9,7 @@ jobs:
       - run: ${{ matrix.install }}
         env:
           DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v2.3.2
+      - uses: actions/checkout@v2.3.3
         with:
           lfs: true
       - uses: actions/cache@v2
@@ -72,7 +72,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.2
+      - uses: actions/checkout@v2.3.3
         with:
           lfs: true
           fetch-depth: 0
