@@ -7,13 +7,13 @@ pub fn app() -> App<'static> {
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
-            Arg::with_name("commit-message-path")
+            Arg::new("commit-message-path")
                 .about("The name of the file that contains the commit log message")
                 .index(1)
                 .required(true),
         )
         .arg(
-            Arg::with_name("commit-message-source")
+            Arg::new("commit-message-source")
                 .about(
                     "The commit message, and can be: message (if a -m or -F option was given to \
                  git); template (if a -t option was given or the configuration option \
@@ -25,13 +25,13 @@ pub fn app() -> App<'static> {
                 .required(false),
         )
         .arg(
-            Arg::with_name("commit-sha")
+            Arg::new("commit-sha")
                 .about("Commit SHA-1 (if a -c, -C or --amend option was given to git).")
                 .index(3)
                 .required(false),
         )
         .arg(
-            Arg::with_name("relates-to-exec")
+            Arg::new("relates-to-exec")
                 .long("relates-to-exec")
                 .about("A command to execute to get the value for the relates to trailer")
                 .env("GIT_MIT_RELATES_TO_EXEC")

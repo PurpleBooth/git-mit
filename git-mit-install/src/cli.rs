@@ -7,7 +7,7 @@ pub fn app() -> App<'static> {
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
-            Arg::with_name("scope")
+            Arg::new("scope")
                 .long("scope")
                 .short('s')
                 .possible_values(&["local", "global"])

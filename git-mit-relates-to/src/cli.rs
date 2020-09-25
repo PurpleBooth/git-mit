@@ -7,12 +7,12 @@ pub fn app() -> App<'static> {
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
-            Arg::with_name("issue-number")
+            Arg::new("issue-number")
                 .about("The issue number or other string to place into the Relates-to trailer")
                 .required(true),
         )
         .arg(
-            Arg::with_name("timeout")
+            Arg::new("timeout")
                 .short('t')
                 .long("timeout")
                 .about("Number of minutes to expire the configuration in")

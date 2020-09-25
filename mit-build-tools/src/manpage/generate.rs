@@ -66,7 +66,7 @@ impl<'a> Context {
 mod existing {
     use clap::App;
 
-    pub(crate) fn existing(app: &App, variable: &str) -> String {
+    pub(crate) fn existing(app: &App, variable: &'static str) -> String {
         let mut copy = app.clone().help_template(variable);
 
         let mut version_buffer: Vec<u8> = vec![];

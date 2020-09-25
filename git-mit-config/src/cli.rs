@@ -1,7 +1,7 @@
 use clap::{crate_authors, crate_version, App, AppSettings, Arg};
 
 pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
-    let lint_argument = Arg::with_name("lint")
+    let lint_argument = Arg::new("lint")
         .about("The lint to enable")
         .required(true)
         .multiple(true)
@@ -13,7 +13,7 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
-            Arg::with_name("scope")
+            Arg::new("scope")
                 .long("scope")
                 .short('s')
                 .possible_values(&["local", "global"])
@@ -51,22 +51,22 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                 .subcommand(
                     App::new("set")
                         .arg(
-                            Arg::with_name("initial")
+                            Arg::new("initial")
                                 .about("Initial of the mit to update or add")
                                 .required(true),
                         )
                         .arg(
-                            Arg::with_name("name")
+                            Arg::new("name")
                                 .about("Name to use for the mit in format \"Forename Surname\"")
                                 .required(true),
                         )
                         .arg(
-                            Arg::with_name("email")
+                            Arg::new("email")
                                 .about("Email to use for the mit")
                                 .required(true),
                         )
                         .arg(
-                            Arg::with_name("signingkey")
+                            Arg::new("signingkey")
                                 .about("Signing key to use for this user")
                                 .required(false),
                         )
@@ -75,7 +75,7 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                 .subcommand(
                     App::new("generate")
                         .arg(
-                            Arg::with_name("file")
+                            Arg::new("file")
                                 .short('c')
                                 .long("config")
                                 .about("Path to a file where mit initials, emails and names can be found")
@@ -83,7 +83,7 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                                 .default_value("$HOME/.config/git-mit/mit.yml"),
                         )
                         .arg(
-                            Arg::with_name("command")
+                            Arg::new("command")
                                 .short('e')
                                 .long("exec")
                                 .about(

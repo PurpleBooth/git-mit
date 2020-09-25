@@ -7,7 +7,7 @@ pub fn app() -> App<'static> {
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
-            Arg::with_name("commit-file-path")
+            Arg::new("commit-file-path")
                 .about(
                     "Path to a temporary file that contains the commit message written by the \
                  developer",
@@ -16,7 +16,7 @@ pub fn app() -> App<'static> {
                 .required(true),
         )
         .arg(
-            Arg::with_name("copy-message-to-clipboard")
+            Arg::new("copy-message-to-clipboard")
                 .long("copy-message-to-clipboard")
                 .about("On lint failure copy the message to clipboard")
                 .env("GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD")

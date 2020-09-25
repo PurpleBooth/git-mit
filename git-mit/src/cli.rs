@@ -41,14 +41,14 @@ pub fn app() -> App<'static> {
             "
         ))
         .arg(
-            Arg::with_name("initials")
+            Arg::new("initials")
                 .about("Initials of the mit to put in the commit")
                 .multiple(true)
                 .required(true)
                 .min_values(1),
         )
         .arg(
-            Arg::with_name("file")
+            Arg::new("file")
                 .short('c')
                 .long("config")
                 .about("Path to a file where mit initials, emails and names can be found")
@@ -56,7 +56,7 @@ pub fn app() -> App<'static> {
                 .default_value("$HOME/.config/git-mit/mit.yml"),
         )
         .arg(
-            Arg::with_name("command")
+            Arg::new("command")
                 .short('e')
                 .long("exec")
                 .about(
@@ -67,7 +67,7 @@ pub fn app() -> App<'static> {
                 .env("GIT_MIT_AUTHORS_EXEC"),
         )
         .arg(
-            Arg::with_name("timeout")
+            Arg::new("timeout")
                 .short('t')
                 .long("timeout")
                 .about("Number of minutes to expire the configuration in")
