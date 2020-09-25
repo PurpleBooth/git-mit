@@ -13,7 +13,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 description = "Generate different things from a clap app file"
 
 [dependencies]
-clap = "3.0.0-beta.1"
+clap = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.1"
 clap_derive = "3.0.0-beta.2"
 xdg = "2.2.0"
