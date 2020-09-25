@@ -33,7 +33,7 @@ clap = "3.0.0-beta.1"
 clap_derive = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.1"
 git2 = "0.13.11"
-mit-commit = "1.14.0"
+mit-commit = "1.15.0"
 console = "0.12.0"
 
   [dependencies.mit-commit-message-lints]
