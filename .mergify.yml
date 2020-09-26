@@ -1,7 +1,6 @@
 pull_request_rules:
   - name: automatic squash merge for main when tests pass
     conditions:
-      - status-success=validate-commits
       - "status-success=lints"
       - "status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-..."
       - "status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x..."
@@ -20,7 +19,6 @@ pull_request_rules:
         method: squash
   - name: automatic rebase for main when tests pass
     conditions:
-      - status-success=validate-commits
       - "status-success=lints"
       - "status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-..."
       - "status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x..."
@@ -39,7 +37,6 @@ pull_request_rules:
         method: rebase
   - name: automatic rebase for releases
     conditions:
-      - status-success=validate-commits
       - "status-success=lints"
       - "status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-..."
       - "status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x..."
@@ -58,7 +55,6 @@ pull_request_rules:
         method: merge
   - name: automatic rebase for dependencies
     conditions:
-      - status-success=validate-commits
       - "status-success=lints"
       - "status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-..."
       - "status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x..."
