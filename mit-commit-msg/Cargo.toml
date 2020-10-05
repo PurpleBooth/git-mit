@@ -33,7 +33,7 @@ git2 = "0.13.11"
 thiserror = "1.0.20"
 mit-commit = "1.16.0"
 console = "0.12.0"
-copypasta = "0.7.0"
+copypasta = "0.7.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
