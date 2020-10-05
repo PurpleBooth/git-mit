@@ -285,7 +285,7 @@ fn set_author_signing_key(config: &mut dyn Vcs, author: &Author) -> Result<(), V
         Some(key) => config
             .set_str("user.signingkey", &key)
             .map_err(VcsError::from),
-        None => config.remove("user.signingkey").or_else(|_| Ok(())),
+        None => config.remove("user.signingkey").or(Ok(())),
     }
 }
 

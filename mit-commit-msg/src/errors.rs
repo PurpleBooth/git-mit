@@ -18,7 +18,7 @@ pub(crate) enum MitCommitMsgError {
     #[error("{0}")]
     External(#[from] external::Error),
     #[error("{0}")]
-    Clipboard(#[from] Box<dyn error::Error>),
+    Clipboard(#[from] Box<dyn error::Error + Sync + Send>),
 }
 
 impl MitCommitMsgError {
