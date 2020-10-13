@@ -406,7 +406,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit"
-version = "3.98.24"
+version = "3.98.30"
 dependencies = [
  "clap 3.0.0-beta.2",
  "clap_derive",
@@ -424,7 +424,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-config"
-version = "3.98.24"
+version = "3.98.30"
 dependencies = [
  "clap 3.0.0-beta.2",
  "clap_derive",
@@ -447,7 +447,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-install"
-version = "3.98.24"
+version = "3.98.30"
 dependencies = [
  "clap 3.0.0-beta.2",
  "clap_derive",
@@ -466,7 +466,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-relates-to"
-version = "3.98.24"
+version = "3.98.30"
 dependencies = [
  "clap 3.0.0-beta.2",
  "clap_derive",
@@ -786,7 +786,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-message-lints"
-version = "3.98.24"
+version = "3.98.30"
 dependencies = [
  "comfy-table",
  "console",
@@ -809,7 +809,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-msg"
-version = "3.98.24"
+version = "3.98.30"
 dependencies = [
  "clap 3.0.0-beta.2",
  "clap_derive",
@@ -833,7 +833,7 @@ dependencies = [
 
 [[package]]
 name = "mit-hook-test-helper"
-version = "3.98.24"
+version = "3.98.30"
 dependencies = [
  "console",
  "git2",
@@ -843,7 +843,7 @@ dependencies = [
 
 [[package]]
 name = "mit-pre-commit"
-version = "3.98.24"
+version = "3.98.30"
 dependencies = [
  "clap 3.0.0-beta.2",
  "clap_derive",
@@ -865,7 +865,7 @@ dependencies = [
 
 [[package]]
 name = "mit-prepare-commit-msg"
-version = "3.98.24"
+version = "3.98.30"
 dependencies = [
  "clap 3.0.0-beta.2",
  "clap_derive",
