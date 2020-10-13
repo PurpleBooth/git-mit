@@ -38,7 +38,7 @@ console = "0.12.0"
   path = "../mit-commit-message-lints"
 
 [dev-dependencies]
-indoc = "1.0.2"
+indoc = "1.0.3"
 pretty_assertions = "0.6.1"
 
   [dev-dependencies.mit-hook-test-helper]
