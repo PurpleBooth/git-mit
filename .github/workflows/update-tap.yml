@@ -52,7 +52,7 @@ jobs:
           git -C homebrew-repo add "Formula/$REPOSITORY_NAME.rb"
           git -C homebrew-repo commit -m "fix: Update $REPOSITORY_NAME to $VERSION"
           git -C homebrew-repo push origin "$REPOSITORY_NAME-$VERSION"
-          (cd homebrew-repo && gh pr create --label bottles --base main --fill)
+          (cd homebrew-repo && gh pr create --label releases --base main --fill)
         env:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           GIT_TAG: ${{ github.ref }}
