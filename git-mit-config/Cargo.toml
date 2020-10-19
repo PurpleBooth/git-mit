@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-config"
-version = "3.98.24"
+version = "3.98.34"
 authors = [ "Billie Thompson <billie+git-mit-config@billiecodes.com>" ]
 edition = "2018"
 license = "CC0 1.0 Universal"
