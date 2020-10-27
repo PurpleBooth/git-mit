@@ -773,9 +773,9 @@ dependencies = [
 
 [[package]]
 name = "mit-commit"
-version = "1.17.0"
+version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f1592b8fc2cacfe99cb095d0997fef03b05e959575baf6b1279c4e9e750af09"
+checksum = "0678917bedad411fd2b525687d55c03f2625e83083dd25f6575ed95420a81ffb"
 dependencies = [
  "indoc",
  "lazy_static",
