@@ -12,12 +12,12 @@ jobs:
         name: Work out repository name
         run: echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
         shell: bash
-      - uses: actions/checkout@v2.3.3
+      - uses: actions/checkout@v2.3.4
         name: Checkout this repository
         with:
           token: ${{ secrets.COMMITTER_TOKEN }}
           path: main-repo
-      - uses: actions/checkout@v2.3.3
+      - uses: actions/checkout@v2.3.4
         with:
           repository: PurpleBooth/homebrew-repo
           token: ${{ secrets.COMMITTER_TOKEN }}
