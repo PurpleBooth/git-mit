@@ -32,7 +32,7 @@ clap_generate = "3.0.0-beta.1"
 git2 = "0.13.12"
 thiserror = "1.0.22"
 mit-commit = "1.19.0"
-console = "0.13.0"
+console = "0.14.0"
 copypasta = "0.7.0"
 
   [dependencies.mit-commit-message-lints]
