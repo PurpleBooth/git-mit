@@ -175,7 +175,7 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE/target/assorted/bin"
           curl -Lo "$GITHUB_WORKSPACE/target/assorted/bin/specdown" "$SPECDOWN_URL"
           chmod +x "$GITHUB_WORKSPACE/target/assorted/bin/specdown"
-          echo "::add-path::$GITHUB_WORKSPACE/target/assorted/bin"
+          echo "$GITHUB_WORKSPACE/target/assorted/bin" >> "$GITHUB_PATH"
         env:
           SPECDOWN_URL: ${{ matrix.specdown }}
       - uses: actions-rs/toolchain@v1
