@@ -11,10 +11,11 @@ use std::{
 
 use git2::{Config, Repository};
 use pretty_assertions::assert_eq;
+use std::path::Path;
 use tempfile::TempDir;
 
 #[must_use]
-pub fn run_hook(working_dir: &PathBuf, package: &str, arguments: Vec<&str>) -> Output {
+pub fn run_hook(working_dir: &Path, package: &str, arguments: Vec<&str>) -> Output {
     let toml_path = calculate_cargo_toml_path(package);
     let mut cargo_arguments = vec![
         "run",
@@ -44,7 +45,7 @@ impl Display for PathError {
     }
 }
 
-pub fn set_co_author(working_dir: &PathBuf, author_name: &str, author_email: &str, index: i64) {
+pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, index: i64) {
     Command::new("git")
         .current_dir(&working_dir)
         .arg("config")
@@ -63,7 +64,7 @@ pub fn set_co_author(working_dir: &PathBuf, author_name: &str, author_email: &st
         .expect("failed to execute process");
 }
 
-pub fn set_author_expires(expiration_time: Duration, working_dir: &PathBuf) {
+pub fn set_author_expires(expiration_time: Duration, working_dir: &Path) {
     let now = format!("{}", expiration_time.as_secs());
     Command::new("git")
         .current_dir(&working_dir)

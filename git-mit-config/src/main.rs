@@ -1,5 +1,5 @@
 use std::env;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use git2::{Config, Repository};
 
@@ -40,9 +40,10 @@ fn main() -> Result<(), GitMitConfigError> {
     Err(GitMitConfigError::UnrecognisedLintCommand)
 }
 
-fn get_vcs(local: bool, current_dir: &PathBuf) -> Result<Git2, GitMitConfigError> {
+fn get_vcs(local: bool, current_dir: &Path) -> Result<Git2, GitMitConfigError> {
     let git_config = if local {
-        Repository::discover(current_dir.clone()).and_then(|repo: Repository| repo.config())?
+        Repository::discover(current_dir.to_path_buf())
+            .and_then(|repo: Repository| repo.config())?
     } else {
         Config::open_default()?
     };

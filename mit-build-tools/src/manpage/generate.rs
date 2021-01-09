@@ -1,7 +1,7 @@
 use std::fs;
 use std::fs::File;
 use std::io::Write;
-use std::path::PathBuf;
+use std::path::Path;
 
 use clap::App;
 use serde::Serialize;
@@ -26,7 +26,7 @@ struct Context {
     before_help: String,
 }
 
-pub fn generate(app: &App, out_dir: &PathBuf, md_template: &str) {
+pub fn generate(app: &App, out_dir: &Path, md_template: &str) {
     let mut tt = TinyTemplate::new();
     let manpage_template = fs::read_to_string(md_template).unwrap();
     tt.set_default_formatter(&formatters::format_escape);
