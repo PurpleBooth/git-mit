@@ -46,12 +46,13 @@ fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>, VcsError> {
 
     Ok(co_author_names
         .iter()
+        .cloned()
         .zip(co_author_emails)
         .filter_map(new_author)
         .collect())
 }
 
-fn new_author(parameters: (&Option<&str>, Option<&str>)) -> Option<Author> {
+fn new_author(parameters: (Option<&str>, Option<&str>)) -> Option<Author> {
     match parameters {
         (Some(name), Some(email)) => Some(Author::new(name, email, None)),
         _ => None,

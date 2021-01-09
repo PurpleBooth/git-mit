@@ -1,7 +1,7 @@
 use std::borrow::Borrow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::convert::{TryFrom, TryInto};
-use std::iter::FromIterator;
+
 use std::vec::IntoIter;
 
 use thiserror::Error;
@@ -17,7 +17,7 @@ pub struct Lints {
 
 lazy_static! {
     static ref AVAILABLE: Lints = {
-        let set = BTreeSet::from_iter(Lint::iterator());
+        let set = Lint::iterator().collect();
         Lints::new(set)
     };
 }
@@ -98,14 +98,12 @@ impl Lints {
 
     #[must_use]
     pub fn merge(&self, other: &Lints) -> Lints {
-        Lints::new(BTreeSet::from_iter(self.lints.union(&other.lints).cloned()))
+        Lints::new(self.lints.union(&other.lints).cloned().collect())
     }
 
     #[must_use]
     pub fn subtract(&self, other: &Lints) -> Lints {
-        Lints::new(BTreeSet::from_iter(
-            self.lints.difference(&other.lints).cloned(),
-        ))
+        Lints::new(self.lints.difference(&other.lints).cloned().collect())
     }
 }
 
@@ -143,7 +141,7 @@ impl TryFrom<Lints> for String {
 
 impl From<Vec<Lint>> for Lints {
     fn from(lints: Vec<Lint>) -> Self {
-        Lints::new(BTreeSet::from_iter(lints.into_iter()))
+        Lints::new(lints.into_iter().collect())
     }
 }
 
@@ -169,7 +167,7 @@ impl TryFrom<Vec<&str>> for Lints {
             )
             .map(Vec::into_iter)?;
 
-        Ok(Lints::new(BTreeSet::from_iter(lints)))
+        Ok(Lints::new(lints.collect()))
     }
 }
 
@@ -201,7 +199,6 @@ mod tests {
     use crate::lints::Lint;
     use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
     use crate::{external::InMemory, lints::Lint::DuplicatedTrailers};
-    use std::iter::FromIterator;
 
     #[test]
     fn it_returns_an_error_if_one_of_the_names_is_wrong() {
@@ -287,7 +284,7 @@ mod tests {
     #[test]
     fn can_get_all() {
         let actual = Lints::available();
-        let lints = BTreeSet::from_iter(Lint::iterator());
+        let lints = Lint::iterator().collect();
         let expected = &Lints::new(lints);
 
         assert_eq!(

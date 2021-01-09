@@ -45,9 +45,9 @@ impl std::convert::From<Lint> for String {
     }
 }
 
-impl Into<&str> for Lint {
-    fn into(self) -> &'static str {
-        self.name()
+impl From<Lint> for &str {
+    fn from(lint: Lint) -> Self {
+        lint.name()
     }
 }
 

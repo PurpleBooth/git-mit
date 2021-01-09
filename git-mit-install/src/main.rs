@@ -1,6 +1,6 @@
 use std::{env, fs, io};
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use thiserror::Error;
 
 mod cli;
@@ -41,7 +41,7 @@ fn main() -> Result<(), GitMitInstallError> {
     Ok(())
 }
 
-fn install_hook(hook_path: &PathBuf, hook_name: &str) -> Result<(), GitMitInstallError> {
+fn install_hook(hook_path: &Path, hook_name: &str) -> Result<(), GitMitInstallError> {
     let binary_path = which::which(format!("mit-{}", hook_name)).unwrap();
     let install_path = hook_path.join(hook_name);
     let install_path_destination = install_path.read_link();
