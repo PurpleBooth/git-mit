@@ -211,7 +211,7 @@ jobs:
           command: clippy
           args: "--all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple-crate-versions"
       - name: Prettify code
-        uses: creyD/prettier_action@v3.2
+        uses: creyD/prettier_action@v3.3
         with:
           # This part is also where you can pass other options, for example:
           prettier_options: --check **/*.{yml,yaml}
