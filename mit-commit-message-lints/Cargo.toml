@@ -28,7 +28,7 @@ console = "0.14.0"
 comfy-table = "1.5.0"
 
   [dependencies.serde]
-  version = "1.0.118"
+  version = "1.0.119"
   features = [ "derive" ]
 
 [dev-dependencies]
