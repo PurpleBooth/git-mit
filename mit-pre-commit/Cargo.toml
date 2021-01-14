@@ -16,10 +16,10 @@ clap_generate = "3.0.0-beta.2"
 clap_derive = "3.0.0-beta.2"
 tinytemplate = "1.2.0"
 serde_json = "1.0.61"
-serde_derive = "1.0.118"
+serde_derive = "1.0.119"
 
   [build-dependencies.serde]
-  version = "1.0.118"
+  version = "1.0.119"
   features = [ "derive" ]
 
   [build-dependencies.mit-build-tools]
@@ -31,7 +31,7 @@ clap = "3.0.0-beta.2"
 clap_derive = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.2"
 git2 = "0.13.15"
-mit-commit = "1.22.0"
+mit-commit = "1.23.0"
 console = "0.14.0"
 
   [dependencies.mit-commit-message-lints]

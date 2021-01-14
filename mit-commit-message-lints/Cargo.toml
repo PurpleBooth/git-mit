@@ -19,16 +19,16 @@ thiserror = "1.0.23"
 git2 = "0.13.15"
 regex = "1.4.3"
 serde_yaml = "0.8.15"
-serde_derive = "1.0.118"
+serde_derive = "1.0.119"
 indoc = "1.0.3"
 toml = "0.5.8"
-mit-commit = "1.22.0"
+mit-commit = "1.23.0"
 lazy_static = "1.4.0"
 console = "0.14.0"
 comfy-table = "1.5.0"
 
   [dependencies.serde]
-  version = "1.0.118"
+  version = "1.0.119"
   features = [ "derive" ]
 
 [dev-dependencies]

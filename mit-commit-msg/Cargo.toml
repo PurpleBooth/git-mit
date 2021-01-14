@@ -16,10 +16,10 @@ clap_derive = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.2"
 tinytemplate = "1.2.0"
 serde_json = "1.0.61"
-serde_derive = "1.0.118"
+serde_derive = "1.0.119"
 
   [build-dependencies.serde]
-  version = "1.0.118"
+  version = "1.0.119"
   features = [ "derive" ]
 
   [build-dependencies.mit-build-tools]
@@ -31,7 +31,7 @@ clap_derive = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.2"
 git2 = "0.13.15"
 thiserror = "1.0.23"
-mit-commit = "1.22.0"
+mit-commit = "1.23.0"
 console = "0.14.0"
 copypasta = "0.7.1"
 
@@ -40,7 +40,7 @@ copypasta = "0.7.1"
 
 [dev-dependencies]
 indoc = "1.0.3"
-tempfile = "3.1.0"
+tempfile = "3.2.0"
 pretty_assertions = "0.6.1"
 
   [dev-dependencies.mit-hook-test-helper]
