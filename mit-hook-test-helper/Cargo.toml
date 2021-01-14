@@ -13,7 +13,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 description = "Testing help tools for git-mit"
 
 [dependencies]
-tempfile = "3.2.0"
+tempfile = "3.1.0"
 git2 = "0.13.15"
 pretty_assertions = "0.6.1"
 console = "0.14.0"
