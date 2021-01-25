@@ -33,7 +33,7 @@ comfy-table = "2.0.0"
 
 [dev-dependencies]
 pretty_assertions = "0.6.1"
-criterion = "0.3.3"
+criterion = "0.3.4"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
