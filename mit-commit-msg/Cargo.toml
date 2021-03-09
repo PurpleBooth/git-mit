@@ -41,7 +41,7 @@ copypasta = "0.7.1"
 [dev-dependencies]
 indoc = "1.0.3"
 tempfile = "3.2.0"
-pretty_assertions = "0.6.1"
+pretty_assertions = "0.7.1"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"

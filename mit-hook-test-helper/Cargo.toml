@@ -15,5 +15,5 @@ description = "Testing help tools for git-mit"
 [dependencies]
 tempfile = "3.2.0"
 git2 = "0.13.17"
-pretty_assertions = "0.6.1"
+pretty_assertions = "0.7.1"
 console = "0.14.0"

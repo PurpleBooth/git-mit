@@ -41,7 +41,7 @@ console = "0.14.0"
 
 [dev-dependencies]
 indoc = "1.0.3"
-pretty_assertions = "0.6.1"
+pretty_assertions = "0.7.1"
 tempfile = "3.2.0"
 
   [dev-dependencies.mit-hook-test-helper]
