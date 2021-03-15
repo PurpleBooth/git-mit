@@ -20,7 +20,7 @@ xdg = "2.2.0"
 tinytemplate = "1.2.0"
 serde_json = "1.0.61"
 serde_derive = "1.0.119"
-console = "0.14.0"
+console = "0.14.1"
 
   [dependencies.serde]
   version = "1.0.123"
