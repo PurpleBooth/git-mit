@@ -60,6 +60,9 @@ const COMMIT_WITH_ALL_FEATURES: &str = indoc!(
         "
 );
 
+/// # Panics
+///
+/// On test failure
 pub fn criterion_benchmark(c: &mut Criterion) {
     c.bench_with_input(
         BenchmarkId::new("trailers", "commit_with_all_features"),

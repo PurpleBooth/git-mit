@@ -26,6 +26,9 @@ struct Context {
     before_help: String,
 }
 
+/// # Panics
+///
+/// Will panic if it can't render the template
 pub fn generate(app: &App, out_dir: &Path, md_template: &str) {
     let mut tt = TinyTemplate::new();
     let manpage_template = fs::read_to_string(md_template).unwrap();
@@ -72,9 +75,6 @@ mod existing {
         let mut version_buffer: Vec<u8> = vec![];
         copy.write_help(&mut version_buffer).unwrap();
 
-        String::from_utf8(version_buffer.to_vec())
-            .unwrap()
-            .trim_end()
-            .into()
+        String::from_utf8(version_buffer).unwrap().trim_end().into()
     }
 }

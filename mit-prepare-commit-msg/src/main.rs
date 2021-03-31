@@ -62,11 +62,10 @@ fn append_coauthors_to_commit_message(
         .collect::<Vec<_>>();
 
     for trailer in trailers {
-        if commit_message
+        if !commit_message
             .get_trailers()
             .iter()
-            .find(|existing_trailer| &&trailer == existing_trailer)
-            .is_none()
+            .any(|existing_trailer| &trailer == existing_trailer)
         {
             commit_message = commit_message.add_trailer(trailer);
         }
@@ -99,14 +98,13 @@ fn add_trailer_if_not_existing(
     if commit_message
         .get_trailers()
         .iter()
-        .find(|existing_trailer| &trailer == existing_trailer)
-        .is_none()
+        .any(|existing_trailer| trailer == existing_trailer)
     {
+        Ok(())
+    } else {
         File::create(commit_message_path).and_then(|mut file| {
             file.write_all(String::from(commit_message.add_trailer(trailer.clone())).as_bytes())
         })
-    } else {
-        Ok(())
     }
 }
 

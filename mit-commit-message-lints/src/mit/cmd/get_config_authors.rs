@@ -6,6 +6,10 @@ use crate::mit::{Author, Authors, VcsError};
 /// # Errors
 ///
 /// On IO failure
+///
+/// # Panics
+///
+/// Does not panic
 pub fn get_config_authors(vcs: &dyn Vcs) -> Result<Authors, VcsError> {
     let raw_entries: BTreeMap<String, BTreeMap<String, String>> = vcs
         .entries(Some("mit.author.config.*"))?

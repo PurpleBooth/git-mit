@@ -46,6 +46,10 @@ impl Lints {
     /// # Errors
     ///
     /// If we fail to parse the toml
+    ///
+    /// # Panics
+    ///
+    /// Will panic if the lint prefix isn't delimited by dots. This should never happen as it's a constant
     pub fn get_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lints, Error> {
         let vcs_lints = Lints::try_from_vcs(vcs)?;
         // contains PB  // contains lint // contains config

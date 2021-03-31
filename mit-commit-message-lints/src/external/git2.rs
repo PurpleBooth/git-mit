@@ -11,6 +11,9 @@ pub struct Git2 {
 }
 
 impl Git2 {
+    /// # Panics
+    ///
+    /// Will panic if it can't open the git config in snapshot mode
     #[must_use]
     pub fn new(mut config: git2::Config) -> Git2 {
         Git2 {

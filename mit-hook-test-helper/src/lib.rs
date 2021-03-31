@@ -78,6 +78,9 @@ pub fn set_author_expires(expiration_time: Duration, working_dir: &Path) {
         .expect("failed to execute process");
 }
 
+/// # Panics
+///
+/// if it can't calculate the path to the cargo toml
 #[must_use]
 pub fn calculate_cargo_toml_path(package: &str) -> String {
     let boxed_path_error = || Box::from(PathError);
@@ -111,6 +114,9 @@ pub fn make_config() -> Config {
         .expect("Failed to get configuration")
 }
 
+/// # Panics
+///
+/// Panics on failed test
 pub fn assert_output(
     output: &Output,
     expected_stdout: &str,
