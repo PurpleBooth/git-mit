@@ -1,0 +1,4 @@
+[advisories]
+ignore = [
+    "RUSTSEC-2021-0019", # `xcb` multiple soundness issues (used by `copypasta`), author confirms it's not affected https://github.com/alacritty/copypasta/issues/29
+]
