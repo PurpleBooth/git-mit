@@ -21,13 +21,13 @@ clap_generate = "3.0.0-beta.2"
   path = "../mit-build-tools"
 
 [dependencies]
-thiserror = "1.0.23"
+thiserror = "1.0.24"
 clap = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.2"
 clap_derive = "3.0.0-beta.2"
 xdg = "2.2.0"
 git2 = "0.13.17"
-console = "0.14.0"
+console = "0.14.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
