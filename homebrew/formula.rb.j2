@@ -43,7 +43,7 @@ class GitMit < Formula
   test do
     system "git", "init", testpath
     system "#{bin}/git-mit-install"
-    output = Utils.popen_read("#{bin}/git-mit-config mit example")
+    output = Utils.popen_read("#{bin}/git-mit-config", "mit", "example")
     (testpath/"git-mit.toml").write output
     system "#{bin}/git-mit", "-c", "git-mit.toml", "se"
     system "git-mit-relates-to", "#12356"
