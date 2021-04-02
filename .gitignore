@@ -1,3 +1,4 @@
+# Ignore following files from git
 /target
 */target/
 /version/version
