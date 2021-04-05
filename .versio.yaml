@@ -3,14 +3,14 @@ options:
 
 projects:
 - name: git-mit
-  id: 0
+  id: 1
   tag_prefix: ''
   labels: cargo
   version:
-    file: ./git-mit/Cargo.toml
+    file: git-mit/Cargo.toml
     toml: package.version
   also:
-  - file: ./git-mit-config/Cargo.toml
+  - file: git-mit-config/Cargo.toml
     toml: package.version
   - file: git-mit-install/Cargo.toml
     toml: package.version
