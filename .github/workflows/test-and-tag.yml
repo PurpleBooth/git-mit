@@ -22,48 +22,19 @@ jobs:
   version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          default: true
-      - uses: actions/checkout@v2.3.4
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
-      - uses: actions/cache@v2.1.4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: git fetch origin +refs/tags/*:refs/tags/*
-      - id: get_previous_version
-        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort | tail -n 1)
-        shell: bash
-      - id: get_last_common_commit
-        run: echo ::set-output name=LAST_COMMON_COMMIT::$(git merge-base "$THIS" "$PREVIOUS_VERSION")
-        shell: bash
+      - uses: chaaz/versio-actions/install@v1.1
+        name: Install versio
+      - name: Check projects
+        run: versio check
+      - name: Print changes
+        run: versio plan
         env:
-          PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
-          THIS: "${{ github.sha }}"
-      - uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: what-bump --force
-      - run: mkdir -p ./version
-      - run: |
-          what-bump "${LAST_COMMON_COMMIT}" --from "${PREVIOUS_VERSION:1}" > ./version/no_prefix_version
-          echo "v" > ./version/prefix
-          cat ./version/prefix ./version/no_prefix_version | tr  -d '\n' > ./version/version
-        env:
-          PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
-          LAST_COMMON_COMMIT: "${{ steps.get_last_common_commit.outputs.LAST_COMMON_COMMIT }}"
-      - uses: actions/upload-artifact@v2
-        with:
-          name: version
-          path: ./version/version
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USER: ${{ github.actor }}
   check:
     runs-on: ubuntu-latest
     steps:
@@ -213,10 +184,9 @@ jobs:
       - name: Prettify code
         uses: creyD/prettier_action@v3.3
         with:
-          # This part is also where you can pass other options, for example:
           prettier_options: --check **/*.{yml,yaml}
   merge-and-push:
-    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'Update cargo package version to v')
+    if: github.ref == 'refs/heads/main'
     needs:
       - version
       - specdown
@@ -230,84 +200,10 @@ jobs:
         with:
           token: "${{ secrets.COMMITTER_TOKEN }}"
           fetch-depth: 0
-      - uses: actions/cache@v2.1.4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions/download-artifact@v2
-      - id: get_current_version
-        run: |
-          echo ::set-output name=VERSION::$(cat ./version/version | cut -c2-)
-          echo ::set-output name=V_VERSION::$(cat ./version/version)
-        shell: bash
-      - uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "git-mit/Cargo.toml"
-          key: "package.version"
-          value: ${{ steps.get_current_version.outputs.VERSION }}
-      - uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "mit-commit-message-lints/Cargo.toml"
-          key: "package.version"
-          value: ${{ steps.get_current_version.outputs.VERSION }}
-      - uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "mit-commit-msg/Cargo.toml"
-          key: "package.version"
-          value: ${{ steps.get_current_version.outputs.VERSION }}
-      - uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "git-mit-config/Cargo.toml"
-          key: "package.version"
-          value: ${{ steps.get_current_version.outputs.VERSION }}
-      - uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "mit-hook-test-helper/Cargo.toml"
-          key: "package.version"
-          value: ${{ steps.get_current_version.outputs.VERSION }}
-      - uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "mit-pre-commit/Cargo.toml"
-          key: "package.version"
-          value: ${{ steps.get_current_version.outputs.VERSION }}
-      - uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "mit-prepare-commit-msg/Cargo.toml"
-          key: "package.version"
-          value: ${{ steps.get_current_version.outputs.VERSION }}
-      - uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "git-mit-relates-to/Cargo.toml"
-          key: "package.version"
-          value: ${{ steps.get_current_version.outputs.VERSION }}
-      - uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "git-mit-install/Cargo.toml"
-          key: "package.version"
-          value: ${{ steps.get_current_version.outputs.VERSION }}
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
-      - shell: bash
+      - uses: chaaz/versio-actions/install@v1.1
+        name: Install versio
+      - name: Generate release
+        run: versio release
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git commit -am "fix: Update cargo package version to $(cat ./version/version)"
-          git tag -a -m "Release $(cat ./version/version)" "$(cat ./version/version)"
-          git push --tags
-
-          git checkout -b "release-$(cat ./version/version)"
-          git push -f origin "release-$(cat ./version/version)"
-      - name: pull-request
-        uses: repo-sync/pull-request@v2
-        with:
-          github_token: "${{ secrets.COMMITTER_TOKEN }}"
-          pr_label: "releases"
-          destination_branch: "main"
-          source_branch: "release-${{ steps.get_current_version.outputs.V_VERSION }}"
+          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+          GITHUB_USER: ${{ github.actor }}

@@ -1,7 +1,7 @@
 "on":
   push:
-    tags:
-      - "*"
+    tags-ignore:
+      - "versio-prev"
 jobs:
   build:
     runs-on: "${{ matrix.os }}"
@@ -95,7 +95,7 @@ jobs:
           command: install
           args: clog-cli
       - id: get_previous_version
-        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort | tail -n 2 | head -n 1)
+        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort | tail -n 3 | head -n 1)
         shell: bash
       - uses: actions-rs/cargo@v1
         with:

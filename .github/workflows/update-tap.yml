@@ -1,8 +1,8 @@
 name: Release to Homebrew
 "on":
   push:
-    tags:
-      - "*"
+    tags-ignore:
+      - "versio-prev"
 jobs:
   generate-formula:
     name: Generate Homebrew Formula

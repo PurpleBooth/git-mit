@@ -1,0 +1,39 @@
+options:
+  prev_tag: versio-prev
+
+projects:
+- name: git-mit
+  id: 0
+  tag_prefix: ''
+  labels: cargo
+  version:
+    file: ./git-mit/Cargo.toml
+    toml: package.version
+  also:
+  - file: ./git-mit-config/Cargo.toml
+    toml: package.version
+  - file: git-mit-install/Cargo.toml
+    toml: package.version
+  - file: git-mit-relates-to/Cargo.toml
+    toml: package.version
+  - file: mit-build-tools/Cargo.toml
+    toml: package.version
+  - file: mit-commit-message-lints/Cargo.toml
+    toml: package.version
+  - file: mit-commit-msg/Cargo.toml
+    toml: package.version
+  - file: mit-hook-test-helper/Cargo.toml
+    toml: package.version
+  - file: mit-pre-commit/Cargo.toml
+    toml: package.version
+  - file: mit-prepare-commit-msg/Cargo.toml
+    toml: package.version
+  hooks:
+    post_write: cargo update --workspace
+
+sizes:
+  major: ['!']
+  minor: [feat]
+  patch: [fix, docs, style, refactor, perf, test, chore, build, ci]
+  none: []
+  fail: ['*']
