@@ -29,7 +29,7 @@ projects:
   - file: mit-prepare-commit-msg/Cargo.toml
     toml: package.version
   hooks:
-    post_write: cargo update --workspace
+    post_write: cargo check
 
 sizes:
   major: ['!']
