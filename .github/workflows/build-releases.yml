@@ -1,221 +1,226 @@
-"on":
+on:
   push:
     tags-ignore:
-      - "versio-prev"
+    - versio-prev
 jobs:
   build:
-    runs-on: "${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
     steps:
-      - run: ${{ matrix.install }}
-        env:
-          DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v2.3.4
-        with:
-          lfs: true
-      - uses: actions/cache@v2.1.4
-        with:
-          key: "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-      - uses: actions-rs/toolchain@v1
-        with:
-          default: true
-          profile: minimal
-          toolchain: stable
-      - uses: actions-rs/cargo@v1
-        with:
-          args: "--release --locked"
-          command: build
-      - id: get_repository_name
-        run: 'echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / ''{print $2}'' | sed -e "s/:refs//")'
-        shell: bash
-      - uses: actions/upload-artifact@v2
-        with:
-          name: mit-commit-msg-${{ matrix.target }}
-          path: ./target/release/mit-commit-msg${{ matrix.suffix }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: git-mit-config-${{ matrix.target }}
-          path: ./target/release/git-mit-config${{ matrix.suffix }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: mit-pre-commit-${{ matrix.target }}
-          path: ./target/release/mit-pre-commit${{ matrix.suffix }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: mit-prepare-commit-msg-${{ matrix.target }}
-          path: ./target/release/mit-prepare-commit-msg${{ matrix.suffix }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: git-mit-${{ matrix.target }}
-          path: ./target/release/git-mit${{ matrix.suffix }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: git-mit-install-${{ matrix.target }}
-          path: ./target/release/git-mit-install${{ matrix.suffix }}
+    - run: ${{ matrix.install }}
+      env:
+        DEBIAN_FRONTEND: noninteractive
+    - uses: actions/checkout@v2.3.4
+      with:
+        lfs: true
+    - uses: actions/cache@v2.1.4
+      with:
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.cargo/bin
+          target
+    - uses: actions-rs/toolchain@v1
+      with:
+        default: true
+        profile: minimal
+        toolchain: stable
+    - uses: actions-rs/cargo@v1
+      with:
+        args: --release --locked
+        command: build
+    - id: get_repository_name
+      run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk
+        -F / '{print $2}' | sed -e "s/:refs//")
+      shell: bash
+    - uses: actions/upload-artifact@v2
+      with:
+        name: mit-commit-msg-${{ matrix.target }}
+        path: ./target/release/mit-commit-msg${{ matrix.suffix }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: git-mit-config-${{ matrix.target }}
+        path: ./target/release/git-mit-config${{ matrix.suffix }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: mit-pre-commit-${{ matrix.target }}
+        path: ./target/release/mit-pre-commit${{ matrix.suffix }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: mit-prepare-commit-msg-${{ matrix.target }}
+        path: ./target/release/mit-prepare-commit-msg${{ matrix.suffix }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: git-mit-${{ matrix.target }}
+        path: ./target/release/git-mit${{ matrix.suffix }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: git-mit-install-${{ matrix.target }}
+        path: ./target/release/git-mit-install${{ matrix.suffix }}
     strategy:
       matrix:
         include:
-          - os: macos-latest
-            suffix: ""
-            target: x86_64-apple-darwin
-            install: echo nothing to install
-          - os: ubuntu-latest
-            suffix: ""
-            target: x86_64-unknown-linux-gnu
-            install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+        - os: macos-latest
+          suffix: ''
+          target: x86_64-apple-darwin
+          install: echo nothing to install
+        - os: ubuntu-latest
+          suffix: ''
+          target: x86_64-unknown-linux-gnu
+          install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
   release:
     needs:
-      - build
+    - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
-        with:
-          lfs: true
-          fetch-depth: 0
-      - uses: actions/cache@v2.1.4
-        with:
-          key: "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-      - uses: actions/download-artifact@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          default: true
-          profile: minimal
-          toolchain: stable
-      - uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: clog-cli
-      - id: get_previous_version
-        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort | tail -n 3 | head -n 1)
-        shell: bash
-      - uses: actions-rs/cargo@v1
-        with:
-          args: toml-cli
-          command: install
-      - id: get_repository_name
-        run: 'echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / ''{print $2}'' | sed -e "s/:refs//")'
-        shell: bash
-      - id: get_version
-        run: "echo ::set-output name=VERSION::v$(toml get git-mit/Cargo.toml package.version | tail -c +2 | head -c -2)"
-        shell: bash
-      - run: |
-          clog --from "$PREVIOUS_VERSION" --to "$VERSION" > CHANGELOG.md
-        shell: bash
-        env:
-          PREVIOUS_VERSION: "${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}"
-          VERSION: "${{ steps.get_version.outputs.VERSION }}"
-      - env:
-          GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
-        id: create_release
-        uses: actions/create-release@v1.1.4
-        with:
-          draft: false
-          prerelease: false
-          body_path: ./CHANGELOG.md
-          release_name: "Release ${{ steps.get_version.outputs.VERSION }}"
-          tag_name: "${{ steps.get_version.outputs.VERSION }}"
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./mit-pre-commit-x86_64-unknown-linux-gnu/mit-pre-commit
-          asset_name: mit-pre-commit-x86_64-unknown-linux-gnu
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./mit-prepare-commit-msg-x86_64-unknown-linux-gnu/mit-prepare-commit-msg
-          asset_name: mit-prepare-commit-msg-x86_64-unknown-linux-gnu
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./mit-commit-msg-x86_64-unknown-linux-gnu/mit-commit-msg
-          asset_name: mit-commit-msg-x86_64-unknown-linux-gnu
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./git-mit-config-x86_64-unknown-linux-gnu/git-mit-config
-          asset_name: git-mit-config-x86_64-unknown-linux-gnu
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./git-mit-x86_64-unknown-linux-gnu/git-mit
-          asset_name: git-mit-x86_64-unknown-linux-gnu
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./git-mit-install-x86_64-unknown-linux-gnu/git-mit-install
-          asset_name: git-mit-install-x86_64-unknown-linux-gnu
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./mit-pre-commit-x86_64-apple-darwin/mit-pre-commit
-          asset_name: mit-pre-commit-x86_64-apple-darwin
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./mit-prepare-commit-msg-x86_64-apple-darwin/mit-prepare-commit-msg
-          asset_name: mit-prepare-commit-msg-x86_64-apple-darwin
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./mit-commit-msg-x86_64-apple-darwin/mit-commit-msg
-          asset_name: mit-commit-msg-x86_64-apple-darwin
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./git-mit-config-x86_64-apple-darwin/git-mit-config
-          asset_name: git-mit-config-x86_64-apple-darwin
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./git-mit-x86_64-apple-darwin/git-mit
-          asset_name: git-mit-x86_64-apple-darwin
-          asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: ./git-mit-install-x86_64-apple-darwin/git-mit-install
-          asset_name: git-mit-install-x86_64-apple-darwin
-          asset_content_type: application/octet-stream
+    - uses: actions/checkout@v2.3.4
+      with:
+        lfs: true
+        fetch-depth: 0
+    - uses: actions/cache@v2.1.4
+      with:
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.cargo/bin
+          target
+    - uses: actions/download-artifact@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        default: true
+        profile: minimal
+        toolchain: stable
+    - uses: actions-rs/cargo@v1
+      with:
+        command: install
+        args: clog-cli
+    - id: get_previous_version
+      run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort
+        | tail -n 3 | head -n 1)
+      shell: bash
+    - uses: actions-rs/cargo@v1
+      with:
+        args: toml-cli
+        command: install
+    - id: get_repository_name
+      run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk
+        -F / '{print $2}' | sed -e "s/:refs//")
+      shell: bash
+    - id: get_version
+      run: echo ::set-output name=VERSION::v$(toml get git-mit/Cargo.toml package.version
+        | tail -c +2 | head -c -2)
+      shell: bash
+    - run: |
+        clog --from "$PREVIOUS_VERSION" --to "$VERSION" > CHANGELOG.md
+      shell: bash
+      env:
+        PREVIOUS_VERSION: ${{ steps.get_previous_version.outputs.PREVIOUS_VERSION
+          }}
+        VERSION: ${{ steps.get_version.outputs.VERSION }}
+    - env:
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+      id: create_release
+      uses: actions/create-release@v1.1.4
+      with:
+        draft: false
+        prerelease: false
+        body_path: ./CHANGELOG.md
+        release_name: Release ${{ steps.get_version.outputs.VERSION }}
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./mit-pre-commit-x86_64-unknown-linux-gnu/mit-pre-commit
+        asset_name: mit-pre-commit-x86_64-unknown-linux-gnu
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./mit-prepare-commit-msg-x86_64-unknown-linux-gnu/mit-prepare-commit-msg
+        asset_name: mit-prepare-commit-msg-x86_64-unknown-linux-gnu
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./mit-commit-msg-x86_64-unknown-linux-gnu/mit-commit-msg
+        asset_name: mit-commit-msg-x86_64-unknown-linux-gnu
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./git-mit-config-x86_64-unknown-linux-gnu/git-mit-config
+        asset_name: git-mit-config-x86_64-unknown-linux-gnu
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./git-mit-x86_64-unknown-linux-gnu/git-mit
+        asset_name: git-mit-x86_64-unknown-linux-gnu
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./git-mit-install-x86_64-unknown-linux-gnu/git-mit-install
+        asset_name: git-mit-install-x86_64-unknown-linux-gnu
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./mit-pre-commit-x86_64-apple-darwin/mit-pre-commit
+        asset_name: mit-pre-commit-x86_64-apple-darwin
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./mit-prepare-commit-msg-x86_64-apple-darwin/mit-prepare-commit-msg
+        asset_name: mit-prepare-commit-msg-x86_64-apple-darwin
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./mit-commit-msg-x86_64-apple-darwin/mit-commit-msg
+        asset_name: mit-commit-msg-x86_64-apple-darwin
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./git-mit-config-x86_64-apple-darwin/git-mit-config
+        asset_name: git-mit-config-x86_64-apple-darwin
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./git-mit-x86_64-apple-darwin/git-mit
+        asset_name: git-mit-x86_64-apple-darwin
+        asset_content_type: application/octet-stream
+    - uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./git-mit-install-x86_64-apple-darwin/git-mit-install
+        asset_name: git-mit-install-x86_64-apple-darwin
+        asset_content_type: application/octet-stream
