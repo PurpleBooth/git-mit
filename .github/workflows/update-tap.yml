@@ -18,6 +18,15 @@ jobs:
       with:
         token: ${{ secrets.COMMITTER_TOKEN }}
         path: main-repo
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v3
+      with:
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        git-user-signingkey: true
+        git-commit-gpgsign: true
+        git-tag-gpgsign: true
+        workdir: main-repo
     - uses: actions/checkout@v2.3.4
       with:
         repository: PurpleBooth/homebrew-repo
@@ -25,6 +34,15 @@ jobs:
         path: homebrew-repo
         ref: main
       name: Checkout the custom tap
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v3
+      with:
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        git-user-signingkey: true
+        git-commit-gpgsign: true
+        git-tag-gpgsign: true
+        workdir: homebrew-repo
     - run: |
         curl -Lo file.tar.gz "https://github.com/$GIT_REPO/archive/$GIT_TAG.tar.gz"
         sha256sum -b file.tar.gz | awk '{ print $1 }' > hash
@@ -57,12 +75,5 @@ jobs:
       env:
         REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
         GIT_TAG: ${{ github.ref }}
-        FORMULA_LOCATION: homebrew-repo/Formula/${{ steps.get_repository_name.outputs.REPOSITORY_NAME
-          }}.rb
-        GH_USERNAME: ${{ github.repository_owner }}
         GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-        EMAIL: ${{ github.actor }}@users.noreply.github.com
-        GIT_AUTHOR_NAME: ${{ github.actor }}
-        GIT_AUTHOR_EMAIL: ${{ github.actor }}@users.noreply.github.com
-        GIT_COMMITTER_NAME: ${{ github.actor }}
-        GIT_COMMITTER_EMAIL: ${{ github.actor }}@users.noreply.github.com
+
