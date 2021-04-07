@@ -1,6 +1,6 @@
 [package]
 name = "mit-prepare-commit-msg"
-version = "3.98.65"
+version = "3.98.66"
 authors = [
   "Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>"
 ]
