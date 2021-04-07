@@ -107,7 +107,7 @@ jobs:
       run: echo ::set-output name=VERSION::v$(toml get git-mit/Cargo.toml package.version
         | tail -c +2 | head -c -2)
       shell: bash
-    - uses: dlavrenuek/conventional-changelog-action@v1.1.0
+    - uses: dlavrenuek/conventional-changelog-action@v1.1.1
       id: changelog
       with:
         from: ${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}
