@@ -211,7 +211,7 @@ jobs:
         git-tag-gpgsign: true
     - uses: chaaz/versio-actions/install@v1.1
       name: Install versio
-    - run: echo ::set-output "BUMP=$( versio release --dry-run )"
+    - run: echo ::set-output "name=BUMP::$( versio release --dry-run )"
       id: get_versio_plan
       env:
         GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
