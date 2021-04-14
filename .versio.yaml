@@ -32,8 +32,5 @@ projects:
     post_write: cargo check
 
 sizes:
-  major: ['!']
-  minor: [feat]
-  patch: [fix, docs, style, refactor, perf, test, chore, build, ci]
-  none: []
-  fail: ['*']
+  use_angular: true
+  none: [ci]
