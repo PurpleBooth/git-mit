@@ -134,16 +134,6 @@ jobs:
       - env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
         id: create_release
-        uses: actions/create-release@v1.1.4
-        with:
-          draft: false
-          prerelease: false
-          body: ${{ steps.changelog.outputs.body }}
-          release_name: Release ${{ steps.get_version.outputs.VERSION }}
-          tag_name: ${{ steps.get_version.outputs.VERSION }}
-      - env:
-          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-        id: create_release
         uses: ncipollo/release-action@v1.8.3
         with:
           allowUpdates: true
