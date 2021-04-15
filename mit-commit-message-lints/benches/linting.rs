@@ -58,18 +58,18 @@ const COMMIT_WITH_ALL_FEATURES: &str = indoc!(
 pub fn criterion_benchmark(c: &mut Criterion) {
     let lints = Lint::iterator().collect::<Vec<_>>();
 
-    lints.iter().for_each(|enabled_lint| {
+    for enabled_lint in &lints {
         let mut btree_lints = BTreeSet::new();
         btree_lints.insert(*enabled_lint);
         let enabled_lints = Lints::new(btree_lints);
         c.bench_with_input(
-            BenchmarkId::new("commit_with_all_features", enabled_lint.clone().name()),
+            BenchmarkId::new("commit_with_all_features", (*enabled_lint).name()),
             &(COMMIT_WITH_ALL_FEATURES, enabled_lints),
             |b, (message, enabled_lints)| {
                 b.iter(|| lint(&CommitMessage::from(*message), enabled_lints.clone()))
             },
         );
-    });
+    }
 
     let all_lints = Lints::available();
     c.bench_with_input(
