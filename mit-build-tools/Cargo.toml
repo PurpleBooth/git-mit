@@ -1,6 +1,6 @@
 [package]
 name = "mit-build-tools"
-version = "3.98.69"
+version = "3.98.70"
 authors = [
   "Billie Thompson <billie+mit-build-tools@billiecodes.com>"
 ]
