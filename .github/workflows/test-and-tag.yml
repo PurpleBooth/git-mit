@@ -30,11 +30,6 @@ jobs:
         name: Install versio
       - name: Check projects
         run: versio check
-      - name: Print changes
-        run: versio plan
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_USER: ${{ github.actor }}
   check:
     runs-on: ubuntu-latest
     steps:
