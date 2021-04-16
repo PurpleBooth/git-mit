@@ -33,4 +33,5 @@ projects:
 
 sizes:
   use_angular: true
+  fix: ["-"]
   none: [ci]
