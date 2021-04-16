@@ -39,7 +39,7 @@ console = "0.14.1"
 
 [dev-dependencies]
 indoc = "1.0.3"
-pretty_assertions = "0.7.1"
+pretty_assertions = "0.7.2"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
