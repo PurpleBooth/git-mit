@@ -48,6 +48,25 @@ lint:
 	cargo audit
 	npx prettier --check **.yml **.yaml
 
+.PHONY: publish-to-crates
+## Publish to crates
+publish-to-crates:
+	( cd mit-build-tools && cargo publish )
+	( cd mit-hook-test-helper && cargo publish )
+	( cd mit-commit-message-lints && cargo publish )
+	( cd mit-commit-msg && cargo publish )
+	( cd mit-pre-commit && cargo publish )
+	( cd mit-prepare-commit-msg && cargo publish )
+	( cd git-mit && cargo publish )
+	( cd git-mit-config && cargo publish )
+	( cd git-mit-install && cargo publish )
+	( cd git-mit-relates-to && cargo publish )
+
+.PHONY: release
+## Publish to crates
+release:
+	versio release
+
 .PHONY: fmt
 ## Format what can be formatted
 fmt:

@@ -216,18 +216,117 @@ jobs:
         if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         run: |
           versio release
-          cargo login "$CARGO_TOKEN"
-          ( cd mit-build-tools && cargo publish )
-          ( cd mit-hook-test-helper && cargo publish )
-          ( cd mit-commit-message-lints && cargo publish )
-          ( cd mit-commit-msg && cargo publish )
-          ( cd mit-pre-commit && cargo publish )
-          ( cd mit-prepare-commit-msg && cargo publish )
-          ( cd git-mit && cargo publish )
-          ( cd git-mit-config && cargo publish )
-          ( cd git-mit-install && cargo publish )
-          ( cd git-mit-relates-to && cargo publish )
         env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
           GITHUB_USER: ${{ github.actor }}
+      - name: Publish mit-build-tools to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd mit-build-tools && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish mit-hook-test-helper to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd mit-hook-test-helper && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish mit-commit-message-lints to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd mit-commit-message-lints && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish mit-commit-msg to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd mit-commit-msg && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish mit-pre-commit to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd mit-pre-commit && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish mit-prepare-commit-msg to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd mit-prepare-commit-msg && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish git-mit to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd git-mit && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish git-mit-config to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd git-mit-config && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish git-mit-install to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd git-mit-install && cargo publish )
+
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish git-mit-relates-to to Crates
+        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 30
+          max_attempts: 10
+          run: |
+            cargo login "$CARGO_TOKEN"
+            ( cd git-mit-relates-to && cargo publish )
+        env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
