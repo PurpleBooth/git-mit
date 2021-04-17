@@ -73,6 +73,18 @@ jobs:
         with:
           name: bins
           path: ./*${{ matrix.target }}${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bash_completion
+          path: ./**/bash_completion/*
+      - uses: actions/upload-artifact@v2
+        with:
+          name: fish_completion
+          path: ./**/fish_completion/*
+      - uses: actions/upload-artifact@v2
+        with:
+          name: zsh_completion
+          path: ./**/zsh_completion/*
     strategy:
       matrix:
         include:
@@ -141,4 +153,4 @@ jobs:
           body: ${{ steps.changelog.outputs.body }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
           tag: ${{ steps.get_version.outputs.VERSION }}
-          artifacts: ./bins/*
+          artifacts: ./bins/*,./bash_completion/*,./fish_completion/*,./zsh_completion/*
