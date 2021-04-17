@@ -235,10 +235,21 @@ For more information on this see the [mit page](docs/mit.md)
 
 ## Installing
 
-You can install this with brew!
+You can install this with brew! This is the preferred method of
+installing.
 
 ``` shell,skip()
 brew install PurpleBooth/repo/git-mit
+```
+
+You can use Cargo too, though this won't install the completions
+
+``` shell,skip()
+cargo install git-mit-config
+cargo install git-mit
+cargo install mit-commit-msg
+cargo install mit-pre-commit
+cargo install mit-prepare-commit-msg
 ```
 
 You can also download the [latest
