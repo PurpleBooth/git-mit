@@ -5,7 +5,7 @@ authors = [
   "Billie Thompson <billie+git-mit-relates-to@billiecodes.com>"
 ]
 edition = "2018"
-license = "Creative Commons Zero v1.0 Universal"
+license = "CC0-1.0"
 description = "Set Relates-to trailer."
 categories = [ "development-tools", "command-line-utilities" ]
 keywords = [ "git", "git-hooks" ]

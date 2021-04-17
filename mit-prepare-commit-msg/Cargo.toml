@@ -5,7 +5,7 @@ authors = [
   "Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>"
 ]
 edition = "2018"
-license = "Creative Commons Zero v1.0 Universal"
+license = "CC0-1.0"
 description = "This hook is invoked by git-commit right after preparing the default log message, and before the editor is started."
 categories = [ "development-tools", "command-line-utilities" ]
 keywords = [ "git", "git-hooks" ]
