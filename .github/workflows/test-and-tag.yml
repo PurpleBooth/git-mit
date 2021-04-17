@@ -216,6 +216,17 @@ jobs:
         if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         run: |
           versio release
+          cargo login "$CARGO_TOKEN"
+          ( cd mit-hook-test-helper && cargo publish )
+          ( cd mit-commit-message-lints && cargo publish )
+          ( cd mit-build-tools && cargo publish )
+          ( cd mit-commit-msg && cargo publish )
+          ( cd mit-pre-commit && cargo publish )
+          ( cd mit-prepare-commit-msg && cargo publish )
+          ( cd git-mit && cargo publish )
+          ( cd git-mit-config && cargo publish )
+          ( cd git-mit-install && cargo publish )
+          ( cd git-mit-relates-to && cargo publish )
         env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
           GITHUB_USER: ${{ github.actor }}
