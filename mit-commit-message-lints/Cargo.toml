@@ -37,6 +37,7 @@ criterion = "0.3.4"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
+  version = "3.98.72"
 
 [[bench]]
 name = "linting"
