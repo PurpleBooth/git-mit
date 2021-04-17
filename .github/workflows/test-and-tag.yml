@@ -207,7 +207,7 @@ jobs:
           git-tag-gpgsign: true
       - uses: chaaz/versio-actions/install@v1.1
         name: Install versio
-      - run: echo ::set-output "name=BUMP::$( versio release --vcs-level-max remote --dry-run )"
+      - run: echo ::set-output "name=BUMP::$( versio release --dry-run )"
         id: get_versio_plan
         env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
@@ -215,7 +215,7 @@ jobs:
       - name: Generate release
         if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         run: |
-          versio release --vcs-level-max remote
+          versio release
         env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
           GITHUB_USER: ${{ github.actor }}
