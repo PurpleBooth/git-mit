@@ -153,4 +153,4 @@ jobs:
           body: ${{ steps.changelog.outputs.body }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
           tag: ${{ steps.get_version.outputs.VERSION }}
-          artifacts: ./bins/*,./bash_completion/*,./fish_completion/*,./zsh_completion/*
+          artifacts: ./bins/*,./bash_completion/**/*.bash,./fish_completion/**/*.fish,./zsh_completion/**/_*
