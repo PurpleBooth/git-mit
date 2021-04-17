@@ -196,7 +196,6 @@ signingkey = "0A46826A"
 [se]
 name = "Someone Else"
 email = "someone@example.com"
-
 ```
 
 And you can run
@@ -236,7 +235,7 @@ For more information on this see the [mit page](docs/mit.md)
 
 ## Installing
 
-You can install this with brew\!
+You can install this with brew!
 
 ``` shell,skip()
 brew install PurpleBooth/repo/git-mit
