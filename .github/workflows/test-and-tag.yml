@@ -225,7 +225,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd mit-build-tools && cargo publish )
         env:
@@ -236,7 +236,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd mit-hook-test-helper && cargo publish )
         env:
@@ -247,7 +247,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd mit-commit-message-lints && cargo publish )
         env:
@@ -258,7 +258,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd mit-commit-msg && cargo publish )
         env:
@@ -269,7 +269,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd mit-pre-commit && cargo publish )
         env:
@@ -280,7 +280,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd mit-prepare-commit-msg && cargo publish )
         env:
@@ -291,7 +291,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd git-mit && cargo publish )
         env:
@@ -302,7 +302,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd git-mit-config && cargo publish )
         env:
@@ -313,7 +313,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd git-mit-install && cargo publish )
 
@@ -325,7 +325,7 @@ jobs:
         with:
           timeout_minutes: 30
           max_attempts: 10
-          run: |
+          command: |
             cargo login "$CARGO_TOKEN"
             ( cd git-mit-relates-to && cargo publish )
         env:
