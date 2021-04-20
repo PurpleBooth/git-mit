@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-install"
-version = "3.98.76"
+version = "3.98.77"
 authors = [ "Billie Thompson <billie+git-mit-install@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -17,7 +17,7 @@ clap_derive = "3.0.0-beta.2"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
-  version = "3.98.76"
+  version = "3.98.77"
 
 [dependencies]
 which = "4.1.0"
@@ -31,7 +31,7 @@ console = "0.14.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "3.98.76"
+  version = "3.98.77"
 
 [dev-dependencies]
 indoc = "1.0.3"
@@ -39,4 +39,4 @@ tempfile = "3.2.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "3.98.76"
+  version = "3.98.77"
