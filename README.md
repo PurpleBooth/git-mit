@@ -4,7 +4,7 @@
 
 *git-mit* is a suite of git hooks. It's aimed to make pair programming,
 adding issue numbers to your commits, and following good commit message
-practices.
+practices something that happens without thinking about it.
 
 ## Usage
 
