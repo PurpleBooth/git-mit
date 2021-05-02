@@ -1,8 +1,10 @@
-# git-mit
+<p align="center">
+    <img alt="Git-Mit" src="./logo/logo.png">
+</p>
 
-*git-mit* started as a reimplementation of *git-duet*. It was an excuse
-for me to learn Rust. It's a bit more than that now, with lints for
-issues.
+*git-mit* is a suite of git hooks. It's aimed to make pair programming,
+adding issue numbers to your commits, and following good commit message
+practices.
 
 ## Usage
 
@@ -196,7 +198,6 @@ signingkey = "0A46826A"
 [se]
 name = "Someone Else"
 email = "someone@example.com"
-
 ```
 
 And you can run
