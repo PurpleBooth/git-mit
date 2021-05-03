@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Git-Mit" src="./logo/logo.png">
+    <img alt="git-mit" src="./logo/logo.png">
 </p>
 
 *git-mit* is a suite of git hooks. It's aimed to make pair programming,
@@ -262,6 +262,16 @@ it.
 
 ### Completions
 
-We generate completions for `fish`,`zsh`, `bash`, and `elvish`. They're
-installed with the homebrew package. You don't need to do anything to
-activate them.
+We generate completions for `fish`,`zsh`, and `bash`. They're installed
+with the homebrew package. You don't need to do anything to activate
+them.
+
+You can also manually download them from the releases page.
+
+## Docs
+
+-   [Using the pair programming part of the tool](./docs/mit.md)
+-   [Using the issue number inserting part of the
+    tool](./docs/mit-relates-to.md)
+-   [Configuring lints](./docs/lints/configuring.md)
+-   [Lint list](./docs/lints/index.md)
