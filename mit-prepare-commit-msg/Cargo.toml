@@ -33,7 +33,7 @@ thiserror = "1.0.24"
 clap = "3.0.0-beta.2"
 clap_derive = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.2"
-git2 = "0.13.18"
+git2 = "0.13.19"
 mit-commit = "1.29.7"
 console = "0.14.1"
 
