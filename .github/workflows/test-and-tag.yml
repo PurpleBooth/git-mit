@@ -182,7 +182,7 @@ jobs:
         uses: creyD/prettier_action@v3.3
         with:
           prettier_options: --check **/*.{yml,yaml}
-      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+      - uses: gaurav-nelson/github-action-markdown-link-check@1.0.12
   merge-and-push:
     if: github.ref == 'refs/heads/main'
     needs:
