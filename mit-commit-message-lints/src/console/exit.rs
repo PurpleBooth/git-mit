@@ -89,10 +89,10 @@ fn format_lint_problems(
 }
 
 pub fn lint_problem(commit_message: &CommitMessage, lint_problems: Vec<Problem>, clipboard: bool) {
-    let output = format_lint_problems(&commit_message, lint_problems);
+    let output = format_lint_problems(commit_message, lint_problems);
 
     if let Some((message, exit_code)) = output {
-        display_lint_err_and_exit(&message, exit_code, clipboard)
+        display_lint_err_and_exit(&message, exit_code, clipboard);
     }
 }
 

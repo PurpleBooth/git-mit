@@ -58,7 +58,7 @@ fn main() -> Result<(), MitCommitMsgError> {
                 false
             };
 
-        exit_lint_problem(&commit_message, lint_problems, clipboard_used)
+        exit_lint_problem(&commit_message, lint_problems, clipboard_used);
     }
 
     Ok(())

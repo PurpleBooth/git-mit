@@ -295,7 +295,7 @@ mod tests {
             expected, actual,
             "Expected all the lints to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -324,7 +324,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -360,7 +360,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -391,7 +391,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -420,7 +420,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -441,7 +441,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -461,7 +461,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -483,7 +483,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -506,7 +506,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -529,7 +529,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -552,7 +552,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -574,7 +574,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -599,7 +599,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -625,7 +625,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -651,7 +651,7 @@ mod tests {
             expected, actual,
             "Expected the list of lint identifiers to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 }
 

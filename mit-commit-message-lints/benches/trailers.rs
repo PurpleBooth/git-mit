@@ -103,7 +103,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
                         Trailer::new("Co-authored-by", &format!("{} <{}>", x.name(), x.email()))
                     })
                     .fold(message.clone(), |_acc, author| message.add_trailer(author))
-            })
+            });
         },
     );
 }

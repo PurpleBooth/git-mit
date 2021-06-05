@@ -70,7 +70,7 @@ mod tests_able_to_load_config_from_git {
             expected, actual,
             "Expected the relate config to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -90,7 +90,7 @@ mod tests_able_to_load_config_from_git {
             expected, actual,
             "Expected the relate config to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     fn add_10_seconds(x: Duration) -> Duration {

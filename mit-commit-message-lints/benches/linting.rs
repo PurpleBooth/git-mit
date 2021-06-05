@@ -66,7 +66,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
             BenchmarkId::new("commit_with_all_features", (*enabled_lint).name()),
             &(COMMIT_WITH_ALL_FEATURES, enabled_lints),
             |b, (message, enabled_lints)| {
-                b.iter(|| lint(&CommitMessage::from(*message), enabled_lints.clone()))
+                b.iter(|| lint(&CommitMessage::from(*message), enabled_lints.clone()));
             },
         );
     }
@@ -76,7 +76,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
         BenchmarkId::new("commit_with_all_features", "all"),
         &(COMMIT_WITH_ALL_FEATURES, all_lints.clone()),
         |b, (message, all_lints)| {
-            b.iter(|| lint(&CommitMessage::from(*message), all_lints.clone()))
+            b.iter(|| lint(&CommitMessage::from(*message), all_lints.clone()));
         },
     );
 }

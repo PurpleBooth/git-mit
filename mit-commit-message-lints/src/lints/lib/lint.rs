@@ -157,13 +157,13 @@ mod tests_lints {
     #[test]
     fn it_is_convertible_to_string() {
         let string: String = Lint::PivotalTrackerIdMissing.into();
-        assert_eq!("pivotal-tracker-id-missing".to_string(), string)
+        assert_eq!("pivotal-tracker-id-missing".to_string(), string);
     }
 
     #[test]
     fn it_can_be_created_from_string() {
         let lint: Lint = "pivotal-tracker-id-missing".try_into().unwrap();
-        assert_eq!(Lint::PivotalTrackerIdMissing, lint)
+        assert_eq!(Lint::PivotalTrackerIdMissing, lint);
     }
 
     #[test]
@@ -171,7 +171,7 @@ mod tests_lints {
         assert_eq!(
             "pivotal-tracker-id-missing",
             &format!("{}", Lint::PivotalTrackerIdMissing)
-        )
+        );
     }
 
     #[test]
@@ -192,7 +192,7 @@ mod tests_lints {
                 Lint::NotConventionalCommit,
                 Lint::NotEmojiLog,
             ]
-        )
+        );
     }
 
     #[test]

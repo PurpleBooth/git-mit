@@ -38,7 +38,7 @@ pub fn generate(app: &App, out_dir: &Path, md_template: &str) {
     tt.add_formatter("escape", formatters::format_escape);
     tt.add_formatter("unescape", tinytemplate::format_unescaped);
 
-    let context = Context::new(&app);
+    let context = Context::new(app);
 
     let rendered = tt.render("man", &context).unwrap();
     let mut file =
@@ -49,18 +49,18 @@ pub fn generate(app: &App, out_dir: &Path, md_template: &str) {
 impl<'a> Context {
     fn new(app: &App) -> Context {
         Context {
-            bin: existing::existing(&app, "{bin}"),
-            version: existing::existing(&app, "{version}"),
-            author: existing::existing(&app, "{mit}"),
-            usage: existing::existing(&app, "{usage}"),
-            all_args: existing::existing(&app, "{all-args}"),
-            unified: existing::existing(&app, "{unified}"),
-            flags: existing::existing(&app, "{flags}"),
-            options: existing::existing(&app, "{options}"),
-            positionals: existing::existing(&app, "{positionals}"),
-            subcommands: existing::existing(&app, "{subcommands}"),
-            after_help: existing::existing(&app, "{after-help}"),
-            before_help: existing::existing(&app, "{before-help}"),
+            bin: existing::existing(app, "{bin}"),
+            version: existing::existing(app, "{version}"),
+            author: existing::existing(app, "{mit}"),
+            usage: existing::existing(app, "{usage}"),
+            all_args: existing::existing(app, "{all-args}"),
+            unified: existing::existing(app, "{unified}"),
+            flags: existing::existing(app, "{flags}"),
+            options: existing::existing(app, "{options}"),
+            positionals: existing::existing(app, "{positionals}"),
+            subcommands: existing::existing(app, "{subcommands}"),
+            after_help: existing::existing(app, "{after-help}"),
+            before_help: existing::existing(app, "{before-help}"),
             about: app.get_about().unwrap().into(),
         }
     }

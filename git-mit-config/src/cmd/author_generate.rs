@@ -28,11 +28,11 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
         .and_then(|matches| matches.subcommand_matches("generate"))
         .unwrap();
 
-    let users_config = get_users_config(&subcommand)?;
+    let users_config = get_users_config(subcommand)?;
     let all_authors = Authors::try_from(users_config.as_str());
 
     if let Err(error) = &all_authors {
-        mit_commit_message_lints::console::exit_unparsable_author(error)
+        mit_commit_message_lints::console::exit_unparsable_author(error);
     }
 
     let is_local = Some("local") == matches.value_of("scope");
@@ -65,7 +65,7 @@ fn get_author_config_from_exec(command: &str) -> Result<String, GitMitConfigErro
 }
 
 fn get_author_config_from_file(matches: &ArgMatches) -> Result<String, GitMitConfigError> {
-    get_author_file_path(&matches)
+    get_author_file_path(matches)
         .ok_or(GitMitConfigError::AuthorFileNotSet)
         .and_then(|path| match path {
             "$HOME/.config/git-mit/mit.yml" => config_path(env!("CARGO_PKG_NAME")),

@@ -83,7 +83,7 @@ mod tests {
             expected, actual,
             "Expected the mit config to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -111,7 +111,7 @@ mod tests {
             expected, actual,
             "Expected the mit config to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -137,6 +137,6 @@ mod tests {
             expected, actual,
             "Expected the mit config to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 }

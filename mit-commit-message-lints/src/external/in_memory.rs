@@ -23,7 +23,7 @@ impl Vcs for InMemory<'_> {
             keys = keys
                 .into_iter()
                 .filter(|value| Pattern::matches(&compiled_glob, value))
-                .collect()
+                .collect();
         }
 
         Ok(keys)

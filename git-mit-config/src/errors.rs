@@ -16,7 +16,7 @@ pub enum GitMitConfigError {
     #[error("failed to open git repository {0}")]
     Git2(#[from] git2::Error),
     #[error("{0}")]
-    LintsError(#[from] lints::LintsError),
+    LintsError(#[from] lints::Error),
     #[error(
         "Unrecognised Lint command, only you may only enable or disable, or list available lints"
     )]

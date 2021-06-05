@@ -11,7 +11,7 @@ pub fn warning(warning: &str) {
 }
 
 pub fn to_be_piped(output: &str) {
-    println!("{}", output)
+    println!("{}", output);
 }
 
 pub fn lint_table(list: &Lints, enabled: &Lints) {

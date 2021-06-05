@@ -30,7 +30,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     if !toml.is_empty() {
         mit_commit_message_lints::console::style::warning(
             "Warning: your config is overridden by a repository config file",
-        )
+        );
     }
 
     let lints: Lints = subcommand

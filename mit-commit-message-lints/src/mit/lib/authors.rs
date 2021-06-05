@@ -110,7 +110,7 @@ mod tests_authors {
                 "billie@example.com",
                 None,
             ))]
-        )
+        );
     }
 
     #[test]
@@ -141,7 +141,7 @@ mod tests_authors {
                 "somebody@example.com",
                 None,
             ))]
-        )
+        );
     }
 
     #[test]
@@ -161,7 +161,7 @@ mod tests_authors {
         );
         let expected = Authors::new(store);
 
-        assert_eq!(Authors::example(), expected,)
+        assert_eq!(Authors::example(), expected,);
     }
 
     #[test]
@@ -211,7 +211,7 @@ mod tests_authors {
     #[test]
     fn must_be_valid_yaml() {
         let actual: Result<_, _> = Authors::try_from("Hello I am invalid yaml : : :");
-        assert!(actual.is_err())
+        assert!(actual.is_err());
     }
 
     #[test]

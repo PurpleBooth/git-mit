@@ -28,6 +28,8 @@ pub enum GitMitError {
     AuthorConfigParse(#[from] mit::AuthorConfigParseError),
     #[error("failed to set mit in vcs {0}")]
     AuthorVcs(#[from] mit::VcsError),
+    #[error("appdata environment variable missing {0}")]
+    AppDataMissing(#[from] std::env::VarError),
 }
 
 impl GitMitError {

@@ -2,7 +2,7 @@ use mit_commit::CommitMessageError;
 use thiserror::Error;
 
 use mit_commit_message_lints::external;
-use mit_commit_message_lints::lints::LintsError;
+use mit_commit_message_lints::lints::Error as LintsError;
 use std::error;
 
 #[derive(Error, Debug)]

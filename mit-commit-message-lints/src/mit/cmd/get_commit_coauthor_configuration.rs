@@ -98,7 +98,7 @@ mod tests {
             expected, actual,
             "Expected the mit config to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -119,7 +119,7 @@ mod tests {
             expected, actual,
             "Expected the mit config to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     #[test]
@@ -148,7 +148,7 @@ mod tests {
             expected, actual,
             "Expected the mit config to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     fn add_100_seconds(x: Duration) -> Duration {
@@ -194,7 +194,7 @@ mod tests {
             expected, actual,
             "Expected the mit config to be {:?}, instead got {:?}",
             expected, actual
-        )
+        );
     }
 
     fn epoch_with_offset(x: fn(Duration) -> Duration) -> i64 {

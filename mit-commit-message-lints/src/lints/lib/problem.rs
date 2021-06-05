@@ -37,18 +37,18 @@ mod tests {
     #[test]
     fn test_has_error() {
         let problem = Problem::new("Some error".into(), "".into(), Code::NotConventionalCommit);
-        assert_eq!(problem.error(), "Some error")
+        assert_eq!(problem.error(), "Some error");
     }
 
     #[test]
     fn test_has_has_tip() {
         let problem = Problem::new("".into(), "Some tip".into(), Code::NotConventionalCommit);
-        assert_eq!(problem.tip(), "Some tip")
+        assert_eq!(problem.tip(), "Some tip");
     }
 
     #[test]
     fn test_has_has_code() {
         let problem = Problem::new("".into(), "".into(), Code::NotConventionalCommit);
-        assert_eq!(problem.code(), &Code::NotConventionalCommit)
+        assert_eq!(problem.code(), &Code::NotConventionalCommit);
     }
 }

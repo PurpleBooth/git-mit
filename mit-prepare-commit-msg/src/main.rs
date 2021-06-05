@@ -34,16 +34,16 @@ fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
     let mut git_config = Git2::try_from(current_dir)?;
 
     if let Some(authors) = get_commit_coauthor_configuration(&mut git_config)? {
-        append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?
+        append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?;
     }
 
     if let Some(exec) = matches.value_of("relates-to-exec") {
         append_relate_to_trailer_to_commit_message(
             commit_message_path,
             &get_relates_to_from_exec(exec)?,
-        )?
+        )?;
     } else if let Some(relates_to) = get_relate_to_configuration(&mut git_config)? {
-        append_relate_to_trailer_to_commit_message(commit_message_path, &relates_to)?
+        append_relate_to_trailer_to_commit_message(commit_message_path, &relates_to)?;
     }
 
     Ok(())

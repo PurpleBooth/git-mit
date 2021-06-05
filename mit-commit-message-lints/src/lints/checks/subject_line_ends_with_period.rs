@@ -16,7 +16,7 @@ fn has_problem(commit_message: &CommitMessage) -> bool {
 }
 
 pub(crate) fn lint(commit_message: &CommitMessage) -> Option<Problem> {
-    if has_problem(&commit_message) {
+    if has_problem(commit_message) {
         Some(Problem::new(
             ERROR.into(),
             HELP_MESSAGE.into(),

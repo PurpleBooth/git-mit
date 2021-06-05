@@ -56,7 +56,7 @@ mod tests_can_set_author_details {
         assert_eq!(
             Some(&"billie@example.com".to_string()),
             strs.get("user.email")
-        )
+        );
     }
 
     #[test]
@@ -85,7 +85,7 @@ mod tests_can_set_author_details {
         let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
         assert!(actual.is_ok());
-        assert_eq!(None, strs.get("user.signingkey"))
+        assert_eq!(None, strs.get("user.signingkey"));
     }
 
     #[test]
@@ -121,7 +121,7 @@ mod tests_can_set_author_details {
         assert_eq!(
             Some(&"annie@example.com".to_string()),
             strs.get("mit.author.coauthors.1.email")
-        )
+        );
     }
 
     #[test]
