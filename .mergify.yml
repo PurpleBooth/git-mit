@@ -19,8 +19,8 @@ pull_request_rules:
     conditions:
       - -author=PurpleBooth
     actions:
-      request_reviews:
-        users:
+      assign:
+        add_users:
           - PurpleBooth
 
   - name: automatic rebase for dependencies
