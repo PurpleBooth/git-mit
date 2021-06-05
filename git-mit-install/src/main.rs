@@ -16,7 +16,7 @@ fn main() -> Result<(), GitMitInstallError> {
             fs::create_dir_all(&hooks)?;
             hooks
         } else {
-            let init_template = PathBuf::from(env!("HOME"))
+            let init_template = PathBuf::from(home_dir())
                 .join(".config")
                 .join("git")
                 .join("init-template");
@@ -39,6 +39,16 @@ fn main() -> Result<(), GitMitInstallError> {
     install_hook(&hooks, "pre-commit")?;
     install_hook(&hooks, "commit-msg")?;
     Ok(())
+}
+
+#[cfg(not(target_os = "windows"))]
+fn home_dir() -> String {
+    env!("HOME").into()
+}
+
+#[cfg(target_os = "windows")]
+fn home_dir() -> String {
+    env!("USERPROFILE").into()
 }
 
 fn install_hook(hook_path: &Path, hook_name: &str) -> Result<(), GitMitInstallError> {
