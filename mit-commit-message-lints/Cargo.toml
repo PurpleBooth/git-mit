@@ -17,6 +17,7 @@ rayon = "1.5.1"
 glob = "0.3.0"
 thiserror = "1.0.25"
 git2 = "0.13.20"
+openssl = { version = '0.10', optional = true }
 regex = "1.5.4"
 serde_yaml = "0.8.17"
 serde_derive = "1.0.125"
@@ -46,3 +47,7 @@ harness = false
 [[bench]]
 name = "trailers"
 harness = false
+
+[features]
+default = []
+vendored-openssl = ["openssl/vendored"]

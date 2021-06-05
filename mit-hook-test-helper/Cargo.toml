@@ -15,5 +15,10 @@ description = "Testing help tools for git-mit"
 [dependencies]
 tempfile = "3.2.0"
 git2 = "0.13.20"
+openssl = { version = '0.10', optional = true }
 pretty_assertions = "0.7.2"
 console = "0.14.1"
+
+[features]
+default = []
+vendored-openssl = ["openssl/vendored"]

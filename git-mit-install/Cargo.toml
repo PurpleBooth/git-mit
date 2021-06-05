@@ -27,6 +27,7 @@ clap_derive = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.2"
 xdg = "2.2.0"
 git2 = "0.13.20"
+openssl = { version = '0.10', optional = true }
 console = "0.14.1"
 
   [dependencies.mit-commit-message-lints]
@@ -40,3 +41,7 @@ tempfile = "3.2.0"
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
   version = "3.99.7"
+
+[features]
+default = []
+vendored-openssl = ["openssl/vendored"]
