@@ -59,6 +59,8 @@ jobs:
             install: echo nothing-to-install
           - os: ubuntu-latest
             install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+          - os: windows-latest
+            install: echo nothing-to-install
     steps:
       - run: ${{ matrix.install }}
         env:
@@ -90,6 +92,8 @@ jobs:
             install: echo nothing-to-install
           - os: ubuntu-latest
             install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+          - os: windows-latest
+            install: echo nothing-to-install
     steps:
       - run: ${{ matrix.install }}
         env:

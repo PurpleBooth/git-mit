@@ -96,6 +96,10 @@ jobs:
             suffix: ""
             target: x86_64-unknown-linux-gnu
             install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+          - os: windows-latest
+            suffix: .exe
+            target: x86_64-pc-windows-msvc
+            install: echo nothing to install
   release:
     needs:
       - build
