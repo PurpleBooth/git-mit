@@ -46,7 +46,7 @@ fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>, VcsError> {
 
     Ok(co_author_names
         .iter()
-        .cloned()
+        .copied()
         .zip(co_author_emails)
         .filter_map(new_author)
         .collect())

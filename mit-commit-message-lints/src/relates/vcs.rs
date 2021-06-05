@@ -163,7 +163,7 @@ mod tests_can_set_relates_to_details {
         let relates_to = RelateTo::new("[#12345678]");
         let actual = set_relates_to(&mut vcs_config, &relates_to, Duration::from_secs(60 * 60));
 
-        assert_eq!(true, actual.is_ok());
+        assert!(actual.is_ok());
         assert_eq!(Some(&"[#12345678]".to_string()), strs.get("mit.relate.to"));
     }
 
@@ -175,7 +175,7 @@ mod tests_can_set_relates_to_details {
         let relates = RelateTo::new("[#12345678]");
         let actual = set_relates_to(&mut vcs_config, &relates, Duration::from_secs(60 * 60));
 
-        assert_eq!(true, actual.is_ok());
+        assert!(actual.is_ok());
 
         let sec59min = SystemTime::now()
             .duration_since(UNIX_EPOCH)
@@ -198,15 +198,13 @@ mod tests_can_set_relates_to_details {
             .and_then(|x| x.parse().ok())
             .expect("Failed to read expire");
 
-        assert_eq!(
-            true,
+        assert!(
             actual_expire_time < sec61min,
             "Expected less than {}, found {}",
             sec61min,
             actual_expire_time
         );
-        assert_eq!(
-            true,
+        assert!(
             actual_expire_time > sec59min,
             "Expected more than {}, found {}",
             sec59min,

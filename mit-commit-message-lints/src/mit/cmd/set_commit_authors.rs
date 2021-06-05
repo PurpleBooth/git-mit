@@ -51,7 +51,7 @@ mod tests_can_set_author_details {
         let author = Author::new("Billie Thompson", "billie@example.com", None);
         let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
-        assert_eq!(true, actual.is_ok());
+        assert!(actual.is_ok());
         assert_eq!(Some(&"Billie Thompson".to_string()), strs.get("user.name"));
         assert_eq!(
             Some(&"billie@example.com".to_string()),
@@ -67,7 +67,7 @@ mod tests_can_set_author_details {
         let author = Author::new("Billie Thompson", "billie@example.com", Some("0A46826A"));
         let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
-        assert_eq!(true, actual.is_ok());
+        assert!(actual.is_ok());
         assert_eq!(
             Some(&"0A46826A".to_string()),
             str_map.get("user.signingkey")
@@ -84,7 +84,7 @@ mod tests_can_set_author_details {
         let author = Author::new("Billie Thompson", "billie@example.com", None);
         let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
-        assert_eq!(true, actual.is_ok());
+        assert!(actual.is_ok());
         assert_eq!(None, strs.get("user.signingkey"))
     }
 
@@ -100,7 +100,7 @@ mod tests_can_set_author_details {
 
         let actual = set_commit_authors(&mut vcs_config, &inputs, Duration::from_secs(60 * 60));
 
-        assert_eq!(true, actual.is_ok());
+        assert!(actual.is_ok());
         assert_eq!(Some(&"Billie Thompson".to_string()), strs.get("user.name"));
         assert_eq!(
             Some(&"billie@example.com".to_string()),
@@ -153,7 +153,7 @@ mod tests_can_set_author_details {
 
         let actual = set_commit_authors(&mut vcs_config, &inputs, Duration::from_secs(60 * 60));
 
-        assert_eq!(true, actual.is_ok());
+        assert!(actual.is_ok());
         assert_eq!(Some(&"Billie Thompson".to_string()), strs.get("user.name"));
         assert_eq!(
             Some(&"billie@example.com".to_string()),
@@ -171,7 +171,7 @@ mod tests_can_set_author_details {
         let author = Author::new("Billie Thompson", "billie@example.com", None);
         let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
-        assert_eq!(true, actual.is_ok());
+        assert!(actual.is_ok());
 
         let sec59min = SystemTime::now()
             .duration_since(UNIX_EPOCH)
@@ -194,15 +194,13 @@ mod tests_can_set_author_details {
             .and_then(|x| x.parse().ok())
             .expect("Failed to read expire");
 
-        assert_eq!(
-            true,
+        assert!(
             actual_expire_time < sec61min,
             "Expected less than {}, found {}",
             sec61min,
             actual_expire_time
         );
-        assert_eq!(
-            true,
+        assert!(
             actual_expire_time > sec59min,
             "Expected more than {}, found {}",
             sec59min,

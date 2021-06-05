@@ -93,7 +93,7 @@ impl Lints {
     pub fn try_from_vcs(config: &mut dyn Vcs) -> Result<Lints, Error> {
         Ok(Lints::new(
             Lint::iterator()
-                .flat_map(|lint| {
+                .filter_map(|lint| {
                     get_config_or_default(config, lint, lint.enabled_by_default()).transpose()
                 })
                 .collect::<Result<BTreeSet<Lint>, Error>>()?,
@@ -102,12 +102,12 @@ impl Lints {
 
     #[must_use]
     pub fn merge(&self, other: &Lints) -> Lints {
-        Lints::new(self.lints.union(&other.lints).cloned().collect())
+        Lints::new(self.lints.union(&other.lints).copied().collect())
     }
 
     #[must_use]
     pub fn subtract(&self, other: &Lints) -> Lints {
-        Lints::new(self.lints.difference(&other.lints).cloned().collect())
+        Lints::new(self.lints.difference(&other.lints).copied().collect())
     }
 }
 

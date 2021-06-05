@@ -211,7 +211,7 @@ mod tests_authors {
     #[test]
     fn must_be_valid_yaml() {
         let actual: Result<_, _> = Authors::try_from("Hello I am invalid yaml : : :");
-        assert_eq!(true, actual.is_err())
+        assert!(actual.is_err())
     }
 
     #[test]
