@@ -1,6 +1,6 @@
 [package]
 name = "mit-commit-message-lints"
-version = "3.99.8"
+version = "3.100.0"
 authors = [
   "Billie Thompson <billie+mit-commit-message-lints@billiecodes.com>"
 ]
@@ -38,7 +38,7 @@ criterion = "0.3.4"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "3.99.8"
+  version = "3.100.0"
 
 [[bench]]
 name = "linting"
