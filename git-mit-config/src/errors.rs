@@ -29,8 +29,11 @@ pub enum GitMitConfigError {
     Io(#[from] io::Error),
     #[error("{0}")]
     Vcs(#[from] VcsError),
+    #[cfg(not(target_os = "windows"))]
     #[error("{0}")]
     Xdg(#[from] xdg::BaseDirectoriesError),
     #[error("{0}")]
     Utf8(#[from] std::string::FromUtf8Error),
+    #[error("appdata environment variable missing {0}")]
+    AppDataMissing(#[from] std::env::VarError),
 }

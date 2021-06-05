@@ -4,8 +4,6 @@ use std::process::{Command, Stdio};
 use std::{env, fs};
 
 use clap::ArgMatches;
-use xdg::BaseDirectories;
-
 use mit_commit_message_lints::mit::{get_config_authors, Authors};
 
 use crate::errors::GitMitConfigError;
@@ -78,6 +76,7 @@ fn get_author_file_path(matches: &ArgMatches) -> Option<&str> {
     matches.value_of("file")
 }
 
+#[cfg(not(target_os = "windows"))]
 fn config_path(cargo_package_name: &str) -> Result<String, GitMitConfigError> {
     xdg::BaseDirectories::with_prefix(cargo_package_name.to_string())
         .map_err(GitMitConfigError::from)
@@ -85,6 +84,22 @@ fn config_path(cargo_package_name: &str) -> Result<String, GitMitConfigError> {
         .map(|path| path.to_string_lossy().into())
 }
 
-fn authors_config_file(config_directory: &BaseDirectories) -> Result<PathBuf, GitMitConfigError> {
+#[cfg(target_os = "windows")]
+fn config_path(cargo_package_name: &str) -> Result<String, GitMitConfigError> {
+    std::env::var("APPDATA")
+        .map(|x| {
+            PathBuf::from(x)
+                .join(cargo_package_name)
+                .join("mit.toml")
+                .to_string_lossy()
+                .into()
+        })
+        .map_err(|error| GitMitConfigError::AppDataMissing(error))
+}
+
+#[cfg(not(target_os = "windows"))]
+fn authors_config_file(
+    config_directory: &xdg::BaseDirectories,
+) -> Result<PathBuf, GitMitConfigError> {
     Ok(config_directory.place_config_file("mit.toml")?)
 }

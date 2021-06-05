@@ -8,8 +8,9 @@ use std::{
 
 use clap::ArgMatches;
 
-use xdg::BaseDirectories;
-
+use mit_commit_message_lints::console::exit_initial_not_matched_to_author;
+use mit_commit_message_lints::console::exit_unparsable_author;
+use mit_commit_message_lints::mit::get_config_authors;
 use mit_commit_message_lints::{
     external::Git2,
     mit::{set_commit_authors, Author, Authors},
@@ -17,10 +18,6 @@ use mit_commit_message_lints::{
 
 use crate::errors::GitMitError;
 use crate::errors::GitMitError::{NoAuthorInitialsProvided, NoTimeoutSet};
-use mit_commit_message_lints::mit::get_config_authors;
-
-use mit_commit_message_lints::console::exit_initial_not_matched_to_author;
-use mit_commit_message_lints::console::exit_unparsable_author;
 
 const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
 
@@ -119,6 +116,7 @@ fn get_timeout(matches: &ArgMatches) -> Result<u64, GitMitError> {
         .and_then(|x| x.parse().map_err(GitMitError::from))
 }
 
+#[cfg(not(target_os = "windows"))]
 fn config_path(cargo_package_name: &str) -> Result<String, GitMitError> {
     xdg::BaseDirectories::with_prefix(cargo_package_name.to_string())
         .map_err(GitMitError::from)
@@ -126,7 +124,21 @@ fn config_path(cargo_package_name: &str) -> Result<String, GitMitError> {
         .map(|path| path.to_string_lossy().into())
 }
 
-fn authors_config_file(config_directory: &BaseDirectories) -> Result<PathBuf, GitMitError> {
+#[cfg(target_os = "windows")]
+fn config_path(cargo_package_name: &str) -> Result<String, GitMitError> {
+    std::env::var("APPDATA")
+        .map(|x| {
+            PathBuf::from(x)
+                .join(cargo_package_name)
+                .join("mit.toml")
+                .to_string_lossy()
+                .into()
+        })
+        .map_err(|error| GitMitError::AppDataMissing(error))
+}
+
+#[cfg(not(target_os = "windows"))]
+fn authors_config_file(config_directory: &xdg::BaseDirectories) -> Result<PathBuf, GitMitError> {
     config_directory
         .place_config_file("mit.toml")
         .map_err(|error| GitMitError::new_io("<config_dir>/mit.toml".into(), &error))

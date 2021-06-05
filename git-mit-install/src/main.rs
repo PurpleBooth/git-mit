@@ -66,7 +66,21 @@ fn install_hook(hook_path: &Path, hook_name: &str) -> Result<(), GitMitInstallEr
         return Err(GitMitInstallError::ExistingHook);
     }
 
-    std::os::unix::fs::symlink(binary_path, &install_path)?;
+    link(binary_path, install_path)?;
+
+    Ok(())
+}
+
+#[cfg(not(target_os = "windows"))]
+fn link(binary_path: PathBuf, install_path: PathBuf) -> Result<(), GitMitInstallError> {
+    std::os::unix::fs::symlink(binary_path, install_path)?;
+
+    Ok(())
+}
+
+#[cfg(target_os = "windows")]
+fn link(binary_path: PathBuf, install_path: PathBuf) -> Result<(), GitMitInstallError> {
+    std::os::windows::fs::symlink_file(binary_path, install_path)?;
 
     Ok(())
 }

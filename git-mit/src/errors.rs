@@ -22,6 +22,7 @@ pub enum GitMitError {
     Io(String, String),
     #[error("failed to generate config with `{0}`: {1}")]
     Exec(String, String),
+    #[cfg(not(target_os = "windows"))]
     #[error("failed to calculate config directory {0}")]
     Xdg(#[from] xdg::BaseDirectoriesError),
     #[error("failed to parse mit author config {0}")]
