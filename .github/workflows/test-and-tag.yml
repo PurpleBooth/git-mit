@@ -4,13 +4,6 @@ on:
       - "*"
   pull_request:
 jobs:
-  lint-markdown:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: PurpleBooth/gfmfmt-action@v1.0.0
-      with:
-        path: "^./(docs/)?[^/]*.md$"
   security-audit:
     runs-on: ubuntu-latest
     steps:
