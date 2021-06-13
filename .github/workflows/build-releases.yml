@@ -143,7 +143,7 @@ jobs:
           | tail -c +2 | head -c -2)
         shell: bash
       - name: Changelog
-        uses: scottbrenner/generate-changelog-action@master
+        uses: scottbrenner/generate-changelog-action@v1.3.0
         id: changelog
         with:
           from-tag: ${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}
