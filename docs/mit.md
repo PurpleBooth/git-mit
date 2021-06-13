@@ -40,7 +40,6 @@ signingkey = "0A46826A"
 [se]
 name = "Someone Else"
 email = "someone@example.com"
-
 ```
 
 You can use yaml too
@@ -106,7 +105,6 @@ email = "jd@example.com"
 [se]
 name = "Someone Else"
 email = "se@example.com"
-
 ```
 
 ## Running the command
