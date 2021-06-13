@@ -23,12 +23,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: PurpleBooth/gfmfmt-action@v1.0.0
+      - uses: PurpleBooth/gfmfmt-action@v1.0.3
         with:
           pattern: '^./[A-Za-z_]+\.md$'
-      - uses: PurpleBooth/gfmfmt-action@v1.0.0
+      - uses: PurpleBooth/gfmfmt-action@v1.0.3
         with:
-          pattern: '^./docs/[A-Za-z_]+\.md$'
+          pattern: '^./docs/.*\.md$'
   version:
     runs-on: ubuntu-latest
     steps:
