@@ -142,16 +142,12 @@ jobs:
           echo ::set-output name=VERSION::v$(toml get git-mit/Cargo.toml package.version
           | tail -c +2 | head -c -2)
         shell: bash
-      - name: Build Changelog
+      - name: Changelog
+        uses: scottbrenner/generate-changelog-action@master
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v1
         with:
-          fromTag: ${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}
-          toTag: ${{ steps.get_version.outputs.VERSION }}
-          commitMode: true
-          ignorePreReleases: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          from-tag: ${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}
+          to-tag: ${{ steps.get_version.outputs.VERSION }}
       - env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
         id: create_release
