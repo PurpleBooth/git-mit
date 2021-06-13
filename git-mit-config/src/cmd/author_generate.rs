@@ -41,7 +41,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
 
     let toml: String = all_authors?.merge(&vcs_authors).try_into()?;
 
-    mit_commit_message_lints::console::style::to_be_piped(&toml);
+    mit_commit_message_lints::console::style::to_be_piped(toml.trim());
     Ok(())
 }
 

@@ -130,7 +130,6 @@ subject-line-ends-with-period = false
 subject-line-not-capitalized = false
 subject-longer-than-72-characters = true
 subject-not-separated-from-body = true
-
 ```
 
 I'd recommend you commit this file, then locally if someone wants to

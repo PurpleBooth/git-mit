@@ -15,7 +15,7 @@ pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConf
 
 fn run() -> Result<(), GitMitConfigError> {
     let example: String = Authors::example().try_into()?;
-    to_be_piped(&example);
+    to_be_piped(example.trim());
 
     Ok(())
 }
