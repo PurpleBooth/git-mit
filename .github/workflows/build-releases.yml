@@ -142,11 +142,16 @@ jobs:
           echo ::set-output name=VERSION::v$(toml get git-mit/Cargo.toml package.version
           | tail -c +2 | head -c -2)
         shell: bash
-      - uses: dlavrenuek/conventional-changelog-action@v1.1.2
+      - name: Build Changelog
         id: changelog
+        uses: mikepenz/release-changelog-builder-action@v1
         with:
-          from: ${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}
-          to: ${{ steps.get_version.outputs.VERSION }}
+          fromTag: ${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}
+          toTag: ${{ steps.get_version.outputs.VERSION }}
+          commitMode: true
+          ignorePreReleases: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
         id: create_release
@@ -154,7 +159,7 @@ jobs:
         with:
           allowUpdates: true
           token: ${{ secrets.COMMITTER_TOKEN }}
-          body: ${{ steps.changelog.outputs.body }}
+          body: ${{ steps.changelog.outputs.changelog }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
           tag: ${{ steps.get_version.outputs.VERSION }}
           artifacts: ./bins/*,./bash_completion/**/*.bash,./fish_completion/**/*.fish,./zsh_completion/**/_*
