@@ -1,6 +1,7 @@
 queue_rules:
   - name: default
     conditions:
+      - status-success=lint-markdown
       - status-success=lints
       - status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-...
       - status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x...
@@ -25,6 +26,7 @@ pull_request_rules:
 
   - name: automatic rebase for dependencies
     conditions:
+      - status-success=lint-markdown
       - status-success=lints
       - status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-...
       - status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x...

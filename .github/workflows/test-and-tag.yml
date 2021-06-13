@@ -201,6 +201,7 @@ jobs:
       - specdown
       - test
       - lints
+      - lint-markdown
       - check
       - security-audit
     runs-on: ubuntu-latest
