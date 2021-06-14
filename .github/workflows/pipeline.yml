@@ -130,6 +130,9 @@ jobs:
     strategy:
       matrix:
         include:
+          - os: windows-latest
+            specdown: https://github.com/specdown/specdown/releases/latest/download/specdown-x86_64-pc-windows-msvc.exe
+            install: echo nothing-to-install
           - os: macos-latest
             specdown: https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x86_64-apple-darwin
             install: echo nothing-to-install
@@ -157,12 +160,14 @@ jobs:
           echo "$GITHUB_WORKSPACE/target/assorted/bin" >> "$GITHUB_PATH"
         env:
           SPECDOWN_URL: ${{ matrix.specdown }}
+        shell: bash
       - uses: actions-rs/toolchain@v1.0.7
         with:
           profile: minimal
           toolchain: stable
           default: true
       - run: make specdown
+        shell: bash
   lints:
     runs-on: ubuntu-latest
     steps:
