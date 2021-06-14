@@ -14,21 +14,28 @@ projects:
             toml: package.version
           - file: git-mit-config/Cargo.toml
             toml: build-dependencies.mit-build-tools.version
+
           - file: git-mit-config/Cargo.toml
             toml: build-dependencies.mit-commit-message-lints.version
           - file: git-mit-config/Cargo.toml
             toml: dependencies.mit-commit-message-lints.version
+          - file: git-mit/Cargo.toml
+            toml: dependencies.mit-commit-message-lints.version
+          - file: git-mit-install/Cargo.toml
+            toml: dependencies.mit-commit-message-lints.version
+
           - file: git-mit-config/Cargo.toml
             toml: dev-dependencies.mit-hook-test-helper.version
+          - file: git-mit/Cargo.toml
+            toml: dev-dependencies.mit-hook-test-helper.version
+          - file: git-mit-install/Cargo.toml
+            toml: dev-dependencies.mit-hook-test-helper.version
+
 
           - file: git-mit-install/Cargo.toml
             toml: package.version
           - file: git-mit-install/Cargo.toml
             toml: build-dependencies.mit-build-tools.version
-          - file: git-mit-install/Cargo.toml
-            toml: dependencies.mit-commit-message-lints.version
-          - file: git-mit-install/Cargo.toml
-            toml: dev-dependencies.mit-hook-test-helper.version
 
           - file: git-mit-relates-to/Cargo.toml
             toml: package.version
