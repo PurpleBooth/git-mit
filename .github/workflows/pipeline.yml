@@ -499,7 +499,7 @@ jobs:
         with:
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: ${{ steps.changelog.outputs.changelog }}
+          body: ${{ steps.changelog.outputs.body }}
           name: Release v${{ needs.release.outputs.current_version }}
           tag: v${{ needs.release.outputs.current_version }}
           artifacts: ./bins/*,./bash_completion/**/*.bash,./fish_completion/**/*.fish,./zsh_completion/**/_*
