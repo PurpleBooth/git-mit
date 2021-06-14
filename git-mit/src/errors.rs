@@ -31,6 +31,8 @@ pub enum GitMitError {
     AuthorVcs(#[from] mit::VcsError),
     #[error("appdata environment variable missing {0}")]
     AppDataMissing(#[from] std::env::VarError),
+    #[error("failed to parse shell given {0}")]
+    BadShellCommand(#[from] shell_words::ParseError),
 }
 
 impl GitMitError {

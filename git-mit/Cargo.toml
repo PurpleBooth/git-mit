@@ -22,6 +22,7 @@ clap_generate = "3.0.0-beta.2"
   version = "3.98.72"
 
 [dependencies]
+shell-words = "1.0.0"
 indoc = "1.0.3"
 thiserror = "1.0.25"
 clap = "3.0.0-beta.2"

@@ -19,8 +19,6 @@ use std::process::{Command, Stdio};
 mod cli;
 mod errors;
 
-const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
-
 fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
     let matches = app().get_matches();
 
@@ -109,11 +107,10 @@ fn add_trailer_if_not_existing(
 }
 
 fn get_relates_to_from_exec(command: &str) -> Result<RelateTo, MitPrepareCommitMessageError> {
-    let shell = env::var("SHELL").unwrap_or_else(|_| PROBABLY_SAFE_FALLBACK_SHELL.into());
-    Command::new(shell)
+    let commandline = shell_words::split(command)?;
+    Command::new(commandline.first().unwrap_or(&String::from("")))
         .stderr(Stdio::inherit())
-        .arg("-c")
-        .arg(command)
+        .args(commandline.iter().skip(1).collect::<Vec<_>>())
         .output()
         .map_err(|error| MitPrepareCommitMessageError::new_exec(command.into(), &error))
         .and_then(|x| {

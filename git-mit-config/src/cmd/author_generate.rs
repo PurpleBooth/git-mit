@@ -11,8 +11,6 @@ use crate::get_vcs;
 
 use std::convert::{TryFrom, TryInto};
 
-const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
-
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
     matches
         .subcommand_matches("mit")
@@ -53,11 +51,10 @@ fn get_users_config(matches: &ArgMatches) -> Result<String, GitMitConfigError> {
 }
 
 fn get_author_config_from_exec(command: &str) -> Result<String, GitMitConfigError> {
-    let shell = env::var("SHELL").unwrap_or_else(|_| PROBABLY_SAFE_FALLBACK_SHELL.into());
-    let output = Command::new(shell)
+    let commandline = shell_words::split(command)?;
+    let output = Command::new(commandline.first().unwrap_or(&String::from("")))
         .stderr(Stdio::inherit())
-        .arg("-c")
-        .arg(command)
+        .args(commandline.iter().skip(1).collect::<Vec<_>>())
         .output()?;
     Ok(String::from_utf8(output.stdout)?)
 }

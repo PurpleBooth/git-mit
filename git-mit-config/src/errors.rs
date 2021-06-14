@@ -36,4 +36,6 @@ pub enum GitMitConfigError {
     Utf8(#[from] std::string::FromUtf8Error),
     #[error("appdata environment variable missing {0}")]
     AppDataMissing(#[from] std::env::VarError),
+    #[error("failed to parse shell given {0}")]
+    BadShellCommand(#[from] shell_words::ParseError),
 }

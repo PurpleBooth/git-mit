@@ -19,8 +19,6 @@ use mit_commit_message_lints::{
 use crate::errors::GitMitError;
 use crate::errors::GitMitError::{NoAuthorInitialsProvided, NoTimeoutSet};
 
-const PROBABLY_SAFE_FALLBACK_SHELL: &str = "/bin/sh";
-
 fn main() -> Result<(), errors::GitMitError> {
     let matches = cli::app().get_matches();
     let users_config = get_users_config(&matches)?;
@@ -83,11 +81,10 @@ fn get_users_config(matches: &ArgMatches) -> Result<String, GitMitError> {
 }
 
 fn get_author_config_from_exec(command: &str) -> Result<String, GitMitError> {
-    let shell = env::var("SHELL").unwrap_or_else(|_| PROBABLY_SAFE_FALLBACK_SHELL.into());
-    Command::new(shell)
+    let commandline = shell_words::split(command)?;
+    Command::new(commandline.first().unwrap_or(&String::from("")))
         .stderr(Stdio::inherit())
-        .arg("-c")
-        .arg(command)
+        .args(commandline.iter().skip(1).collect::<Vec<_>>())
         .output()
         .map_err(|error| GitMitError::new_exec(command.into(), &error))
         .and_then(|x| String::from_utf8(x.stdout).map_err(GitMitError::from))
