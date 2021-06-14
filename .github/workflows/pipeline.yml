@@ -489,17 +489,17 @@ jobs:
           echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk
           -F / '{print $2}' | sed -e "s/:refs//")
         shell: bash
-      - uses: dlavrenuek/conventional-changelog-action@v1.1.2
-        id: changelog
-        with:
-          from: v${{ needs.release.outputs.previous_version }}
-          to: v${{ needs.release.outputs.current_version }}
+      - run: cargo install git-cz
+      - run: git cz changelog "$FROM..$TO" > CHANGELOG.md
+        env:
+          FROM: v${{ needs.release.outputs.previous_version }}
+          TO: v${{ needs.release.outputs.current_version }}
       - id: create_release
         uses: ncipollo/release-action@v1.8.6
         with:
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: ${{ steps.changelog.outputs.body }}
+          bodyFile: "CHANGELOG.md"
           name: Release v${{ needs.release.outputs.current_version }}
           tag: v${{ needs.release.outputs.current_version }}
           artifacts: ./bins/*,./bash_completion/**/*.bash,./fish_completion/**/*.fish,./zsh_completion/**/_*
