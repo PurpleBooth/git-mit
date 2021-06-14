@@ -555,7 +555,7 @@ jobs:
         shell: bash
         env:
           GIT_REPO: ${{ github.repository }}
-          GIT_TAG: ${{ github.ref }}
+          GIT_TAG: v${{ needs.release.outputs.current_version }}
         name: Calculate the binary hash
       - uses: cuchi/jinja2-action@v1.2.0
         with:
@@ -563,7 +563,7 @@ jobs:
           output_file: formula.rb
           variables: |
             github_repo=${{ github.repository }}
-            git_tag=${{ github.ref }}
+            git_tag=v${{ needs.release.outputs.current_version }}
             file_sha=${{ steps.hash.outputs.SHA256 }}
         name: Generate the template
       - shell: bash
