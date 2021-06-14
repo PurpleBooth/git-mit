@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: PurpleBooth/gfmfmt-action@v1.0.3
         with:
-          pattern: '^./([A-Za-z_]+|docs/.*)\.md$'
+          pattern: ^./([A-Za-z_]+|docs/.*)\.md$
   version:
     runs-on: ubuntu-latest
     steps:
@@ -34,9 +34,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: chaaz/versio-actions/install@v1.1
-        name: Install versio
-      - name: Check projects
-        run: versio check
+      - run: versio check
+      - run: versio release --dry-run
   check:
     runs-on: ubuntu-latest
     steps:
@@ -189,13 +188,16 @@ jobs:
           args:
             --all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
             -D clippy::cargo -A clippy::multiple-crate-versions
-      - name: Prettify code
-        uses: creyD/prettier_action@v3.3
+      - uses: creyD/prettier_action@v3.3
         with:
           prettier_options: --check **/*.{yml,yaml}
       - uses: gaurav-nelson/github-action-markdown-link-check@1.0.12
-  merge-and-push:
+
+  release:
     if: github.ref == 'refs/heads/main'
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_USER: ${{ github.actor }}
     needs:
       - version
       - specdown
@@ -204,29 +206,43 @@ jobs:
       - lint-markdown
       - check
       - security-audit
+    outputs:
+      version_bump: ${{ steps.version_bump.outputs.version_bump }}
+      current_version: ${{ steps.current_version.outputs.current_version }}
+      previous_version: ${{ steps.previous_version.outputs.previous_version }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
         with:
-          token: ${{ secrets.COMMITTER_TOKEN }}
           fetch-depth: 0
       - uses: chaaz/versio-actions/install@v1.1
         name: Install versio
+      - id: previous_version
+        run: echo ::set-output "name=previous_version::$( versio get --id 1 -v )"
       - run: echo ::set-output "name=BUMP::$( versio release --dry-run )"
         id: get_versio_plan
-        env:
-          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-          GITHUB_USER: ${{ github.actor }}
       - name: Generate release
         if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         run: |
           versio release
-        env:
-          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-          GITHUB_USER: ${{ github.actor }}
+      - run: echo ::set-output "name=current_version::$( versio get --id 1 -v )"
+        id: current_version
+      - run: echo ::set-output "name=version_bump::true"
+        if: steps.current_version.outputs.current_version != steps.previous_version.outputs.previous_version
+        id: version_bump
+
+  cargo-publish:
+    if: needs.release.outputs.version_bump
+    needs:
+      - release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+        name: Checkout the repository
+        with:
+          ref: v${{ needs.release.outputs.current_version }}
       - run: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
       - name: Publish mit-build-tools to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -237,7 +253,6 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-hook-test-helper to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -248,7 +263,6 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-commit-message-lints to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -259,7 +273,6 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-commit-msg to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -270,7 +283,6 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-pre-commit to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -281,7 +293,6 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-prepare-commit-msg to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -292,7 +303,6 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish git-mit to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -303,7 +313,6 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish git-mit-config to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -314,7 +323,6 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish git-mit-install to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -322,11 +330,9 @@ jobs:
           command: |
             cargo login "$CARGO_TOKEN"
             ( cd git-mit-install && cargo publish )
-
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish git-mit-relates-to to Crates
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
         uses: nick-invision/retry@v2.4.1
         with:
           timeout_minutes: 30
@@ -336,3 +342,227 @@ jobs:
             ( cd git-mit-relates-to && cargo publish )
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+
+  build:
+    if: needs.release.outputs.version_bump
+    needs:
+      - release
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: ${{ matrix.install }}
+        env:
+          DEBIAN_FRONTEND: noninteractive
+      - uses: actions/checkout@v2.3.4
+        with:
+          lfs: true
+          ref: v${{ needs.release.outputs.current_version }}
+      - uses: actions/cache@v2.1.6
+        with:
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+      - uses: actions-rs/toolchain@v1.0.7
+        with:
+          default: true
+          profile: minimal
+          toolchain: stable
+      - uses: actions-rs/cargo@v1.0.3
+        with:
+          args: --release --locked
+          command: build
+      - id: get_repository_name
+        run:
+          echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk
+          -F / '{print $2}' | sed -e "s/:refs//")
+        shell: bash
+      - name: Move binary to upload location
+        env:
+          TARGET: ${{ matrix.target }}
+          EXTENSION: ${{ matrix.suffix }}
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+        run: mv ./target/release/mit-commit-msg$EXTENSION ./mit-commit-msg-$TARGET$EXTENSION
+        shell: bash
+      - name: Move binary to upload location
+        env:
+          TARGET: ${{ matrix.target }}
+          EXTENSION: ${{ matrix.suffix }}
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+        run: mv ./target/release/git-mit-config$EXTENSION ./git-mit-config-$TARGET$EXTENSION
+        shell: bash
+      - name: Move binary to upload location
+        env:
+          TARGET: ${{ matrix.target }}
+          EXTENSION: ${{ matrix.suffix }}
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+        run: mv ./target/release/mit-pre-commit$EXTENSION ./mit-pre-commit-$TARGET$EXTENSION
+        shell: bash
+      - name: Move binary to upload location
+        env:
+          TARGET: ${{ matrix.target }}
+          EXTENSION: ${{ matrix.suffix }}
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+        run: mv ./target/release/mit-prepare-commit-msg$EXTENSION ./mit-prepare-commit-msg-$TARGET$EXTENSION
+        shell: bash
+      - name: Move binary to upload location
+        env:
+          TARGET: ${{ matrix.target }}
+          EXTENSION: ${{ matrix.suffix }}
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+        run: mv ./target/release/git-mit$EXTENSION ./git-mit-$TARGET$EXTENSION
+        shell: bash
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bins
+          path: ./*${{ matrix.target }}${{ matrix.suffix }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bash_completion
+          path: ./**/bash_completion/*
+      - uses: actions/upload-artifact@v2
+        with:
+          name: fish_completion
+          path: ./**/fish_completion/*
+      - uses: actions/upload-artifact@v2
+        with:
+          name: zsh_completion
+          path: ./**/zsh_completion/*
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            suffix: ""
+            target: x86_64-apple-darwin
+            install: echo nothing to install
+          - os: ubuntu-latest
+            suffix: ""
+            target: x86_64-unknown-linux-gnu
+            install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+          - os: windows-latest
+            suffix: .exe
+            target: x86_64-pc-windows-msvc
+            install: echo nothing to install
+  generate-github-release:
+    if: needs.release.outputs.version_bump
+    needs:
+      - release
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          lfs: true
+          fetch-depth: 0
+          ref: v${{ needs.release.outputs.current_version }}
+      - uses: actions/cache@v2.1.6
+        with:
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+      - uses: actions/download-artifact@v2
+      - uses: actions-rs/toolchain@v1.0.7
+        with:
+          default: true
+          profile: minimal
+          toolchain: stable
+      - id: get_repository_name
+        run:
+          echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk
+          -F / '{print $2}' | sed -e "s/:refs//")
+        shell: bash
+      - uses: dlavrenuek/conventional-changelog-action@v1.1.2
+        id: changelog
+        with:
+          from: v${{ needs.release.outputs.previous_version }}
+          to: v${{ needs.release.outputs.current_version }}
+      - id: create_release
+        uses: ncipollo/release-action@v1.8.6
+        with:
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          name: Release v${{ needs.release.outputs.current_version }}
+          tag: v${{ needs.release.outputs.current_version }}
+          artifacts: ./bins/*,./bash_completion/**/*.bash,./fish_completion/**/*.fish,./zsh_completion/**/_*
+
+  generate-formula:
+    if: needs.release.outputs.version_bump
+    needs:
+      - release
+    name: Generate Homebrew Formula
+    runs-on: ubuntu-latest
+    steps:
+      - id: get_repository_name
+        name: Work out repository name
+        run:
+          echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" |
+          awk -F / '{print $2}' | sed -e "s/:refs//")"
+        shell: bash
+      - uses: actions/checkout@v2.3.4
+        name: Checkout this repository
+        with:
+          path: main-repo
+          ref: v${{ needs.release.outputs.current_version }}
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v3.1.0
+        with:
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git-user-signingkey: true
+          git-commit-gpgsign: true
+          git-tag-gpgsign: true
+          workdir: main-repo
+      - uses: actions/checkout@v2.3.4
+        with:
+          repository: PurpleBooth/homebrew-repo
+          token: ${{ secrets.COMMITTER_TOKEN }}
+          path: homebrew-repo
+          ref: main
+        name: Checkout the custom tap
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v3.1.0
+        with:
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git-user-signingkey: true
+          git-commit-gpgsign: true
+          git-tag-gpgsign: true
+          workdir: homebrew-repo
+      - run: |
+          curl -Lo file.tar.gz "https://github.com/$GIT_REPO/archive/$GIT_TAG.tar.gz"
+          sha256sum -b file.tar.gz | awk '{ print $1 }' > hash
+          echo ::set-output "name=SHA256::$( cat hash )"
+        id: hash
+        shell: bash
+        env:
+          GIT_REPO: ${{ github.repository }}
+          GIT_TAG: ${{ github.ref }}
+        name: Calculate the binary hash
+      - uses: cuchi/jinja2-action@v1.2.0
+        with:
+          template: main-repo/homebrew/formula.rb.j2
+          output_file: formula.rb
+          variables: |
+            github_repo=${{ github.repository }}
+            git_tag=${{ github.ref }}
+            file_sha=${{ steps.hash.outputs.SHA256 }}
+        name: Generate the template
+      - shell: bash
+        name: Open a PR on the custom tap repository
+        run: |
+          VERSION="$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
+          git -C homebrew-repo switch -c "$REPOSITORY_NAME-$VERSION"
+          cp formula.rb "homebrew-repo/Formula/$REPOSITORY_NAME.rb"
+          git -C homebrew-repo add "Formula/$REPOSITORY_NAME.rb"
+          git -C homebrew-repo commit -m "fix: Update $REPOSITORY_NAME to $VERSION"
+          git -C homebrew-repo push origin "$REPOSITORY_NAME-$VERSION"
+          (cd homebrew-repo && gh pr create --label releases --base main --fill)
+        env:
+          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
+          GIT_TAG: v${{ needs.release.outputs.current_version }}
+          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
