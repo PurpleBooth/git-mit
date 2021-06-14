@@ -166,6 +166,12 @@ jobs:
           profile: minimal
           toolchain: stable
           default: true
+      - name: Rename wsl bash
+        if: runner.os == 'Windows'
+        run: |
+          takeown /F C:\Windows\System32\bash.exe
+          icacls C:\Windows\System32\bash.exe /grant administrators:F
+          ren C:\Windows\System32\bash.exe wsl-bash.exe
       - run: make specdown
         shell: bash
   lints:
