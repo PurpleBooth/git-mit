@@ -141,5 +141,5 @@ echo "[#$(curl --silent -X GET -H "X-TrackerToken: $PIVOTAL_TRACKER_TOKEN" "http
 This would become
 
 ``` shell,skip()
-export GIT_MIT_RELATES_TO_EXEC="echo \"[#\$(curl --silent -X GET -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" \"https://www.pivotaltracker.com/services/v5/projects/\$(cat .pivotal_tracker_project)/stories?filter=state:started+owner:\$(curl --silent \"https://www.pivotaltracker.com/services/v5/me?fields=%3Adefault\" -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" | jq -r .initials)\" | jq .[0].id)]\""
+export GIT_MIT_RELATES_TO_EXEC="bash -c 'echo \"[#\$(curl --silent -X GET -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" \"https://www.pivotaltracker.com/services/v5/projects/\$(cat .pivotal_tracker_project)/stories?filter=state:started+owner:\$(curl --silent \"https://www.pivotaltracker.com/services/v5/me?fields=%3Adefault\" -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" | jq -r .initials)\" | jq .[0].id)]\"'"
 ```
