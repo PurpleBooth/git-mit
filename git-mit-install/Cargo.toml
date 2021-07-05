@@ -21,7 +21,7 @@ clap_derive = "3.0.0-beta.2"
 
 [dependencies]
 which = "4.1.0"
-thiserror = "1.0.25"
+thiserror = "1.0.26"
 clap = "3.0.0-beta.2"
 clap_derive = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.2"
