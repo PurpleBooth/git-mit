@@ -1,6 +1,6 @@
 [package]
 name = "mit-commit-msg"
-version = "4.0.6"
+version = "4.0.7"
 authors = [ "Billie Thompson <billie+mit-commit-msg@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -24,7 +24,7 @@ serde_derive = "1.0.125"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
-  version = "4.0.6"
+  version = "4.0.7"
 
 [dependencies]
 clap = "3.0.0-beta.2"
@@ -39,7 +39,7 @@ copypasta = "0.7.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "4.0.6"
+  version = "4.0.7"
 
 [dev-dependencies]
 indoc = "1.0.3"
@@ -48,7 +48,7 @@ pretty_assertions = "0.7.2"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "4.0.6"
+  version = "4.0.7"
 
 [features]
 default = []
