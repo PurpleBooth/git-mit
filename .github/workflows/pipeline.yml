@@ -495,7 +495,7 @@ jobs:
           FROM: v${{ needs.release.outputs.previous_version }}
           TO: v${{ needs.release.outputs.current_version }}
       - id: create_release
-        uses: ncipollo/release-action@v1.8.6
+        uses: ncipollo/release-action@v1.8.8
         with:
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
