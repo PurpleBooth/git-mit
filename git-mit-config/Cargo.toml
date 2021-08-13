@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-config"
-version = "4.0.11"
+version = "4.0.12"
 authors = [ "Billie Thompson <billie+git-mit-config@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -24,11 +24,11 @@ serde_derive = "1.0.125"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
-  version = "4.0.11"
+  version = "4.0.12"
 
   [build-dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "4.0.11"
+  version = "4.0.12"
 
 [dependencies]
 shell-words = "1.0.0"
@@ -44,7 +44,7 @@ comfy-table = "4.1.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "4.0.11"
+  version = "4.0.12"
 
 [dev-dependencies]
 indoc = "1.0.3"
@@ -52,7 +52,7 @@ pretty_assertions = "0.7.2"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "4.0.11"
+  version = "4.0.12"
 
 [features]
 default = []
