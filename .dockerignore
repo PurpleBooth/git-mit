@@ -1,0 +1,6 @@
+# Ignore following files from git
+/target
+*/target/
+/version/version
+/*-x86_64-*
+.idea
