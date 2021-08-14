@@ -59,7 +59,7 @@ impl Lint {
             Lint::PivotalTrackerIdMissing => checks::missing_pivotal_tracker_id::CONFIG,
             Lint::JiraIssueKeyMissing => checks::missing_jira_issue_key::CONFIG,
             Lint::GitHubIdMissing => checks::missing_github_id::CONFIG,
-            Lint::SubjectNotSeparateFromBody => checks::subject_not_seperate_from_body::CONFIG,
+            Lint::SubjectNotSeparateFromBody => checks::subject_not_separate_from_body::CONFIG,
             Lint::SubjectLongerThan72Characters => {
                 checks::subject_longer_than_72_characters::CONFIG
             }
@@ -119,7 +119,7 @@ impl Lint {
             Lint::JiraIssueKeyMissing => checks::missing_jira_issue_key::lint(commit_message),
             Lint::GitHubIdMissing => checks::missing_github_id::lint(commit_message),
             Lint::SubjectNotSeparateFromBody => {
-                checks::subject_not_seperate_from_body::lint(commit_message)
+                checks::subject_not_separate_from_body::lint(commit_message)
             }
             Lint::SubjectLongerThan72Characters => {
                 checks::subject_longer_than_72_characters::lint(commit_message)

@@ -41,7 +41,7 @@ mod tests {
 
     #[test]
     fn with_gutter() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 An example commit
@@ -51,7 +51,7 @@ mod tests {
             ),
             &None,
         );
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 Another example
@@ -68,12 +68,12 @@ mod tests {
 
     #[test]
     fn single_line_with_trailing_newline() {
-        test_subject_not_seperate_from_body("An example commit\n", &None);
+        test_subject_not_separate_from_body("An example commit\n", &None);
     }
 
     #[test]
     fn single_line_with_long_comments() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
             "
             Remove duplicated function
@@ -133,12 +133,12 @@ mod tests {
 
     #[test]
     fn single_line() {
-        test_subject_not_seperate_from_body("An example commit", &None);
+        test_subject_not_separate_from_body("An example commit", &None);
     }
 
     #[test]
     fn gutter_missing() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 An example commit
@@ -151,7 +151,7 @@ mod tests {
                 Code::SubjectNotSeparateFromBody,
             )),
         );
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 An example commit
@@ -168,7 +168,7 @@ mod tests {
         );
     }
 
-    fn test_subject_not_seperate_from_body(message: &str, expected: &Option<Problem>) {
+    fn test_subject_not_separate_from_body(message: &str, expected: &Option<Problem>) {
         let actual = &lint(&CommitMessage::from(message));
         assert_eq!(
             actual, expected,

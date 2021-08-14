@@ -42,5 +42,5 @@ pub enum Error {
     #[error("failed to read git-mit config")]
     Io(#[from] std::io::Error),
     #[error("failed to parse glob {0}")]
-    Glov(#[from] glob::PatternError),
+    Glob(#[from] glob::PatternError),
 }

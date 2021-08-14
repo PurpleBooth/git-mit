@@ -49,7 +49,7 @@ class GitMit < Formula
     system "#{bin}/git-mit", "-c", "git-mit.toml", "se"
     system "git-mit-relates-to", "#12356"
     system "git", "add", testpath
-    system "git", "commit", "-m", "Exammple Commit"
+    system "git", "commit", "-m", "Example Commit"
     system "#{bin}/git-mit-config", "lint", "available"
   end
 end

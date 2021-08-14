@@ -124,17 +124,17 @@ mod tests {
 
     #[test]
     fn we_get_author_config_back_if_there_is_any() {
-        let mut strs = BTreeMap::new();
-        strs.insert(
+        let mut buffer = BTreeMap::new();
+        buffer.insert(
             super::CONFIG_KEY_EXPIRES.into(),
             format!("{}", epoch_with_offset(add_100_seconds)),
         );
-        strs.insert(
+        buffer.insert(
             "mit.author.coauthors.0.email".into(),
             "annie@example.com".into(),
         );
-        strs.insert("mit.author.coauthors.0.name".into(), "Annie Example".into());
-        let mut vcs = InMemory::new(&mut strs);
+        buffer.insert("mit.author.coauthors.0.name".into(), "Annie Example".into());
+        let mut vcs = InMemory::new(&mut buffer);
 
         let actual =
             get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
@@ -165,23 +165,23 @@ mod tests {
 
     #[test]
     fn we_get_multiple_authors_back_if_there_are_multiple() {
-        let mut strs = BTreeMap::new();
-        strs.insert(
+        let mut buffer = BTreeMap::new();
+        buffer.insert(
             super::CONFIG_KEY_EXPIRES.into(),
             format!("{}", epoch_with_offset(add_100_seconds)),
         );
-        strs.insert(
+        buffer.insert(
             "mit.author.coauthors.0.email".into(),
             "annie@example.com".into(),
         );
-        strs.insert("mit.author.coauthors.0.name".into(), "Annie Example".into());
-        strs.insert(
+        buffer.insert("mit.author.coauthors.0.name".into(), "Annie Example".into());
+        buffer.insert(
             "mit.author.coauthors.1.email".into(),
             "joe@example.com".into(),
         );
-        strs.insert("mit.author.coauthors.1.name".into(), "Joe Bloggs".into());
+        buffer.insert("mit.author.coauthors.1.name".into(), "Joe Bloggs".into());
 
-        let mut vcs = InMemory::new(&mut strs);
+        let mut vcs = InMemory::new(&mut buffer);
 
         let actual =
             get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");

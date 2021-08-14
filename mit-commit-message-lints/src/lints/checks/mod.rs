@@ -8,4 +8,4 @@ pub(crate) mod not_emoji_log;
 pub(crate) mod subject_line_ends_with_period;
 pub(crate) mod subject_longer_than_72_characters;
 pub(crate) mod subject_not_capitalized;
-pub(crate) mod subject_not_seperate_from_body;
+pub(crate) mod subject_not_separate_from_body;

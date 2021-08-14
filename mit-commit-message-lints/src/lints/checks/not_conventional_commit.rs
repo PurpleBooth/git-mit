@@ -61,7 +61,7 @@ mod tests {
 
     #[test]
     fn commit_message_with_description_and_breaking_change_footer() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 feat: allow provided config object to extend other configs
@@ -75,7 +75,7 @@ mod tests {
 
     #[test]
     fn commit_message_with_bang_to_draw_attention_to_breaking_change() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 refactor!: drop support for Node 6
@@ -87,7 +87,7 @@ mod tests {
 
     #[test]
     fn commit_message_with_both_bang_and_breaking_change_footer() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 refactor!: drop support for Node 6
@@ -101,7 +101,7 @@ mod tests {
 
     #[test]
     fn commit_message_with_no_body() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 docs: correct spelling of CHANGELOG
@@ -113,7 +113,7 @@ mod tests {
 
     #[test]
     fn commit_message_with_scope() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 feat(lang): add polish language
@@ -125,7 +125,7 @@ mod tests {
 
     #[test]
     fn commit_message_with_multi_paragraph_body_and_multiple_footers() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 fix: correct minor typos in code
@@ -144,7 +144,7 @@ mod tests {
 
     #[test]
     fn revert_example() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 revert: let us never again speak of the noodle incident
@@ -158,7 +158,7 @@ mod tests {
 
     #[test]
     fn non_conventional() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 An example commit
@@ -176,7 +176,7 @@ mod tests {
 
     #[test]
     fn missing_bracket() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 fix(example: An example commit
@@ -194,7 +194,7 @@ mod tests {
 
     #[test]
     fn missing_space() {
-        test_subject_not_seperate_from_body(
+        test_subject_not_separate_from_body(
             indoc!(
                 "
                 fix(example):An example commit
@@ -210,7 +210,7 @@ mod tests {
         );
     }
 
-    fn test_subject_not_seperate_from_body(message: &str, expected: &Option<Problem>) {
+    fn test_subject_not_separate_from_body(message: &str, expected: &Option<Problem>) {
         let actual = &lint(&CommitMessage::from(message));
         assert_eq!(
             actual, expected,

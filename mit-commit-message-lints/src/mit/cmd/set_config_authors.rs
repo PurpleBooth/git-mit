@@ -41,7 +41,7 @@ mod tests {
         let mut vcs = InMemory::new(&mut store);
 
         set_config_authors(&mut vcs, "zy", &Author::new("Z Y", "zy@example.com", None))
-            .expect("command to have succeded");
+            .expect("command to have succeeded");
 
         let mut expected: BTreeMap<String, String> = BTreeMap::new();
         expected.insert("mit.author.config.zy.email".into(), "zy@example.com".into());
