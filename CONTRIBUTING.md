@@ -49,8 +49,8 @@ the action you have taken to solve it.
 The aim of this repository is:
 
 -   We aim to be easy to use
--   We aim to include lints that developers in large organisations
-    need, but not have hundreds of them
+-   We aim to include lints that developers in large organisations need,
+    but not have hundreds of them
 -   We aim to encourage and advocate for pair programming
 -   To provide an alternative to git duet
 
