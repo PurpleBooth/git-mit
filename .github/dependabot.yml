@@ -15,3 +15,10 @@ updates:
     commit-message:
       prefix: fix
       prefix-development: build
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: fix
