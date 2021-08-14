@@ -470,30 +470,19 @@ jobs:
           lfs: true
           fetch-depth: 0
           ref: v${{ needs.release.outputs.current_version }}
-      - uses: actions/cache@v2.1.6
-        with:
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
       - uses: actions/download-artifact@v2
-      - uses: actions-rs/toolchain@v1.0.7
-        with:
-          default: true
-          profile: minimal
-          toolchain: stable
       - id: get_repository_name
         run:
           echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk
           -F / '{print $2}' | sed -e "s/:refs//")
         shell: bash
-      - run: cargo install git-cz
-      - run: git cz changelog "$FROM..$TO" > CHANGELOG.md
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v1
+        with:
+          config: cliff.toml
+          args: --verbose --latest
         env:
-          FROM: v${{ needs.release.outputs.previous_version }}
-          TO: v${{ needs.release.outputs.current_version }}
+          OUTPUT: CHANGELOG.md
       - id: create_release
         uses: ncipollo/release-action@v1.8.8
         with:
