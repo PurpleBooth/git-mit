@@ -128,8 +128,8 @@ page](docs/lints/configuring.md)
 
 ### Append issue number
 
-In projects it nice to help out your co-workers by linking the commits
-you're making back to issues in the backlog. This can get a bit tedious
+In projects, it is nice to help out your co-workers by linking the commits
+you're making back to the issue in the backlog. This can get a bit tedious
 to remember though, so here's a command to reduce the amount of typing.
 
 Say you've just made this awesome `README.md` for Pivotal Tracker ID

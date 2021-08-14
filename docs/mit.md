@@ -4,7 +4,7 @@ This is the `git mit` part of the tool.
 
 ## Setup
 
-In order to get started with this tool you'll need a git repostory
+In order to get started with this tool you'll need a git repository
 
 ``` shell,script(name="1",expected_exit_code=0)
 git init .
@@ -58,7 +58,7 @@ se:
   email: someone@example.com
 ```
 
-To make keeping this file up to date easier there's some commands to
+To make keeping this file up-to-date easier there's some commands to
 adding and removing users to your git repository, that can then be
 output into a more permanent configuration file.
 

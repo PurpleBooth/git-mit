@@ -2,8 +2,8 @@
 
 ## Setup
 
-As always we need a working it repository the, with the hooks installed
-to run these lints
+As always we need a working it repository with the hooks installed to
+run these lints
 
 ``` shell,script(name="1",expected_exit_code=0)
 git init .
@@ -370,7 +370,7 @@ You can fix this by making the lines in your body no more than 72 characters
 
 #### Git Manual Style Extended
 
-The style from the git book, but that doesn't effect using git
+The style from the git book, but that doesn't affect using git
 
 ##### subject-line-not-capitalized
 

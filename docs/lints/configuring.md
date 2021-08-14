@@ -1,11 +1,11 @@
 # Configuring Lints
 
-Some lints are not appropriate in some situations. For example you
+Some lints are not appropriate in some situations. For example, you
 probably don't want the `github-id-missing` lint if you're using Jira.
 
 ## Setup
 
-As always we need a working it repository the, with the hooks installed.
+As always we need a working it repository, with the hooks installed.
 
 ``` shell,script(name="1",expected_exit_code=0)
 git init .
@@ -82,13 +82,12 @@ git mit-config lint status subject-longer-than-72-characters
 +-----------------------------------+---------+
 ```
 
-This are written to the `./.git/config` file.
+These are written to the `./.git/config` file.
 
 ## Project level lint configuration
 
-Sometimes you're working with a group of people and you want them to
-have the same configuration as you, so the git history looks lovely and
-tidy.
+Sometimes you're working with a group of people, and want share the
+setup for git-mit with everyone, saving them having to set it up.
 
 We can do this with a `.git-mit.toml.dist`
 
@@ -154,3 +153,6 @@ git mit-config lint status pivotal-tracker-id-missing
 | pivotal-tracker-id-missing | disabled |
 +----------------------------+----------+
 ```
+
+You configure the authors [separately](../mit.md). This is so you don't
+end up committing peoples emails into a public repository.
