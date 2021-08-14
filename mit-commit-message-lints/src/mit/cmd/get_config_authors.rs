@@ -21,11 +21,11 @@ pub fn get_config_authors(vcs: &dyn Vcs) -> Result<Authors, VcsError> {
             let initial = String::from(*fragment_iterator.next().unwrap());
             let part = String::from(*fragment_iterator.next().unwrap());
 
-            let mut exisiting: BTreeMap<String, String> =
+            let mut existing: BTreeMap<String, String> =
                 acc.get(&initial).map(BTreeMap::clone).unwrap_or_default();
-            exisiting.insert(part, String::from(vcs.get_str(key)?.unwrap()));
+            existing.insert(part, String::from(vcs.get_str(key)?.unwrap()));
 
-            acc.insert(initial, exisiting);
+            acc.insert(initial, existing);
             Ok(acc)
         })?;
 
