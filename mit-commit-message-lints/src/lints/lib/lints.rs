@@ -212,7 +212,7 @@ mod tests {
         ];
         let actual: Result<Lints, Error> = lints.try_into();
 
-        assert_eq!(true, actual.is_err());
+        assert!(actual.is_err());
     }
 
     #[test]

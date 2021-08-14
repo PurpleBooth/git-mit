@@ -195,11 +195,11 @@ mod tests_lints {
 
     #[test]
     fn i_can_get_if_a_lint_is_enabled_by_default() {
-        assert_eq!(Lint::DuplicatedTrailers.enabled_by_default(), true);
-        assert_eq!(Lint::PivotalTrackerIdMissing.enabled_by_default(), false);
-        assert_eq!(Lint::JiraIssueKeyMissing.enabled_by_default(), false);
-        assert_eq!(Lint::SubjectNotSeparateFromBody.enabled_by_default(), true);
-        assert_eq!(Lint::GitHubIdMissing.enabled_by_default(), false);
+        assert!(Lint::DuplicatedTrailers.enabled_by_default());
+        assert!(!Lint::PivotalTrackerIdMissing.enabled_by_default());
+        assert!(!Lint::JiraIssueKeyMissing.enabled_by_default());
+        assert!(Lint::SubjectNotSeparateFromBody.enabled_by_default());
+        assert!(!Lint::GitHubIdMissing.enabled_by_default());
     }
 }
 
