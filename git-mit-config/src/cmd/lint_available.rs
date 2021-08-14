@@ -21,7 +21,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let mut vcs = get_vcs(is_local, &current_dir)?;
     let toml = external::read_toml(current_dir)?;
 
-    let lints = Lints::get_from_toml_or_else_vcs(&toml, &mut vcs)?;
+    let lints = Lints::read_from_toml_or_else_vcs(&toml, &mut vcs)?;
     mit_commit_message_lints::console::style::lint_table(Lints::available(), &lints);
 
     Ok(())

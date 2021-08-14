@@ -21,7 +21,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let input_toml = external::read_toml(current_dir)?;
 
     let output_toml: String =
-        Lints::get_from_toml_or_else_vcs(&input_toml, &mut vcs)?.try_into()?;
+        Lints::read_from_toml_or_else_vcs(&input_toml, &mut vcs)?.try_into()?;
 
     mit_commit_message_lints::console::to_be_piped(output_toml.trim());
 
