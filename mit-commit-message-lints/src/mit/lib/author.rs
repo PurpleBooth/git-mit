@@ -38,8 +38,6 @@ impl Author {
 mod tests_author {
     #![allow(clippy::wildcard_imports)]
 
-    use pretty_assertions::assert_eq;
-
     use super::*;
 
     #[test]

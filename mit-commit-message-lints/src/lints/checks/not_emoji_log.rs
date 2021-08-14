@@ -57,7 +57,6 @@ mod test {
     #![allow(clippy::wildcard_imports)]
 
     use indoc::indoc;
-    use pretty_assertions::assert_eq;
 
     use super::*;
 

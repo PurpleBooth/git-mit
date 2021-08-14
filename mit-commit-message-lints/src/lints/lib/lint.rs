@@ -150,8 +150,6 @@ impl Lint {
 mod tests_lints {
     use std::convert::TryInto;
 
-    use pretty_assertions::assert_eq;
-
     use crate::lints::Lint;
 
     #[test]

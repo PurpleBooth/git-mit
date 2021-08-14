@@ -19,8 +19,6 @@ pub fn set_status(lints: Lints, vcs: &mut dyn Vcs, status: bool) -> Result<(), E
 mod tests_can_enable_lints_via_a_command {
     use std::collections::{BTreeMap, BTreeSet};
 
-    use pretty_assertions::assert_eq;
-
     use crate::external::InMemory;
     use crate::lints::cmd::set_status::set_status;
     use crate::lints::lib::{Lint, Lints};

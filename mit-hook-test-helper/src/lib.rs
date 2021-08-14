@@ -10,7 +10,7 @@ use std::{
 };
 
 use git2::{Config, Repository};
-use pretty_assertions::assert_eq;
+
 use std::path::Path;
 use tempfile::TempDir;
 

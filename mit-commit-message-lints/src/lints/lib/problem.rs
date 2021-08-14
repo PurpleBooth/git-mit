@@ -29,7 +29,6 @@ impl Problem {
 
 #[cfg(test)]
 mod tests {
-    use pretty_assertions::assert_eq;
 
     use crate::console::exit::Code;
     use crate::lints::Problem;

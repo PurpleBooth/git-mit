@@ -51,8 +51,6 @@ mod tests_able_to_load_config_from_git {
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
 
-    use pretty_assertions::assert_eq;
-
     use crate::external::InMemory;
     use crate::relates::entities::RelateTo;
     use crate::relates::vcs::get_relate_to_configuration;

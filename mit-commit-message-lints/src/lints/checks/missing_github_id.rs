@@ -46,7 +46,6 @@ mod tests_has_missing_github_id {
     #![allow(clippy::wildcard_imports)]
 
     use indoc::indoc;
-    use pretty_assertions::assert_eq;
 
     use super::*;
 

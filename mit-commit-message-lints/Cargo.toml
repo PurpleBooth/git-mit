@@ -33,7 +33,7 @@ comfy-table = "4.1.1"
   features = [ "derive" ]
 
 [dev-dependencies]
-pretty_assertions = "0.7.2"
+
 criterion = "0.3.5"
 
   [dev-dependencies.mit-hook-test-helper]

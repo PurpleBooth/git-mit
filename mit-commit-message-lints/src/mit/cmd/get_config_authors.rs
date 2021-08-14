@@ -61,8 +61,6 @@ pub fn get_config_authors(vcs: &dyn Vcs) -> Result<Authors, VcsError> {
 mod tests {
     use std::collections::BTreeMap;
 
-    use pretty_assertions::assert_eq;
-
     use crate::mit::cmd::get_config_authors::get_config_authors;
     use crate::mit::Authors;
     use crate::{external::InMemory, mit::Author};

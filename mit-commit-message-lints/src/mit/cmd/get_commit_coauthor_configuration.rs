@@ -76,8 +76,6 @@ mod tests {
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
 
-    use pretty_assertions::assert_eq;
-
     use crate::mit::get_commit_coauthor_configuration;
     use crate::{external::InMemory, mit::Author};
 

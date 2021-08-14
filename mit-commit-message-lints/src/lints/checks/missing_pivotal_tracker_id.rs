@@ -50,7 +50,6 @@ mod tests_has_missing_pivotal_tracker_id {
     #![allow(clippy::wildcard_imports)]
 
     use indoc::indoc;
-    use pretty_assertions::assert_eq;
 
     use super::*;
 

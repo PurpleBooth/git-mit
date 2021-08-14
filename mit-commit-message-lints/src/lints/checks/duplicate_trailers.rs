@@ -80,7 +80,6 @@ mod tests_has_duplicated_trailers {
 
     use indoc::indoc;
     use mit_commit::CommitMessage;
-    use pretty_assertions::assert_eq;
 
     use super::*;
 

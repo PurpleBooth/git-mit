@@ -193,7 +193,6 @@ mod tests {
     use std::convert::{TryFrom, TryInto};
 
     use indoc::indoc;
-    use pretty_assertions::assert_eq;
 
     use crate::lints::lib::lint::Lint::{
         BodyWiderThan72Characters, GitHubIdMissing, SubjectLongerThan72Characters,

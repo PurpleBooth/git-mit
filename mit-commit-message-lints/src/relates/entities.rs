@@ -23,8 +23,6 @@ impl RelateTo {
 mod tests_relate_to {
     #![allow(clippy::wildcard_imports)]
 
-    use pretty_assertions::assert_eq;
-
     use super::*;
 
     #[test]
