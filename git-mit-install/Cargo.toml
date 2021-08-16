@@ -13,7 +13,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 [build-dependencies]
 clap = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.2"
-clap_derive = "3.0.0-beta.2"
+clap_derive = "3.0.0-beta.4"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
@@ -23,7 +23,7 @@ clap_derive = "3.0.0-beta.2"
 which = "4.2.2"
 thiserror = "1.0.26"
 clap = "3.0.0-beta.2"
-clap_derive = "3.0.0-beta.2"
+clap_derive = "3.0.0-beta.4"
 clap_generate = "3.0.0-beta.2"
 xdg = "2.2.0"
 git2 = "0.13.20"
