@@ -11,7 +11,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 description = "A command for enabling and disabling git lints"
 
 [build-dependencies]
-clap = "3.0.0-beta.2"
+clap = "3.0.0-beta.4"
 clap_generate = "3.0.0-beta.2"
 clap_derive = "3.0.0-beta.4"
 tinytemplate = "1.2.1"
@@ -36,7 +36,7 @@ xdg = "2.2.0"
 thiserror = "1.0.26"
 git2 = "0.13.20"
 openssl = { version = '0.10', optional = true }
-clap = "3.0.0-beta.2"
+clap = "3.0.0-beta.4"
 clap_derive = "3.0.0-beta.4"
 clap_generate = "3.0.0-beta.2"
 console = "0.14.1"
