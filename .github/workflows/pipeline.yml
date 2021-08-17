@@ -494,11 +494,6 @@ jobs:
           fetch-depth: 0
           ref: v${{ needs.release.outputs.current_version }}
       - uses: actions/download-artifact@v2
-      - id: get_repository_name
-        run:
-          echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk
-          -F / '{print $2}' | sed -e "s/:refs//")
-        shell: bash
       - name: Generate a changelog
         uses: orhun/git-cliff-action@v1
         with:
