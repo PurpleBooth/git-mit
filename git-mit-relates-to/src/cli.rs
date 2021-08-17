@@ -17,6 +17,7 @@ pub fn app() -> App<'static> {
                 .long("timeout")
                 .about("Number of minutes to expire the configuration in")
                 .env("GIT_MIT_RELATES_TO_TIMEOUT")
-                .default_value("60"),
+                .default_value("60")
+                .takes_value(true),
         )
 }

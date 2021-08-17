@@ -35,6 +35,7 @@ pub fn app() -> App<'static> {
                 .long("relates-to-exec")
                 .about("A command to execute to get the value for the relates to trailer")
                 .env("GIT_MIT_RELATES_TO_EXEC")
+                .takes_value(true)
                 .required(false),
         )
 }

@@ -19,5 +19,5 @@ where
     let mut app = app.clone();
 
     fs::create_dir(dir.to_path_buf()).unwrap();
-    generate_to::<T, _, _>(&mut app, name, &dir);
+    generate_to::<T, _, _>(&mut app, name, &dir).unwrap();
 }
