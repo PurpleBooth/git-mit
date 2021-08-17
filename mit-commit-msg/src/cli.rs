@@ -20,6 +20,7 @@ pub fn app() -> App<'static> {
                 .long("copy-message-to-clipboard")
                 .about("On lint failure copy the message to clipboard")
                 .env("GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD")
+                .takes_value(true)
                 .default_value("true"),
         )
 }

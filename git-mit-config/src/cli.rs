@@ -4,7 +4,7 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
     let lint_argument = Arg::new("lint")
         .about("The lint to enable")
         .required(true)
-        .multiple(true)
+        .multiple_values(true)
         .min_values(1)
         .possible_values(lint_names);
     App::new(env!("CARGO_PKG_NAME"))
@@ -80,7 +80,8 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                                 .long("config")
                                 .about("Path to a file where mit initials, emails and names can be found")
                                 .env("GIT_MIT_AUTHORS_CONFIG")
-                                .default_value("$HOME/.config/git-mit/mit.yml"),
+                                .default_value("$HOME/.config/git-mit/mit.yml")
+                                .takes_value(true),
                         )
                         .arg(
                             Arg::new("command")
@@ -91,7 +92,8 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                  captured and used instead of the file, if both this and the file is present, \
                  this takes precedence",
                                 )
-                                .env("GIT_MIT_AUTHORS_EXEC"),
+                                .env("GIT_MIT_AUTHORS_EXEC")
+                                .takes_value(true),
                         )
                         .about("Generate a file version of available authors"),
                 )
