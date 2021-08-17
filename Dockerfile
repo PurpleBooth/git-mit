@@ -12,7 +12,7 @@ COPY . .
 
 RUN make build generate-manpages
 
-FROM debian:10.10
+FROM debian:11.0
 ENV DEBIAN_FRONTEND noninteractive
 
 ### Nice things if for actually using the tool
