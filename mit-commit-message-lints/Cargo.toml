@@ -19,7 +19,7 @@ thiserror = "1.0.26"
 git2 = "0.13.20"
 openssl = { version = '0.10', optional = true }
 regex = "1.5.4"
-serde_yaml = "0.8.18"
+serde_yaml = "0.8.19"
 serde_derive = "1.0.125"
 indoc = "1.0.3"
 toml = "0.5.8"
