@@ -32,7 +32,7 @@ clap_derive = "3.0.0-beta.4"
 clap_generate = "3.0.0-beta.2"
 git2 = "0.13.20"
 openssl = { version = '0.10', optional = true }
-thiserror = "1.0.26"
+thiserror = "1.0.28"
 mit-commit = "1.29.8"
 console = "0.14.1"
 copypasta = "0.7.1"
