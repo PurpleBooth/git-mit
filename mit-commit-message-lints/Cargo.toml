@@ -15,7 +15,7 @@ description = "Check the correctness of a specific commit message. Designed to b
 [dependencies]
 rayon = "1.5.1"
 glob = "0.3.0"
-thiserror = "1.0.28"
+thiserror = "1.0.29"
 git2 = "0.13.20"
 openssl = { version = '0.10', optional = true }
 regex = "1.5.4"
