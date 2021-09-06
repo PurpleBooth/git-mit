@@ -34,9 +34,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let is_local = Some("local") == matches.value_of("scope");
     let current_dir = current_dir()?;
     let vcs = get_vcs(is_local, &current_dir)?;
-
-    let vcs_argument = &vcs;
-    let vcs_authors = Authors::try_from(vcs_argument)?;
+    let vcs_authors = Authors::try_from(&vcs)?;
 
     let toml: String = all_authors?.merge(&vcs_authors).try_into()?;
 
@@ -67,7 +65,7 @@ fn get_author_config_from_file(matches: &ArgMatches) -> Result<String, GitMitCon
             "$HOME/.config/git-mit/mit.toml" => config_path(env!("CARGO_PKG_NAME")),
             _ => Ok(path.into()),
         })
-        .and_then(|path| Ok(fs::read_to_string(&path)?))
+        .map(|path| fs::read_to_string(&path).unwrap_or_default())
 }
 
 fn get_author_file_path(matches: &ArgMatches) -> Option<&str> {

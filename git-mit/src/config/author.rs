@@ -25,9 +25,7 @@ fn from_file(args: &Args) -> Result<String, GitMitError> {
             "$HOME/.config/git-mit/mit.toml" => author_file_path(env!("CARGO_PKG_NAME")),
             _ => Ok(path.into()),
         })
-        .and_then(|path| {
-            fs::read_to_string(&path).map_err(|error| GitMitError::new_io(path, &error))
-        })
+        .map(|path| fs::read_to_string(&path).unwrap_or_default())
 }
 
 #[cfg(not(target_os = "windows"))]

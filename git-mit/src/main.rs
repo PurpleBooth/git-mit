@@ -26,9 +26,7 @@ fn main() -> Result<(), GitMitError> {
         exit_unparsable_author(error);
     }
 
-    let vcs_authors = &Authors::try_from(&git_config)?;
-    let authors = file_authors?.merge(vcs_authors);
-
+    let authors = file_authors?.merge(&Authors::try_from(&git_config)?);
     let initials = args.initials().ok_or(NoAuthorInitialsProvided)?;
     let selected_authors = authors.get(&initials);
     let initials_without_authors = find_initials_missing(initials, &selected_authors);

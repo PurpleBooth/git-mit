@@ -5,7 +5,7 @@ use crate::mit::lib::author::Author;
 use std::convert::TryFrom;
 use thiserror::Error;
 
-#[derive(Debug, Eq, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq, Clone, Default)]
 pub struct Authors {
     pub authors: BTreeMap<String, Author>,
 }
@@ -231,6 +231,15 @@ mod tests_authors {
             Author::new("Billie Thompson", "billie@example.com", None),
         );
         let expected = Authors::new(input);
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn an_empty_file_is_a_default_authors() {
+        let actual = Authors::try_from("").expect("Failed to parse yaml");
+
+        let expected = Authors::default();
 
         assert_eq!(expected, actual);
     }
