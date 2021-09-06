@@ -21,7 +21,7 @@ pub fn app() -> App<'static> {
                 You can save that author permanently by running
 
                     git mit-config mit set eg \"Egg Sample\" egg.sample@example.com
-                    git mit-config mit generate > $HOME/.config/git-mit/mit.yml
+                    git mit-config mit generate > $HOME/.config/git-mit/mit.toml
 
                 You can disable a lint by running
 
@@ -29,7 +29,7 @@ pub fn app() -> App<'static> {
 
                 You can install the example authors file to the default location with
 
-                    git mit-config mit example > $HOME/.config/git-mit/mit.yml
+                    git mit-config mit example > $HOME/.config/git-mit/mit.toml
 
                 You can set the current author, and Co-authors by running
 
@@ -54,7 +54,7 @@ pub fn app() -> App<'static> {
                 .about("Path to a file where mit initials, emails and names can be found")
                 .env("GIT_MIT_AUTHORS_CONFIG")
                 .takes_value(true)
-                .default_value("$HOME/.config/git-mit/mit.yml"),
+                .default_value("$HOME/.config/git-mit/mit.toml"),
         )
         .arg(
             Arg::new("command")

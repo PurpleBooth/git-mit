@@ -80,7 +80,7 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                                 .long("config")
                                 .about("Path to a file where mit initials, emails and names can be found")
                                 .env("GIT_MIT_AUTHORS_CONFIG")
-                                .default_value("$HOME/.config/git-mit/mit.yml")
+                                .default_value("$HOME/.config/git-mit/mit.toml")
                                 .takes_value(true),
                         )
                         .arg(
