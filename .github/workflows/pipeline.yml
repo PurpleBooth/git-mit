@@ -563,7 +563,7 @@ jobs:
           path: main-repo
           ref: v${{ needs.release.outputs.current_version }}
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v3.2.0
+        uses: crazy-max/ghaction-import-gpg@v4
         with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
@@ -579,7 +579,7 @@ jobs:
           ref: main
         name: Checkout the custom tap
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v3.2.0
+        uses: crazy-max/ghaction-import-gpg@v4
         with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
