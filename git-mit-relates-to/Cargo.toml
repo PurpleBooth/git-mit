@@ -22,7 +22,7 @@ clap_generate = "3.0.0-beta.2"
   version = "4.0.25"
 
 [dependencies]
-thiserror = "1.0.28"
+thiserror = "1.0.29"
 clap = "3.0.0-beta.4"
 clap_generate = "3.0.0-beta.2"
 clap_derive = "3.0.0-beta.4"
