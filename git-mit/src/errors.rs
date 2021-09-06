@@ -3,6 +3,7 @@ use std::string;
 use thiserror::Error;
 
 use mit_commit_message_lints::{external, mit};
+use std::convert::Infallible;
 
 #[derive(Error, Debug)]
 pub enum GitMitError {
@@ -33,6 +34,8 @@ pub enum GitMitError {
     AppDataMissing(#[from] std::env::VarError),
     #[error("failed to parse shell given {0}")]
     BadShellCommand(#[from] shell_words::ParseError),
+    #[error("{0}")]
+    Infallible(#[from] Infallible),
 }
 
 impl GitMitError {

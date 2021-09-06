@@ -1,3 +1,4 @@
+use std::convert::Infallible;
 use thiserror::Error;
 
 pub trait Vcs {
@@ -43,4 +44,6 @@ pub enum Error {
     Io(#[from] std::io::Error),
     #[error("failed to parse glob {0}")]
     Glob(#[from] glob::PatternError),
+    #[error("{0}")]
+    Infallible(#[from] Infallible),
 }

@@ -1,5 +1,7 @@
 use crate::external::{Error, Vcs};
+use crate::mit::{Author, Authors};
 use glob::Pattern;
+use std::convert::TryFrom;
 use std::{collections::BTreeMap, string::String};
 
 pub struct InMemory<'a> {
@@ -60,5 +62,59 @@ impl Vcs for InMemory<'_> {
     fn remove(&mut self, name: &str) -> Result<(), Error> {
         self.store.remove(name);
         Ok(())
+    }
+}
+
+impl TryFrom<&'_ InMemory<'_>> for Authors {
+    type Error = Error;
+
+    fn try_from(vcs: &'_ InMemory) -> Result<Self, Self::Error> {
+        let raw_entries: BTreeMap<String, BTreeMap<String, String>> = vcs
+            .entries(Some("mit.author.config.*"))?
+            .iter()
+            .map(|key| (key, key.trim_start_matches("mit.author.config.")))
+            .map(|(key, parts)| (key, parts.split_terminator('.').collect::<Vec<_>>()))
+            .try_fold::<_, _, Result<_, Self::Error>>(
+                BTreeMap::new(),
+                |mut acc, (key, fragments)| {
+                    let mut fragment_iterator = fragments.iter();
+                    let initial = String::from(*fragment_iterator.next().unwrap());
+                    let part = String::from(*fragment_iterator.next().unwrap());
+
+                    let mut existing: BTreeMap<String, String> =
+                        acc.get(&initial).map(BTreeMap::clone).unwrap_or_default();
+                    existing.insert(part, String::from(vcs.get_str(key)?.unwrap()));
+
+                    acc.insert(initial, existing);
+                    Ok(acc)
+                },
+            )?;
+
+        Ok(Authors::new(
+            raw_entries
+                .iter()
+                .filter_map(|(key, cfg)| {
+                    let name = cfg.get("name").map(String::clone);
+                    let email = cfg.get("email").map(String::clone);
+                    let signingkey: Option<String> = cfg.get("signingkey").map(String::clone);
+
+                    match (name, email, signingkey) {
+                        (Some(name), Some(email), None) => {
+                            Some((key, Author::new(&name, &email, None)))
+                        }
+                        (Some(name), Some(email), Some(signingkey)) => {
+                            Some((key, Author::new(&name, &email, Some(&signingkey))))
+                        }
+                        _ => None,
+                    }
+                })
+                .fold(
+                    BTreeMap::new(),
+                    |mut acc: BTreeMap<String, Author>, (key, value): (&String, Author)| {
+                        acc.insert(key.clone(), value);
+                        acc
+                    },
+                ),
+        ))
     }
 }

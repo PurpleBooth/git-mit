@@ -4,7 +4,7 @@ use std::process::{Command, Stdio};
 use std::{env, fs};
 
 use clap::ArgMatches;
-use mit_commit_message_lints::mit::{get_config_authors, Authors};
+use mit_commit_message_lints::mit::Authors;
 
 use crate::errors::GitMitConfigError;
 use crate::get_vcs;
@@ -35,7 +35,8 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let current_dir = current_dir()?;
     let vcs = get_vcs(is_local, &current_dir)?;
 
-    let vcs_authors = get_config_authors(&vcs)?;
+    let vcs_argument = &vcs;
+    let vcs_authors = Authors::try_from(vcs_argument)?;
 
     let toml: String = all_authors?.merge(&vcs_authors).try_into()?;
 

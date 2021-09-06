@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 
 use crate::mit::lib::author::Author;
+
 use std::convert::TryFrom;
 use thiserror::Error;
 
@@ -89,7 +90,6 @@ impl TryFrom<Authors> for String {
 mod tests_authors {
     #![allow(clippy::wildcard_imports)]
 
-    use super::*;
     use crate::mit::lib::author::Author;
     use indoc::indoc;
     use std::convert::TryInto;
@@ -319,5 +319,84 @@ mod tests_authors {
         .to_string();
 
         assert_eq!(expected, actual);
+    }
+
+    use std::collections::BTreeMap;
+
+    use crate::external::InMemory;
+    use crate::mit::Authors;
+    use std::convert::TryFrom;
+
+    #[test]
+    fn it_can_give_me_an_author() {
+        let mut strings: BTreeMap<String, String> = BTreeMap::new();
+        strings.insert("mit.author.config.zy.email".into(), "zy@example.com".into());
+        strings.insert("mit.author.config.zy.name".into(), "Z Y".into());
+        let vcs = InMemory::new(&mut strings);
+
+        let actual = Authors::try_from(&vcs).expect("Failed to read VCS config");
+        let expected_author = Author::new("Z Y", "zy@example.com", None);
+        let mut store = BTreeMap::new();
+        store.insert("zy".into(), expected_author);
+        let expected = Authors::new(store);
+        assert_eq!(
+            expected, actual,
+            "Expected the mit config to be {:?}, instead got {:?}",
+            expected, actual
+        );
+    }
+
+    #[test]
+    fn it_can_give_me_multiple_authors() {
+        let mut strings: BTreeMap<String, String> = BTreeMap::new();
+        strings.insert("mit.author.config.zy.email".into(), "zy@example.com".into());
+        strings.insert("mit.author.config.zy.name".into(), "Z Y".into());
+        strings.insert(
+            "mit.author.config.bt.email".into(),
+            "billie@example.com".into(),
+        );
+        strings.insert("mit.author.config.bt.name".into(), "Billie Thompson".into());
+        strings.insert("mit.author.config.bt.signingkey".into(), "ABC".into());
+        let vcs = InMemory::new(&mut strings);
+
+        let actual = Authors::try_from(&vcs).expect("Failed to read VCS config");
+        let mut store = BTreeMap::new();
+        store.insert("zy".into(), Author::new("Z Y", "zy@example.com", None));
+        store.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", Some("ABC")),
+        );
+        let expected = Authors::new(store);
+        assert_eq!(
+            expected, actual,
+            "Expected the mit config to be {:?}, instead got {:?}",
+            expected, actual
+        );
+    }
+
+    #[test]
+    fn broken_authors_are_skipped() {
+        let mut strings: BTreeMap<String, String> = BTreeMap::new();
+        strings.insert("mit.author.config.zy.name".into(), "Z Y".into());
+        strings.insert(
+            "mit.author.config.bt.email".into(),
+            "billie@example.com".into(),
+        );
+        strings.insert("mit.author.config.bt.name".into(), "Billie Thompson".into());
+        strings.insert("mit.author.config.bt.signingkey".into(), "ABC".into());
+        let vcs = InMemory::new(&mut strings);
+
+        let actual = Authors::try_from(&vcs).expect("Failed to read VCS config");
+        let mut store = BTreeMap::new();
+        store.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", Some("ABC")),
+        );
+        let expected = Authors::new(store);
+        assert_eq!(
+            expected, actual,
+            "Expected the mit config to be {:?}, instead got {:?}",
+            expected, actual
+        );
     }
 }

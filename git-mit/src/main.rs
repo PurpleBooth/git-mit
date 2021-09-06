@@ -2,34 +2,35 @@ mod cli;
 mod config;
 mod errors;
 
-use std::{convert::TryFrom, time::Duration};
+use std::time::Duration;
 
 use mit_commit_message_lints::console::exit_initial_not_matched_to_author;
 use mit_commit_message_lints::console::exit_unparsable_author;
-use mit_commit_message_lints::mit::get_config_authors;
 use mit_commit_message_lints::{
     external::Git2,
-    mit::{set_commit_authors, Author},
+    mit::{set_commit_authors, Author, Authors},
 };
 
 use crate::cli::args::Args;
 use crate::errors::GitMitError;
 use crate::errors::GitMitError::NoAuthorInitialsProvided;
+use std::convert::TryFrom;
 
 fn main() -> Result<(), GitMitError> {
     let args: cli::args::Args = cli::app::app().get_matches().into();
-    let initials = args.initials().ok_or(NoAuthorInitialsProvided)?;
 
     let mut git_config = Git2::try_from(Args::cwd()?)?;
-    let authors_file = crate::config::author::load(&args);
+    let file_authors = crate::config::author::load(&args);
 
-    if let Err(error) = &authors_file {
+    if let Err(error) = &file_authors {
         exit_unparsable_author(error);
     }
 
-    let all_authors = authors_file?.merge(&get_config_authors(&git_config)?);
+    let vcs_authors = &Authors::try_from(&git_config)?;
+    let authors = file_authors?.merge(vcs_authors);
 
-    let selected_authors = all_authors.get(&initials);
+    let initials = args.initials().ok_or(NoAuthorInitialsProvided)?;
+    let selected_authors = authors.get(&initials);
     let initials_without_authors = find_initials_missing(initials, &selected_authors);
 
     if !initials_without_authors.is_empty() {
