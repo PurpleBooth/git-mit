@@ -257,7 +257,7 @@ git mit-config mit example
 
 Here's the technical details, that might help you track down the source of the problem
 
-failed to parse authors as toml invalid type: string "Hello, I am a broken file", expected a map at line 1 column 1 or as yaml expected an equals, found a comma at line 1 column 6
+failed to parse mit author config failed to parse authors as toml invalid type: string "Hello, I am a broken file", expected a map at line 1 column 1 or as yaml expected an equals, found a comma at line 1 column 6
 ```
 
 Same applies for `git mit-config mit generate`
