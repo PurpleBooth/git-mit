@@ -12,6 +12,18 @@ pub struct Authors {
 
 impl Authors {
     #[must_use]
+    pub fn missing_initials<'a>(&self, authors_initials: Vec<&'a str>) -> Vec<&'a str> {
+        self.get(&authors_initials)
+            .iter()
+            .zip(authors_initials)
+            .filter_map(|(result, initial)| match result {
+                None => Some(initial),
+                Some(_) => None,
+            })
+            .collect()
+    }
+
+    #[must_use]
     pub fn new(authors: BTreeMap<String, Author>) -> Authors {
         Authors { authors }
     }
@@ -206,6 +218,18 @@ mod tests_authors {
         let expected: Authors = Authors::new(expected_map);
 
         assert_eq!(expected, input1.merge(&input2));
+    }
+
+    #[test]
+    fn it_can_tell_me_if_initials_are_not_in() {
+        let mut store = BTreeMap::new();
+        store.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", None),
+        );
+        let actual = Authors::new(store);
+
+        assert_eq!(actual.missing_initials(vec!["bt", "an"]), vec!["an"]);
     }
 
     #[test]

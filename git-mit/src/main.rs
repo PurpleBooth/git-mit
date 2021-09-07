@@ -8,7 +8,7 @@ use mit_commit_message_lints::console::exit_initial_not_matched_to_author;
 use mit_commit_message_lints::console::exit_unparsable_author;
 use mit_commit_message_lints::{
     external::Git2,
-    mit::{set_commit_authors, Author, Authors},
+    mit::{set_commit_authors, Authors},
 };
 
 use crate::cli::args::Args;
@@ -29,7 +29,7 @@ fn main() -> Result<(), GitMitError> {
     let authors = file_authors?.merge(&Authors::try_from(&git_config)?);
     let initials = args.initials().ok_or(NoAuthorInitialsProvided)?;
     let selected_authors = authors.get(&initials);
-    let initials_without_authors = find_initials_missing(initials, &selected_authors);
+    let initials_without_authors = authors.missing_initials(initials);
 
     if !initials_without_authors.is_empty() {
         exit_initial_not_matched_to_author(&initials_without_authors);
@@ -43,18 +43,4 @@ fn main() -> Result<(), GitMitError> {
     )?;
 
     Ok(())
-}
-
-fn find_initials_missing<'a>(
-    authors_initials: Vec<&'a str>,
-    selected_authors: &[Option<&Author>],
-) -> Vec<&'a str> {
-    selected_authors
-        .iter()
-        .zip(authors_initials)
-        .filter_map(|(result, initial)| match result {
-            None => Some(initial),
-            Some(_) => None,
-        })
-        .collect()
 }
