@@ -1,9 +1,7 @@
-use std::string;
-
-use thiserror::Error;
+use std::{convert::Infallible, string};
 
 use mit_commit_message_lints::{external, mit};
-use std::convert::Infallible;
+use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum GitMitError {

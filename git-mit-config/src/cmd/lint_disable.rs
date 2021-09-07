@@ -1,14 +1,12 @@
-use std::convert::TryInto;
-use std::env::current_dir;
+use std::{convert::TryInto, env::current_dir};
 
 use clap::ArgMatches;
+use mit_commit_message_lints::{external, lints::Lints};
 
-use mit_commit_message_lints::external;
-use mit_commit_message_lints::lints::Lints;
-
-use crate::errors::GitMitConfigError;
-use crate::errors::GitMitConfigError::LintNameNotGiven;
-use crate::get_vcs;
+use crate::{
+    errors::{GitMitConfigError, GitMitConfigError::LintNameNotGiven},
+    get_vcs,
+};
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
     matches

@@ -1,6 +1,7 @@
-use crate::lints::Lints;
 use comfy_table::Table;
 use console::style;
+
+use crate::lints::Lints;
 
 pub fn success(success: &str, tip: &str) {
     println!(

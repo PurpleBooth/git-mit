@@ -1,12 +1,9 @@
-use clap::ArgMatches;
-
-use mit_commit_message_lints::lints::Lints;
-
-use crate::errors::GitMitConfigError;
-use crate::get_vcs;
-
-use mit_commit_message_lints::external;
 use std::env::current_dir;
+
+use clap::ArgMatches;
+use mit_commit_message_lints::{external, lints::Lints};
+
+use crate::{errors::GitMitConfigError, get_vcs};
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
     matches

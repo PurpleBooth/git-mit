@@ -2,8 +2,7 @@ use indoc::indoc;
 use mit_commit::CommitMessage;
 use regex::Regex;
 
-use crate::console::exit::Code;
-use crate::lints::lib::Problem;
+use crate::{console::exit::Code, lints::lib::Problem};
 
 pub(crate) const CONFIG: &str = "github-id-missing";
 

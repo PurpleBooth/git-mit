@@ -1,15 +1,16 @@
-use std::env::current_dir;
-use std::path::PathBuf;
-use std::process::{Command, Stdio};
-use std::{env, fs};
+use std::{
+    convert::{TryFrom, TryInto},
+    env,
+    env::current_dir,
+    fs,
+    path::PathBuf,
+    process::{Command, Stdio},
+};
 
 use clap::ArgMatches;
 use mit_commit_message_lints::mit::Authors;
 
-use crate::errors::GitMitConfigError;
-use crate::get_vcs;
-
-use std::convert::{TryFrom, TryInto};
+use crate::{errors::GitMitConfigError, get_vcs};
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
     matches

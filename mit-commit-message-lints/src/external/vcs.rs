@@ -1,4 +1,5 @@
 use std::convert::Infallible;
+
 use thiserror::Error;
 
 pub trait Vcs {

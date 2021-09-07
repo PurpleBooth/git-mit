@@ -3,15 +3,13 @@ use std::{
     error::Error,
     fmt,
     fmt::{Display, Formatter},
-    path::PathBuf,
+    path::{Path, PathBuf},
     process::{Command, Output},
     str,
     time::Duration,
 };
 
 use git2::{Config, Repository};
-
-use std::path::Path;
 use tempfile::TempDir;
 
 #[must_use]

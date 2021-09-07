@@ -1,6 +1,5 @@
 pub use lint::lint;
-pub use set_status::set_status;
-pub use set_status::Error as SetStatusError;
+pub use set_status::{set_status, Error as SetStatusError};
 
 mod lint;
 mod set_status;

@@ -1,5 +1,4 @@
-use tinytemplate::error::Error;
-use tinytemplate::format_unescaped;
+use tinytemplate::{error::Error, format_unescaped};
 
 /// Format a string as uppercase
 ///

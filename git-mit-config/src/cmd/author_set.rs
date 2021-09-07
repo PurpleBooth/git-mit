@@ -1,11 +1,9 @@
-use clap::ArgMatches;
-
-use mit_commit_message_lints::mit::Author;
-
-use crate::errors::GitMitConfigError;
-use crate::get_vcs;
-use mit_commit_message_lints::mit::set_config_authors;
 use std::env::current_dir;
+
+use clap::ArgMatches;
+use mit_commit_message_lints::mit::{set_config_authors, Author};
+
+use crate::{errors::GitMitConfigError, get_vcs};
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
     matches

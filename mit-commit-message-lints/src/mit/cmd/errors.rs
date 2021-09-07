@@ -1,6 +1,8 @@
-use crate::external;
 use std::{num, time};
+
 use thiserror::Error;
+
+use crate::external;
 
 #[derive(Error, Debug)]
 pub enum Error {

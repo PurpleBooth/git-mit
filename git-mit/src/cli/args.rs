@@ -1,8 +1,8 @@
-use crate::errors::GitMitError;
-use crate::errors::GitMitError::NoAuthorInitialsProvided;
+use std::{env, path::PathBuf};
+
 use clap::ArgMatches;
-use std::env;
-use std::path::PathBuf;
+
+use crate::errors::{GitMitError, GitMitError::NoAuthorInitialsProvided};
 
 pub struct Args {
     matches: ArgMatches,

@@ -1,1 +1,6 @@
 edition = "2018"
+
+imports_granularity = "Crate"
+imports_layout = "HorizontalVertical"
+group_imports = "StdExternalCrate"
+reorder_impl_items = true

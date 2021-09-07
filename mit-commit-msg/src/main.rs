@@ -1,20 +1,16 @@
 extern crate mit_commit_message_lints;
 
-use std::env;
-use std::{convert::TryFrom, path::PathBuf};
+use std::{convert::TryFrom, env, path::PathBuf, str::FromStr};
 
+use copypasta::{ClipboardContext, ClipboardProvider};
 use mit_commit::CommitMessage;
-
 use mit_commit_message_lints::{
+    console::exit_lint_problem,
     external,
     lints::{lint, Lints},
 };
 
-use crate::cli::app;
-use crate::errors::MitCommitMsgError;
-use copypasta::{ClipboardContext, ClipboardProvider};
-use mit_commit_message_lints::console::exit_lint_problem;
-use std::str::FromStr;
+use crate::{cli::app, errors::MitCommitMsgError};
 
 fn main() -> Result<(), MitCommitMsgError> {
     let matches = app().get_matches();

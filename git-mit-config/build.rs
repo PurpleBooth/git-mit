@@ -1,10 +1,7 @@
-use std::env;
-use std::path::PathBuf;
+use std::{env, path::PathBuf};
 
 use clap_generate::generators::{Bash, Elvish, Fish};
-
-use mit_build_tools::completion;
-use mit_build_tools::manpage;
+use mit_build_tools::{completion, manpage};
 use mit_commit_message_lints::lints::Lint;
 
 #[path = "src/cli.rs"]

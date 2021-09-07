@@ -1,9 +1,11 @@
-use std::collections::{BTreeMap, HashSet};
+use std::{
+    collections::{BTreeMap, HashSet},
+    convert::TryFrom,
+};
+
+use thiserror::Error;
 
 use crate::mit::lib::author::Author;
-
-use std::convert::TryFrom;
-use thiserror::Error;
 
 #[derive(Debug, Eq, PartialEq, Clone, Default)]
 pub struct Authors {
@@ -105,9 +107,11 @@ impl TryFrom<Authors> for String {
 mod tests_authors {
     #![allow(clippy::wildcard_imports)]
 
-    use crate::mit::lib::author::Author;
-    use indoc::indoc;
     use std::convert::TryInto;
+
+    use indoc::indoc;
+
+    use crate::mit::lib::author::Author;
 
     #[test]
     fn it_can_get_an_author_in_it() {
@@ -345,11 +349,9 @@ mod tests_authors {
         assert_eq!(expected, actual);
     }
 
-    use std::collections::BTreeMap;
+    use std::{collections::BTreeMap, convert::TryFrom};
 
-    use crate::external::InMemory;
-    use crate::mit::Authors;
-    use std::convert::TryFrom;
+    use crate::{external::InMemory, mit::Authors};
 
     #[test]
     fn it_can_give_me_an_author() {

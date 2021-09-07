@@ -1,10 +1,9 @@
-use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
-
-use mit_commit::CommitMessage;
-
-use indoc::indoc;
-use mit_commit_message_lints::lints::{lint, Lint, Lints};
 use std::collections::BTreeSet;
+
+use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
+use indoc::indoc;
+use mit_commit::CommitMessage;
+use mit_commit_message_lints::lints::{lint, Lint, Lints};
 
 const COMMIT_WITH_ALL_FEATURES: &str = indoc!(
     "

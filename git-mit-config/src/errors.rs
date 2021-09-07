@@ -1,9 +1,7 @@
 use std::io;
 
+use mit_commit_message_lints::{external, lints, mit, mit::VcsError};
 use thiserror::Error;
-
-use mit_commit_message_lints::mit::VcsError;
-use mit_commit_message_lints::{external, lints, mit};
 
 #[derive(Error, Debug)]
 pub enum GitMitConfigError {

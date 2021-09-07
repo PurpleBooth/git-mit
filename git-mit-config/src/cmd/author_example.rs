@@ -1,10 +1,9 @@
 use std::convert::TryInto;
 
 use clap::ArgMatches;
+use mit_commit_message_lints::{console::style::to_be_piped, mit::Authors};
 
 use crate::errors::GitMitConfigError;
-use mit_commit_message_lints::console::style::to_be_piped;
-use mit_commit_message_lints::mit::Authors;
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
     matches

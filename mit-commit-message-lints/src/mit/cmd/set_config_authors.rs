@@ -1,5 +1,7 @@
-use crate::external::Vcs;
-use crate::mit::{Author, VcsError};
+use crate::{
+    external::Vcs,
+    mit::{Author, VcsError},
+};
 
 /// # Errors
 ///
@@ -30,10 +32,12 @@ pub fn set_config_authors(
 
 #[cfg(test)]
 mod tests {
-    use crate::external::InMemory;
-    use crate::mit::cmd::set_config_authors::set_config_authors;
-    use crate::mit::Author;
     use std::collections::BTreeMap;
+
+    use crate::{
+        external::InMemory,
+        mit::{cmd::set_config_authors::set_config_authors, Author},
+    };
 
     #[test]
     fn can_set_an_author() {

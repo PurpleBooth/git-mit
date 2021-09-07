@@ -17,10 +17,12 @@ impl Problem {
     pub fn code(&self) -> &Code {
         &self.code
     }
+
     #[must_use]
     pub fn error(&self) -> &str {
         &self.error
     }
+
     #[must_use]
     pub fn tip(&self) -> &str {
         &self.tip
@@ -30,8 +32,7 @@ impl Problem {
 #[cfg(test)]
 mod tests {
 
-    use crate::console::exit::Code;
-    use crate::lints::Problem;
+    use crate::{console::exit::Code, lints::Problem};
 
     #[test]
     fn test_has_error() {

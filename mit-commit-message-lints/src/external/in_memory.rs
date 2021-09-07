@@ -1,8 +1,11 @@
-use crate::external::{Error, Vcs};
-use crate::mit::{Author, Authors};
+use std::{collections::BTreeMap, convert::TryFrom, string::String};
+
 use glob::Pattern;
-use std::convert::TryFrom;
-use std::{collections::BTreeMap, string::String};
+
+use crate::{
+    external::{Error, Vcs},
+    mit::{Author, Authors},
+};
 
 pub struct InMemory<'a> {
     store: &'a mut BTreeMap<String, String>,

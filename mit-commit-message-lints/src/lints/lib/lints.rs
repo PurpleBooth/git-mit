@@ -1,14 +1,17 @@
-use std::borrow::Borrow;
-use std::collections::{BTreeMap, BTreeSet};
-use std::convert::{TryFrom, TryInto};
-
-use std::vec::IntoIter;
+use std::{
+    borrow::Borrow,
+    collections::{BTreeMap, BTreeSet},
+    convert::{TryFrom, TryInto},
+    vec::IntoIter,
+};
 
 use thiserror::Error;
 
-use crate::external;
-use crate::external::Vcs;
-use crate::lints::lib::{lint, Lint};
+use crate::{
+    external,
+    external::Vcs,
+    lints::lib::{lint, Lint},
+};
 
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Lints {
@@ -112,8 +115,8 @@ impl Lints {
 }
 
 impl std::iter::IntoIterator for Lints {
-    type Item = Lint;
     type IntoIter = IntoIter<Lint>;
+    type Item = Lint;
 
     fn into_iter(self) -> Self::IntoIter {
         self.lints.into_iter().collect::<Vec<_>>().into_iter()
@@ -189,19 +192,29 @@ fn get_config_or_default(
 
 #[cfg(test)]
 mod tests {
-    use std::collections::{BTreeMap, BTreeSet};
-    use std::convert::{TryFrom, TryInto};
+    use std::{
+        collections::{BTreeMap, BTreeSet},
+        convert::{TryFrom, TryInto},
+    };
 
     use indoc::indoc;
 
-    use crate::lints::lib::lint::Lint::{
-        BodyWiderThan72Characters, GitHubIdMissing, SubjectLongerThan72Characters,
-        SubjectNotSeparateFromBody,
+    use crate::{
+        external::InMemory,
+        lints::{
+            lib::{
+                lint::Lint::{
+                    BodyWiderThan72Characters,
+                    GitHubIdMissing,
+                    SubjectLongerThan72Characters,
+                    SubjectNotSeparateFromBody,
+                },
+                lints::{Error, Lints},
+            },
+            Lint,
+            Lint::{DuplicatedTrailers, JiraIssueKeyMissing, PivotalTrackerIdMissing},
+        },
     };
-    use crate::lints::lib::lints::{Error, Lints};
-    use crate::lints::Lint;
-    use crate::lints::Lint::{JiraIssueKeyMissing, PivotalTrackerIdMissing};
-    use crate::{external::InMemory, lints::Lint::DuplicatedTrailers};
 
     #[test]
     fn it_returns_an_error_if_one_of_the_names_is_wrong() {

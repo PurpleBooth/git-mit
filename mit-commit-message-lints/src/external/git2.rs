@@ -1,11 +1,11 @@
-use std::path::PathBuf;
+use std::{collections::BTreeMap, convert::TryFrom, path::PathBuf};
 
 use git2::{Config, Repository};
 
-use crate::external::{Error, Vcs};
-use crate::mit::{Author, Authors};
-use std::collections::BTreeMap;
-use std::convert::TryFrom;
+use crate::{
+    external::{Error, Vcs},
+    mit::{Author, Authors},
+};
 
 pub struct Git2 {
     config_snapshot: git2::Config,

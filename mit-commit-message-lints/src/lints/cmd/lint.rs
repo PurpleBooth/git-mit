@@ -1,7 +1,7 @@
 use mit_commit::CommitMessage;
+use rayon::prelude::*;
 
 use crate::lints::lib::{Lints, Problem};
-use rayon::prelude::*;
 
 #[must_use]
 pub fn lint(commit_message: &CommitMessage, lints: Lints) -> Vec<Problem> {

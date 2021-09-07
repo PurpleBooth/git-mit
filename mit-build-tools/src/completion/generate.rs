@@ -1,5 +1,4 @@
-use std::fs;
-use std::path::Path;
+use std::{fs, path::Path};
 
 use clap::App;
 use clap_generate::{generate_to, Generator};

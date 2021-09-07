@@ -1,8 +1,9 @@
-pub use self::config::read_toml;
-pub use self::git2::Git2;
-pub use self::in_memory::InMemory;
-pub use self::vcs::Error;
-pub use self::vcs::Vcs;
+pub use self::{
+    config::read_toml,
+    git2::Git2,
+    in_memory::InMemory,
+    vcs::{Error, Vcs},
+};
 
 mod config;
 mod git2;

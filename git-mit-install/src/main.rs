@@ -1,10 +1,12 @@
-use std::path::{Path, PathBuf};
-use std::{env, fs};
-
-use git2::{Config, Error};
-use indoc::indoc;
+use std::{
+    env,
+    fs,
+    path::{Path, PathBuf},
+};
 
 use errors::GitMitInstallError;
+use git2::{Config, Error};
+use indoc::indoc;
 
 pub(crate) use crate::cli::app;
 use crate::cli::args::Args;

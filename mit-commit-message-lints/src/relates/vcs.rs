@@ -1,19 +1,17 @@
-use std::{convert::TryInto, time::SystemTimeError};
 use std::{
+    convert::TryInto,
     num,
     ops::Add,
     option::Option,
     result::Result,
     time,
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{Duration, SystemTime, SystemTimeError, UNIX_EPOCH},
 };
 
 use thiserror::Error;
 
-use crate::external;
-use crate::external::Vcs;
-
 use super::entities::RelateTo;
+use crate::{external, external::Vcs};
 
 const CONFIG_KEY_EXPIRES: &str = "mit.relate.expires";
 
@@ -51,9 +49,10 @@ mod tests_able_to_load_config_from_git {
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
 
-    use crate::external::InMemory;
-    use crate::relates::entities::RelateTo;
-    use crate::relates::vcs::get_relate_to_configuration;
+    use crate::{
+        external::InMemory,
+        relates::{entities::RelateTo, vcs::get_relate_to_configuration},
+    };
 
     #[test]
     fn there_is_no_relate_config_if_it_has_expired() {
@@ -148,9 +147,10 @@ mod tests_can_set_relates_to_details {
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
 
-    use crate::external::InMemory;
-    use crate::relates::entities::RelateTo;
-    use crate::relates::vcs::set_relates_to;
+    use crate::{
+        external::InMemory,
+        relates::{entities::RelateTo, vcs::set_relates_to},
+    };
 
     #[test]
     fn the_first_initial_becomes_the_relates() {

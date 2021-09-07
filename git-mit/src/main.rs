@@ -2,19 +2,15 @@ mod cli;
 mod config;
 mod errors;
 
-use std::time::Duration;
+use std::{convert::TryFrom, time::Duration};
 
-use mit_commit_message_lints::console::exit_initial_not_matched_to_author;
-use mit_commit_message_lints::console::exit_unparsable_author;
 use mit_commit_message_lints::{
+    console::{exit_initial_not_matched_to_author, exit_unparsable_author},
     external::Git2,
     mit::{set_commit_authors, Authors},
 };
 
-use crate::cli::args::Args;
-use crate::errors::GitMitError;
-
-use std::convert::TryFrom;
+use crate::{cli::args::Args, errors::GitMitError};
 
 fn main() -> Result<(), GitMitError> {
     let args: cli::args::Args = cli::app::app().get_matches().into();

@@ -36,9 +36,8 @@ impl From<ArgMatches> for Args {
 
 #[cfg(test)]
 mod tests {
-    use crate::cli::args::Scope;
-
     use super::Args;
+    use crate::cli::args::Scope;
 
     #[test]
     fn can_tell_me_if_its_global() {

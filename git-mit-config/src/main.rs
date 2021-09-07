@@ -1,13 +1,12 @@
-use std::env;
-use std::path::{Path, PathBuf};
+use std::{
+    env,
+    path::{Path, PathBuf},
+};
 
 use git2::{Config, Repository};
+use mit_commit_message_lints::{external::Git2, lints::Lint};
 
-use mit_commit_message_lints::external::Git2;
-use mit_commit_message_lints::lints::Lint;
-
-use crate::cli::app;
-use crate::errors::GitMitConfigError;
+use crate::{cli::app, errors::GitMitConfigError};
 
 mod cli;
 mod cmd;

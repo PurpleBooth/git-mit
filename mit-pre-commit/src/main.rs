@@ -1,11 +1,8 @@
-use std::convert::TryFrom;
-use std::env;
+use std::{convert::TryFrom, env};
 
-use mit_commit_message_lints::external::Git2;
+use mit_commit_message_lints::{external::Git2, mit::get_commit_coauthor_configuration};
 
-use crate::cli::app;
-use crate::errors::MitPreCommitError;
-use mit_commit_message_lints::mit::get_commit_coauthor_configuration;
+use crate::{cli::app, errors::MitPreCommitError};
 
 fn main() -> Result<(), errors::MitPreCommitError> {
     app().get_matches();

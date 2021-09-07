@@ -1,7 +1,6 @@
 use std::{convert::TryFrom, env, time::Duration};
 
 use clap::ArgMatches;
-
 use mit_commit_message_lints::{
     external::Git2,
     relates::{entities::RelateTo, vcs::set_relates_to},

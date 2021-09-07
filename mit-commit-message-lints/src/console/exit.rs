@@ -1,11 +1,12 @@
-use std::error::Error;
-use std::process;
+use std::{error::Error, process};
 
 use console::style;
 use mit_commit::CommitMessage;
 
-use crate::console::exit::Code::{InitialNotMatchedToAuthor, UnparsableAuthorFile};
-use crate::lints::Problem;
+use crate::{
+    console::exit::Code::{InitialNotMatchedToAuthor, UnparsableAuthorFile},
+    lints::Problem,
+};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(i32)]

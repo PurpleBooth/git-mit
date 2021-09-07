@@ -1,6 +1,4 @@
-use crate::external::Vcs;
-
-use crate::mit::cmd::errors::Error;
+use crate::{external::Vcs, mit::cmd::errors::Error};
 
 #[allow(clippy::maybe_infinite_iter)]
 pub(crate) fn get_vcs_coauthors_config<'a>(

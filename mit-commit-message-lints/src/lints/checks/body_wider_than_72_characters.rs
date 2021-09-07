@@ -1,7 +1,6 @@
 use mit_commit::CommitMessage;
 
-use crate::console::exit::Code;
-use crate::lints::lib::Problem;
+use crate::{console::exit::Code, lints::lib::Problem};
 
 pub(crate) const CONFIG: &str = "body-wider-than-72-characters";
 

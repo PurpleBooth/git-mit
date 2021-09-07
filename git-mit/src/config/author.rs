@@ -1,12 +1,13 @@
-use std::convert::TryFrom;
-use std::fs;
-use std::path::PathBuf;
-use std::process::{Command, Stdio};
+use std::{
+    convert::TryFrom,
+    fs,
+    path::PathBuf,
+    process::{Command, Stdio},
+};
 
 use mit_commit_message_lints::mit::Authors;
 
-use crate::cli::args::Args;
-use crate::errors::GitMitError;
+use crate::{cli::args::Args, errors::GitMitError};
 
 pub(crate) fn load(args: &Args) -> Result<Authors, GitMitError> {
     let toml = match args.command() {

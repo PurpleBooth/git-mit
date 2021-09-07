@@ -1,20 +1,25 @@
-use std::convert::TryFrom;
-use std::path::PathBuf;
-use std::{env, fs::File, io, io::Write};
+use std::{
+    convert::TryFrom,
+    env,
+    fs::File,
+    io,
+    io::Write,
+    path::PathBuf,
+    process::{Command, Stdio},
+};
 
-use mit_commit::CommitMessage;
-use mit_commit::Trailer;
-use mit_commit_message_lints::relates::vcs::get_relate_to_configuration;
+use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
     external::Git2,
     mit::{get_commit_coauthor_configuration, Author},
-    relates::entities::RelateTo,
+    relates::{entities::RelateTo, vcs::get_relate_to_configuration},
 };
 
-use crate::cli::app;
-use crate::errors::MitPrepareCommitMessageError;
-use crate::MitPrepareCommitMessageError::MissingCommitFilePath;
-use std::process::{Command, Stdio};
+use crate::{
+    cli::app,
+    errors::MitPrepareCommitMessageError,
+    MitPrepareCommitMessageError::MissingCommitFilePath,
+};
 
 mod cli;
 mod errors;

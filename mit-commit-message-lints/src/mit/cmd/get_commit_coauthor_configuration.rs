@@ -1,13 +1,14 @@
-use std::{convert::TryInto, time::SystemTimeError};
 use std::{
+    convert::TryInto,
     option::Option,
     result::Result,
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{Duration, SystemTime, SystemTimeError, UNIX_EPOCH},
 };
 
-use crate::mit::cmd::CONFIG_KEY_EXPIRES;
-use crate::mit::VcsError;
-use crate::{external::Vcs, mit::Author};
+use crate::{
+    external::Vcs,
+    mit::{cmd::CONFIG_KEY_EXPIRES, Author, VcsError},
+};
 
 /// Get the co-authors that are currently defined for this vcs config source
 ///
@@ -76,8 +77,10 @@ mod tests {
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
 
-    use crate::mit::get_commit_coauthor_configuration;
-    use crate::{external::InMemory, mit::Author};
+    use crate::{
+        external::InMemory,
+        mit::{get_commit_coauthor_configuration, Author},
+    };
 
     #[test]
     fn there_is_no_author_config_if_it_has_expired() {

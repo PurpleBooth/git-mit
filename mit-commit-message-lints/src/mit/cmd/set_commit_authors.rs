@@ -1,14 +1,18 @@
-use std::convert::TryInto;
 use std::{
+    convert::TryInto,
     ops::Add,
     result::Result,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use crate::mit::cmd::vcs::has_vcs_coauthor;
-use crate::mit::cmd::CONFIG_KEY_EXPIRES;
-use crate::mit::VcsError;
-use crate::{external::Vcs, mit::Author};
+use crate::{
+    external::Vcs,
+    mit::{
+        cmd::{vcs::has_vcs_coauthor, CONFIG_KEY_EXPIRES},
+        Author,
+        VcsError,
+    },
+};
 
 /// # Errors
 ///
@@ -39,8 +43,10 @@ mod tests_can_set_author_details {
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
 
-    use crate::mit::set_commit_authors;
-    use crate::{external::InMemory, mit::Author};
+    use crate::{
+        external::InMemory,
+        mit::{set_commit_authors, Author},
+    };
 
     #[test]
     fn the_first_initial_becomes_the_author() {

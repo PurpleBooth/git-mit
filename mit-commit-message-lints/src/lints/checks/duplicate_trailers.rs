@@ -1,11 +1,8 @@
-use std::collections::BTreeMap;
-use std::ops::Add;
+use std::{collections::BTreeMap, ops::Add};
 
-use mit_commit::CommitMessage;
-use mit_commit::Trailer as NgTrailer;
+use mit_commit::{CommitMessage, Trailer as NgTrailer};
 
-use crate::console::exit::Code;
-use crate::lints::lib::Problem;
+use crate::{console::exit::Code, lints::lib::Problem};
 
 pub(crate) const CONFIG: &str = "duplicated-trailers";
 

@@ -3,9 +3,10 @@ use std::convert::TryInto;
 use mit_commit::CommitMessage;
 use thiserror::Error;
 
-use crate::lints::checks;
-use crate::lints::lib::Lints;
-use crate::lints::lib::Problem;
+use crate::lints::{
+    checks,
+    lib::{Lints, Problem},
+};
 
 /// The lints that are supported
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash, Ord, PartialOrd)]
