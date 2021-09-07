@@ -13,7 +13,7 @@ use mit_commit_message_lints::{
 
 use crate::cli::args::Args;
 use crate::errors::GitMitError;
-use crate::errors::GitMitError::NoAuthorInitialsProvided;
+
 use std::convert::TryFrom;
 
 fn main() -> Result<(), GitMitError> {
@@ -27,7 +27,7 @@ fn main() -> Result<(), GitMitError> {
     }
 
     let authors = file_authors?.merge(&Authors::try_from(&git_config)?);
-    let initials = args.initials().ok_or(NoAuthorInitialsProvided)?;
+    let initials = args.initials()?;
     let missing = authors.missing_initials(initials.clone());
 
     if !missing.is_empty() {

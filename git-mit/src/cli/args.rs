@@ -1,4 +1,5 @@
 use crate::errors::GitMitError;
+use crate::errors::GitMitError::NoAuthorInitialsProvided;
 use clap::ArgMatches;
 use std::env;
 use std::path::PathBuf;
@@ -29,8 +30,11 @@ impl Args {
         self.matches.value_of("command")
     }
 
-    pub fn initials(&self) -> Option<Vec<&str>> {
-        self.matches.values_of("initials").map(Iterator::collect)
+    pub fn initials(&self) -> Result<Vec<&str>, crate::GitMitError> {
+        self.matches
+            .values_of("initials")
+            .map(Iterator::collect)
+            .ok_or(NoAuthorInitialsProvided)
     }
 
     pub fn author_file(&self) -> Option<&str> {
