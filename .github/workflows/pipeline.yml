@@ -208,11 +208,11 @@ jobs:
             ~/.cargo/bin
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/toolchain@v1.0.7
+      - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
-          default: true
+          toolchain: nightly
+          override: true
           components: rustfmt, clippy
       - uses: actions-rs/cargo@v1.0.3
         with:
