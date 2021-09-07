@@ -2,6 +2,14 @@ use crate::lints::Lints;
 use comfy_table::Table;
 use console::style;
 
+pub fn success(success: &str, tip: &str) {
+    println!(
+        "{}\n\n{}",
+        style(success).green().bold(),
+        style(tip).italic()
+    );
+}
+
 pub fn problem(error: &str, tip: &str) {
     eprintln!("{}\n\n{}", style(error).red().bold(), style(tip).italic());
 }

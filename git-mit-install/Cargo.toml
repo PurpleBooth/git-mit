@@ -29,13 +29,13 @@ xdg = "2.2.0"
 git2 = "0.13.20"
 openssl = { version = '0.10', optional = true }
 console = "0.14.1"
+indoc = "1.0.3"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
   version = "5.0.1"
 
 [dev-dependencies]
-indoc = "1.0.3"
 tempfile = "3.2.0"
 
   [dev-dependencies.mit-hook-test-helper]
