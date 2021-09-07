@@ -36,11 +36,7 @@ fn main() -> Result<(), GitMitError> {
 
     set_commit_authors(
         &mut git_config,
-        &authors
-            .get(&initials)
-            .into_iter()
-            .flatten()
-            .collect::<Vec<_>>(),
+        &authors.get(&initials),
         Duration::from_secs(args.timeout()? * 60),
     )?;
 

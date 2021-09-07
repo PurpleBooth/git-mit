@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 
 use crate::mit::lib::author::Author;
 
@@ -12,14 +12,17 @@ pub struct Authors {
 
 impl Authors {
     #[must_use]
-    pub fn missing_initials<'a>(&self, authors_initials: Vec<&'a str>) -> Vec<&'a str> {
-        self.get(&authors_initials)
-            .iter()
-            .zip(authors_initials)
-            .filter_map(|(result, initial)| match result {
-                None => Some(initial),
-                Some(_) => None,
-            })
+    pub fn missing_initials<'a>(&'a self, authors_initials: Vec<&'a str>) -> Vec<&'a str> {
+        let configured: HashSet<_> = self
+            .authors
+            .keys()
+            .map(std::string::String::as_str)
+            .collect();
+        let from_cli: HashSet<_> = authors_initials.into_iter().collect();
+        from_cli
+            .difference(&configured)
+            .into_iter()
+            .copied()
             .collect()
     }
 
@@ -29,10 +32,10 @@ impl Authors {
     }
 
     #[must_use]
-    pub fn get(&self, author_initials: &[&str]) -> Vec<Option<&Author>> {
+    pub fn get(&self, author_initials: &[&str]) -> Vec<&Author> {
         author_initials
             .iter()
-            .map(|initial| self.authors.get(*initial))
+            .filter_map(|initial| self.authors.get(*initial))
             .collect()
     }
 
@@ -117,11 +120,7 @@ mod tests_authors {
 
         assert_eq!(
             actual.get(&["bt"]),
-            vec![Some(&Author::new(
-                "Billie Thompson",
-                "billie@example.com",
-                None,
-            ))]
+            vec![&Author::new("Billie Thompson", "billie@example.com", None,)]
         );
     }
 
@@ -140,19 +139,11 @@ mod tests_authors {
 
         assert_eq!(
             actual.get(&["bt"]),
-            vec![Some(&Author::new(
-                "Billie Thompson",
-                "billie@example.com",
-                None,
-            ))]
+            vec![&Author::new("Billie Thompson", "billie@example.com", None,)]
         );
         assert_eq!(
             actual.get(&["se"]),
-            vec![Some(&Author::new(
-                "Somebody Else",
-                "somebody@example.com",
-                None,
-            ))]
+            vec![&Author::new("Somebody Else", "somebody@example.com", None,)]
         );
     }
 
