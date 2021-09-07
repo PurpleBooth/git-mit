@@ -1,13 +1,14 @@
 use std::path::{Path, PathBuf};
 use std::{env, fs, io};
 
+pub(crate) use crate::cli::app;
 use indoc::indoc;
 use thiserror::Error;
 
 mod cli;
 
 fn main() -> Result<(), GitMitInstallError> {
-    let matches = cli::app().get_matches();
+    let matches = app::app().get_matches();
 
     let hooks = if let Some("global") = matches.value_of("scope") {
         let mut config = git2::Config::open_default()?;

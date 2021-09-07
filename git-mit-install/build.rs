@@ -6,12 +6,12 @@ use clap_generate::generators::{Bash, Elvish, Fish, Zsh};
 use mit_build_tools::completion;
 use mit_build_tools::manpage;
 
-#[path = "src/cli.rs"]
-mod cli;
+#[path = "src/cli/app.rs"]
+mod app;
 
 fn main() {
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
-    let app = cli::app();
+    let app = app::app();
 
     completion::generate::<Elvish>(&app, &out_dir.join("elvish_completion"));
     completion::generate::<Fish>(&app, &out_dir.join("fish_completion"));
