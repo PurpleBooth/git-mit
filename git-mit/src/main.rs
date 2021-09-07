@@ -28,17 +28,19 @@ fn main() -> Result<(), GitMitError> {
 
     let authors = file_authors?.merge(&Authors::try_from(&git_config)?);
     let initials = args.initials().ok_or(NoAuthorInitialsProvided)?;
-    let selected_authors = authors.get(&initials);
-    let initials_without_authors = authors.missing_initials(initials);
+    let missing = authors.missing_initials(initials.clone());
 
-    if !initials_without_authors.is_empty() {
-        exit_initial_not_matched_to_author(&initials_without_authors);
+    if !missing.is_empty() {
+        exit_initial_not_matched_to_author(&missing);
     }
 
-    let authors = selected_authors.into_iter().flatten().collect::<Vec<_>>();
     set_commit_authors(
         &mut git_config,
-        &authors,
+        &authors
+            .get(&initials)
+            .into_iter()
+            .flatten()
+            .collect::<Vec<_>>(),
         Duration::from_secs(args.timeout()? * 60),
     )?;
 
