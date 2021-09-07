@@ -2,15 +2,16 @@ use std::path::{Path, PathBuf};
 use std::{env, fs, io};
 
 pub(crate) use crate::cli::app;
+use crate::cli::args::Args;
 use indoc::indoc;
 use thiserror::Error;
 
 mod cli;
 
 fn main() -> Result<(), GitMitInstallError> {
-    let matches = app::app().get_matches();
+    let args: Args = app::app().get_matches().into();
 
-    let hooks = if let Some("global") = matches.value_of("scope") {
+    let hooks = if args.scope().is_global() {
         let mut config = git2::Config::open_default()?;
 
         if let Ok(path) = config.snapshot()?.get_path("init.templatedir") {
@@ -41,7 +42,7 @@ fn main() -> Result<(), GitMitInstallError> {
     install_hook(&hooks, "pre-commit")?;
     install_hook(&hooks, "commit-msg")?;
 
-    if let Some("global") = matches.value_of("scope") {
+    if args.scope().is_global() {
         mit_commit_message_lints::console::style::success(
             "git-mit will be added for newly created or cloned repositories",
             "inside existing repositories run \"git init\" to set them up",
