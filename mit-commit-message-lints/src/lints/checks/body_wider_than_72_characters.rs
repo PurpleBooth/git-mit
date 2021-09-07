@@ -5,9 +5,10 @@ use crate::{console::exit::Code, lints::lib::Problem};
 pub(crate) const CONFIG: &str = "body-wider-than-72-characters";
 
 const HELP_MESSAGE: &str = "It's important to keep the body of the commit narrower than 72 \
-characters because when you look at the git log, that's where it truncates the message. This means \
-that people won't get the entirety of the information in your commit.\n\nYou can fix this by making \
-the lines in your body no more than 72 characters";
+                            characters because when you look at the git log, that's where it \
+                            truncates the message. This means that people won't get the entirety \
+                            of the information in your commit.\n\nYou can fix this by making the \
+                            lines in your body no more than 72 characters";
 const ERROR: &str = "Your commit has a body wider than 72 characters";
 
 fn has_problem(commit: &CommitMessage) -> bool {
@@ -78,18 +79,21 @@ mod tests {
             #     preceded by a single space, with blank lines in
             #     between, but conventions vary here
 
-            # Bitte geben Sie eine Commit-Beschreibung f\u{00FC}r Ihre \u{00C4}nderungen ein. Zeilen,
+            # Bitte geben Sie eine Commit-Beschreibung f\u{00FC}r Ihre \u{00C4}nderungen ein. \
+             Zeilen,
             # die mit '#' beginnen, werden ignoriert, und eine leere Beschreibung
             # bricht den Commit ab.
             #
             # Auf Branch character-limit
             # Zum Commit vorgemerkte \u{00C4}nderungen:
-            #	ge\u{00E4}ndert:       mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
+            #	ge\u{00E4}ndert:       \
+             mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
             #
             # ------------------------ >8 ------------------------
             # \u{00C4}ndern oder entfernen Sie nicht die obige Zeile.
             # Alles unterhalb von ihr wird ignoriert.
-            diff --git a/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs b/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
+            diff --git a/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs \
+             b/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
             index 5a83784..ebaee48 100644
             --- a/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
             +++ b/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs

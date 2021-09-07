@@ -10,7 +10,7 @@ pub fn app() -> App<'static> {
             Arg::new("commit-file-path")
                 .about(
                     "Path to a temporary file that contains the commit message written by the \
-                 developer",
+                     developer",
                 )
                 .index(1)
                 .required(true),

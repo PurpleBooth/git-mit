@@ -5,7 +5,8 @@ use clap_generate::{generate_to, Generator};
 
 /// # Panics
 ///
-/// Will panic if it can't work out the application's binary name, or create the build directory
+/// Will panic if it can't work out the application's binary name, or create the
+/// build directory
 pub fn generate<T>(app: &App, dir: &Path)
 where
     T: Generator,

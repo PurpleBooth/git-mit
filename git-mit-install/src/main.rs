@@ -135,7 +135,11 @@ fn install_hook(hook_path: &Path, hook_name: &str) -> Result<(), GitMitInstallEr
     }
 
     if install_path.exists() {
-        let mut tip = format!("Couldn't create hook at {}, it already exists, you need to remove this before continuing", install_path.to_string_lossy());
+        let mut tip = format!(
+            "Couldn't create hook at {}, it already exists, you need to remove this before \
+             continuing",
+            install_path.to_string_lossy()
+        );
         if let Ok(dest) = install_path.read_link() {
             tip = format!(
                 "{}\nlooks like it's a symlink to {}",

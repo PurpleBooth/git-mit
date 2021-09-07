@@ -52,7 +52,8 @@ impl Lints {
     ///
     /// # Panics
     ///
-    /// Will panic if the lint prefix isn't delimited by dots. This should never happen as it's a constant
+    /// Will panic if the lint prefix isn't delimited by dots. This should never
+    /// happen as it's a constant
     pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lints, Error> {
         let vcs_lints = Lints::try_from_vcs(vcs)?;
         // contains PB  // contains lint // contains config

@@ -6,9 +6,10 @@ pub(crate) const CONFIG: &str = "subject-not-separated-from-body";
 
 const ERROR: &str = "Your commit message is missing a blank line between the subject and the body";
 const HELP_MESSAGE: &str = "Most tools that render and parse commit messages, expect commit \
-messages to be in the form of subject and body. This includes git itself in tools like \
-git-format-patch. If you don't include this you may see strange behaviour from git and any related \
-tools.\n\nTo fix this separate subject from body with a blank line";
+                            messages to be in the form of subject and body. This includes git \
+                            itself in tools like git-format-patch. If you don't include this you \
+                            may see strange behaviour from git and any related tools.\n\nTo fix \
+                            this separate subject from body with a blank line";
 
 fn has_problem(commit_message: &CommitMessage) -> bool {
     commit_message
@@ -73,7 +74,7 @@ mod tests {
     fn single_line_with_long_comments() {
         test_subject_not_separate_from_body(
             indoc!(
-            "
+                "
             Remove duplicated function
             # Short (50 chars or less) summary of changes
             #
@@ -93,18 +94,21 @@ mod tests {
             #     preceded by a single space, with blank lines in
             #     between, but conventions vary here
 
-            # Bitte geben Sie eine Commit-Beschreibung f\u{00FC}r Ihre \u{00C4}nderungen ein. Zeilen,
+            # Bitte geben Sie eine Commit-Beschreibung f\u{00FC}r Ihre \u{00C4}nderungen ein. \
+                 Zeilen,
             # die mit '#' beginnen, werden ignoriert, und eine leere Beschreibung
             # bricht den Commit ab.
             #
             # Auf Branch character-limit
             # Zum Commit vorgemerkte \u{00C4}nderungen:
-            #	ge\u{00E4}ndert:       mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
+            #	ge\u{00E4}ndert:       \
+                 mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
             #
             # ------------------------ >8 ------------------------
             # \u{00C4}ndern oder entfernen Sie nicht die obige Zeile.
             # Alles unterhalb von ihr wird ignoriert.
-            diff --git a/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs b/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
+            diff --git a/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs \
+                 b/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
             index 5a83784..ebaee48 100644
             --- a/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
             +++ b/mit-commit-message-lints/src/lints/lib/missing_pivotal_tracker_id.rs
@@ -126,7 +130,9 @@ mod tests {
 
 
             "
-        ), &None);
+            ),
+            &None,
+        );
     }
 
     #[test]

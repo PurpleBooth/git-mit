@@ -9,9 +9,10 @@ pub(crate) const CONFIG: &str = "pivotal-tracker-id-missing";
 const HELP_MESSAGE: &str = indoc!(
     "
     It's important to add the ID because it allows code to be linked back to the stories it was \
-    done for, it can provide a chain of custody for code for audit purposes, and it can give \
-    future explorers of the codebase insight into the wider organisational need behind the change. \
-    We may also use it for automation purposes, like generating changelogs or notification emails.
+     done for, it can provide a chain of custody for code for audit purposes, and it can give \
+     future explorers of the codebase insight into the wider organisational need behind the \
+     change. We may also use it for automation purposes, like generating changelogs or \
+     notification emails.
 
     You can fix this by adding the Id in one of the styles below to the commit message
     [Delivers #12345678]

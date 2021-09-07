@@ -61,9 +61,9 @@ pub fn app() -> App<'static> {
                 .short('e')
                 .long("exec")
                 .about(
-                    "Execute a command to generate the mit configuration, stdout will be \
-                 captured and used instead of the file, if both this and the file is present, \
-                 this takes precedence",
+                    "Execute a command to generate the mit configuration, stdout will be captured \
+                     and used instead of the file, if both this and the file is present, this \
+                     takes precedence",
                 )
                 .env("GIT_MIT_AUTHORS_EXEC")
                 .takes_value(true),

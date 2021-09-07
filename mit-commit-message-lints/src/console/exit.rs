@@ -28,7 +28,15 @@ pub enum Code {
 }
 
 pub fn unparsable_author(parse_err: &dyn Error) {
-    super::style::problem("Unable to parse the author config", &format!("You can fix this by correcting the file so it's parsable\n\nYou can see a parsable example by running:\ngit mit-config mit example\n\nHere's the technical details, that might help you track down the source of the problem\n\n{}", parse_err));
+    super::style::problem(
+        "Unable to parse the author config",
+        &format!(
+            "You can fix this by correcting the file so it's parsable\n\nYou can see a parsable \
+             example by running:\ngit mit-config mit example\n\nHere's the technical details, \
+             that might help you track down the source of the problem\n\n{}",
+            parse_err
+        ),
+    );
     std::process::exit(UnparsableAuthorFile as i32);
 }
 
@@ -44,7 +52,12 @@ pub fn initial_not_matched_to_author(initials_without_authors: &[&str]) {
 }
 
 pub fn stale_author() {
-    crate::console::style::problem("The details of the author of this commit are stale", "Can you confirm who's currently coding?\n\nIt's nice to get and give the right credit.\n\nYou can fix this by running `git mit` then the initials of whoever is coding for example:\ngit mit bt\ngit mit bt se\n");
+    crate::console::style::problem(
+        "The details of the author of this commit are stale",
+        "Can you confirm who's currently coding?\n\nIt's nice to get and give the right \
+         credit.\n\nYou can fix this by running `git mit` then the initials of whoever is coding \
+         for example:\ngit mit bt\ngit mit bt se\n",
+    );
 
     process::exit(Code::StaleAuthor as i32);
 }

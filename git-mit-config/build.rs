@@ -17,7 +17,8 @@ fn main() {
 
     completion::generate::<Elvish>(&app, &out_dir.join("elvish_completion"));
     completion::generate::<Fish>(&app, &out_dir.join("fish_completion"));
-    //completion::generate::<Zsh>(&app, &out_dir.join("zsh_completion")); // This segfaults at the moment
+    // completion::generate::<Zsh>(&app, &out_dir.join("zsh_completion")); // This
+    // segfaults at the moment
     completion::generate::<Bash>(&app, &out_dir.join("bash_completion"));
 
     manpage::generate(&app, &out_dir, "docs/manpage.template.md");

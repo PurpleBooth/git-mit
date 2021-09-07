@@ -1,5 +1,6 @@
 use clap::{crate_authors, crate_version, App, AppSettings, Arg};
 
+#[allow(clippy::too_many_lines)]
 pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
     let lint_argument = Arg::new("lint")
         .about("The lint to enable")
@@ -78,7 +79,10 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                             Arg::new("file")
                                 .short('c')
                                 .long("config")
-                                .about("Path to a file where mit initials, emails and names can be found")
+                                .about(
+                                    "Path to a file where mit initials, emails and names can be \
+                                     found",
+                                )
                                 .env("GIT_MIT_AUTHORS_CONFIG")
                                 .default_value("$HOME/.config/git-mit/mit.toml")
                                 .takes_value(true),
@@ -88,9 +92,9 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                                 .short('e')
                                 .long("exec")
                                 .about(
-                                    "Execute a command to generate the mit configuration, stdout will be \
-                 captured and used instead of the file, if both this and the file is present, \
-                 this takes precedence",
+                                    "Execute a command to generate the mit configuration, stdout \
+                                     will be captured and used instead of the file, if both this \
+                                     and the file is present, this takes precedence",
                                 )
                                 .env("GIT_MIT_AUTHORS_EXEC")
                                 .takes_value(true),

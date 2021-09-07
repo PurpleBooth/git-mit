@@ -59,8 +59,8 @@ pub(crate) fn lint(commit: &CommitMessage) -> Option<Problem> {
 fn warning(duplicated_trailers: &[String]) -> String {
     let warning = format!(
         "These are normally added accidentally when you're rebasing or amending to a commit, \
-        sometimes in the text editor, but often by git hooks.\n\nYou can fix this by deleting the \
-        duplicated \"{}\" {}",
+         sometimes in the text editor, but often by git hooks.\n\nYou can fix this by deleting \
+         the duplicated \"{}\" {}",
         duplicated_trailers.join("\", \""),
         if duplicated_trailers.len() > 1 {
             FIELD_PLURAL
@@ -109,10 +109,15 @@ mod tests_has_duplicated_trailers {
                 Co-authored-by: Billie Thompson <email@example.com>
                 Co-authored-by: Billie Thompson <email@example.com>
                 "
-            ).into(),
-            &Some(Problem::new(ERROR.into(),
-                               "These are normally added accidentally when you\'re rebasing or amending to a commit, sometimes in the text editor, but often by git hooks.\n\nYou can fix this by deleting the duplicated \"Co-authored-by\", \"Signed-off-by\" fields".into(),
-                               Code::DuplicatedTrailers,
+            )
+            .into(),
+            &Some(Problem::new(
+                ERROR.into(),
+                "These are normally added accidentally when you\'re rebasing or amending to a \
+                 commit, sometimes in the text editor, but often by git hooks.\n\nYou can fix \
+                 this by deleting the duplicated \"Co-authored-by\", \"Signed-off-by\" fields"
+                    .into(),
+                Code::DuplicatedTrailers,
             )),
         );
     }
@@ -133,7 +138,10 @@ mod tests_has_duplicated_trailers {
             .into(),
             &Some(Problem::new(
                 ERROR.into(),
-                "These are normally added accidentally when you\'re rebasing or amending to a commit, sometimes in the text editor, but often by git hooks.\n\nYou can fix this by deleting the duplicated \"Signed-off-by\" field".into(),
+                "These are normally added accidentally when you\'re rebasing or amending to a \
+                 commit, sometimes in the text editor, but often by git hooks.\n\nYou can fix \
+                 this by deleting the duplicated \"Signed-off-by\" field"
+                    .into(),
                 Code::DuplicatedTrailers,
             )),
         );
@@ -155,7 +163,10 @@ mod tests_has_duplicated_trailers {
             .into(),
             &Some(Problem::new(
                 ERROR.into(),
-                "These are normally added accidentally when you\'re rebasing or amending to a commit, sometimes in the text editor, but often by git hooks.\n\nYou can fix this by deleting the duplicated \"Co-authored-by\" field".into(),
+                "These are normally added accidentally when you\'re rebasing or amending to a \
+                 commit, sometimes in the text editor, but often by git hooks.\n\nYou can fix \
+                 this by deleting the duplicated \"Co-authored-by\" field"
+                    .into(),
                 Code::DuplicatedTrailers,
             )),
         );
@@ -177,7 +188,10 @@ mod tests_has_duplicated_trailers {
             .into(),
             &Some(Problem::new(
                 ERROR.into(),
-                "These are normally added accidentally when you\'re rebasing or amending to a commit, sometimes in the text editor, but often by git hooks.\n\nYou can fix this by deleting the duplicated \"Relates-to\" field".into(),
+                "These are normally added accidentally when you\'re rebasing or amending to a \
+                 commit, sometimes in the text editor, but often by git hooks.\n\nYou can fix \
+                 this by deleting the duplicated \"Relates-to\" field"
+                    .into(),
                 Code::DuplicatedTrailers,
             )),
         );
@@ -214,10 +228,12 @@ mod tests_has_duplicated_trailers {
                 @@ -82,6 +82,7 @@ Co-authored-by: Billie Thompson <billie@example.com>
                  Your commit message has duplicated trailers
 
-                 You can fix this by deleting the duplicated \"Signed-off-by\", \"Co-authored-by\" fields
+                 You can fix this by deleting the duplicated \"Signed-off-by\", \"Co-authored-by\" \
+                 fields
                 +
                 "
-            ).into(),
+            )
+            .into(),
             &None,
         );
     }
