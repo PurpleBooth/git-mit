@@ -1,6 +1,7 @@
 use std::path::{Path, PathBuf};
 use std::{env, fs};
 
+use git2::{Config, Error};
 use indoc::indoc;
 
 use errors::GitMitInstallError;
@@ -15,26 +16,9 @@ fn main() -> Result<(), GitMitInstallError> {
     let args: Args = app::app().get_matches().into();
 
     let hooks = if args.scope().is_global() {
-        let mut config = git2::Config::open_default()?;
-
-        if let Ok(path) = config.snapshot()?.get_path("init.templatedir") {
-            let hooks = path.join("hooks");
-            fs::create_dir_all(&hooks)?;
-            hooks
-        } else {
-            let init_template = PathBuf::from(home_dir())
-                .join(".config")
-                .join("git")
-                .join("init-template");
-            let hooks = init_template.join("hooks");
-            fs::create_dir_all(&hooks)?;
-            config.set_str("init.templatedir", "~/.config/git/init-template")?;
-            hooks
-        }
+        setup_global_hooks_dir()?
     } else {
-        git2::Repository::discover(env::current_dir()?)?
-            .path()
-            .join("hooks")
+        get_local_hooks_dir()?
     };
 
     if !hooks.exists() {
@@ -87,6 +71,41 @@ fn main() -> Result<(), GitMitInstallError> {
     );
 
     Ok(())
+}
+
+fn get_local_hooks_dir() -> Result<PathBuf, GitMitInstallError> {
+    let current_dir = env::current_dir()?;
+    let buf = git2::Repository::discover(current_dir)?
+        .path()
+        .join("hooks");
+    Ok(buf)
+}
+
+fn setup_global_hooks_dir() -> Result<PathBuf, GitMitInstallError> {
+    let mut config = git2::Config::open_default()?;
+
+    let template_dir = if let Ok(template_dir) = git_template_dir(&mut config) {
+        template_dir
+    } else {
+        let template_dir = new_template_folder();
+        config.set_str("init.templatedir", &template_dir.to_string_lossy())?;
+        template_dir
+    };
+
+    let hooks = template_dir.join("hooks");
+    fs::create_dir_all(&hooks)?;
+    Ok(hooks)
+}
+
+fn new_template_folder() -> PathBuf {
+    PathBuf::from(home_dir())
+        .join(".config")
+        .join("git")
+        .join("init-template")
+}
+
+fn git_template_dir(config: &mut Config) -> Result<PathBuf, Error> {
+    config.snapshot()?.get_path("init.templatedir")
 }
 
 #[cfg(not(target_os = "windows"))]
