@@ -224,7 +224,7 @@ jobs:
           args:
             --all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
             -D clippy::cargo -A clippy::multiple-crate-versions
-      - uses: creyD/prettier_action@v3.3
+      - uses: creyD/prettier_action@v4.0
         with:
           prettier_options: --check **/*.{yml,yaml}
       - uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
