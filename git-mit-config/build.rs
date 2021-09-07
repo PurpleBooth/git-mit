@@ -1,6 +1,6 @@
 use std::{env, path::PathBuf};
 
-use clap_generate::generators::{Bash, Elvish, Fish};
+use clap_generate::generators::{Bash, Elvish, Fish, Zsh};
 use mit_build_tools::{completion, manpage};
 use mit_commit_message_lints::lints::Lint;
 
@@ -17,8 +17,7 @@ fn main() {
 
     completion::generate::<Elvish>(&app, &out_dir.join("elvish_completion"));
     completion::generate::<Fish>(&app, &out_dir.join("fish_completion"));
-    // completion::generate::<Zsh>(&app, &out_dir.join("zsh_completion")); // This
-    // segfaults at the moment
+    completion::generate::<Zsh>(&app, &out_dir.join("zsh_completion"));
     completion::generate::<Bash>(&app, &out_dir.join("bash_completion"));
 
     manpage::generate(&app, &out_dir, "docs/manpage.template.md");
