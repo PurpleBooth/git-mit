@@ -46,7 +46,7 @@ fn author_file_path(cargo_package_name: &str) -> Result<String, GitMitError> {
                 .to_string_lossy()
                 .into()
         })
-        .map_err(|error| GitMitError::AppDataMissing(error))
+        .map_err(GitMitError::AppDataMissing)
 }
 
 #[cfg(not(target_os = "windows"))]
