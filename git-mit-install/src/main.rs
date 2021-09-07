@@ -1,12 +1,15 @@
 use std::path::{Path, PathBuf};
-use std::{env, fs, io};
+use std::{env, fs};
+
+use indoc::indoc;
+
+use errors::GitMitInstallError;
 
 pub(crate) use crate::cli::app;
 use crate::cli::args::Args;
-use indoc::indoc;
-use thiserror::Error;
 
 mod cli;
+mod errors;
 
 fn main() -> Result<(), GitMitInstallError> {
     let args: Args = app::app().get_matches().into();
@@ -142,14 +145,4 @@ fn link(binary_path: PathBuf, install_path: PathBuf) -> Result<(), GitMitInstall
     std::os::windows::fs::symlink_file(binary_path, install_path)?;
 
     Ok(())
-}
-
-#[derive(Error, Debug)]
-pub enum GitMitInstallError {
-    #[error("failed install hook")]
-    ExistingHook,
-    #[error("failed to find git repository: {0}")]
-    Git2(#[from] git2::Error),
-    #[error("failed to install hooks: {0}")]
-    Io(#[from] io::Error),
 }
