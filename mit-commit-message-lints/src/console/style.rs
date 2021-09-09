@@ -15,8 +15,12 @@ pub fn problem(error: &str, tip: &str) {
     eprintln!("{}\n\n{}", style(error).red().bold(), style(tip).italic());
 }
 
-pub fn warning(warning: &str) {
+pub fn warning(warning: &str, tip: Option<&str>) {
     eprintln!("{}", style(warning).yellow().bold());
+
+    if let Some(tip) = tip {
+        eprintln!("\n{}", style(tip).italic());
+    }
 }
 
 pub fn to_be_piped(output: &str) {

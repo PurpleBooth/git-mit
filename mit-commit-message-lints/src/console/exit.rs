@@ -45,7 +45,7 @@ pub fn initial_not_matched_to_author(initials_without_authors: &[&str]) {
         "To see a summary of your configured authors run",
         "git mit-config mit generate",
         "To add a new author run",
-        "git mit-config mit set eg \"Egg Sample\" egg.sample@example.com"
+        "git mit-config mit set eg \"Egg Sample\" egg.sample@example.com",
     ];
 
     if initials_without_authors.contains(&"config") {
@@ -54,6 +54,10 @@ pub fn initial_not_matched_to_author(initials_without_authors: &[&str]) {
 
     if initials_without_authors.contains(&"relates-to") {
         tips.push("Did you mean \"git mit-relates-to\"");
+    }
+
+    if initials_without_authors.contains(&"install") {
+        tips.push("Did you mean \"git mit-install\"");
     }
 
     super::style::problem(

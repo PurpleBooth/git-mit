@@ -1,4 +1,4 @@
-use std::{convert::TryInto, env::current_dir};
+use std::{convert::TryInto, env::current_dir, option::Option::None};
 
 use clap::ArgMatches;
 use mit_commit_message_lints::{external, lints::Lints};
@@ -28,6 +28,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     if !toml.is_empty() {
         mit_commit_message_lints::console::style::warning(
             "Warning: your config is overridden by a repository config file",
+            None,
         );
     }
 
