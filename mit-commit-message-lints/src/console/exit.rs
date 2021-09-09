@@ -41,12 +41,27 @@ pub fn unparsable_author(parse_err: &dyn Error) {
 }
 
 pub fn initial_not_matched_to_author(initials_without_authors: &[&str]) {
+    let mut tips = vec![
+        "To see a summary of your configured authors run",
+        "git mit-config mit generate",
+        "To add a new author run",
+        "git mit-config mit set eg \"Egg Sample\" egg.sample@example.com"
+    ];
+
+    if initials_without_authors.contains(&"config") {
+        tips.push("Did you mean \"git mit-config\"");
+    }
+
+    if initials_without_authors.contains(&"relates-to") {
+        tips.push("Did you mean \"git mit-relates-to\"");
+    }
+
     super::style::problem(
         &format!(
             "Could not find the initials {}.",
             initials_without_authors.join(", ")
         ),
-        "You can fix this by checking the initials are in the configuration file.",
+        &tips.join("\n\n"),
     );
     std::process::exit(InitialNotMatchedToAuthor as i32);
 }
