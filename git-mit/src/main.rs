@@ -2,7 +2,7 @@ mod cli;
 mod config;
 mod errors;
 
-use std::{convert::TryFrom, option::Option::None, time::Duration};
+use std::{convert::TryFrom, env, option::Option::None, time::Duration};
 
 use git2::Repository;
 use mit_commit_message_lints::{
@@ -50,11 +50,11 @@ fn not_setup_warning() {
 }
 
 fn is_hook_present() -> bool {
-    Args::cwd()
+    env::current_dir()
         .ok()
         .and_then(|path| Repository::discover(path).ok())
-        .map(|x| x.path().join("hooks").join("commit-msg"))
-        .filter(|x| match x.canonicalize().ok() {
+        .map(|repo| repo.path().join("hooks").join("commit-msg"))
+        .filter(|path_buf| match path_buf.canonicalize().ok() {
             None => false,
             Some(path) => path.to_string_lossy().contains("mit-commit-msg"),
         })
@@ -62,7 +62,7 @@ fn is_hook_present() -> bool {
 }
 
 fn repo_present() -> bool {
-    Args::cwd()
+    env::current_dir()
         .ok()
         .and_then(|path| Repository::discover(path).ok())
         .is_some()
