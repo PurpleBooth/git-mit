@@ -1,11 +1,5 @@
-use std::{
-    env,
-    fs,
-    path::{Path, PathBuf},
-};
-
 use errors::GitMitInstallError;
-use git2::{Config, Error};
+use hook::{dir, install};
 use indoc::indoc;
 
 pub(crate) use crate::cli::app;
@@ -13,23 +7,16 @@ use crate::cli::args::Args;
 
 mod cli;
 mod errors;
+mod hook;
 
 fn main() -> Result<(), GitMitInstallError> {
     let args: Args = app::app().get_matches().into();
 
-    let hooks = if args.scope().is_global() {
-        setup_global_hooks_dir()?
-    } else {
-        get_local_hooks_dir()?
-    };
+    let hooks = dir::create(args.scope().is_global())?;
 
-    if !hooks.exists() {
-        fs::create_dir(&hooks)?;
-    }
-
-    install_hook(&hooks, "prepare-commit-msg")?;
-    install_hook(&hooks, "pre-commit")?;
-    install_hook(&hooks, "commit-msg")?;
+    install::link(&hooks, "prepare-commit-msg")?;
+    install::link(&hooks, "pre-commit")?;
+    install::link(&hooks, "commit-msg")?;
 
     if args.scope().is_global() {
         mit_commit_message_lints::console::style::success(
@@ -71,103 +58,6 @@ fn main() -> Result<(), GitMitInstallError> {
             git mit-config generate > "$HOME/.config/git-mit/mit.toml"
         "#},
     );
-
-    Ok(())
-}
-
-fn get_local_hooks_dir() -> Result<PathBuf, GitMitInstallError> {
-    let current_dir = env::current_dir()?;
-    let buf = git2::Repository::discover(current_dir)?
-        .path()
-        .join("hooks");
-    Ok(buf)
-}
-
-fn setup_global_hooks_dir() -> Result<PathBuf, GitMitInstallError> {
-    let mut config = git2::Config::open_default()?;
-
-    let template_dir = if let Ok(template_dir) = git_template_dir(&mut config) {
-        template_dir
-    } else {
-        let template_dir = new_template_folder();
-        config.set_str("init.templatedir", &template_dir.to_string_lossy())?;
-        template_dir
-    };
-
-    let hooks = template_dir.join("hooks");
-    fs::create_dir_all(&hooks)?;
-    Ok(hooks)
-}
-
-fn new_template_folder() -> PathBuf {
-    PathBuf::from(home_dir())
-        .join(".config")
-        .join("git")
-        .join("init-template")
-}
-
-fn git_template_dir(config: &mut Config) -> Result<PathBuf, Error> {
-    config.snapshot()?.get_path("init.templatedir")
-}
-
-#[cfg(not(target_os = "windows"))]
-fn home_dir() -> String {
-    env!("HOME").into()
-}
-
-#[cfg(target_os = "windows")]
-fn home_dir() -> String {
-    env!("USERPROFILE").into()
-}
-
-fn install_hook(hook_path: &Path, hook_name: &str) -> Result<(), GitMitInstallError> {
-    #[cfg(target_os = "windows")]
-    let suffix = ".exe";
-    #[cfg(not(target_os = "windows"))]
-    let suffix = "";
-    let binary_path = which::which(format!("mit-{}{}", hook_name, suffix)).unwrap();
-    let install_path = hook_path.join(format!("{}{}", hook_name, suffix));
-    let install_path_destination = install_path.read_link();
-    if let Ok(existing_hook_path) = install_path_destination.and_then(|x| x.canonicalize()) {
-        if existing_hook_path == install_path {
-            return Ok(());
-        }
-    }
-
-    if install_path.exists() {
-        let mut tip = format!(
-            "Couldn't create hook at {}, it already exists, you need to remove this before \
-             continuing",
-            install_path.to_string_lossy()
-        );
-        if let Ok(dest) = install_path.read_link() {
-            tip = format!(
-                "{}\nlooks like it's a symlink to {}",
-                tip,
-                dest.to_string_lossy()
-            );
-        }
-
-        mit_commit_message_lints::console::style::problem("couldn't install hook", &tip);
-
-        return Err(GitMitInstallError::ExistingHook);
-    }
-
-    link(binary_path, install_path)?;
-
-    Ok(())
-}
-
-#[cfg(not(target_os = "windows"))]
-fn link(binary_path: PathBuf, install_path: PathBuf) -> Result<(), GitMitInstallError> {
-    std::os::unix::fs::symlink(binary_path, install_path)?;
-
-    Ok(())
-}
-
-#[cfg(target_os = "windows")]
-fn link(binary_path: PathBuf, install_path: PathBuf) -> Result<(), GitMitInstallError> {
-    std::os::windows::fs::symlink_file(binary_path, install_path)?;
 
     Ok(())
 }

@@ -43,7 +43,7 @@ build:
 ## Lint it
 lint:
 	cargo fmt --all -- --check
-	cargo clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple-crate-versions
+	cargo +nightly clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
 	cargo check
 	cargo audit
 	npx prettier --check **.yml **.yaml

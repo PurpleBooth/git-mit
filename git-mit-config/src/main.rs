@@ -30,7 +30,7 @@ fn main() -> Result<(), GitMitConfigError> {
         cmd::lint_generate::run_on_match,
     ]
     .iter()
-    .find_map(|x| x(&matches));
+    .find_map(|cmd| cmd(&matches));
 
     if let Some(response) = possible {
         return response;
