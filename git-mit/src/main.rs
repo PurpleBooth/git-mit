@@ -3,7 +3,11 @@ mod config;
 mod errors;
 
 use std::{convert::TryFrom, env, option::Option::None, time::Duration};
-
+#[cfg(test)]
+extern crate quickcheck;
+#[cfg(test)]
+#[macro_use(quickcheck)]
+extern crate quickcheck_macros;
 use git2::Repository;
 use mit_commit_message_lints::{
     console::{exit_initial_not_matched_to_author, exit_unparsable_author, style},
