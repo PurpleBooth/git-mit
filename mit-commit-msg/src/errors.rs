@@ -21,7 +21,7 @@ pub(crate) enum MitCommitMsgError {
 }
 
 impl MitCommitMsgError {
-    pub(crate) fn new_io(location: String, error: &std::io::Error) -> MitCommitMsgError {
-        MitCommitMsgError::Io(location, format!("{}", error))
+    pub(crate) fn new_pwd_io(error: &std::io::Error) -> MitCommitMsgError {
+        MitCommitMsgError::Io("$PWD".into(), format!("{}", error))
     }
 }

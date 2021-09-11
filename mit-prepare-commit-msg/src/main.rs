@@ -31,8 +31,8 @@ fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
         .value_of("commit-message-path")
         .map(PathBuf::from)
         .ok_or(MissingCommitFilePath)?;
-    let current_dir = env::current_dir()
-        .map_err(|err| MitPrepareCommitMessageError::new_io("$PWD".into(), &err))?;
+    let current_dir =
+        env::current_dir().map_err(|err| MitPrepareCommitMessageError::new_cwd_io(&err))?;
 
     let mut git_config = Git2::try_from(current_dir)?;
 

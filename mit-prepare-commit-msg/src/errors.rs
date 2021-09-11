@@ -29,6 +29,10 @@ impl MitPrepareCommitMessageError {
         MitPrepareCommitMessageError::Io(source, format!("{}", error))
     }
 
+    pub(crate) fn new_cwd_io(error: &std::io::Error) -> MitPrepareCommitMessageError {
+        MitPrepareCommitMessageError::Io(String::from("$PWD"), format!("{}", error))
+    }
+
     pub(crate) fn new_exec(source: String, error: &std::io::Error) -> MitPrepareCommitMessageError {
         MitPrepareCommitMessageError::Exec(source, format!("{}", error))
     }

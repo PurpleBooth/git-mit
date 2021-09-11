@@ -41,6 +41,10 @@ impl GitMitError {
         GitMitError::Io(source, format!("{}", error))
     }
 
+    pub(crate) fn new_pwd_io(error: &std::io::Error) -> GitMitError {
+        GitMitError::Io("$PWD".into(), format!("{}", error))
+    }
+
     pub(crate) fn new_exec(source: String, error: &std::io::Error) -> GitMitError {
         GitMitError::Exec(source, format!("{}", error))
     }

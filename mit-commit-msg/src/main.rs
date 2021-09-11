@@ -22,8 +22,7 @@ fn main() -> Result<(), MitCommitMsgError> {
 
     let commit_message = CommitMessage::try_from(commit_file_path)?;
 
-    let current_dir =
-        env::current_dir().map_err(|err| MitCommitMsgError::new_io("$PWD".into(), &err))?;
+    let current_dir = env::current_dir().map_err(|err| MitCommitMsgError::new_pwd_io(&err))?;
 
     let toml = external::read_toml(current_dir.clone())?;
     let mut git_config = external::Git2::try_from(current_dir)?;

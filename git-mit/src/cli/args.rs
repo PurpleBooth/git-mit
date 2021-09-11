@@ -16,7 +16,7 @@ impl From<ArgMatches> for Args {
 
 impl Args {
     pub(crate) fn cwd() -> Result<PathBuf, GitMitError> {
-        env::current_dir().map_err(|error| GitMitError::new_io("$PWD".into(), &error))
+        env::current_dir().map_err(|error| GitMitError::new_pwd_io(&error))
     }
 
     pub(crate) fn timeout(&self) -> Result<u64, GitMitError> {
