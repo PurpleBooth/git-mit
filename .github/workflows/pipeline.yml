@@ -525,7 +525,7 @@ jobs:
           bodyFile: "CHANGELOG.md"
           name: Release v${{ needs.release.outputs.current_version }}
           tag: v${{ needs.release.outputs.current_version }}
-          artifacts: ./bins/*,./bash_completion/**/*.bash,./fish_completion/**/*.fish,./zsh_completion/**/_*
+          artifacts: ./bins/*,./bash_completion/*,./fish_completion/*,./zsh_completion/*,./power_shell_completion/*
 
   docker-push:
     if: needs.release.outputs.version_bump
