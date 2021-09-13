@@ -518,7 +518,7 @@ jobs:
         env:
           OUTPUT: CHANGELOG.md
       - id: create_release
-        uses: ncipollo/release-action@v1.8.8
+        uses: ncipollo/release-action@v1.8.9
         with:
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
