@@ -25,7 +25,6 @@ jobs:
           cache-from: |
             type=registry,ref=ghcr.io/purplebooth/git-mit:cache
             type=registry,ref=ghcr.io/purplebooth/git-mit:latest
-          cache-to: type=registry,ref=ghcr.io/purplebooth/git-mit:cache,mode=max
           tags: |
             ghcr.io/purplebooth/git-mit:git-${{ github.sha }}
             ghcr.io/purplebooth/git-mit:latest
