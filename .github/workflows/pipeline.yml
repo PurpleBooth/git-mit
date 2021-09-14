@@ -23,9 +23,9 @@ jobs:
           push: false
           pull: true
           cache-from: |
-            type=gha
+            type=registry,ref=ghcr.io/purplebooth/git-mit:cache
             type=registry,ref=ghcr.io/purplebooth/git-mit:latest
-          cache-to: type=gha,mode=max
+          cache-to: type=registry,ref=ghcr.io/purplebooth/git-mit:cache,mode=max
           tags: |
             ghcr.io/purplebooth/git-mit:git-${{ github.sha }}
             ghcr.io/purplebooth/git-mit:latest
@@ -559,9 +559,9 @@ jobs:
           push: true
           pull: true
           cache-from: |
-            type=gha
+            type=registry,ref=ghcr.io/purplebooth/git-mit:cache
             type=registry,ref=ghcr.io/purplebooth/git-mit:latest
-          cache-to: type=gha,mode=max
+          cache-to: type=registry,ref=ghcr.io/purplebooth/git-mit:cache,mode=max
           tags: |
             ghcr.io/purplebooth/git-mit:v${{ needs.release.outputs.current_version }}
             ghcr.io/purplebooth/git-mit:latest
