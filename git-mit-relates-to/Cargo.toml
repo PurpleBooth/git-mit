@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-relates-to"
-version = "5.3.1"
+version = "5.3.2"
 authors = [
   "Billie Thompson <billie+git-mit-relates-to@billiecodes.com>"
 ]
@@ -19,7 +19,7 @@ clap_generate = "3.0.0-beta.2"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
-  version = "5.3.1"
+  version = "5.3.2"
 
 [dependencies]
 thiserror = "1.0.29"
@@ -33,7 +33,7 @@ console = "0.14.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "5.3.1"
+  version = "5.3.2"
 
 [features]
 default = []
@@ -45,4 +45,4 @@ tempfile = "3.2.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "5.3.1"
+  version = "5.3.2"
