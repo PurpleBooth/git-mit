@@ -25,17 +25,17 @@ git mit-config lint enabled
 You can see what's enabled by default.
 
 ``` text,verify(script_name="2",stream=stdout)
-+-----------------------------------+---------+
-| Lint                              | Status  |
-+=============================================+
-| duplicated-trailers               | enabled |
-|-----------------------------------+---------|
-| subject-not-separated-from-body   | enabled |
-|-----------------------------------+---------|
-| subject-longer-than-72-characters | enabled |
-|-----------------------------------+---------|
-| body-wider-than-72-characters     | enabled |
-+-----------------------------------+---------+
+╭───────────────────────────────────┬─────────╮
+│ Lint                              ┆ Status  │
+╞═══════════════════════════════════╪═════════╡
+│ duplicated-trailers               ┆ enabled │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ subject-not-separated-from-body   ┆ enabled │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ subject-longer-than-72-characters ┆ enabled │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ body-wider-than-72-characters     ┆ enabled │
+╰───────────────────────────────────┴─────────╯
 ```
 
 ## Toggling lints
@@ -55,11 +55,11 @@ git mit-config lint status subject-longer-than-72-characters
 We will see that it's now disabled
 
 ``` text,verify(script_name="5",stream=stdout)
-+-----------------------------------+----------+
-| Lint                              | Status   |
-+==============================================+
-| subject-longer-than-72-characters | disabled |
-+-----------------------------------+----------+
+╭───────────────────────────────────┬──────────╮
+│ Lint                              ┆ Status   │
+╞═══════════════════════════════════╪══════════╡
+│ subject-longer-than-72-characters ┆ disabled │
+╰───────────────────────────────────┴──────────╯
 ```
 
 If we run
@@ -75,11 +75,11 @@ git mit-config lint status subject-longer-than-72-characters
 ```
 
 ``` text,verify(script_name="6",stream=stdout)
-+-----------------------------------+---------+
-| Lint                              | Status  |
-+=============================================+
-| subject-longer-than-72-characters | enabled |
-+-----------------------------------+---------+
+╭───────────────────────────────────┬─────────╮
+│ Lint                              ┆ Status  │
+╞═══════════════════════════════════╪═════════╡
+│ subject-longer-than-72-characters ┆ enabled │
+╰───────────────────────────────────┴─────────╯
 ```
 
 These are written to the `./.git/config` file.
@@ -103,11 +103,11 @@ git mit-config lint status pivotal-tracker-id-missing
 ```
 
 ``` text,verify(script_name="7",stream=stdout)
-+----------------------------+---------+
-| Lint                       | Status  |
-+======================================+
-| pivotal-tracker-id-missing | enabled |
-+----------------------------+---------+
+╭────────────────────────────┬─────────╮
+│ Lint                       ┆ Status  │
+╞════════════════════════════╪═════════╡
+│ pivotal-tracker-id-missing ┆ enabled │
+╰────────────────────────────┴─────────╯
 ```
 
 You can generate this file for your current settings by running
@@ -147,11 +147,11 @@ git mit-config lint status pivotal-tracker-id-missing
 ```
 
 ``` text,verify(script_name="8",stream=stdout)
-+----------------------------+----------+
-| Lint                       | Status   |
-+=======================================+
-| pivotal-tracker-id-missing | disabled |
-+----------------------------+----------+
+╭────────────────────────────┬──────────╮
+│ Lint                       ┆ Status   │
+╞════════════════════════════╪══════════╡
+│ pivotal-tracker-id-missing ┆ disabled │
+╰────────────────────────────┴──────────╯
 ```
 
 You configure the authors [separately](../mit.md). This is so you don't

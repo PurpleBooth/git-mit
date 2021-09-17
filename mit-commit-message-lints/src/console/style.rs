@@ -1,4 +1,4 @@
-use comfy_table::Table;
+use comfy_table::{modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL, ContentArrangement, Table};
 use console::style;
 
 use crate::lints::Lints;
@@ -29,7 +29,11 @@ pub fn to_be_piped(output: &str) {
 
 pub fn lint_table(list: &Lints, enabled: &Lints) {
     let mut table = Table::new();
-    table.set_header(vec!["Lint", "Status"]);
+    table
+        .load_preset(UTF8_FULL)
+        .apply_modifier(UTF8_ROUND_CORNERS)
+        .set_content_arrangement(ContentArrangement::Dynamic)
+        .set_header(vec!["Lint", "Status"]);
 
     let rows: Table = list.clone().into_iter().fold(table, |mut table, lint| {
         table.add_row(vec![
