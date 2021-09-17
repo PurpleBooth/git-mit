@@ -158,10 +158,10 @@ jobs:
             specdown: https://github.com/specdown/specdown/releases/latest/download/specdown-x86_64-pc-windows-msvc.exe
             install: echo nothing-to-install
           - os: macos-latest
-            specdown: https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x86_64-apple-darwin
+            specdown: https://github.com/specdown/specdown/releases/latest/download/specdown-x86_64-apple-darwin
             install: echo nothing-to-install
           - os: ubuntu-latest
-            specdown: https://github.com/specdown/specdown/releases/download/v0.41.0/specdown-x86_64-unknown-linux-gnu
+            specdown: https://github.com/specdown/specdown/releases/latest/download/specdown-x86_64-unknown-linux-gnu
             install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
     steps:
       - run: ${{ matrix.install }}
