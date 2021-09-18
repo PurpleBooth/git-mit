@@ -1,10 +1,11 @@
 use std::{env, path::PathBuf};
 
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
+use cli::app;
 use mit_build_tools::{completion, manpage};
 use mit_commit_message_lints::lints::Lint;
 
-#[path = "src/cli.rs"]
+#[path = "src/cli/mod.rs"]
 mod cli;
 
 fn main() {
@@ -13,7 +14,7 @@ fn main() {
         .collect();
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
 
-    let app = cli::app(&lint_names);
+    let app = app::app(&lint_names);
 
     completion::generate::<Elvish>(&app, &out_dir.join("elvish_completion"));
     completion::generate::<Fish>(&app, &out_dir.join("fish_completion"));

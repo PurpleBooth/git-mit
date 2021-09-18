@@ -3,10 +3,11 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use cli::app::app;
 use git2::{Config, Repository};
 use mit_commit_message_lints::{external::Git2, lints::Lint};
 
-use crate::{cli::app, errors::GitMitConfigError};
+use crate::errors::GitMitConfigError;
 
 mod cli;
 mod cmd;

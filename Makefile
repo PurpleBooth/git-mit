@@ -70,8 +70,8 @@ release:
 .PHONY: fmt
 ## Format what can be formatted
 fmt:
-	cargo fix --allow-dirty
-	cargo +nightly clippy --allow-dirty --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
+	cargo fix --allow-dirty --allow-staged
+	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
 	cargo fmt --all
 	npx prettier --write **.yml **.yaml
 
