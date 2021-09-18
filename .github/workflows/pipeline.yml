@@ -209,7 +209,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
-          default: default
+          default: true
           components: rustfmt, clippy
       - uses: actions-rs/cargo@v1.0.3
         with:
