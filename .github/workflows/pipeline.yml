@@ -77,7 +77,6 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rs/toolchain@v1.0.7
         with:
-          profile: minimal
           toolchain: stable
           default: true
       - uses: actions-rs/cargo@v1.0.3
@@ -109,7 +108,6 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rs/toolchain@v1.0.7
         with:
-          profile: minimal
           toolchain: stable
           default: true
       - uses: actions-rs/cargo@v1.0.3
@@ -142,7 +140,6 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rs/toolchain@v1.0.7
         with:
-          profile: minimal
           toolchain: stable
           default: true
       - uses: actions-rs/cargo@v1.0.3
@@ -187,7 +184,6 @@ jobs:
         shell: bash
       - uses: actions-rs/toolchain@v1.0.7
         with:
-          profile: minimal
           toolchain: stable
           default: true
       - name: Rename wsl bash
@@ -212,9 +208,8 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rs/toolchain@v1
         with:
-          profile: minimal
           toolchain: nightly
-          override: true
+          default: default
           components: rustfmt, clippy
       - uses: actions-rs/cargo@v1.0.3
         with:
@@ -406,7 +401,6 @@ jobs:
       - uses: actions-rs/toolchain@v1.0.7
         with:
           default: true
-          profile: minimal
           toolchain: stable
       - uses: actions-rs/cargo@v1.0.3
         with:
