@@ -183,3 +183,27 @@ More awesome additions
 
 Relates-to: [#12321513]
 ```
+
+Alternatively you can set the template via an environment variable
+
+``` shell,script(expected_exit_code=0)
+git mit-relates-to "12321513"
+echo "Something else" >> README.md
+git add README.md
+git mit bt
+GIT_MIT_RELATES_TO_TEMPLATE="JIR-{value}" git commit -m "More awesome additions"
+```
+
+``` shell,script(expected_exit_code=0)
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+``` text,verify(stream=stdout)
+author: [Billie Thompson billie@example.com] signed-by: [] 
+---
+More awesome additions
+
+Relates-to: JIR-12321513
+```

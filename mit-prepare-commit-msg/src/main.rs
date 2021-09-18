@@ -47,7 +47,10 @@ fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?;
     }
 
-    let relates_to_template = get_relates_to_template(&mut git_config)?;
+    let relates_to_template = matches
+        .value_of("relates-to-template")
+        .map(String::from)
+        .or(get_relates_to_template(&mut git_config)?);
 
     if let Some(exec) = matches.value_of("relates-to-exec") {
         append_relate_to_trailer_to_commit_message(

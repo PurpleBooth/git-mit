@@ -38,4 +38,12 @@ pub fn app() -> App<'static> {
                 .takes_value(true)
                 .required(false),
         )
+        .arg(
+            Arg::new("relates-to-template")
+                .long("relates-to-template")
+                .about("A template to apply to the relates to trailer")
+                .env("GIT_MIT_RELATES_TO_TEMPLATE")
+                .takes_value(true)
+                .required(false),
+        )
 }
