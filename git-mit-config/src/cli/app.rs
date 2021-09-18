@@ -132,5 +132,30 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                 .subcommand(App::new("example").about("Print example mit yaml file"))
                 .setting(AppSettings::SubcommandRequiredElseHelp),
         )
+        .subcommand(
+            App::new("relates-to")
+                .about("Manage relates-to settings")
+                .subcommand(
+                    App::new("template")
+                        .arg(
+                            Arg::new("template")
+                                .about(
+                                    "A TinyTemplate template with a single value variable that will be applied to the relates-to trailer",
+                                )
+                                .env("GIT_MIT_RELATES_TO_TEMPLATE")
+                                .default_value("{ value }")
+                                .takes_value(true),
+                        )
+                        .arg(
+                            Arg::new("scope")
+                                .long("scope")
+                                .short('s')
+                                .possible_values(&["local", "global"])
+                                .default_value("local"),
+                        )
+                        .about("Use a template for the relates-to trailer"),
+                )
+                .setting(AppSettings::SubcommandRequiredElseHelp),
+        )
         .setting(AppSettings::SubcommandRequiredElseHelp)
 }

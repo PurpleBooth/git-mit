@@ -7,3 +7,4 @@ pub(crate) mod lint_enable;
 pub(crate) mod lint_enabled;
 pub(crate) mod lint_generate;
 pub(crate) mod lint_status;
+pub(crate) mod relates_to_template;

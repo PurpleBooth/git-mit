@@ -20,6 +20,8 @@ pub(crate) enum MitPrepareCommitMessageError {
     ReadFromVcs(#[from] external::Error),
     #[error("{0}")]
     Utf8(#[from] std::string::FromUtf8Error),
+    #[error("{0}")]
+    TinyTemplate(#[from] tinytemplate::error::Error),
     #[error("failed to parse shell given {0}")]
     BadShellCommand(#[from] shell_words::ParseError),
 }

@@ -879,7 +879,6 @@ dependencies = [
  "mit-hook-test-helper",
  "openssl",
  "serde",
- "serde_derive",
  "serde_json",
  "shell-words",
  "tempfile",

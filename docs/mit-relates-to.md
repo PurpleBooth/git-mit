@@ -143,3 +143,43 @@ This would become
 ``` shell,skip()
 export GIT_MIT_RELATES_TO_EXEC="bash -c 'echo \"[#\$(curl --silent -X GET -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" \"https://www.pivotaltracker.com/services/v5/projects/\$(cat .pivotal_tracker_project)/stories?filter=state:started+owner:\$(curl --silent \"https://www.pivotaltracker.com/services/v5/me?fields=%3Adefault\" -H \"X-TrackerToken: \$PIVOTAL_TRACKER_TOKEN\" | jq -r .initials)\" | jq .[0].id)]\"'"
 ```
+
+## Templating
+
+It is possible to do some light templating of this command. This makes
+it possible to avoid typing so much, or skip awkward characters.
+
+``` shell,script(expected_exit_code=0)
+git mit-config relates-to template "[#{value}]"
+```
+
+The templating uses
+[TinyTemplate](https://docs.rs/tinytemplate/latest/tinytemplate/), with
+a single `value` variable available, containing the value passed to the
+command
+
+Next time you commit after running relates to
+
+``` shell,script(expected_exit_code=0)
+git mit-relates-to "12321513"
+echo "Something else" >> README.md
+git add README.md
+git mit bt
+git commit -m "More awesome additions"
+```
+
+the commit message will contain the ID
+
+``` shell,script(expected_exit_code=0)
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+``` text,verify(stream=stdout)
+author: [Billie Thompson billie@example.com] signed-by: [] 
+---
+More awesome additions
+
+Relates-to: [#12321513]
+```

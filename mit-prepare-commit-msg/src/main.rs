@@ -7,13 +7,15 @@ use std::{
     path::PathBuf,
     process::{Command, Stdio},
 };
-
+extern crate tinytemplate;
 use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
-    external::Git2,
+    external::{Git2, Vcs},
     mit::{get_commit_coauthor_configuration, Author},
     relates::{entities::RelateTo, vcs::get_relate_to_configuration},
 };
+use serde::Serialize;
+use tinytemplate::TinyTemplate;
 
 use crate::{
     cli::app,
@@ -23,6 +25,11 @@ use crate::{
 
 mod cli;
 mod errors;
+
+#[derive(Serialize)]
+struct Context {
+    value: String,
+}
 
 fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
     let matches = app().get_matches();
@@ -40,16 +47,27 @@ fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?;
     }
 
+    let relates_to_template = get_relates_to_template(&mut git_config)?;
+
     if let Some(exec) = matches.value_of("relates-to-exec") {
         append_relate_to_trailer_to_commit_message(
             commit_message_path,
             &get_relates_to_from_exec(exec)?,
+            relates_to_template,
         )?;
     } else if let Some(relates_to) = get_relate_to_configuration(&mut git_config)? {
-        append_relate_to_trailer_to_commit_message(commit_message_path, &relates_to)?;
+        append_relate_to_trailer_to_commit_message(
+            commit_message_path,
+            &relates_to,
+            relates_to_template,
+        )?;
     }
 
     Ok(())
+}
+
+fn get_relates_to_template(vcs: &mut Git2) -> Result<Option<String>, MitPrepareCommitMessageError> {
+    Ok(vcs.get_str("mit.relate.template")?.map(String::from))
 }
 
 fn append_coauthors_to_commit_message(
@@ -82,11 +100,21 @@ fn append_coauthors_to_commit_message(
 fn append_relate_to_trailer_to_commit_message(
     commit_message_path: PathBuf,
     relates: &RelateTo,
+    template: Option<String>,
 ) -> Result<(), MitPrepareCommitMessageError> {
     let path = String::from(commit_message_path.to_string_lossy());
     let commit_message = CommitMessage::try_from(commit_message_path.clone())?;
 
-    let trailer = Trailer::new("Relates-to", &relates.to());
+    let mut tt = TinyTemplate::new();
+    let defaulted_template = template.unwrap_or_else(|| "{ value }".to_string());
+    tt.add_template("template", &defaulted_template)?;
+    let value = tt.render(
+        "template",
+        &Context {
+            value: relates.to(),
+        },
+    )?;
+    let trailer = Trailer::new("Relates-to", &value);
     add_trailer_if_not_existing(commit_message_path, &commit_message, &trailer)
         .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))?;
 
