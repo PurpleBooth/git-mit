@@ -8,27 +8,34 @@ use std::{
 };
 
 use clap::ArgMatches;
-use mit_commit_message_lints::mit::Authors;
+use mit_commit_message_lints::{console::style::author_table, mit::Authors};
 
 use crate::{errors::GitMitConfigError, get_vcs};
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
     matches
         .subcommand_matches("mit")
-        .filter(|subcommand| subcommand.subcommand_matches("generate").is_some())
+        .filter(|subcommand| {
+            subcommand.subcommand_matches("generate").is_some()
+                || subcommand.subcommand_matches("available").is_some()
+        })
         .map(|_| run(matches))
 }
 
 fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let subcommand = matches
         .subcommand_matches("mit")
-        .and_then(|matches| matches.subcommand_matches("generate"))
+        .and_then(|matches| {
+            matches
+                .subcommand_matches("generate")
+                .or_else(|| matches.subcommand_matches("available"))
+        })
         .unwrap();
 
     let users_config = get_users_config(subcommand)?;
-    let all_authors = Authors::try_from(users_config.as_str());
+    let config_authors = Authors::try_from(users_config.as_str());
 
-    if let Err(error) = &all_authors {
+    if let Err(error) = &config_authors {
         mit_commit_message_lints::console::exit_unparsable_author(error);
     }
 
@@ -37,10 +44,25 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let vcs = get_vcs(is_local, &current_dir)?;
     let vcs_authors = Authors::try_from(&vcs)?;
 
-    let toml: String = all_authors?.merge(&vcs_authors).try_into()?;
+    let authors = config_authors?.merge(&vcs_authors);
 
-    mit_commit_message_lints::console::style::to_be_piped(toml.trim());
+    let output: String = if matches
+        .subcommand_matches("mit")
+        .and_then(|x| x.subcommand_matches("generate"))
+        .is_some()
+    {
+        to_toml(authors)?
+    } else {
+        author_table(&authors)
+    };
+
+    mit_commit_message_lints::console::style::to_be_piped(&output);
     Ok(())
+}
+
+fn to_toml(authors: Authors) -> Result<String, GitMitConfigError> {
+    let toml: String = authors.try_into()?;
+    Ok(toml.trim().to_string())
 }
 
 fn get_users_config(matches: &ArgMatches) -> Result<String, GitMitConfigError> {

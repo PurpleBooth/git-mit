@@ -107,6 +107,26 @@ name = "Someone Else"
 email = "se@example.com"
 ```
 
+To get a summary of the authors that are configured run
+
+``` shell,script(expected_exit_code=0)
+git mit-config mit available
+```
+
+``` text,skip()
+╭─────────┬─────────────────┬────────────────────┬─────────────╮
+│ Initial ┆ Name            ┆ Email              ┆ Signing Key │
+╞═════════╪═════════════════╪════════════════════╪═════════════╡
+│ ae      ┆ Anyone Else     ┆ anyone@example.com ┆ None        │
+├╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ bt      ┆ Billie Thompson ┆ billie@example.com ┆ 0A46826A    │
+├╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ jd      ┆ Jane Doe        ┆ jd@example.com     ┆ None        │
+├╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ se      ┆ Someone Else    ┆ se@example.com     ┆ None        │
+╰─────────┴─────────────────┴────────────────────┴─────────────╯
+```
+
 ## Running the command
 
 We can then use this by passing `-c` to the `git-mit` command.

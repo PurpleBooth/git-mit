@@ -1,7 +1,14 @@
-use comfy_table::{modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL, ContentArrangement, Table};
+use comfy_table::{
+    modifiers::UTF8_ROUND_CORNERS,
+    presets::UTF8_FULL,
+    Attribute,
+    Cell,
+    ContentArrangement,
+    Table,
+};
 use console::style;
 
-use crate::lints::Lints;
+use crate::{lints::Lints, mit::Authors};
 
 pub fn success(success: &str, tip: &str) {
     println!(
@@ -48,4 +55,33 @@ pub fn lint_table(list: &Lints, enabled: &Lints) {
     });
 
     println!("{}", rows);
+}
+
+#[must_use]
+pub fn author_table(authors: &Authors) -> String {
+    let mut table = Table::new();
+    table
+        .load_preset(UTF8_FULL)
+        .apply_modifier(UTF8_ROUND_CORNERS)
+        .set_content_arrangement(ContentArrangement::Dynamic)
+        .set_header(vec!["Initial", "Name", "Email", "Signing Key"]);
+
+    let rows: Table = authors
+        .clone()
+        .into_iter()
+        .fold(table, |mut table, (initial, author)| {
+            table.add_row(vec![
+                Cell::new(initial),
+                Cell::new(author.name()),
+                Cell::new(author.email()),
+                if let Some(key) = author.signingkey() {
+                    Cell::new(key)
+                } else {
+                    Cell::new("None".to_string()).add_attributes(vec![Attribute::Italic])
+                },
+            ]);
+            table
+        });
+
+    format!("{}", rows)
 }

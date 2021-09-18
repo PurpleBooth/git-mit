@@ -1,5 +1,5 @@
 use std::{
-    collections::{BTreeMap, HashSet},
+    collections::{btree_map::IntoIter, BTreeMap, HashSet},
     convert::TryFrom,
 };
 
@@ -73,6 +73,15 @@ impl Authors {
     }
 }
 
+impl IntoIterator for Authors {
+    type IntoIter = IntoIter<String, Author>;
+    type Item = (String, Author);
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.authors.into_iter()
+    }
+}
+
 impl TryFrom<&str> for Authors {
     type Error = ConfigParseError;
 
@@ -112,6 +121,24 @@ mod tests_authors {
     use indoc::indoc;
 
     use crate::mit::lib::author::Author;
+
+    #[test]
+    fn is_is_iterable() {
+        let mut store = BTreeMap::new();
+        store.insert(
+            "bt".into(),
+            Author::new("Billie Thompson", "billie@example.com", None),
+        );
+        let actual = Authors::new(store);
+
+        assert_eq!(
+            actual.into_iter().collect::<Vec<_>>(),
+            vec![(
+                "bt".to_string(),
+                Author::new("Billie Thompson", "billie@example.com", None,)
+            )]
+        );
+    }
 
     #[test]
     fn it_can_get_an_author_in_it() {
