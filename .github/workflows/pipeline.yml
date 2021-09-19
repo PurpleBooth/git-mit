@@ -204,11 +204,9 @@ jobs:
         with:
           toolchain: nightly
           profile: default
+          default: true
           components: rustfmt, clippy
-      - uses: actions-rs/cargo@v1.0.3
-        with:
-          command: fmt
-          args: --all -- --check
+      - uses: cargo fmt --all -- --check
       - run: "cargo clippy --all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple-crate-versions"
       - uses: creyD/prettier_action@v4.0
         with:
