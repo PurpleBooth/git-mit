@@ -209,7 +209,7 @@ jobs:
         with:
           command: fmt
           args: --all -- --check
-      - uses: cargo clippy --all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple-crate-versions
+      - run: "cargo clippy --all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple-crate-versions"
       - uses: creyD/prettier_action@v4.0
         with:
           prettier_options: --check **/*.{yml,yaml}
