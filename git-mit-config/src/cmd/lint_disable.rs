@@ -1,7 +1,8 @@
 use std::{convert::TryInto, env::current_dir, option::Option::None};
 
 use clap::ArgMatches;
-use mit_commit_message_lints::{external, lints::Lints};
+use mit_commit_message_lints::external;
+use mit_lint::Lints;
 
 use crate::{
     errors::{GitMitConfigError, GitMitConfigError::LintNameNotGiven},

@@ -2,30 +2,7 @@ use std::{error::Error, process};
 
 use console::style;
 use mit_commit::CommitMessage;
-
-use crate::{
-    console::exit::Code::{InitialNotMatchedToAuthor, UnparsableAuthorFile},
-    lints::Problem,
-};
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[repr(i32)]
-pub enum Code {
-    InitialNotMatchedToAuthor = 3,
-    UnparsableAuthorFile,
-    StaleAuthor,
-    DuplicatedTrailers,
-    PivotalTrackerIdMissing,
-    JiraIssueKeyMissing,
-    GitHubIdMissing,
-    SubjectNotSeparateFromBody,
-    SubjectLongerThan72Characters,
-    SubjectNotCapitalized,
-    SubjectEndsWithPeriod,
-    BodyWiderThan72Characters,
-    NotConventionalCommit,
-    NotEmojiLog,
-}
+use mit_lint::{Code, Problem};
 
 pub fn unparsable_author(parse_err: &dyn Error) {
     super::style::problem(
@@ -37,7 +14,7 @@ pub fn unparsable_author(parse_err: &dyn Error) {
             parse_err
         ),
     );
-    std::process::exit(UnparsableAuthorFile as i32);
+    std::process::exit(Code::UnparsableAuthorFile as i32);
 }
 
 pub fn initial_not_matched_to_author(initials_without_authors: &[&str]) {
@@ -67,7 +44,7 @@ pub fn initial_not_matched_to_author(initials_without_authors: &[&str]) {
         ),
         &tips.join("\n\n"),
     );
-    std::process::exit(InitialNotMatchedToAuthor as i32);
+    std::process::exit(Code::InitialNotMatchedToAuthor as i32);
 }
 
 pub fn stale_author() {

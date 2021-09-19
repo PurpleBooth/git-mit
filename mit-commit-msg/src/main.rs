@@ -7,8 +7,9 @@ use mit_commit::CommitMessage;
 use mit_commit_message_lints::{
     console::exit_lint_problem,
     external,
-    lints::{lint, Lints},
+    lints::read_from_toml_or_else_vcs,
 };
+use mit_lint::lint;
 
 use crate::{cli::app, errors::MitCommitMsgError};
 
@@ -26,7 +27,7 @@ fn main() -> Result<(), MitCommitMsgError> {
 
     let toml = external::read_toml(current_dir.clone())?;
     let mut git_config = external::Git2::try_from(current_dir)?;
-    let lint_config = Lints::read_from_toml_or_else_vcs(&toml, &mut git_config)?;
+    let lint_config = read_from_toml_or_else_vcs(&toml, &mut git_config)?;
 
     let lint_problems = lint(&commit_message, lint_config);
     if !lint_problems.is_empty() {

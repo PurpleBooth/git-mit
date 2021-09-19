@@ -142,10 +142,8 @@ jobs:
         with:
           toolchain: stable
           default: true
-      - uses: actions-rs/cargo@v1.0.3
-        with:
-          args: " --locked"
-          command: bench
+      - run: cargo install cargo-criterion
+      - run: cargo criterion
   specdown:
     runs-on: ${{ matrix.os }}
     strategy:

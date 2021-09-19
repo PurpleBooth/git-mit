@@ -5,7 +5,8 @@ use std::{
 
 use cli::app::app;
 use git2::{Config, Repository};
-use mit_commit_message_lints::{external::Git2, lints::Lint};
+use mit_commit_message_lints::external::Git2;
+use mit_lint::Lint;
 
 use crate::errors::GitMitConfigError;
 
@@ -14,9 +15,7 @@ mod cmd;
 mod errors;
 
 fn main() -> Result<(), GitMitConfigError> {
-    let lint_names: Vec<&str> = Lint::iterator()
-        .map(mit_commit_message_lints::lints::Lint::name)
-        .collect();
+    let lint_names: Vec<&str> = Lint::iterator().map(Lint::name).collect();
     let matches = app(&lint_names).get_matches();
 
     let possible: Option<Result<(), GitMitConfigError>> = [

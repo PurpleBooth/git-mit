@@ -1,6 +1,3 @@
-pub use cmd::{lint, set_status, SetStatusError};
-pub use lib::{Error, Lint, LintError, Lints, Problem};
+pub use cmd::{read_from_toml_or_else_vcs, set_status, ReadFromTomlOrElseVcsError, SetStatusError};
 
-mod checks;
 mod cmd;
-mod lib;

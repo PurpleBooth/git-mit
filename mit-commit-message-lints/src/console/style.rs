@@ -7,8 +7,9 @@ use comfy_table::{
     Table,
 };
 use console::style;
+use mit_lint::Lints;
 
-use crate::{lints::Lints, mit::Authors};
+use crate::mit::Authors;
 
 pub fn success(success: &str, tip: &str) {
     println!(

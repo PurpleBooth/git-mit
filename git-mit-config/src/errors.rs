@@ -1,6 +1,12 @@
 use std::io;
 
-use mit_commit_message_lints::{external, lints, mit, mit::VcsError};
+use mit_commit_message_lints::{
+    external,
+    lints,
+    lints::ReadFromTomlOrElseVcsError,
+    mit,
+    mit::VcsError,
+};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -14,7 +20,9 @@ pub enum GitMitConfigError {
     #[error("failed to open git repository {0}")]
     Git2(#[from] git2::Error),
     #[error("{0}")]
-    LintsError(#[from] lints::Error),
+    Lints(#[from] mit_lint::Error),
+    #[error("{0}")]
+    ReadFromTomlOrElseVcs(#[from] ReadFromTomlOrElseVcsError),
     #[error(
         "Unrecognised Lint command, only you may only enable or disable, or list available lints"
     )]

@@ -1,7 +1,8 @@
 use std::convert::TryInto;
 
 use clap::ArgMatches;
-use mit_commit_message_lints::{external, lints::Lints};
+use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
+use mit_lint::Lints;
 
 use crate::{
     current_dir,
@@ -27,7 +28,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let toml = external::read_toml(current_dir)?;
 
     let lints = get_selected_lints(subcommand_args)?;
-    let config = Lints::read_from_toml_or_else_vcs(&toml, &mut vcs)?;
+    let config = read_from_toml_or_else_vcs(&toml, &mut vcs)?;
 
     mit_commit_message_lints::console::style::lint_table(&lints, &config);
 

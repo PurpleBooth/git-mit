@@ -1,7 +1,7 @@
 use std::convert::TryInto;
 
 use clap::ArgMatches;
-use mit_commit_message_lints::{external, lints::Lints};
+use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 
 use crate::{current_dir, errors::GitMitConfigError, get_vcs};
 
@@ -18,8 +18,7 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     let mut vcs = get_vcs(is_local, &current_dir)?;
     let input_toml = external::read_toml(current_dir)?;
 
-    let output_toml: String =
-        Lints::read_from_toml_or_else_vcs(&input_toml, &mut vcs)?.try_into()?;
+    let output_toml: String = read_from_toml_or_else_vcs(&input_toml, &mut vcs)?.try_into()?;
 
     mit_commit_message_lints::console::to_be_piped(output_toml.trim());
 

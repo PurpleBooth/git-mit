@@ -1,6 +1,7 @@
+use mit_lint::Lints;
 use thiserror::Error;
 
-use crate::{external, external::Vcs, lints::lib::Lints};
+use crate::{external, external::Vcs};
 
 /// # Errors
 ///
@@ -17,13 +18,9 @@ pub fn set_status(lints: Lints, vcs: &mut dyn Vcs, status: bool) -> Result<(), E
 mod tests_can_enable_lints_via_a_command {
     use std::collections::{BTreeMap, BTreeSet};
 
-    use crate::{
-        external::InMemory,
-        lints::{
-            cmd::set_status::set_status,
-            lib::{Lint, Lints},
-        },
-    };
+    use mit_lint::{Lint, Lints};
+
+    use crate::{external::InMemory, lints::cmd::set_status::set_status};
 
     #[test]
     fn we_can_enable_lints() {

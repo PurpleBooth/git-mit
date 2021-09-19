@@ -3,15 +3,13 @@ use std::{env, path::PathBuf};
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use cli::app;
 use mit_build_tools::{completion, manpage};
-use mit_commit_message_lints::lints::Lint;
+use mit_lint::Lint;
 
 #[path = "src/cli/mod.rs"]
 mod cli;
 
 fn main() {
-    let lint_names: Vec<_> = Lint::iterator()
-        .map(mit_commit_message_lints::lints::Lint::name)
-        .collect();
+    let lint_names: Vec<_> = Lint::iterator().map(mit_lint::Lint::name).collect();
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
 
     let app = app::app(&lint_names);

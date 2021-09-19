@@ -6,6 +6,5 @@ pub use exit::{
     lint_problem as exit_lint_problem,
     stale_author as exit_stale_author,
     unparsable_author as exit_unparsable_author,
-    Code as ExitCode,
 };
 pub use style::to_be_piped;
