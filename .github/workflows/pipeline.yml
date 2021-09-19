@@ -47,6 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
       - uses: PurpleBooth/gfmfmt-action@v1.0.5
         with:
           pattern: ^./([A-Za-z_]+|docs/.*)\.md$
@@ -78,10 +79,8 @@ jobs:
       - uses: actions-rs/toolchain@v1.0.7
         with:
           toolchain: stable
-          default: true
-      - uses: actions-rs/cargo@v1.0.3
-        with:
-          command: check
+          profile: default
+      - run: cargo check
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -109,11 +108,8 @@ jobs:
       - uses: actions-rs/toolchain@v1.0.7
         with:
           toolchain: stable
-          default: true
-      - uses: actions-rs/cargo@v1.0.3
-        with:
-          args: " --locked"
-          command: test
+          profile: default
+      - run: cargo test
   bench:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -141,7 +137,7 @@ jobs:
       - uses: actions-rs/toolchain@v1.0.7
         with:
           toolchain: stable
-          default: true
+          profile: default
       - run: cargo install cargo-criterion
       - run: cargo criterion
   specdown:
@@ -183,7 +179,7 @@ jobs:
       - uses: actions-rs/toolchain@v1.0.7
         with:
           toolchain: stable
-          default: true
+          profile: default
       - name: Rename wsl bash
         if: runner.os == 'Windows'
         run: |
@@ -207,22 +203,16 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
-          default: true
+          profile: default
           components: rustfmt, clippy
       - uses: actions-rs/cargo@v1.0.3
         with:
           command: fmt
           args: --all -- --check
-      - uses: actions-rs/cargo@v1.0.3
-        with:
-          command: clippy
-          args:
-            --all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
-            -D clippy::cargo -A clippy::multiple-crate-versions
+      - uses: cargo clippy --all-targets --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple-crate-versions
       - uses: creyD/prettier_action@v4.0
         with:
           prettier_options: --check **/*.{yml,yaml}
-      - uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
 
   release:
     if: github.ref == 'refs/heads/main'
@@ -273,6 +263,10 @@ jobs:
         name: Checkout the repository
         with:
           ref: v${{ needs.release.outputs.current_version }}
+      - uses: actions-rs/toolchain@v1.0.7
+        with:
+          toolchain: stable
+          profile: default
       - run: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
       - name: Publish mit-build-tools to Crates
         uses: nick-invision/retry@v2.4.1
@@ -398,7 +392,7 @@ jobs:
             target
       - uses: actions-rs/toolchain@v1.0.7
         with:
-          default: true
+          profile: default
           toolchain: stable
       - uses: actions-rs/cargo@v1.0.3
         with:
