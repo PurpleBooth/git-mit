@@ -138,8 +138,7 @@ jobs:
         with:
           toolchain: stable
           profile: default
-      - run: cargo install cargo-criterion
-      - run: cargo criterion
+      - run: cargo bench
   specdown:
     runs-on: ${{ matrix.os }}
     strategy:
