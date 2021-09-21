@@ -24,7 +24,7 @@ serde_derive = "1.0.125"
 indoc = "1.0.3"
 toml = "0.5.8"
 mit-commit = "1.29.8"
-mit-lint = "0.1.4"
+mit-lint = "0.1.5"
 console = "0.14.1"
 comfy-table = "4.1.1"
 
