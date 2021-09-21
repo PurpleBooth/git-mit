@@ -845,9 +845,9 @@ dependencies = [
 
 [[package]]
 name = "mit-lint"
-version = "0.1.3"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c84621f9b8fb2c6da2928ca42c013785b3067eebe5c52a47c65505eba3332bb3"
+checksum = "e094c4913b5dc5929b65096687f1815858d0a23585cc910a14ba1050d72ed9c4"
 dependencies = [
  "indoc",
  "lazy_static",
