@@ -58,7 +58,7 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
 /// If reading from the VCS fails
 fn try_from_vcs(config: &mut dyn Vcs) -> Result<Lints, Error> {
     Ok(Lints::new(
-        Lint::iterator()
+        Lint::all_lints()
             .filter_map(|lint| {
                 get_config_or_default(config, lint, lint.enabled_by_default()).transpose()
             })

@@ -15,7 +15,7 @@ mod cmd;
 mod errors;
 
 fn main() -> Result<(), GitMitConfigError> {
-    let lint_names: Vec<&str> = Lint::iterator().map(Lint::name).collect();
+    let lint_names: Vec<&str> = Lint::all_lints().map(Lint::name).collect();
     let matches = app(&lint_names).get_matches();
 
     let possible: Option<Result<(), GitMitConfigError>> = [

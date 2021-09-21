@@ -9,7 +9,7 @@ use mit_lint::Lint;
 mod cli;
 
 fn main() {
-    let lint_names: Vec<_> = Lint::iterator().map(mit_lint::Lint::name).collect();
+    let lint_names: Vec<_> = Lint::all_lints().map(mit_lint::Lint::name).collect();
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
 
     let app = app::app(&lint_names);
