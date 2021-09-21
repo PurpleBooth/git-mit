@@ -1,6 +1,6 @@
 [package]
 name = "mit-prepare-commit-msg"
-version = "5.6.0"
+version = "5.6.1"
 authors = [
   "Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>"
 ]
@@ -24,7 +24,7 @@ serde_json = "1.0.68"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
-  version = "5.6.0"
+  version = "5.6.1"
 
 [dependencies]
 tinytemplate = "1.2.1"
@@ -44,7 +44,7 @@ console = "0.14.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "5.6.0"
+  version = "5.6.1"
 
 [features]
 default = []
@@ -57,4 +57,4 @@ tempfile = "3.2.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "5.6.0"
+  version = "5.6.1"
