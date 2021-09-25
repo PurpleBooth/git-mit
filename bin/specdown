@@ -71,15 +71,15 @@ function safe_specdown() {
 
 			mkdir "$TEMPORARY_DIR/repo"
 
-			export HOME="$TEMPORARY_DIR"
-			export GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD=false
-			export GIT_MIT_AUTHORS_CONFIG="$TEMPORARY_DIR/git-mit.toml"
 			echo "$MARKDOWN_PATH"
 			git config --global core.autocrlf false
 			specdown run \
 				--running-dir "$TEMPORARY_DIR/repo" \
 				--add-path "$REPOSITORY_DIR/target/release/" \
 				--env KEY="$KEY" \
+				--env HOME="$TEMPORARY_DIR" \
+				--env GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD=false \
+				--env GIT_MIT_AUTHORS_CONFIG="$TEMPORARY_DIR/git-mit.toml" \
 				"$MARKDOWN_PATH"
 		)
 	else
