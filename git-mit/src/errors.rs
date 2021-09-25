@@ -37,6 +37,7 @@ pub enum GitMitError {
 }
 
 impl GitMitError {
+    #[cfg(not(target_os = "windows"))]
     pub(crate) fn new_io(source: String, error: &std::io::Error) -> GitMitError {
         GitMitError::Io(source, format!("{}", error))
     }
