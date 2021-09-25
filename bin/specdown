@@ -29,20 +29,20 @@ function safe_specdown() {
 			mkdir "$GNUPGHOME"
 			cd "$GNUPGHOME"
 
-			cat >batchfile <<EOF
-%echo Generating a basic OpenPGP key
-%no-protection
-Key-Type: DSA
-Key-Length: 1024
-Subkey-Type: ELG-E
-Subkey-Length: 1024
-Name-Real: Billie Thompson
-Name-Email: billie@example.com
-Expire-Date: 0
-# Do a commit here, so that we can later print "done" :-)
-%commit
-%echo done
-EOF
+			cat >batchfile <<-EOF
+				%echo Generating a basic OpenPGP key
+				%no-protection
+				Key-Type: DSA
+				Key-Length: 1024
+				Subkey-Type: ELG-E
+				Subkey-Length: 1024
+				Name-Real: Billie Thompson
+				Name-Email: billie@example.com
+				Expire-Date: 0
+				# Do a commit here, so that we can later print "done" :-)
+				%commit
+				%echo done
+				EOF
 			gpg --batch --generate-key batchfile 2>/dev/null
 			chmod o-rwx "$GNUPGHOME"
 			chmod g-rwx "$GNUPGHOME"
@@ -50,22 +50,22 @@ EOF
 			export KEY
 			rm batchfile
 
-			cat >"$TEMPORARY_DIR/git-mit.toml" <<EOF
-[ae]
-name = "Anyone Else"
-email = "anyone@example.com"
+			cat >"$TEMPORARY_DIR/git-mit.toml" <<-EOF
+				[ae]
+				name = "Anyone Else"
+				email = "anyone@example.com"
 
-[bt]
-name = "Billie Thompson"
-email = "billie@example.com"
-signingkey = "$KEY"
+				[bt]
+				name = "Billie Thompson"
+				email = "billie@example.com"
+				signingkey = "$KEY"
 
-[se]
-name = "Someone Else"
-email = "someone@example.com"
+				[se]
+				name = "Someone Else"
+				email = "someone@example.com"
 
 
-EOF
+				EOF
 
 			mkdir -p "$TEMPORARY_DIR/.config/git-mit/"
 			cp "$TEMPORARY_DIR/git-mit.toml" "$TEMPORARY_DIR/.config/git-mit/mit.toml"
