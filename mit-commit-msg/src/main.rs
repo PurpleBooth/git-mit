@@ -9,11 +9,12 @@ use mit_commit_message_lints::{
     external,
     lints::read_from_toml_or_else_vcs,
 };
-use mit_lint::lint;
+use mit_lint::async_lint;
 
 use crate::{cli::app, errors::MitCommitMsgError};
 
-fn main() -> Result<(), MitCommitMsgError> {
+#[tokio::main]
+async fn main() -> Result<(), MitCommitMsgError> {
     let matches = app().get_matches();
 
     let commit_file_path = matches
@@ -29,7 +30,7 @@ fn main() -> Result<(), MitCommitMsgError> {
     let mut git_config = external::Git2::try_from(current_dir)?;
     let lint_config = read_from_toml_or_else_vcs(&toml, &mut git_config)?;
 
-    let lint_problems = lint(&commit_message, lint_config);
+    let lint_problems = async_lint(&commit_message, lint_config).await;
     if !lint_problems.is_empty() {
         let clipboard_used =
             if !FromStr::from_str(matches.value_of("copy-message-to-clipboard").unwrap())
