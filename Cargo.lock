@@ -486,7 +486,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -508,7 +508,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-config"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -533,7 +533,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-install"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -553,7 +553,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-relates-to"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -854,7 +854,7 @@ dependencies = [
 
 [[package]]
 name = "mit-build-tools"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -881,7 +881,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-message-lints"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "comfy-table",
  "console",
@@ -904,7 +904,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-msg"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -929,7 +929,7 @@ dependencies = [
 
 [[package]]
 name = "mit-hook-test-helper"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "console",
  "git2",
@@ -955,7 +955,7 @@ dependencies = [
 
 [[package]]
 name = "mit-pre-commit"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -977,7 +977,7 @@ dependencies = [
 
 [[package]]
 name = "mit-prepare-commit-msg"
-version = "5.6.4"
+version = "5.6.5"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
