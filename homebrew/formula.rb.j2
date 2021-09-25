@@ -40,6 +40,16 @@ class GitMit < Formula
     end
   end
 
+  def caveats
+    <<~EOS
+      Update your git config to finish installation:
+        # Install into existing repository
+        $ git mit-install
+        # Install into all new repositories
+        $ git mit-install --scope=global
+    EOS
+  end
+
   test do
     system "git", "init", testpath
     system "#{bin}/git-mit-install"
