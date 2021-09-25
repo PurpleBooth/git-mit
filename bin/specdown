@@ -10,15 +10,13 @@ function safe_specdown() {
         )/$(basename "$1")"
 
         (
-            unset GNUPGHOME
             unset EDITOR
             unset VISUAL
-
+            unset GNUPGHOME
             unset XDG_CACHE_HOME
             unset XDG_CONFIG_HOME
             unset XDG_DATA_HOME
             unset XDG_RUNTIME_DIR
-
             unset GIT_MIT_AUTHORS_EXEC
             unset GIT_MIT_AUTHORS_CONFIG
 
@@ -74,13 +72,13 @@ EOF
 
             mkdir "$TEMPORARY_DIR/repo"
 
-            cd "$TEMPORARY_DIR/repo"
             export HOME="$TEMPORARY_DIR"
             export GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD=false
             export GIT_MIT_AUTHORS_CONFIG="$TEMPORARY_DIR/git-mit.toml"
             echo "$MARKDOWN_PATH"
             git config --global core.autocrlf false
             specdown run \
+                --running-dir "$TEMPORARY_DIR/repo" \
                 --add-path "$REPOSITORY_DIR/target/release/" \
                 "$MARKDOWN_PATH"
         )
