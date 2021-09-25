@@ -5,7 +5,6 @@ class GitMit < Formula
   sha256 "{{ file_sha }}"
   depends_on "pandoc" => :build
   depends_on "rust" => :build
-  depends_on "git"
   depends_on "openssl@1.1"
   on_linux do
     depends_on "libxcb"
