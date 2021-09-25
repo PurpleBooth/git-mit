@@ -6,9 +6,7 @@ class GitMit < Formula
   depends_on "pandoc" => :build
   depends_on "rust" => :build
   depends_on "git"
-  on_macos do
-    depends_on "openssl@1.1"
-  end
+  depends_on "openssl@1.1"
   on_linux do
     depends_on "libxcb"
     depends_on "libxkbcommon"
