@@ -47,7 +47,6 @@ function safe_specdown() {
 			chmod o-rwx "$GNUPGHOME"
 			chmod g-rwx "$GNUPGHOME"
 			KEY="$(gpg --with-colons --fingerprint billie@example.com 2>/dev/null | awk -F: '$1 == "fpr" {print $10;}' | head -n 1)"
-			export KEY
 			rm batchfile
 
 			cat >"$TEMPORARY_DIR/git-mit.toml" <<-EOF
@@ -80,6 +79,7 @@ function safe_specdown() {
 			specdown run \
 				--running-dir "$TEMPORARY_DIR/repo" \
 				--add-path "$REPOSITORY_DIR/target/release/" \
+				--env KEY="$KEY" \
 				"$MARKDOWN_PATH"
 		)
 	else
