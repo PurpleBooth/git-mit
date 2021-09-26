@@ -616,7 +616,7 @@ jobs:
       - name: Generate a changelog
         uses: orhun/git-cliff-action@v1
         with:
-          config: cliff.toml
+          config: main-repo/cliff.toml
           args: --verbose --latest --repository main-repo
         env:
           OUTPUT: CHANGELOG.md
