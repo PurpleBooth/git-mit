@@ -565,6 +565,8 @@ jobs:
       - uses: actions/checkout@v2.3.4
         name: Checkout this repository
         with:
+          lfs: true
+          fetch-depth: 0
           path: main-repo
           ref: v${{ needs.release.outputs.current_version }}
       - name: Import GPG key
@@ -615,7 +617,7 @@ jobs:
         uses: orhun/git-cliff-action@v1
         with:
           config: cliff.toml
-          args: --verbose --latest
+          args: --verbose --latest --repository main-repo
         env:
           OUTPUT: CHANGELOG.md
       - shell: bash
