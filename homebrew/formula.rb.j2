@@ -12,13 +12,13 @@ class GitMit < Formula
   end
 
   def install
-    system "cargo", "install", "--locked", "--root", prefix, "--path", "./mit-commit-msg/"
-    system "cargo", "install", "--locked", "--root", prefix, "--path", "./mit-pre-commit/"
-    system "cargo", "install", "--locked", "--root", prefix, "--path", "./mit-prepare-commit-msg/"
-    system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit/"
-    system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit-config/"
-    system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit-relates-to/"
-    system "cargo", "install", "--locked", "--root", prefix, "--path", "./git-mit-install/"
+    system "cargo", "install", "--root", prefix, "--path", "./mit-commit-msg/"
+    system "cargo", "install", "--root", prefix, "--path", "./mit-pre-commit/"
+    system "cargo", "install", "--root", prefix, "--path", "./mit-prepare-commit-msg/"
+    system "cargo", "install", "--root", prefix, "--path", "./git-mit/"
+    system "cargo", "install", "--root", prefix, "--path", "./git-mit-config/"
+    system "cargo", "install", "--root", prefix, "--path", "./git-mit-relates-to/"
+    system "cargo", "install", "--root", prefix, "--path", "./git-mit-install/"
 
     Pathname.glob("**/bash_completion/*").each do |file|
       base = file.basename(".bash")
