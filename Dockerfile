@@ -3,8 +3,7 @@ FROM rust:1.55.0 as builder
 WORKDIR /root/app
 
 ## Build deps for git-mit
-RUN --mount=type=cache,target=/var/cache,sharing=locked \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y libxkbcommon-dev libxcb-shape0-dev libxcb-xfixes0-dev pandoc && \
     rm -rf /var/lib/apt/lists/*
 
@@ -17,33 +16,28 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ### Nice things if for actually using the tool
 ## Git
-RUN --mount=type=cache,target=/var/cache,sharing=locked  \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y git && \
     rm -rf /var/lib/apt/lists/*
 
 ## Bash
-RUN --mount=type=cache,target=/var/cache,sharing=locked  \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y bash && \
     rm -rf /var/lib/apt/lists/*
 
 ## Vim
-RUN --mount=type=cache,target=/var/cache,sharing=locked  \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y vim && \
     rm -rf /var/lib/apt/lists/*
 
 ## Man
-RUN --mount=type=cache,target=/var/cache,sharing=locked  \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y man && \
     rm -rf /var/lib/apt/lists/*
 
 ### The Tool
 ## Runtime deps for git-mit
-RUN --mount=type=cache,target=/var/cache,sharing=locked  \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y libxkbcommon0 libxcb-shape0 libxcb-xfixes0 && \
     rm -rf /var/lib/apt/lists/*
 
