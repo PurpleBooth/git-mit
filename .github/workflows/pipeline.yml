@@ -214,9 +214,6 @@ jobs:
 
   release:
     if: github.ref == 'refs/heads/main'
-    concurrency:
-      group: release
-      cancel-in-progress: true
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_USER: ${{ github.actor }}
