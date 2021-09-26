@@ -611,6 +611,13 @@ jobs:
             git_tag=v${{ needs.release.outputs.current_version }}
             file_sha=${{ steps.hash.outputs.SHA256 }}
         name: Generate the template
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v1
+        with:
+          config: cliff.toml
+          args: --verbose --latest
+        env:
+          OUTPUT: CHANGELOG.md
       - shell: bash
         name: Open a PR on the custom tap repository
         run: |
@@ -620,7 +627,7 @@ jobs:
           git -C homebrew-repo add "Formula/$REPOSITORY_NAME.rb"
           git -C homebrew-repo commit -m "fix: Update $REPOSITORY_NAME to $VERSION"
           git -C homebrew-repo push origin "$REPOSITORY_NAME-$VERSION"
-          (cd homebrew-repo && gh pr create --label releases --base main --fill)
+          (cd homebrew-repo && gh pr create --body-file "../CHANGELOG.md" --label releases --base main --fill)
         env:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
           GIT_TAG: v${{ needs.release.outputs.current_version }}
