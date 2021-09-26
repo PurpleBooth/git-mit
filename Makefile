@@ -26,18 +26,18 @@ bench:
 .PHONY: smoke-test
 ## Run a smoke test and see if the app runs
 smoke-test: build
-	cargo run --locked --bin git-mit -- -h
-	cargo run --locked --bin git-mit-config -- -h
-	cargo run --locked --bin git-mit-relates-to -- -h
-	cargo run --locked --bin git-mit-install -- -h
-	cargo run --locked --bin mit-commit-msg -- -h
-	cargo run --locked --bin mit-pre-commit -- -h
-	cargo run --locked --bin mit-prepare-commit-msg -- -h
+	cargo run --bin git-mit -- -h
+	cargo run --bin git-mit-config -- -h
+	cargo run --bin git-mit-relates-to -- -h
+	cargo run --bin git-mit-install -- -h
+	cargo run --bin mit-commit-msg -- -h
+	cargo run --bin mit-pre-commit -- -h
+	cargo run --bin mit-prepare-commit-msg -- -h
 
 .PHONY: build
 ## Build release version
 build:
-	cargo build --locked --release
+	cargo build --release
 
 .PHONY: lint
 ## Lint it
