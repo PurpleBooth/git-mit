@@ -1,8 +1,9 @@
 use std::path::{Path, PathBuf};
 
-use crate::errors::GitMitInstallError;
+use miette::{IntoDiagnostic, Result};
 
-pub fn link(hook_path: &Path, hook_name: &str) -> Result<(), GitMitInstallError> {
+use crate::errors::GitMitInstallError;
+pub fn link(hook_path: &Path, hook_name: &str) -> Result<()> {
     #[cfg(target_os = "windows")]
     let suffix = ".exe";
     #[cfg(not(target_os = "windows"))]
@@ -32,7 +33,7 @@ pub fn link(hook_path: &Path, hook_name: &str) -> Result<(), GitMitInstallError>
 
         mit_commit_message_lints::console::style::problem("couldn't install hook", &tip);
 
-        return Err(GitMitInstallError::ExistingHook);
+        return Err(GitMitInstallError::ExistingHook).into_diagnostic();
     }
 
     symlink(binary_path, install_path)?;
@@ -41,15 +42,15 @@ pub fn link(hook_path: &Path, hook_name: &str) -> Result<(), GitMitInstallError>
 }
 
 #[cfg(not(target_os = "windows"))]
-fn symlink(binary_path: PathBuf, install_path: PathBuf) -> Result<(), GitMitInstallError> {
-    std::os::unix::fs::symlink(binary_path, install_path)?;
+fn symlink(binary_path: PathBuf, install_path: PathBuf) -> Result<()> {
+    std::os::unix::fs::symlink(binary_path, install_path).into_diagnostic()?;
 
     Ok(())
 }
 
 #[cfg(target_os = "windows")]
-fn symlink(binary_path: PathBuf, install_path: PathBuf) -> Result<(), GitMitInstallError> {
-    std::os::windows::fs::symlink_file(binary_path, install_path)?;
+fn symlink(binary_path: PathBuf, install_path: PathBuf) -> Result<()> {
+    std::os::windows::fs::symlink_file(binary_path, install_path).into_diagnostic()?;
 
     Ok(())
 }

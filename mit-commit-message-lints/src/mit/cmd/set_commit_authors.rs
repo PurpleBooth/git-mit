@@ -1,16 +1,16 @@
 use std::{
     convert::TryInto,
     ops::Add,
-    result::Result,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
+
+use miette::{IntoDiagnostic, Result, WrapErr};
 
 use crate::{
     external::Vcs,
     mit::{
-        cmd::{vcs::has_vcs_coauthor, CONFIG_KEY_EXPIRES},
+        cmd::{errors::Error::NoAuthorsToSet, vcs::has_vcs_coauthor, CONFIG_KEY_EXPIRES},
         Author,
-        VcsError,
     },
 };
 
@@ -22,8 +22,11 @@ pub fn set_commit_authors(
     config: &mut dyn Vcs,
     authors: &[&Author],
     expires_in: Duration,
-) -> Result<(), VcsError> {
-    let (first_author, others) = authors.split_first().ok_or(VcsError::NoAuthorsToSet)?;
+) -> Result<()> {
+    let (first_author, others) = authors
+        .split_first()
+        .ok_or(NoAuthorsToSet)
+        .into_diagnostic()?;
 
     remove_coauthors(config)?;
     set_vcs_user(config, first_author)?;
@@ -224,7 +227,7 @@ mod tests_can_set_author_details {
     }
 }
 
-fn remove_coauthors(config: &mut dyn Vcs) -> Result<(), VcsError> {
+fn remove_coauthors(config: &mut dyn Vcs) -> Result<()> {
     get_defined_vcs_coauthor_keys(config)
         .into_iter()
         .try_for_each(|key| config.remove(&key))?;
@@ -247,25 +250,21 @@ fn get_defined_vcs_coauthor_keys(config: &mut dyn Vcs) -> Vec<String> {
         .collect()
 }
 
-fn set_vcs_coauthors(config: &mut dyn Vcs, authors: &[&Author]) -> Result<(), VcsError> {
+fn set_vcs_coauthors(config: &mut dyn Vcs, authors: &[&Author]) -> Result<()> {
     authors
         .iter()
         .enumerate()
         .try_for_each(|(index, author)| set_vcs_coauthor(config, index, author))
 }
 
-fn set_vcs_coauthor(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<(), VcsError> {
+fn set_vcs_coauthor(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<()> {
     set_vcs_coauthor_name(config, index, author)?;
     set_vcs_coauthor_email(config, index, author)?;
 
     Ok(())
 }
 
-fn set_vcs_coauthor_name(
-    config: &mut dyn Vcs,
-    index: usize,
-    author: &Author,
-) -> Result<(), VcsError> {
+fn set_vcs_coauthor_name(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<()> {
     config.set_str(
         &format!("mit.author.coauthors.{}.name", index),
         &author.name(),
@@ -273,11 +272,7 @@ fn set_vcs_coauthor_name(
     Ok(())
 }
 
-fn set_vcs_coauthor_email(
-    config: &mut dyn Vcs,
-    index: usize,
-    author: &Author,
-) -> Result<(), VcsError> {
+fn set_vcs_coauthor_email(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<()> {
     config.set_str(
         &format!("mit.author.coauthors.{}.email", index),
         &author.email(),
@@ -285,7 +280,7 @@ fn set_vcs_coauthor_email(
     Ok(())
 }
 
-fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), VcsError> {
+fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<()> {
     config.set_str("user.name", &author.name())?;
     config.set_str("user.email", &author.email())?;
     set_author_signing_key(config, author)?;
@@ -293,19 +288,21 @@ fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<(), VcsError> {
     Ok(())
 }
 
-fn set_author_signing_key(config: &mut dyn Vcs, author: &Author) -> Result<(), VcsError> {
+fn set_author_signing_key(config: &mut dyn Vcs, author: &Author) -> Result<()> {
     match author.signingkey() {
         Some(key) => config
             .set_str("user.signingkey", &key)
-            .map_err(VcsError::from),
+            .wrap_err("failed to set git author's signing key "),
         None => config.remove("user.signingkey").or(Ok(())),
     }
 }
 
-fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<(), VcsError> {
-    let now = SystemTime::now().duration_since(UNIX_EPOCH)?;
-    let expiry_time = now.add(expires_in).as_secs().try_into()?;
+fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<()> {
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .into_diagnostic()?;
+    let expiry_time = now.add(expires_in).as_secs().try_into().into_diagnostic()?;
     config
         .set_i64(CONFIG_KEY_EXPIRES, expiry_time)
-        .map_err(VcsError::from)
+        .wrap_err("failed to set author expiry name")
 }

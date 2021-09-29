@@ -124,25 +124,30 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Demonstration Commit Message
+Error: DuplicatedTrailers
 
-This is a commit message that has trailers and is invalid
+  × Your commit message has duplicated trailers
+    ╭─[5:1]
+  5 │ Co-authored-by: Billie Thompson <billie@example.com>
+  6 │ Co-authored-by: Billie Thompson <billie@example.com>
+    · ──────────────────────────┬─────────────────────────
+    ·                           ╰── Duplicated `Co-authored-by`
+  7 │ Signed-off-by: Someone Else <someone@example.com>
+  8 │ Signed-off-by: Someone Else <someone@example.com>
+    · ────────────────────────┬────────────────────────
+    ·                         ╰── Duplicated `Signed-off-by`
+  9 │ Relates-to: #315
+ 10 │ Relates-to: #315
+    · ────────┬───────
+    ·         ╰── Duplicated `Relates-to`
+    ╰────
+  help: These are normally added accidentally when you're rebasing or
+        amending to a commit, sometimes in the text editor, but often by
+        git hooks.
+        
+        You can fix this by deleting the duplicated "Co-authored-by",
+        "Relates-to", "Signed-off-by" fields
 
-Co-authored-by: Billie Thompson <billie@example.com>
-Co-authored-by: Billie Thompson <billie@example.com>
-Signed-off-by: Someone Else <someone@example.com>
-Signed-off-by: Someone Else <someone@example.com>
-Relates-to: #315
-Relates-to: #315
-
-
----
-
-Your commit message has duplicated trailers
-
-These are normally added accidentally when you're rebasing or amending to a commit, sometimes in the text editor, but often by git hooks.
-
-You can fix this by deleting the duplicated "Co-authored-by", "Relates-to", "Signed-off-by" fields
 ```
 
 #### Git Manual Style
@@ -205,17 +210,23 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Demonstration Commit Message
-This is a commit message that is invalid
+Error: SubjectNotSeparateFromBody
 
+  × Your commit message is missing a blank line between the subject and the
+  │ body
+   ╭─[1:1]
+ 1 │ Demonstration Commit Message
+ 2 │ This is a commit message that is invalid
+   · ────────────────────┬───────────────────
+   ·                     ╰── Missing blank line
+   ╰────
+  help: Most tools that render and parse commit messages, expect commit
+        messages to be in the form of subject and body. This includes git
+        itself in tools like git-format-patch. If you don't include this you
+        may see strange behaviour from git and any related tools.
+        
+        To fix this separate subject from body with a blank line
 
----
-
-Your commit message is missing a blank line between the subject and the body
-
-Most tools that render and parse commit messages, expect commit messages to be in the form of subject and body. This includes git itself in tools like git-format-patch. If you don't include this you may see strange behaviour from git and any related tools.
-
-To fix this separate subject from body with a blank line
 ```
 
 ##### subject-longer-than-72-characters
@@ -278,19 +289,23 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+Error: SubjectLongerThan72Characters
 
-Demonstration Commit Message
-This is a commit message that is invalid
+  × Your subject is longer than 72 characters
+   ╭─[1:1]
+ 1 │ 
+   · ┬
+   · ╰── Too long
+ 2 │ 
+ 3 │ Demonstration Commit Message
+   ╰────
+  help: It's important to keep the subject of the commit less than 72
+        characters because when you look at the git log, that's where it
+        truncates the message. This means that people won't get the entirety
+        of the information in your commit.
+        
+        Please keep the subject line 72 characters or under
 
-
----
-
-Your subject is longer than 72 characters
-
-It's important to keep the subject of the commit less than 72 characters because when you look at the git log, that's where it truncates the message. This means that people won't get the entirety of the information in your commit.
-
-Please keep the subject line 72 characters or under
 ```
 
 ##### body-wider-than-72-characters
@@ -353,19 +368,24 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Demonstration Commit Message
+Error: BodyWiderThan72Characters
 
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-This is a commit message that is invalid
+  × Your commit has a body wider than 72 characters
+   ╭─[2:1]
+ 2 │ 
+ 3 │ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+   ·                                                                         ┬
+   ·                                                                         ╰── Too long
+ 4 │ This is a commit message that is invalid
+   ╰────
+  help: It's important to keep the body of the commit narrower than 72
+        characters because when you look at the git log, that's where it
+        truncates the message. This means that people won't get the entirety
+        of the information in your commit.
+        
+        You can fix this by making the lines in your body no more than 72
+        characters
 
-
----
-
-Your commit has a body wider than 72 characters
-
-It's important to keep the body of the commit narrower than 72 characters because when you look at the git log, that's where it truncates the message. This means that people won't get the entirety of the information in your commit.
-
-You can fix this by making the lines in your body no more than 72 characters
 ```
 
 #### Git Manual Style Extended
@@ -437,18 +457,19 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-demonstration Commit Message
+Error: SubjectNotCapitalized
 
-This is a commit message that is invalid
+  × Your commit message is missing a capital letter
+   ╭─[1:1]
+ 1 │ demonstration Commit Message
+   · ┬
+   · ╰── Not capitalised
+ 2 │ 
+   ╰────
+  help: The subject line is a title, and as such should be capitalised.
+        
+        You can fix this by capitalising the first character in the subject
 
-
----
-
-Your commit message is missing a capital letter
-
-The subject line is a title, and as such should be capitalised.
-
-You can fix this by capitalising the first character in the subject
 ```
 
 ###### Disabling
@@ -524,18 +545,23 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Demonstration Commit Message.
+Error: SubjectEndsWithPeriod
 
-This is a commit message that is invalid
+  × Your commit message ends with a period
+   ╭─[1:1]
+ 1 │ .
+   · ┬
+   · ╰── Unneeded period
+ 2 │ 
+   ╰────
+  help: It's important to keep your commits short, because we only have a
+        limited number of characters to use (72) before the subject line
+        is truncated. Full stops aren't normally in subject lines, and take
+        up an extra character, so we shouldn't use them in commit message
+        subjects.
+        
+        You can fix this by removing the period
 
-
----
-
-Your commit message ends with a period
-
-It's important to keep your commits short, because we only have a limited number of characters to use (72) before the subject line is truncated. Full stops aren't normally in subject lines, and take up an extra character, so we shouldn't use them in commit message subjects.
-
-You can fix this by removing the period
 ```
 
 ###### Disabling
@@ -550,7 +576,7 @@ git mit-config lint disable subject-line-ends-with-period
 
 ##### not-conventional-commit
 
-The conventional changelog is a scheme of commit messages used t
+The conventional changelog is a scheme of commit messages used to allow for automation of changelog generation and releases. It's particularly useful for monorepos.
 
 ###### Default status
 
@@ -618,26 +644,29 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Demonstration Commit Message
+Error: NotConventionalCommit (https://www.conventionalcommits.org/)
 
-This is a commit message that is invalid
+  × Your commit message isn't in conventional style
+   ╭─[1:1]
+ 1 │ Demonstration Commit Message
+   · ──────────────┬─────────────
+   ·               ╰── Not conventional
+ 2 │ 
+   ╰────
+  help: It's important to follow the conventional commit style when creating
+        your commit message. By using this style we can automatically
+        calculate the version of software using deployment pipelines, and
+        also generate changelogs and other useful information without human
+        interaction.
+        
+        You can fix it by following style
+        
+        <type>[optional scope]: <description>
+        
+        [optional body]
+        
+        [optional footer(s)]
 
-
----
-
-Your commit message isn't in conventional style
-
-It's important to follow the conventional commit style when creating your commit message. By using this style we can automatically calculate the version of software using deployment pipelines, and also generate changelogs and other useful information without human interaction.
-
-You can fix it by following style
-
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-
-You can read more at https://www.conventionalcommits.org/
 ```
 
 ###### Disabling
@@ -720,25 +749,32 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-demonstration Commit Message
+Error: PivotalTrackerIdMissing
 
-This is a commit message that is invalid
+  × Your commit message is missing a Pivotal Tracker ID
+   ╭─[2:1]
+ 2 │ 
+ 3 │ This is a commit message that is invalid
+   · ────────────────────┬────────────────────
+   ·                     ╰── No Pivotal Tracker ID
+   ╰────
+  help: It's important to add the ID because it allows code to be linked
+        back to the stories it was done for, it can provide a chain
+        of custody for code for audit purposes, and it can give future
+        explorers of the codebase insight into the wider organisational need
+        behind the change. We may also use it for automation purposes, like
+        generating changelogs or notification emails.
+        
+        You can fix this by adding the Id in one of the styles below to the
+        commit message
+        [Delivers #12345678]
+        [fixes #12345678]
+        [finishes #12345678]
+        [#12345884 #12345678]
+        [#12345884,#12345678]
+        [#12345678],[#12345884]
+        This will address [#12345884]
 
-
----
-
-Your commit message is missing a Pivotal Tracker Id
-
-It's important to add the ID because it allows code to be linked back to the stories it was done for, it can provide a chain of custody for code for audit purposes, and it can give future explorers of the codebase insight into the wider organisational need behind the change. We may also use it for automation purposes, like generating changelogs or notification emails.
-
-You can fix this by adding the Id in one of the styles below to the commit message
-[Delivers #12345678]
-[fixes #12345678]
-[finishes #12345678]
-[#12345884 #12345678]
-[#12345884,#12345678]
-[#12345678],[#12345884]
-This will address [#12345884]
 ```
 
 ###### Disabling
@@ -816,18 +852,22 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-demonstration Commit Message
+Error: JiraIssueKeyMissing
 
-This is a commit message that is invalid
+  × Your commit message is missing a JIRA Issue Key
+   ╭─[2:1]
+ 2 │ 
+ 3 │ This is a commit message that is invalid
+   · ────────────────────┬────────────────────
+   ·                     ╰── No JIRA Issue Key
+   ╰────
+  help: It's important to add the issue key because it allows us to link
+        code back to the motivations for doing it, and in some cases provide
+        an audit trail for compliance purposes.
+        
+        You can fix this by adding a key like `JRA-123` to the commit
+        message
 
-
----
-
-Your commit message is missing a JIRA Issue Key
-
-It's important to add the issue key because it allows us to link code back to the motivations for doing it, and in some cases provide an audit trail for compliance purposes.
-
-You can fix this by adding a key like `JRA-123` to the commit message
 ```
 
 ###### Disabling
@@ -905,26 +945,30 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-demonstration Commit Message
+Error: GitHubIdMissing
 
-This is a commit message that is invalid
+  × Your commit message is missing a GitHub ID
+   ╭─[2:1]
+ 2 │ 
+ 3 │ This is a commit message that is invalid
+   · ────────────────────┬────────────────────
+   ·                     ╰── No GitHub ID
+   ╰────
+  help: It's important to add the issue ID because it allows us to link code
+        back to the motivations for doing it, and because we can help people
+        exploring the repository link their issues to specific bits of code.
+        
+        You can fix this by adding a ID like the following examples:
+        
+        #642
+        GH-642
+        AnUser/git-mit#642
+        AnOrganisation/git-mit#642
+        fixes #642
+        
+        Be careful just putting '#642' on a line by itself, as '#' is the
+        default comment character
 
-
----
-
-Your commit message is missing a GitHub ID
-
-It's important to add the issue ID because it allows us to link code back to the motivations for doing it, and because we can help people exploring the repository link their issues to specific bits of code.
-
-You can fix this by adding a ID like the following examples:
-
-#642
-GH-642
-AnUser/git-mit#642
-AnOrganisation/git-mit#642
-fixes #642
-
-Be careful just putting '#642' on a line by itself, as '#' is the default comment character
 ```
 
 ###### Disabling

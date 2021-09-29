@@ -3,10 +3,11 @@ use std::{
     convert::TryInto,
 };
 
+use miette::{Diagnostic, IntoDiagnostic, Result, SourceOffset, SourceSpan};
 use mit_lint::{Lint, Lints, CONFIG_KEY_PREFIX};
 use thiserror::Error as ThisError;
 
-use crate::{external, external::Vcs};
+use crate::external::Vcs;
 
 /// # Errors
 ///
@@ -16,11 +17,23 @@ use crate::{external, external::Vcs};
 ///
 /// Will panic if the lint prefix isn't delimited by dots. This should never
 /// happen as it's a constant
-pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lints, Error> {
+pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lints> {
     let vcs_lints = try_from_vcs(vcs)?;
     // contains PB  // contains lint // contains config
-    let config: BTreeMap<String, BTreeMap<String, BTreeMap<String, bool>>> =
-        toml::from_str(config)?;
+    let config: BTreeMap<String, BTreeMap<String, BTreeMap<String, bool>>> = toml::from_str(config)
+        .map_err(|x| SerialiseLintError {
+            src: config.to_string(),
+            message: x.to_string(),
+            span: x.line_col().map_or(
+                SourceSpan::new(0.into(), SourceOffset::from(0)),
+                |(line, col)| {
+                    SourceSpan::new(
+                        SourceOffset::from_location(config, line, col),
+                        SourceOffset::from(0),
+                    )
+                },
+            ),
+        })?;
 
     let lint_prefix = CONFIG_KEY_PREFIX.split('.').collect::<Vec<_>>();
     let namespace = (*lint_prefix.get(0).unwrap()).to_string();
@@ -41,49 +54,48 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
         .iter()
         .filter_map(|(key, value)| if *value { Some(key as &str) } else { None })
         .collect::<Vec<&str>>()
-        .try_into()?;
+        .try_into()
+        .into_diagnostic()?;
 
     let to_remove: Lints = lint_names
         .iter()
         .filter_map(|(key, value)| if *value { None } else { Some(key as &str) })
         .collect::<Vec<&str>>()
-        .try_into()?;
+        .try_into()
+        .into_diagnostic()?;
 
     Ok(vcs_lints.subtract(&to_remove).merge(&to_add))
+}
+
+#[derive(ThisError, Debug, Diagnostic)]
+#[error("could not parse lint configuration")]
+#[diagnostic(help("you can generate an example using `git mit-config lint generate`"))]
+struct SerialiseLintError {
+    #[source_code]
+    src: String,
+    #[label("invalid in toml: {message}")]
+    span: SourceSpan,
+    message: String,
 }
 
 /// Create lints from the VCS configuration
 ///
 /// # Errors
 /// If reading from the VCS fails
-fn try_from_vcs(config: &mut dyn Vcs) -> Result<Lints, Error> {
+fn try_from_vcs(config: &mut dyn Vcs) -> Result<Lints> {
     Ok(Lints::new(
         Lint::all_lints()
             .filter_map(|lint| {
                 get_config_or_default(config, lint, lint.enabled_by_default()).transpose()
             })
-            .collect::<Result<BTreeSet<Lint>, Error>>()?,
+            .collect::<Result<BTreeSet<Lint>>>()?,
     ))
 }
 
-fn get_config_or_default(
-    config: &dyn Vcs,
-    lint: Lint,
-    default: bool,
-) -> Result<Option<Lint>, Error> {
+fn get_config_or_default(config: &dyn Vcs, lint: Lint, default: bool) -> Result<Option<Lint>> {
     Ok(config
         .get_bool(&lint.config_key())?
         .or(Some(default))
         .filter(|lint_value| lint_value == &true)
         .map(|_| lint))
-}
-
-#[derive(ThisError, Debug)]
-pub enum Error {
-    #[error("lint config reading failed: {0}")]
-    VcsIo(#[from] external::Error),
-    #[error("{0}")]
-    Toml(#[from] toml::de::Error),
-    #[error("{0}")]
-    MitLint(#[from] mit_lint::Error),
 }

@@ -1,50 +1,50 @@
 use std::convert::Infallible;
 
+use miette::Result;
 use thiserror::Error;
-
 pub trait Vcs {
     /// # Errors
     ///
     /// If we can't read the config, or it's not parsable into a bool
-    fn entries(&self, glob: Option<&str>) -> Result<Vec<String>, Error>;
+    fn entries(&self, glob: Option<&str>) -> Result<Vec<String>>;
     /// # Errors
     ///
     /// If we can't read the config, or it's not parsable into a bool
-    fn get_bool(&self, name: &str) -> Result<Option<bool>, Error>;
+    fn get_bool(&self, name: &str) -> Result<Option<bool>>;
     /// # Errors
     ///
     /// If we can't read the config, or it's not parsable into a &str
-    fn get_str(&self, name: &str) -> Result<Option<&str>, Error>;
+    fn get_str(&self, name: &str) -> Result<Option<&str>>;
     /// # Errors
     ///
     /// If we can't read the config, or it's not parsable into a i64
-    fn get_i64(&self, name: &str) -> Result<Option<i64>, Error>;
+    fn get_i64(&self, name: &str) -> Result<Option<i64>>;
     /// # Errors
     ///
     /// If the config fails to write
-    fn set_str(&mut self, name: &str, value: &str) -> Result<(), Error>;
+    fn set_str(&mut self, name: &str, value: &str) -> Result<()>;
     /// # Errors
     ///
     /// If the config fails to write
-    fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Error>;
+    fn set_i64(&mut self, name: &str, value: i64) -> Result<()>;
     /// # Errors
     ///
     /// If the config fails to write
-    fn remove(&mut self, name: &str) -> Result<(), Error>;
+    fn remove(&mut self, name: &str) -> Result<()>;
 }
 
 #[derive(Error, Debug)]
 pub enum Error {
     #[error("failed to interact with git repository: {0}")]
-    Git2Io(#[from] git2::Error),
+    Git2Io(git2::Error),
     #[error("failed to read int from in memory datastore: {0}")]
-    InMemoryParseInt(#[from] std::num::ParseIntError),
+    InMemoryParseInt(std::num::ParseIntError),
     #[error("failed to read bool from in memory datastore: {0}")]
-    InMemoryParseBool(#[from] std::str::ParseBoolError),
+    InMemoryParseBool(std::str::ParseBoolError),
     #[error("failed to read git-mit config")]
-    Io(#[from] std::io::Error),
+    Io(std::io::Error),
     #[error("failed to parse glob {0}")]
-    Glob(#[from] glob::PatternError),
+    Glob(glob::PatternError),
     #[error("{0}")]
-    Infallible(#[from] Infallible),
+    Infallible(Infallible),
 }

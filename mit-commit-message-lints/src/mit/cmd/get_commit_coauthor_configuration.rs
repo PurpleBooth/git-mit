@@ -1,31 +1,29 @@
 use std::{
     convert::TryInto,
     option::Option,
-    result::Result,
-    time::{Duration, SystemTime, SystemTimeError, UNIX_EPOCH},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
+
+use miette::{IntoDiagnostic, Result};
 
 use crate::{
     external::Vcs,
-    mit::{cmd::CONFIG_KEY_EXPIRES, Author, VcsError},
+    mit::{cmd::CONFIG_KEY_EXPIRES, Author},
 };
-
 /// Get the co-authors that are currently defined for this vcs config source
 ///
 /// # Errors
 ///
 /// Will fail if reading or writing from the VCS config fails, or it contains
 /// data in an incorrect format
-pub fn get_commit_coauthor_configuration(
-    config: &mut dyn Vcs,
-) -> Result<Option<Vec<Author>>, VcsError> {
+pub fn get_commit_coauthor_configuration(config: &mut dyn Vcs) -> Result<Option<Vec<Author>>> {
     let config_value = config.get_i64(CONFIG_KEY_EXPIRES)?;
 
     match config_value {
         Some(config_value) => {
             let now = now()?;
 
-            if now < Duration::from_secs(config_value.try_into()?) {
+            if now < Duration::from_secs(config_value.try_into().into_diagnostic()?) {
                 let author_config = get_vcs_authors(config)?;
 
                 Ok(Some(author_config))
@@ -37,11 +35,13 @@ pub fn get_commit_coauthor_configuration(
     }
 }
 
-fn now() -> Result<Duration, SystemTimeError> {
-    SystemTime::now().duration_since(UNIX_EPOCH)
+fn now() -> Result<Duration> {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .into_diagnostic()
 }
 
-fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>, VcsError> {
+fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>> {
     let co_author_names = get_vcs_coauthor_names(config)?;
     let co_author_emails = get_vcs_coauthor_emails(config)?;
 
@@ -60,11 +60,11 @@ fn new_author(parameters: (Option<&str>, Option<&str>)) -> Option<Author> {
     }
 }
 
-fn get_vcs_coauthor_names(config: &dyn Vcs) -> Result<Vec<Option<&str>>, VcsError> {
+fn get_vcs_coauthor_names(config: &dyn Vcs) -> Result<Vec<Option<&str>>> {
     super::vcs::get_vcs_coauthors_config(config, "name")
 }
 
-fn get_vcs_coauthor_emails(config: &dyn Vcs) -> Result<Vec<Option<&str>>, VcsError> {
+fn get_vcs_coauthor_emails(config: &dyn Vcs) -> Result<Vec<Option<&str>>> {
     super::vcs::get_vcs_coauthors_config(config, "email")
 }
 

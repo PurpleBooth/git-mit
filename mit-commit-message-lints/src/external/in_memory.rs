@@ -1,9 +1,10 @@
 use std::{collections::BTreeMap, convert::TryFrom, string::String};
 
 use glob::Pattern;
+use miette::{IntoDiagnostic, Report, Result};
 
 use crate::{
-    external::{Error, Vcs},
+    external::Vcs,
     mit::{Author, Authors},
 };
 
@@ -19,11 +20,11 @@ impl InMemory<'_> {
 }
 
 impl Vcs for InMemory<'_> {
-    fn entries(&self, glob: Option<&str>) -> Result<Vec<String>, Error> {
+    fn entries(&self, glob: Option<&str>) -> Result<Vec<String>> {
         let mut keys: Vec<String> = self.store.keys().map(String::from).collect();
 
         if let Some(pattern) = glob {
-            let compiled_glob = glob::Pattern::new(pattern)?;
+            let compiled_glob = glob::Pattern::new(pattern).into_diagnostic()?;
 
             keys = keys
                 .into_iter()
@@ -34,42 +35,42 @@ impl Vcs for InMemory<'_> {
         Ok(keys)
     }
 
-    fn get_bool(&self, name: &str) -> Result<Option<bool>, Error> {
+    fn get_bool(&self, name: &str) -> Result<Option<bool>> {
         match self.store.get(name) {
             None => Ok(None),
-            Some(raw_value) => Ok(Some(raw_value.parse().map_err(Error::from)?)),
+            Some(raw_value) => Ok(Some(raw_value.parse().into_diagnostic()?)),
         }
     }
 
-    fn get_str(&self, name: &str) -> Result<Option<&str>, Error> {
+    fn get_str(&self, name: &str) -> Result<Option<&str>> {
         Ok(self.store.get(name).map(String::as_str))
     }
 
-    fn get_i64(&self, name: &str) -> Result<Option<i64>, Error> {
+    fn get_i64(&self, name: &str) -> Result<Option<i64>> {
         match self.store.get(name) {
             None => Ok(None),
-            Some(raw_value) => Ok(Some(raw_value.parse().map_err(Error::from)?)),
+            Some(raw_value) => Ok(Some(raw_value.parse().into_diagnostic()?)),
         }
     }
 
-    fn set_str(&mut self, name: &str, value: &str) -> Result<(), Error> {
+    fn set_str(&mut self, name: &str, value: &str) -> Result<()> {
         self.store.insert(name.into(), value.into());
         Ok(())
     }
 
-    fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Error> {
+    fn set_i64(&mut self, name: &str, value: i64) -> Result<()> {
         self.store.insert(name.into(), format!("{}", value));
         Ok(())
     }
 
-    fn remove(&mut self, name: &str) -> Result<(), Error> {
+    fn remove(&mut self, name: &str) -> Result<()> {
         self.store.remove(name);
         Ok(())
     }
 }
 
 impl TryFrom<&'_ InMemory<'_>> for Authors {
-    type Error = Error;
+    type Error = Report;
 
     fn try_from(vcs: &'_ InMemory) -> Result<Self, Self::Error> {
         let raw_entries: BTreeMap<String, BTreeMap<String, String>> = vcs

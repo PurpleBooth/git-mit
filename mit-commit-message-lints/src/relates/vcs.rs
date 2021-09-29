@@ -3,11 +3,11 @@ use std::{
     num,
     ops::Add,
     option::Option,
-    result::Result,
     time,
-    time::{Duration, SystemTime, SystemTimeError, UNIX_EPOCH},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
+use miette::{IntoDiagnostic, Result, WrapErr};
 use thiserror::Error;
 
 use super::entities::RelateTo;
@@ -21,14 +21,14 @@ const CONFIG_KEY_EXPIRES: &str = "mit.relate.expires";
 ///
 /// Will fail if reading or writing from the VCS config fails, or it contains
 /// data in an incorrect format
-pub fn get_relate_to_configuration(config: &mut dyn Vcs) -> Result<Option<RelateTo>, Error> {
+pub fn get_relate_to_configuration(config: &mut dyn Vcs) -> Result<Option<RelateTo>> {
     let config_value = config.get_i64(CONFIG_KEY_EXPIRES)?;
 
     match config_value {
         Some(config_value) => {
             let now = now()?;
 
-            if now < Duration::from_secs(config_value.try_into()?) {
+            if now < Duration::from_secs(config_value.try_into().into_diagnostic()?) {
                 let relate_to_config = get_vcs_relate_to(config)?.map(RelateTo::new);
 
                 Ok(relate_to_config)
@@ -113,13 +113,17 @@ mod tests_able_to_load_config_from_git {
     }
 }
 
-fn now() -> Result<Duration, SystemTimeError> {
-    SystemTime::now().duration_since(UNIX_EPOCH)
+fn now() -> Result<Duration> {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .into_diagnostic()
 }
 
 #[allow(clippy::maybe_infinite_iter)]
-fn get_vcs_relate_to(config: &dyn Vcs) -> Result<Option<&str>, Error> {
-    config.get_str("mit.relate.to").map_err(Error::from)
+fn get_vcs_relate_to(config: &dyn Vcs) -> Result<Option<&str>> {
+    config
+        .get_str("mit.relate.to")
+        .wrap_err("failed to read relate-to issue")
 }
 
 /// # Errors
@@ -130,7 +134,7 @@ pub fn set_relates_to(
     config: &mut dyn Vcs,
     relates: &RelateTo,
     expires_in: Duration,
-) -> Result<(), Error> {
+) -> Result<()> {
     set_vcs_relates_to(config, relates)?;
     set_vcs_expires_time(config, expires_in)?;
 
@@ -214,25 +218,27 @@ mod tests_can_set_relates_to_details {
     }
 }
 
-fn set_vcs_relates_to(config: &mut dyn Vcs, relates: &RelateTo) -> Result<(), Error> {
+fn set_vcs_relates_to(config: &mut dyn Vcs, relates: &RelateTo) -> Result<()> {
     config.set_str("mit.relate.to", &relates.to())?;
     Ok(())
 }
 
-fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<(), Error> {
-    let now = SystemTime::now().duration_since(UNIX_EPOCH)?;
-    let expiry_time = now.add(expires_in).as_secs().try_into()?;
+fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<()> {
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .into_diagnostic()?;
+    let expiry_time = now.add(expires_in).as_secs().try_into().into_diagnostic()?;
     config
         .set_i64(CONFIG_KEY_EXPIRES, expiry_time)
-        .map_err(Error::from)
+        .wrap_err("failed to update the expiry time mit-relates-to")
 }
 
 #[derive(Error, Debug)]
 pub enum Error {
     #[error("failed to interact with the git config: {0}")]
-    GitIo(#[from] external::Error),
+    GitIo(external::Error),
     #[error("failed converted epoch int between types: {0}")]
-    EpochConvert(#[from] num::TryFromIntError),
+    EpochConvert(num::TryFromIntError),
     #[error("failed to get system time: {0}")]
-    SystemTime(#[from] time::SystemTimeError),
+    SystemTime(time::SystemTimeError),
 }

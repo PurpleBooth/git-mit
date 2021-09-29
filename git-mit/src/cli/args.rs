@@ -7,7 +7,7 @@ use crate::errors::{GitMitError, GitMitError::NoAuthorInitialsProvided};
 pub struct Args {
     matches: ArgMatches,
 }
-
+use miette::{IntoDiagnostic, Result};
 impl From<ArgMatches> for Args {
     fn from(matches: ArgMatches) -> Self {
         Args { matches }
@@ -15,26 +15,28 @@ impl From<ArgMatches> for Args {
 }
 
 impl Args {
-    pub(crate) fn cwd() -> Result<PathBuf, GitMitError> {
-        env::current_dir().map_err(|error| GitMitError::new_pwd_io(&error))
+    pub(crate) fn cwd() -> Result<PathBuf> {
+        env::current_dir().into_diagnostic()
     }
 
-    pub(crate) fn timeout(&self) -> Result<u64, GitMitError> {
+    pub(crate) fn timeout(&self) -> Result<u64> {
         self.matches
             .value_of("timeout")
             .ok_or(GitMitError::NoTimeoutSet)
-            .and_then(|timeout| timeout.parse().map_err(GitMitError::from))
+            .into_diagnostic()
+            .and_then(|timeout| timeout.parse().into_diagnostic())
     }
 
     pub fn command(&self) -> Option<&str> {
         self.matches.value_of("command")
     }
 
-    pub fn initials(&self) -> Result<Vec<&str>, crate::GitMitError> {
+    pub fn initials(&self) -> Result<Vec<&str>> {
         self.matches
             .values_of("initials")
             .map(Iterator::collect)
             .ok_or(NoAuthorInitialsProvided)
+            .into_diagnostic()
     }
 
     pub fn author_file(&self) -> Option<&str> {

@@ -27,14 +27,15 @@ serde_derive = "1.0.125"
   version = "5.7.6"
 
 [dependencies]
+thiserror = "1.0.29"
 tokio = { version = "1.12.0", features = ["full"] }
-mit-lint = "1.0.0"
+mit-lint = "2.0.0"
 clap = "3.0.0-beta.4"
 clap_derive = "3.0.0-beta.4"
 clap_generate = "3.0.0-beta.2"
 git2 = "0.13.22"
 openssl = { version = '0.10', optional = true }
-thiserror = "1.0.29"
+miette = { version = "3.0.0", features = [ "fancy" ] }
 mit-commit = "1.29.9"
 console = "0.14.1"
 copypasta = "0.7.1"

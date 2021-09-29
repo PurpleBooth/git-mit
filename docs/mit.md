@@ -263,38 +263,46 @@ Hello, I am a broken file
 
 You'll get an error when you run the command
 
-``` shell,script(name="error-mit",expected_exit_code=4)
+``` shell,script(name="error-mit",expected_exit_code=1)
 git mit -c "broken.toml" ae bt se
 ```
 
 ``` text,verify(script_name="error-mit",stream=stderr)
-Unable to parse the author config
+Error: common::mit::lib::authors::try_from_str::unparsable
 
-You can fix this by correcting the file so it's parsable
+  × could not parse author configuration
+   ╭────
+ 1 │ Hello, I am a broken file
+   · ▲  ▲
+   · │  ╰── invalid in toml: 
+   · ╰── invalid in yaml: 
+   ╰────
+  help: `git mit-config mit example` can show you an example of what it
+        should look like, or you can generate one using `git mit-config
+        mit generate` after setting up some authors with `git mit-config
+        mit set`
 
-You can see a parsable example by running:
-git mit-config mit example
-
-Here's the technical details, that might help you track down the source of the problem
-
-failed to parse mit author config failed to parse authors as toml invalid type: string "Hello, I am a broken file", expected a map at line 1 column 1 or as yaml expected an equals, found a comma at line 1 column 6
 ```
 
 Same applies for `git mit-config mit generate`
 
-``` shell,script(name="error-mit-config-set",expected_exit_code=4)
+``` shell,script(name="error-mit-config-set",expected_exit_code=1)
 git mit-config mit generate -c "broken.toml"
 ```
 
 ``` text,verify(script_name="error-mit-config-set",stream=stderr)
-Unable to parse the author config
+Error: common::mit::lib::authors::try_from_str::unparsable
 
-You can fix this by correcting the file so it's parsable
+  × could not parse author configuration
+   ╭────
+ 1 │ Hello, I am a broken file
+   · ▲  ▲
+   · │  ╰── invalid in toml: 
+   · ╰── invalid in yaml: 
+   ╰────
+  help: `git mit-config mit example` can show you an example of what it
+        should look like, or you can generate one using `git mit-config
+        mit generate` after setting up some authors with `git mit-config
+        mit set`
 
-You can see a parsable example by running:
-git mit-config mit example
-
-Here's the technical details, that might help you track down the source of the problem
-
-failed to parse authors as toml invalid type: string "Hello, I am a broken file", expected a map at line 1 column 1 or as yaml expected an equals, found a comma at line 1 column 6
 ```

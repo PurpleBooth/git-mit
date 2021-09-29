@@ -1,29 +1,26 @@
 use std::{convert::TryInto, env::current_dir, option::Option::None};
 
 use clap::ArgMatches;
+use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::external;
 use mit_lint::Lints;
 
-use crate::{
-    errors::{GitMitConfigError, GitMitConfigError::LintNameNotGiven},
-    get_vcs,
-};
-
-pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
+use crate::{errors::GitMitConfigError::LintNameNotGiven, get_vcs};
+pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
         .subcommand_matches("lint")
         .filter(|subcommand| subcommand.subcommand_matches("enable").is_some())
         .map(|_| run(matches))
 }
 
-fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
+fn run(matches: &ArgMatches) -> Result<()> {
     let subcommand = matches
         .subcommand_matches("lint")
         .and_then(|x| x.subcommand_matches("enable"))
         .unwrap();
 
     let is_local = Some("local") == matches.value_of("scope");
-    let current_dir = current_dir()?;
+    let current_dir = current_dir().into_diagnostic()?;
     let mut vcs = get_vcs(is_local, &current_dir)?;
     let toml = external::read_toml(current_dir)?;
     if !toml.is_empty() {
@@ -35,9 +32,11 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
 
     let lints: Lints = subcommand
         .values_of("lint")
-        .ok_or(LintNameNotGiven)?
+        .ok_or(LintNameNotGiven)
+        .into_diagnostic()?
         .collect::<Vec<_>>()
-        .try_into()?;
+        .try_into()
+        .into_diagnostic()?;
 
     mit_commit_message_lints::lints::set_status(lints, &mut vcs, true)?;
 

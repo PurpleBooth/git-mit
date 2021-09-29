@@ -1,4 +1,3 @@
-use errors::GitMitInstallError;
 use hook::{dir, install};
 use indoc::indoc;
 
@@ -8,8 +7,22 @@ use crate::cli::args::Args;
 mod cli;
 mod errors;
 mod hook;
+use std::env;
 
-fn main() -> Result<(), GitMitInstallError> {
+use miette::Result;
+
+fn main() -> Result<()> {
+    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
+        miette::set_hook(Box::new(|_| {
+            Box::new(
+                miette::MietteHandlerOpts::new()
+                    .force_graphical(true)
+                    .build(),
+            )
+        }))
+        .unwrap();
+    }
+
     let args: Args = app::app().get_matches().into();
 
     let hooks = dir::create(args.scope().is_global())?;

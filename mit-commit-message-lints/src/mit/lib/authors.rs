@@ -3,6 +3,7 @@ use std::{
     convert::TryFrom,
 };
 
+use miette::{Diagnostic, SourceOffset, SourceSpan};
 use thiserror::Error;
 
 use crate::mit::lib::author::Author;
@@ -83,32 +84,60 @@ impl IntoIterator for Authors {
 }
 
 impl TryFrom<&str> for Authors {
-    type Error = ConfigParseError;
+    type Error = SerialiseAuthorsError;
 
-    fn try_from(input: &str) -> Result<Self, Self::Error> {
+    fn try_from(input: &str) -> std::result::Result<Self, Self::Error> {
         serde_yaml::from_str(input)
             .or_else(|yaml_error| {
-                toml::from_str(input)
-                    .map_err(|toml_error| ConfigParseError::Parse(yaml_error, toml_error))
+                toml::from_str(input).map_err(|toml_error| SerialiseAuthorsError {
+                    src: input.to_string(),
+                    toml_span: (span_from_toml_err(&toml_error, input), 0).into(),
+                    yaml_span: (span_from_yaml_err(&yaml_error, input), 0).into(),
+                    yaml_message: "".to_string(),
+                    toml_message: "".to_string(),
+                })
             })
-            .map_err(ConfigParseError::from)
             .map(Authors::new)
     }
 }
 
-#[derive(Error, Debug)]
-pub enum ConfigParseError {
-    #[error("failed to parse authors as toml {0} or as yaml {1}")]
-    Parse(serde_yaml::Error, toml::de::Error),
-    #[error("failed to serialise toml {0}")]
-    SerialiseYaml(#[from] toml::ser::Error),
+fn span_from_toml_err(err: &toml::de::Error, input: &str) -> usize {
+    err.line_col()
+        .map_or(SourceOffset::from(0), |(line, col)| {
+            SourceOffset::from_location(input, line, col)
+        })
+        .offset()
 }
 
-impl TryFrom<Authors> for String {
-    type Error = ConfigParseError;
+fn span_from_yaml_err(err: &serde_yaml::Error, input: &str) -> usize {
+    err.location()
+        .map_or(SourceOffset::from(0), |location| {
+            SourceOffset::from_location(input, location.line(), location.column())
+        })
+        .offset()
+}
 
-    fn try_from(value: Authors) -> Result<Self, Self::Error> {
-        toml::to_string(&value.authors).map_err(ConfigParseError::from)
+#[derive(Error, Debug, Diagnostic)]
+#[error("could not parse author configuration")]
+#[diagnostic(
+code(common::mit::lib::authors::try_from_str::unparsable),
+help("`git mit-config mit example` can show you an example of what it should look like, or you can generate one using `git mit-config mit generate` after setting up some authors with `git mit-config mit set`"),
+)]
+pub struct SerialiseAuthorsError {
+    #[source_code]
+    src: String,
+    #[label("invalid in toml: {toml_message}")]
+    toml_span: SourceSpan,
+    #[label("invalid in yaml: {yaml_message}")]
+    yaml_span: SourceSpan,
+
+    yaml_message: String,
+    toml_message: String,
+}
+
+impl From<Authors> for String {
+    fn from(value: Authors) -> String {
+        toml::to_string(&value.authors).unwrap()
     }
 }
 
@@ -116,11 +145,17 @@ impl TryFrom<Authors> for String {
 mod tests_authors {
     #![allow(clippy::wildcard_imports)]
 
-    use std::convert::TryInto;
+    use std::{
+        collections::BTreeMap,
+        convert::{TryFrom, TryInto},
+    };
 
     use indoc::indoc;
 
-    use crate::mit::lib::author::Author;
+    use crate::{
+        external::InMemory,
+        mit::{lib::author::Author, Authors},
+    };
 
     #[test]
     fn is_is_iterable() {
@@ -135,7 +170,7 @@ mod tests_authors {
             actual.into_iter().collect::<Vec<_>>(),
             vec![(
                 "bt".to_string(),
-                Author::new("Billie Thompson", "billie@example.com", None,)
+                Author::new("Billie Thompson", "billie@example.com", None)
             )]
         );
     }
@@ -151,7 +186,7 @@ mod tests_authors {
 
         assert_eq!(
             actual.get(&["bt"]),
-            vec![&Author::new("Billie Thompson", "billie@example.com", None,)]
+            vec![&Author::new("Billie Thompson", "billie@example.com", None)]
         );
     }
 
@@ -170,11 +205,11 @@ mod tests_authors {
 
         assert_eq!(
             actual.get(&["bt"]),
-            vec![&Author::new("Billie Thompson", "billie@example.com", None,)]
+            vec![&Author::new("Billie Thompson", "billie@example.com", None)]
         );
         assert_eq!(
             actual.get(&["se"]),
-            vec![&Author::new("Somebody Else", "somebody@example.com", None,)]
+            vec![&Author::new("Somebody Else", "somebody@example.com", None)]
         );
     }
 
@@ -375,10 +410,6 @@ mod tests_authors {
 
         assert_eq!(expected, actual);
     }
-
-    use std::{collections::BTreeMap, convert::TryFrom};
-
-    use crate::{external::InMemory, mit::Authors};
 
     #[test]
     fn it_can_give_me_an_author() {

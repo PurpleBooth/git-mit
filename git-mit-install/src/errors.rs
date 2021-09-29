@@ -1,11 +1,10 @@
-use std::io;
-
-#[derive(thiserror::Error, Debug)]
+use miette::Diagnostic;
+#[derive(thiserror::Error, Debug, Diagnostic)]
 pub enum GitMitInstallError {
-    #[error("failed install hook")]
+    #[error("failed to install hook")]
+    #[diagnostic(
+        url(docsrs),
+        help("open `.git/hooks` and see if there's something conflicting there")
+    )]
     ExistingHook,
-    #[error("failed to find git repository: {0}")]
-    Git2(#[from] git2::Error),
-    #[error("failed to install hooks: {0}")]
-    Io(#[from] io::Error),
 }

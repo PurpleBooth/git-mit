@@ -1,12 +1,11 @@
+use miette::Result;
 use mit_lint::Lints;
-use thiserror::Error;
 
-use crate::{external, external::Vcs};
-
+use crate::external::Vcs;
 /// # Errors
 ///
 /// Errors if writing to the VCS config fails
-pub fn set_status(lints: Lints, vcs: &mut dyn Vcs, status: bool) -> Result<(), Error> {
+pub fn set_status(lints: Lints, vcs: &mut dyn Vcs, status: bool) -> Result<()> {
     lints
         .config_keys()
         .into_iter()
@@ -59,10 +58,4 @@ mod tests_can_enable_lints_via_a_command {
             .clone();
         assert_eq!(expected, actual);
     }
-}
-
-#[derive(Error, Debug)]
-pub enum Error {
-    #[error("could not set lint status: {0}")]
-    VcsIo(#[from] external::Error),
 }

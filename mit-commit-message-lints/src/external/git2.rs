@@ -1,12 +1,12 @@
 use std::{collections::BTreeMap, convert::TryFrom, path::PathBuf};
 
 use git2::{Config, Repository};
+use miette::{IntoDiagnostic, Report, Result};
 
 use crate::{
-    external::{Error, Vcs},
+    external::Vcs,
     mit::{Author, Authors},
 };
-
 pub struct Git2 {
     config_snapshot: git2::Config,
     config_live: git2::Config,
@@ -24,19 +24,19 @@ impl Git2 {
         }
     }
 
-    fn config_defined(&self, lint_name: &str) -> Result<bool, Error> {
+    fn config_defined(&self, lint_name: &str) -> Result<bool> {
         self.config_snapshot
             .entries(Some(lint_name))
             .map(|entries| entries.count() > 0)
-            .map_err(Error::from)
+            .into_diagnostic()
     }
 }
 
 impl Vcs for Git2 {
-    fn entries(&self, glob: Option<&str>) -> Result<Vec<String>, Error> {
+    fn entries(&self, glob: Option<&str>) -> Result<Vec<String>> {
         let mut entries = vec![];
-        for entry in &self.config_snapshot.entries(glob)? {
-            if let Some(name) = entry?.name() {
+        for entry in &self.config_snapshot.entries(glob).into_diagnostic()? {
+            if let Some(name) = entry.into_diagnostic()?.name() {
                 entries.push(name.into());
             }
         }
@@ -44,63 +44,63 @@ impl Vcs for Git2 {
         Ok(entries)
     }
 
-    fn get_bool(&self, name: &str) -> Result<Option<bool>, Error> {
+    fn get_bool(&self, name: &str) -> Result<Option<bool>> {
         if self.config_defined(name)? {
-            Ok(Some(self.config_snapshot.get_bool(name)?))
+            Ok(Some(self.config_snapshot.get_bool(name).into_diagnostic()?))
         } else {
             Ok(None)
         }
     }
 
-    fn get_str(&self, name: &str) -> Result<Option<&str>, Error> {
+    fn get_str(&self, name: &str) -> Result<Option<&str>> {
         let defined = self.config_defined(name)?;
 
         if defined {
             self.config_snapshot
                 .get_str(name)
                 .map(Some)
-                .map_err(Error::from)
+                .into_diagnostic()
         } else {
             Ok(None)
         }
     }
 
-    fn get_i64(&self, name: &str) -> Result<Option<i64>, Error> {
+    fn get_i64(&self, name: &str) -> Result<Option<i64>> {
         let defined = self.config_defined(name)?;
 
         if defined {
             self.config_snapshot
                 .get_i64(name)
                 .map(Some)
-                .map_err(Error::from)
+                .into_diagnostic()
         } else {
             Ok(None)
         }
     }
 
-    fn set_str(&mut self, name: &str, value: &str) -> Result<(), Error> {
-        self.config_live.set_str(name, value)?;
+    fn set_str(&mut self, name: &str, value: &str) -> Result<()> {
+        self.config_live.set_str(name, value).into_diagnostic()?;
 
-        let config = self.config_live.snapshot()?;
+        let config = self.config_live.snapshot().into_diagnostic()?;
 
         self.config_snapshot = config;
 
         Ok(())
     }
 
-    fn set_i64(&mut self, name: &str, value: i64) -> Result<(), Error> {
-        self.config_live.set_i64(name, value)?;
+    fn set_i64(&mut self, name: &str, value: i64) -> Result<()> {
+        self.config_live.set_i64(name, value).into_diagnostic()?;
 
-        let config = self.config_live.snapshot()?;
+        let config = self.config_live.snapshot().into_diagnostic()?;
         self.config_snapshot = config;
 
         Ok(())
     }
 
-    fn remove(&mut self, name: &str) -> Result<(), Error> {
-        self.config_live.remove(name)?;
+    fn remove(&mut self, name: &str) -> Result<()> {
+        self.config_live.remove(name).into_diagnostic()?;
 
-        let config = self.config_live.snapshot()?;
+        let config = self.config_live.snapshot().into_diagnostic()?;
         self.config_snapshot = config;
 
         Ok(())
@@ -108,19 +108,19 @@ impl Vcs for Git2 {
 }
 
 impl TryFrom<PathBuf> for Git2 {
-    type Error = Error;
+    type Error = Report;
 
     fn try_from(current_dir: PathBuf) -> Result<Self, Self::Error> {
         Repository::discover(current_dir)
             .and_then(|x| x.config())
             .or_else(|_| Config::open_default())
             .map(Git2::new)
-            .map_err(Error::from)
+            .into_diagnostic()
     }
 }
 
 impl TryFrom<&'_ Git2> for Authors {
-    type Error = Error;
+    type Error = Report;
 
     fn try_from(vcs: &'_ Git2) -> Result<Self, Self::Error> {
         let raw_entries: BTreeMap<String, BTreeMap<String, String>> = vcs

@@ -1,16 +1,17 @@
 use clap::ArgMatches;
+use miette::Result;
 use mit_commit_message_lints::{external, external::Vcs};
 
-use crate::{current_dir, errors::GitMitConfigError, get_vcs};
+use crate::{current_dir, get_vcs};
 
-pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
+pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
         .subcommand_matches("relates-to")
         .filter(|subcommand| subcommand.subcommand_matches("template").is_some())
         .map(|_| run(matches))
 }
 
-fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
+fn run(matches: &ArgMatches) -> Result<()> {
     let subcommand_args = matches
         .subcommand_matches("relates-to")
         .and_then(|x| x.subcommand_matches("template"))

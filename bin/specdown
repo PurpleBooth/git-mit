@@ -21,6 +21,7 @@ function safe_specdown() {
 
             unset GIT_MIT_AUTHORS_EXEC
             unset GIT_MIT_AUTHORS_CONFIG
+            export DEBUG_PRETTY_ERRORS="true"
 
             REPOSITORY_DIR="$PWD"
             TEMPORARY_DIR="$(mktemp -d)"

@@ -10,8 +10,20 @@ use mit_commit_message_lints::{
 
 mod cli;
 mod errors;
+use miette::{IntoDiagnostic, Result};
 
-fn main() -> Result<(), errors::GitRelatesTo> {
+fn main() -> Result<()> {
+    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
+        miette::set_hook(Box::new(|_| {
+            Box::new(
+                miette::MietteHandlerOpts::new()
+                    .force_graphical(true)
+                    .build(),
+            )
+        }))
+        .unwrap();
+    }
+
     let args: Args = app::app().get_matches().into();
 
     let relates_to = args.issue_number()?;
@@ -20,7 +32,7 @@ fn main() -> Result<(), errors::GitRelatesTo> {
         not_setup_warning();
     };
 
-    let current_dir = env::current_dir()?;
+    let current_dir = env::current_dir().into_diagnostic()?;
     let mut vcs = Git2::try_from(current_dir)?;
     set_relates_to(&mut vcs, &RelateTo::new(relates_to), args.timeout()?)?;
 

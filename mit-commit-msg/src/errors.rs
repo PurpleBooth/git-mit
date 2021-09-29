@@ -1,29 +1,127 @@
-use std::error;
+use std::{error, fmt::Display};
 
-use mit_commit::CommitMessageError;
-use mit_commit_message_lints::{external, lints::ReadFromTomlOrElseVcsError};
+use miette::{Diagnostic, LabeledSpan, Result, Severity, SourceCode};
+use mit_lint::Problem;
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Diagnostic)]
 pub(crate) enum MitCommitMsgError {
     #[error("expected file path name")]
+    #[diagnostic()]
     CommitPathMissing,
-    #[error("failed to read git config from `{0}`: {1}")]
-    Io(String, String),
     #[error("{0}")]
-    MitCommitMessageLint(#[from] mit_lint::Error),
-    #[error("{0}")]
-    MitCommitMessage(#[from] CommitMessageError),
-    #[error("{0}")]
-    External(#[from] external::Error),
-    #[error("{0}")]
-    ReadFromTomlOrElseVcs(#[from] ReadFromTomlOrElseVcsError),
-    #[error("{0}")]
-    Clipboard(#[from] Box<dyn error::Error + Sync + Send>),
+    #[diagnostic()]
+    Clipboard(#[source] Box<dyn error::Error + Sync + Send>),
 }
 
-impl MitCommitMsgError {
-    pub(crate) fn new_pwd_io(error: &std::io::Error) -> MitCommitMsgError {
-        MitCommitMsgError::Io("$PWD".into(), format!("{}", error))
+#[derive(Error, Debug)]
+#[error("multiple lint problems")]
+pub(crate) struct AggregateProblem(Vec<Problem>);
+
+impl AggregateProblem {
+    pub(crate) fn to(problems: Vec<Problem>) -> Result<()> {
+        if problems.len() == 1 {
+            return Err(problems.first().cloned().unwrap().into());
+        } else if problems.is_empty() {
+            Ok(())
+        } else {
+            Err(AggregateProblem(problems).into())
+        }
+    }
+}
+
+impl Diagnostic for AggregateProblem {
+    fn code<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+        let collection = self
+            .0
+            .iter()
+            .filter_map(|x| (x as &dyn Diagnostic).code().map(|x| x.to_string()))
+            .collect::<Vec<String>>();
+
+        if collection.is_empty() {
+            None
+        } else {
+            Some(Box::new(collection.join(" ")))
+        }
+    }
+
+    fn severity(&self) -> Option<Severity> {
+        let collection = self
+            .0
+            .iter()
+            .filter_map(|x| x.severity())
+            .collect::<Vec<Severity>>();
+
+        if collection.is_empty() {
+            None
+        } else if collection.iter().any(|x| x == &Severity::Error) {
+            Some(Severity::Error)
+        } else if collection.iter().any(|x| x == &Severity::Warning) {
+            Some(Severity::Warning)
+        } else {
+            Some(Severity::Advice)
+        }
+    }
+
+    fn help<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+        let collection = self
+            .0
+            .iter()
+            .filter_map(|x| (x as &dyn Diagnostic).help().map(|x| x.to_string()))
+            .collect::<Vec<String>>();
+
+        if collection.is_empty() {
+            None
+        } else {
+            Some(Box::new(collection.join("\n\n---\n\n")))
+        }
+    }
+
+    fn url<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+        let collection = self
+            .0
+            .iter()
+            .filter_map(|x| (x as &dyn Diagnostic).url().map(|x| x.to_string()))
+            .collect::<Vec<String>>();
+
+        if collection.is_empty() {
+            None
+        } else {
+            Some(Box::new(collection.join(" ")))
+        }
+    }
+
+    fn source_code(&self) -> Option<&dyn SourceCode> {
+        self.0.first().and_then(|x| x.source_code())
+    }
+
+    fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
+        let collection = self
+            .0
+            .iter()
+            .filter_map(|x| x.labels())
+            .flatten()
+            .collect::<Vec<LabeledSpan>>();
+
+        if collection.is_empty() {
+            return None;
+        }
+
+        Some(Box::new(collection.into_iter()))
+    }
+
+    fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item = &'a dyn Diagnostic> + 'a>> {
+        let collection = self
+            .0
+            .iter()
+            .filter_map(|x| x.related())
+            .flatten()
+            .collect::<Vec<&dyn Diagnostic>>();
+
+        if collection.is_empty() {
+            return None;
+        }
+
+        Some(Box::new(collection.into_iter()))
     }
 }

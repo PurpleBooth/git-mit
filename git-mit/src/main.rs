@@ -1,33 +1,42 @@
-mod cli;
-mod config;
-mod errors;
-
-use std::{convert::TryFrom, env, option::Option::None, time::Duration};
 #[cfg(test)]
 extern crate quickcheck;
 #[cfg(test)]
 #[macro_use(quickcheck)]
 extern crate quickcheck_macros;
+
+use std::{convert::TryFrom, env, option::Option::None, time::Duration};
+
 use git2::Repository;
+use miette::Result;
 use mit_commit_message_lints::{
-    console::{exit_initial_not_matched_to_author, exit_unparsable_author, style},
+    console::{exit::UnknownAuthor, style},
     external::Git2,
     mit::{set_commit_authors, Authors},
 };
 
-use crate::{cli::args::Args, errors::GitMitError};
+use crate::cli::args::Args;
 
-fn main() -> Result<(), GitMitError> {
+mod cli;
+mod config;
+mod errors;
+
+fn main() -> Result<()> {
+    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
+        miette::set_hook(Box::new(|_| {
+            Box::new(
+                miette::MietteHandlerOpts::new()
+                    .force_graphical(true)
+                    .build(),
+            )
+        }))
+        .unwrap();
+    }
+
     let args: cli::args::Args = cli::app::app().get_matches().into();
 
     let mut git_config = Git2::try_from(Args::cwd()?)?;
-    let file_authors = crate::config::author::load(&args);
-
-    if let Err(error) = &file_authors {
-        exit_unparsable_author(error);
-    };
-
-    let authors = file_authors?.merge(&Authors::try_from(&git_config)?);
+    let file_authors = crate::config::author::load(&args)?;
+    let authors = file_authors.merge(&Authors::try_from(&git_config)?);
     let initials = args.initials()?;
 
     if repo_present() && !is_hook_present() {
@@ -37,7 +46,15 @@ fn main() -> Result<(), GitMitError> {
     let missing = authors.missing_initials(initials.clone());
 
     if !missing.is_empty() {
-        exit_initial_not_matched_to_author(&missing);
+        return Err(UnknownAuthor::new(
+            &initials
+                .clone()
+                .into_iter()
+                .map(String::from)
+                .collect::<Vec<_>>(),
+            missing.clone().into_iter().map(String::from).collect(),
+        )
+        .into());
     }
 
     set_commit_authors(

@@ -17,7 +17,7 @@ clap_derive = "3.0.0-beta.4"
 tinytemplate = "1.2.1"
 serde_json = "1.0.68"
 serde_derive = "1.0.125"
-mit-lint = "1.0.0"
+mit-lint = "2.0.0"
 
   [build-dependencies.serde]
   version = "1.0.125"
@@ -32,10 +32,11 @@ mit-lint = "1.0.0"
   version = "5.7.6"
 
 [dependencies]
-mit-lint = "1.0.0"
+mit-lint = "2.0.0"
 shell-words = "1.0.0"
 xdg = "2.2.0"
 thiserror = "1.0.29"
+miette = { version = "3.0.0", features = [ "fancy" ] }
 git2 = "0.13.22"
 openssl = { version = '0.10', optional = true }
 clap = "3.0.0-beta.4"

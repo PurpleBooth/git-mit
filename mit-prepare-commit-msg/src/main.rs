@@ -2,7 +2,6 @@ use std::{
     convert::TryFrom,
     env,
     fs::File,
-    io,
     io::Write,
     path::PathBuf,
     process::{Command, Stdio},
@@ -22,7 +21,6 @@ use crate::{
     errors::MitPrepareCommitMessageError,
     MitPrepareCommitMessageError::MissingCommitFilePath,
 };
-
 mod cli;
 mod errors;
 
@@ -30,16 +28,27 @@ mod errors;
 struct Context {
     value: String,
 }
+use miette::{IntoDiagnostic, Result};
 
-fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
+fn main() -> Result<()> {
+    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
+        miette::set_hook(Box::new(|_| {
+            Box::new(
+                miette::MietteHandlerOpts::new()
+                    .force_graphical(true)
+                    .build(),
+            )
+        }))
+        .unwrap();
+    }
     let matches = app().get_matches();
 
     let commit_message_path = matches
         .value_of("commit-message-path")
         .map(PathBuf::from)
-        .ok_or(MissingCommitFilePath)?;
-    let current_dir =
-        env::current_dir().map_err(|err| MitPrepareCommitMessageError::new_cwd_io(&err))?;
+        .ok_or(MissingCommitFilePath)
+        .into_diagnostic()?;
+    let current_dir = env::current_dir().into_diagnostic()?;
 
     let mut git_config = Git2::try_from(current_dir)?;
 
@@ -69,16 +78,17 @@ fn main() -> Result<(), errors::MitPrepareCommitMessageError> {
     Ok(())
 }
 
-fn get_relates_to_template(vcs: &mut Git2) -> Result<Option<String>, MitPrepareCommitMessageError> {
+fn get_relates_to_template(vcs: &mut Git2) -> Result<Option<String>> {
     Ok(vcs.get_str("mit.relate.template")?.map(String::from))
 }
 
 fn append_coauthors_to_commit_message(
     commit_message_path: PathBuf,
     authors: &[Author],
-) -> Result<(), MitPrepareCommitMessageError> {
-    let path = String::from(commit_message_path.to_string_lossy());
-    let mut commit_message = CommitMessage::try_from(commit_message_path.clone())?;
+) -> Result<()> {
+    let _path = String::from(commit_message_path.to_string_lossy());
+    let mut commit_message =
+        CommitMessage::try_from(commit_message_path.clone()).into_diagnostic()?;
 
     let trailers = authors
         .iter()
@@ -97,29 +107,31 @@ fn append_coauthors_to_commit_message(
 
     File::create(commit_message_path)
         .and_then(|mut file| file.write_all(String::from(commit_message).as_bytes()))
-        .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))
+        .into_diagnostic()
 }
 
 fn append_relate_to_trailer_to_commit_message(
     commit_message_path: PathBuf,
     relates: &RelateTo,
     template: Option<String>,
-) -> Result<(), MitPrepareCommitMessageError> {
-    let path = String::from(commit_message_path.to_string_lossy());
-    let commit_message = CommitMessage::try_from(commit_message_path.clone())?;
+) -> Result<()> {
+    let _path = String::from(commit_message_path.to_string_lossy());
+    let commit_message = CommitMessage::try_from(commit_message_path.clone()).into_diagnostic()?;
 
     let mut tt = TinyTemplate::new();
     let defaulted_template = template.unwrap_or_else(|| "{ value }".to_string());
-    tt.add_template("template", &defaulted_template)?;
-    let value = tt.render(
-        "template",
-        &Context {
-            value: relates.to(),
-        },
-    )?;
+    tt.add_template("template", &defaulted_template)
+        .into_diagnostic()?;
+    let value = tt
+        .render(
+            "template",
+            &Context {
+                value: relates.to(),
+            },
+        )
+        .into_diagnostic()?;
     let trailer = Trailer::new("Relates-to", &value);
-    add_trailer_if_not_existing(commit_message_path, &commit_message, &trailer)
-        .map_err(|err| MitPrepareCommitMessageError::new_io(path, &err))?;
+    add_trailer_if_not_existing(commit_message_path, &commit_message, &trailer)?;
 
     Ok(())
 }
@@ -128,7 +140,7 @@ fn add_trailer_if_not_existing(
     commit_message_path: PathBuf,
     commit_message: &CommitMessage,
     trailer: &Trailer,
-) -> Result<(), io::Error> {
+) -> Result<()> {
     if commit_message
         .get_trailers()
         .iter()
@@ -136,22 +148,24 @@ fn add_trailer_if_not_existing(
     {
         Ok(())
     } else {
-        File::create(commit_message_path).and_then(|mut file| {
-            file.write_all(String::from(commit_message.add_trailer(trailer.clone())).as_bytes())
-        })
+        File::create(commit_message_path)
+            .and_then(|mut file| {
+                file.write_all(String::from(commit_message.add_trailer(trailer.clone())).as_bytes())
+            })
+            .into_diagnostic()
     }
 }
 
-fn get_relates_to_from_exec(command: &str) -> Result<RelateTo, MitPrepareCommitMessageError> {
-    let commandline = shell_words::split(command)?;
+fn get_relates_to_from_exec(command: &str) -> Result<RelateTo> {
+    let commandline = shell_words::split(command).into_diagnostic()?;
     Command::new(commandline.first().unwrap_or(&String::from("")))
         .stderr(Stdio::inherit())
         .args(commandline.iter().skip(1).collect::<Vec<_>>())
         .output()
-        .map_err(|error| MitPrepareCommitMessageError::new_exec(command.into(), &error))
+        .into_diagnostic()
         .and_then(|x| {
             Ok(RelateTo::new(
-                &String::from_utf8(x.stdout).map_err(MitPrepareCommitMessageError::from)?,
+                &String::from_utf8(x.stdout).into_diagnostic()?,
             ))
         })
 }

@@ -1,23 +1,19 @@
 use std::convert::TryInto;
 
 use clap::ArgMatches;
+use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 use mit_lint::Lints;
 
-use crate::{
-    current_dir,
-    errors::{GitMitConfigError, GitMitConfigError::LintNameNotGiven},
-    get_vcs,
-};
-
-pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<(), GitMitConfigError>> {
+use crate::{current_dir, errors::GitMitConfigError::LintNameNotGiven, get_vcs};
+pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
         .subcommand_matches("lint")
         .filter(|subcommand| subcommand.subcommand_matches("status").is_some())
         .map(|_| run(matches))
 }
 
-fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
+fn run(matches: &ArgMatches) -> Result<()> {
     let subcommand_args = matches
         .subcommand_matches("lint")
         .and_then(|x| x.subcommand_matches("status"))
@@ -35,10 +31,11 @@ fn run(matches: &ArgMatches) -> Result<(), GitMitConfigError> {
     Ok(())
 }
 
-fn get_selected_lints(args: &ArgMatches) -> Result<Lints, GitMitConfigError> {
-    Ok(args
-        .values_of("lint")
-        .ok_or(LintNameNotGiven)?
+fn get_selected_lints(args: &ArgMatches) -> Result<Lints> {
+    args.values_of("lint")
+        .ok_or(LintNameNotGiven)
+        .into_diagnostic()?
         .collect::<Vec<_>>()
-        .try_into()?)
+        .try_into()
+        .into_diagnostic()
 }
