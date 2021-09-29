@@ -18,22 +18,17 @@ pub fn link(hook_path: &Path, hook_name: &str) -> Result<()> {
     }
 
     if install_path.exists() {
-        let mut tip = format!(
-            "Couldn't create hook at {}, it already exists, you need to remove this before \
-             continuing",
-            install_path.to_string_lossy()
-        );
         if let Ok(dest) = install_path.read_link() {
-            tip = format!(
-                "{}\nlooks like it's a symlink to {}",
-                tip,
-                dest.to_string_lossy()
-            );
+            return Err(GitMitInstallError::ExistingSymlink(
+                install_path.to_string_lossy().to_string(),
+                dest.to_string_lossy().to_string(),
+            )
+            .into());
         }
 
-        mit_commit_message_lints::console::style::problem("couldn't install hook", &tip);
-
-        return Err(GitMitInstallError::ExistingHook.into());
+        return Err(
+            GitMitInstallError::ExistingHook(install_path.to_string_lossy().to_string()).into(),
+        );
     }
 
     symlink(binary_path, install_path)?;

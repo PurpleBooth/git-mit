@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use comfy_table::{
     modifiers::UTF8_ROUND_CORNERS,
     presets::UTF8_FULL,
@@ -7,7 +9,9 @@ use comfy_table::{
     Table,
 };
 use console::style;
+use miette::{Diagnostic, GraphicalReportHandler, Severity};
 use mit_lint::Lints;
+use thiserror::Error;
 
 use crate::mit::Authors;
 
@@ -23,12 +27,41 @@ pub fn problem(error: &str, tip: &str) {
     eprintln!("{}\n\n{}", style(error).red().bold(), style(tip).italic());
 }
 
-pub fn warning(warning: &str, tip: Option<&str>) {
-    eprintln!("{}", style(warning).yellow().bold());
+#[derive(Error, Debug)]
+#[error("{warning}")]
+struct Warning<'a> {
+    warning: String,
+    help: Option<&'a str>,
+}
 
-    if let Some(tip) = tip {
-        eprintln!("\n{}", style(tip).italic());
+impl Diagnostic for Warning<'_> {
+    fn severity(&self) -> Option<Severity> {
+        Some(Severity::Warning)
     }
+
+    fn help<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+        self.help
+            .map(|x| Box::new(x.to_string()) as Box<dyn Display>)
+    }
+}
+
+/// Print a warning using our error handler tool
+///
+/// # Panics
+///
+/// Panics on a format failure. This should be impossible
+pub fn warning(warning: &str, tip: Option<&str>) {
+    let mut out = String::new();
+    GraphicalReportHandler::default()
+        .render_report(
+            &mut out,
+            &Warning {
+                warning: warning.to_string(),
+                help: tip,
+            },
+        )
+        .unwrap();
+    eprintln!("{}", out);
 }
 
 pub fn to_be_piped(output: &str) {
