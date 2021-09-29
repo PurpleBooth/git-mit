@@ -124,7 +124,7 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Error: DuplicatedTrailers
+Error: DuplicatedTrailers (https://git-scm.com/docs/githooks#_commit_msg)
 
   × Your commit message has duplicated trailers
     ╭─[5:1]
@@ -210,7 +210,7 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Error: SubjectNotSeparateFromBody
+Error: SubjectNotSeparateFromBody (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit message is missing a blank line between the subject and the
   │ body
@@ -289,7 +289,7 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Error: SubjectLongerThan72Characters
+Error: SubjectLongerThan72Characters (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your subject is longer than 72 characters
    ╭─[1:1]
@@ -368,7 +368,7 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Error: BodyWiderThan72Characters
+Error: BodyWiderThan72Characters (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit has a body wider than 72 characters
    ╭─[2:1]
@@ -457,7 +457,7 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Error: SubjectNotCapitalized
+Error: SubjectNotCapitalized (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit message is missing a capital letter
    ╭─[1:1]
@@ -545,7 +545,7 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Error: SubjectEndsWithPeriod
+Error: SubjectEndsWithPeriod (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit message ends with a period
    ╭─[1:1]
@@ -749,7 +749,7 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Error: PivotalTrackerIdMissing
+Error: PivotalTrackerIdMissing (https://www.pivotaltracker.com/help/api?version=v5#Tracker_Updates_in_SCM_Post_Commit_Hooks)
 
   × Your commit message is missing a Pivotal Tracker ID
    ╭─[2:1]
@@ -852,7 +852,7 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Error: JiraIssueKeyMissing
+Error: JiraIssueKeyMissing (https://support.atlassian.com/jira-software-cloud/docs/what-is-an-issue/#Workingwithissues-Projectkeys)
 
   × Your commit message is missing a JIRA Issue Key
    ╭─[2:1]
@@ -945,7 +945,7 @@ git commit --message="$(cat message)"
 ```
 
 ``` text,verify(script_name="1",stream=stderr)
-Error: GitHubIdMissing
+Error: GitHubIdMissing (https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls#issues-and-pull-requests)
 
   × Your commit message is missing a GitHub ID
    ╭─[2:1]
