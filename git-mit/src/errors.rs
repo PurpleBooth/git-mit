@@ -66,12 +66,24 @@ impl Diagnostic for UnknownAuthor {
             self.missing_initials
                 .clone()
                 .into_iter()
-                .filter_map(|initial| {
-                    self.command
-                        .find(&format!(" {} ", initial))
-                        .map(|x| (x, initial))
-                        .map(|(x, y)| ("Not found".to_string(), x + 1, y.len()))
+                .flat_map(|initial| {
+                    let mut matches = self
+                        .command
+                        .match_indices(&format!(" {} ", initial))
+                        .map(|x| (x, initial.clone()))
+                        .map(|(x, y)| ("Not found".to_string(), x.0 + 1, y.len()))
                         .map(|(label, pos, offset)| LabeledSpan::new(Some(label), pos, offset))
+                        .collect::<Vec<_>>();
+
+                    if self.command.ends_with(&initial) {
+                        matches.push(LabeledSpan::new(
+                            Some("Not found".to_string()),
+                            self.command.len() - initial.len(),
+                            initial.len(),
+                        ));
+                    }
+
+                    matches
                 })
                 .collect::<Vec<LabeledSpan>>()
                 .into_iter(),
