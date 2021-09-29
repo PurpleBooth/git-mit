@@ -961,12 +961,13 @@ dependencies = [
 
 [[package]]
 name = "mit-commit"
-version = "1.29.9"
+version = "1.29.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9246a16da82ecb90eb24373a2c1b454adb36ed4c48ba3eaadbc5fd2901b92cee"
+checksum = "c4f3fb6c981a75001ea78d730b3909be75e14f8c6b007cc9f26612e7f4e44f99"
 dependencies = [
  "indoc",
  "lazy_static",
+ "miette",
  "regex",
  "thiserror",
 ]
@@ -1034,9 +1035,9 @@ dependencies = [
 
 [[package]]
 name = "mit-lint"
-version = "2.0.1"
+version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e277ece0e308f3cbeef5596e053d091eb06eb34f04965ffdfb9cbc2712641e0"
+checksum = "5b860c18f9880c38ffb1a02323197a8cce2fb07d2cdf6a6dee3e5ef4282e451e"
 dependencies = [
  "futures",
  "lazy_static",
