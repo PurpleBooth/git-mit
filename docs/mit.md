@@ -268,7 +268,7 @@ git mit -c "broken.toml" ae bt se
 ```
 
 ``` text,verify(script_name="error-mit",stream=stderr)
-Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error (https://docs.rs/mit-commit-message-lints/5.8.1/mit-commit-message-lints/struct.SerialiseAuthorsError.html)
+Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
 
   × could not parse author configuration
    ╭────
@@ -291,7 +291,7 @@ git mit-config mit generate -c "broken.toml"
 ```
 
 ``` text,verify(script_name="error-mit-config-set",stream=stderr)
-Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error (https://docs.rs/mit-commit-message-lints/5.8.1/mit-commit-message-lints/struct.SerialiseAuthorsError.html)
+Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
 
   × could not parse author configuration
    ╭────

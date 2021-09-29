@@ -3,7 +3,7 @@ use std::{
     convert::TryInto,
 };
 
-use miette::{Diagnostic, IntoDiagnostic, Result, SourceOffset, SourceSpan};
+use miette::{Diagnostic, Result, SourceOffset, SourceSpan};
 use mit_lint::{Lint, Lints, CONFIG_KEY_PREFIX};
 use thiserror::Error as ThisError;
 
@@ -54,15 +54,13 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
         .iter()
         .filter_map(|(key, value)| if *value { Some(key as &str) } else { None })
         .collect::<Vec<&str>>()
-        .try_into()
-        .into_diagnostic()?;
+        .try_into()?;
 
     let to_remove: Lints = lint_names
         .iter()
         .filter_map(|(key, value)| if *value { None } else { Some(key as &str) })
         .collect::<Vec<&str>>()
-        .try_into()
-        .into_diagnostic()?;
+        .try_into()?;
 
     Ok(vcs_lints.subtract(&to_remove).merge(&to_add))
 }
