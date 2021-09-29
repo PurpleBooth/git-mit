@@ -33,7 +33,7 @@ pub fn link(hook_path: &Path, hook_name: &str) -> Result<()> {
 
         mit_commit_message_lints::console::style::problem("couldn't install hook", &tip);
 
-        return Err(GitMitInstallError::ExistingHook).into_diagnostic();
+        return Err(GitMitInstallError::ExistingHook.into());
     }
 
     symlink(binary_path, install_path)?;

@@ -9,12 +9,12 @@ use std::{convert::TryFrom, env, option::Option::None, time::Duration};
 use git2::Repository;
 use miette::Result;
 use mit_commit_message_lints::{
-    console::{exit::UnknownAuthor, style},
+    console::style,
     external::Git2,
     mit::{set_commit_authors, Authors},
 };
 
-use crate::cli::args::Args;
+use crate::{cli::args::Args, errors::UnknownAuthor};
 
 mod cli;
 mod config;
@@ -46,14 +46,10 @@ fn main() -> Result<()> {
     let missing = authors.missing_initials(initials.clone());
 
     if !missing.is_empty() {
-        return Err(UnknownAuthor::new(
-            &initials
-                .clone()
-                .into_iter()
-                .map(String::from)
-                .collect::<Vec<_>>(),
-            missing.clone().into_iter().map(String::from).collect(),
-        )
+        return Err(UnknownAuthor {
+            command: env::args().into_iter().collect::<Vec<_>>().join(" "),
+            missing_initials: missing.clone().into_iter().map(String::from).collect(),
+        }
         .into());
     }
 

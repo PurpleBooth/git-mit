@@ -29,11 +29,11 @@ async fn main() -> Result<()> {
 
     let matches = app().get_matches();
 
-    let commit_file_path = matches
-        .value_of("commit-file-path")
-        .map(PathBuf::from)
-        .ok_or(errors::MitCommitMsgError::CommitPathMissing)
-        .into_diagnostic()?;
+    let commit_file_path = match matches.value_of("commit-file-path") {
+        None => Err(errors::MitCommitMsgError::CommitPathMissing),
+        Some(path) => Ok(path),
+    }
+    .map(PathBuf::from)?;
     let commit_message = CommitMessage::try_from(commit_file_path).into_diagnostic()?;
     let current_dir = env::current_dir().into_diagnostic()?;
 
@@ -62,8 +62,7 @@ async fn main() -> Result<()> {
 
                 clipboard
                     .set_contents(trimmed_commit)
-                    .map_err(|e| MitCommitMsgError::Clipboard(e))
-                    .into_diagnostic()?;
+                    .map_err(|e| MitCommitMsgError::Clipboard(e))?;
                 true
             } else {
                 false

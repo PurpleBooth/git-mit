@@ -3,7 +3,7 @@ use std::{convert::TryFrom, env};
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{external::Git2, mit::get_commit_coauthor_configuration};
 
-use crate::cli::app;
+use crate::{cli::app, errors::StaleAuthorError};
 
 fn main() -> Result<()> {
     if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
@@ -23,10 +23,11 @@ fn main() -> Result<()> {
     let co_author_configuration = get_commit_coauthor_configuration(&mut git_config)?;
 
     if co_author_configuration.is_none() {
-        return Err(mit_commit_message_lints::console::exit::StaleAuthorError {}).into_diagnostic();
+        return Err(StaleAuthorError {}.into());
     }
 
     Ok(())
 }
 
 mod cli;
+mod errors;

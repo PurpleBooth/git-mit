@@ -21,14 +21,15 @@ pub(crate) fn load(args: &Args) -> Result<Authors> {
 }
 
 fn from_file(args: &Args) -> Result<String> {
-    args.author_file()
-        .ok_or(GitMitError::AuthorFileNotSet)
-        .into_diagnostic()
-        .and_then(|path| match path {
-            "$HOME/.config/git-mit/mit.toml" => author_file_path(env!("CARGO_PKG_NAME")),
-            _ => Ok(path.into()),
-        })
-        .map(|path| fs::read_to_string(&path).unwrap_or_default())
+    match args.author_file() {
+        None => Err(GitMitError::AuthorFileNotSet.into()),
+        Some(path) => Ok(path),
+    }
+    .and_then(|path| match path {
+        "$HOME/.config/git-mit/mit.toml" => author_file_path(env!("CARGO_PKG_NAME")),
+        _ => Ok(path.into()),
+    })
+    .map(|path| fs::read_to_string(&path).unwrap_or_default())
 }
 
 #[cfg(not(target_os = "windows"))]
@@ -67,11 +68,12 @@ fn from_exec(command: &str) -> Result<String> {
         .output()
         .into_diagnostic()
         .and_then(|output| {
-            String::from_utf8(output.stdout)
-                .map_err(|source| GitMitError::ExecUtf8 {
+            String::from_utf8(output.stdout).map_err(|source| {
+                GitMitError::ExecUtf8 {
                     source,
                     command: command.to_string(),
-                })
-                .into_diagnostic()
+                }
+                .into()
+            })
         })
 }

@@ -31,10 +31,13 @@ fn run(matches: &ArgMatches) -> Result<()> {
         );
     }
 
-    let lints: Lints = subcommand
-        .values_of("lint")
-        .ok_or(LintNameNotGiven)
-        .into_diagnostic()?
+    let lint_names = subcommand.values_of("lint");
+    if lint_names.is_none() {
+        return Err(LintNameNotGiven.into());
+    }
+
+    let lints: Lints = lint_names
+        .unwrap()
         .collect::<Vec<_>>()
         .try_into()
         .into_diagnostic()?;

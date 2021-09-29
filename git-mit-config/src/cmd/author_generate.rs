@@ -79,14 +79,12 @@ fn get_author_config_from_exec(command: &str) -> Result<String> {
 }
 
 fn get_author_config_from_file(matches: &ArgMatches) -> Result<String> {
-    get_author_file_path(matches)
-        .ok_or(GitMitConfigError::AuthorFileNotSet)
-        .into_diagnostic()
-        .and_then(|path| match path {
-            "$HOME/.config/git-mit/mit.toml" => config_path(env!("CARGO_PKG_NAME")),
-            _ => Ok(path.into()),
-        })
-        .map(|path| fs::read_to_string(&path).unwrap_or_default())
+    match get_author_file_path(matches) {
+        None => Err(GitMitConfigError::AuthorFileNotSet.into()),
+        Some("$HOME/.config/git-mit/mit.toml") => config_path(env!("CARGO_PKG_NAME")),
+        Some(path) => Ok(path.into()),
+    }
+    .map(|path: String| fs::read_to_string(&path).unwrap_or_default())
 }
 
 fn get_author_file_path(matches: &ArgMatches) -> Option<&str> {

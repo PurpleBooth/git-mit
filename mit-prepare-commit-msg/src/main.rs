@@ -43,11 +43,12 @@ fn main() -> Result<()> {
     }
     let matches = app().get_matches();
 
-    let commit_message_path = matches
-        .value_of("commit-message-path")
-        .map(PathBuf::from)
-        .ok_or(MissingCommitFilePath)
-        .into_diagnostic()?;
+    let commit_message_path = match matches.value_of("commit-message-path") {
+        None => Err(MissingCommitFilePath),
+        Some(path) => Ok(path),
+    }
+    .map(PathBuf::from)?;
+
     let current_dir = env::current_dir().into_diagnostic()?;
 
     let mut git_config = Git2::try_from(current_dir)?;

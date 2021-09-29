@@ -32,9 +32,13 @@ fn run(matches: &ArgMatches) -> Result<()> {
 }
 
 fn get_selected_lints(args: &ArgMatches) -> Result<Lints> {
-    args.values_of("lint")
-        .ok_or(LintNameNotGiven)
-        .into_diagnostic()?
+    let lint_names = args.values_of("lint");
+    if lint_names.is_none() {
+        return Err(LintNameNotGiven.into());
+    }
+
+    lint_names
+        .unwrap()
         .collect::<Vec<_>>()
         .try_into()
         .into_diagnostic()

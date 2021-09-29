@@ -2,7 +2,7 @@ use std::{env, path::PathBuf};
 
 use clap::ArgMatches;
 
-use crate::errors::{GitMitError, GitMitError::NoAuthorInitialsProvided};
+use crate::errors::GitMitError;
 
 pub struct Args {
     matches: ArgMatches,
@@ -20,11 +20,11 @@ impl Args {
     }
 
     pub(crate) fn timeout(&self) -> Result<u64> {
-        self.matches
-            .value_of("timeout")
-            .ok_or(GitMitError::NoTimeoutSet)
-            .into_diagnostic()
-            .and_then(|timeout| timeout.parse().into_diagnostic())
+        match self.matches.value_of("timeout") {
+            None => Err(GitMitError::NoTimeoutSet.into()),
+            Some(value) => Ok(value),
+        }
+        .and_then(|timeout| timeout.parse().into_diagnostic())
     }
 
     pub fn command(&self) -> Option<&str> {
@@ -32,11 +32,10 @@ impl Args {
     }
 
     pub fn initials(&self) -> Result<Vec<&str>> {
-        self.matches
-            .values_of("initials")
-            .map(Iterator::collect)
-            .ok_or(NoAuthorInitialsProvided)
-            .into_diagnostic()
+        match self.matches.values_of("initials") {
+            None => Err(GitMitError::NoAuthorInitialsProvided.into()),
+            Some(value) => Ok(value.collect()),
+        }
     }
 
     pub fn author_file(&self) -> Option<&str> {

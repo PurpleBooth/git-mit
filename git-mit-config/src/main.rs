@@ -52,7 +52,7 @@ fn main() -> Result<()> {
         return response;
     };
 
-    Err(UnrecognisedLintCommand {}).into_diagnostic()
+    Err(UnrecognisedLintCommand {}.into())
 }
 
 fn get_vcs(local: bool, current_dir: &Path) -> Result<Git2> {
@@ -62,12 +62,9 @@ fn get_vcs(local: bool, current_dir: &Path) -> Result<Git2> {
             .and_then(|repo: Repository| {
                 repo.config()
                     .map_err(|source| ReadConfigFromGitRepository { source })
-            })
-            .into_diagnostic()?
+            })?
     } else {
-        Config::open_default()
-            .map_err(|source| ReadUserConfigFromGit { source })
-            .into_diagnostic()?
+        Config::open_default().map_err(|source| ReadUserConfigFromGit { source })?
     };
 
     Ok(Git2::new(git_config))

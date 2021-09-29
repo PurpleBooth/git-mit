@@ -1,11 +1,13 @@
 use miette::Diagnostic;
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Diagnostic)]
 pub enum GitMitConfigError {
     #[error("lint name not given")]
+    #[diagnostic()]
     LintNameNotGiven,
     #[error("author file not set")]
+    #[diagnostic()]
     AuthorFileNotSet,
 }
 
