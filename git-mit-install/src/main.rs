@@ -9,7 +9,7 @@ mod errors;
 mod hook;
 use std::env;
 
-use miette::Result;
+use miette::{GraphicalTheme, Result};
 
 fn main() -> Result<()> {
     if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
@@ -17,6 +17,8 @@ fn main() -> Result<()> {
             Box::new(
                 miette::MietteHandlerOpts::new()
                     .force_graphical(true)
+                    .terminal_links(false)
+                    .graphical_theme(GraphicalTheme::unicode_nocolor())
                     .build(),
             )
         }))

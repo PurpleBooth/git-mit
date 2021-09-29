@@ -69,7 +69,11 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
 
 #[derive(ThisError, Debug, Diagnostic)]
 #[error("could not parse lint configuration")]
-#[diagnostic(help("you can generate an example using `git mit-config lint generate`"))]
+#[diagnostic(
+    url(docsrs),
+    code(mit_commit_message_lints::lints::cmd::read_lint_config::serialise_lint_error),
+    help("you can generate an example using `git mit-config lint generate`")
+)]
 struct SerialiseLintError {
     #[source_code]
     src: String,

@@ -36,11 +36,7 @@ fn run(matches: &ArgMatches) -> Result<()> {
         return Err(LintNameNotGiven.into());
     }
 
-    let lints: Lints = lint_names
-        .unwrap()
-        .collect::<Vec<_>>()
-        .try_into()
-        .into_diagnostic()?;
+    let lints: Lints = lint_names.unwrap().collect::<Vec<_>>().try_into()?;
 
     mit_commit_message_lints::lints::set_status(lints, &mut vcs, false)?;
 

@@ -20,6 +20,7 @@ async fn main() -> Result<()> {
             Box::new(
                 miette::MietteHandlerOpts::new()
                     .force_graphical(true)
+                    .terminal_links(false)
                     .graphical_theme(GraphicalTheme::unicode_nocolor())
                     .build(),
             )

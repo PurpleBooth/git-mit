@@ -120,7 +120,8 @@ fn span_from_yaml_err(err: &serde_yaml::Error, input: &str) -> usize {
 #[derive(Error, Debug, Diagnostic)]
 #[error("could not parse author configuration")]
 #[diagnostic(
-code(common::mit::lib::authors::try_from_str::unparsable),
+url(docsrs),
+code(mit_commit_message_lints::mit::lib::authors::serialise_authors_error),
 help("`git mit-config mit example` can show you an example of what it should look like, or you can generate one using `git mit-config mit generate` after setting up some authors with `git mit-config mit set`"),
 )]
 pub struct SerialiseAuthorsError {

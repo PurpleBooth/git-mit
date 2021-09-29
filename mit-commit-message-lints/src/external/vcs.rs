@@ -1,6 +1,6 @@
 use std::convert::Infallible;
 
-use miette::Result;
+use miette::{Diagnostic, Result};
 use thiserror::Error;
 pub trait Vcs {
     /// # Errors
@@ -33,18 +33,39 @@ pub trait Vcs {
     fn remove(&mut self, name: &str) -> Result<()>;
 }
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Diagnostic)]
 pub enum Error {
     #[error("failed to interact with git repository: {0}")]
+    #[diagnostic(
+        url(docsrs),
+        code(mit_commit_message_lints::external::vcs::error::git2_io)
+    )]
     Git2Io(git2::Error),
     #[error("failed to read int from in memory datastore: {0}")]
+    #[diagnostic(
+        url(docsrs),
+        code(mit_commit_message_lints::external::vcs::error::in_memory_parse_int)
+    )]
     InMemoryParseInt(std::num::ParseIntError),
     #[error("failed to read bool from in memory datastore: {0}")]
+    #[diagnostic(
+        url(docsrs),
+        code(mit_commit_message_lints::external::vcs::error::in_memory_parse_bool)
+    )]
     InMemoryParseBool(std::str::ParseBoolError),
     #[error("failed to read git-mit config")]
+    #[diagnostic(url(docsrs), code(mit_commit_message_lints::external::vcs::error::io))]
     Io(std::io::Error),
     #[error("failed to parse glob {0}")]
+    #[diagnostic(
+        url(docsrs),
+        code(mit_commit_message_lints::external::vcs::error::glob)
+    )]
     Glob(glob::PatternError),
-    #[error("{0}")]
+    #[error(transparent)]
+    #[diagnostic(
+        url(docsrs),
+        code(mit_commit_message_lints::external::vcs::error::infallible)
+    )]
     Infallible(Infallible),
 }

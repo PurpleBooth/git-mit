@@ -10,7 +10,7 @@ use mit_commit_message_lints::{
 
 mod cli;
 mod errors;
-use miette::{IntoDiagnostic, Result};
+use miette::{GraphicalTheme, IntoDiagnostic, Result};
 
 fn main() -> Result<()> {
     if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
@@ -18,6 +18,8 @@ fn main() -> Result<()> {
             Box::new(
                 miette::MietteHandlerOpts::new()
                     .force_graphical(true)
+                    .terminal_links(false)
+                    .graphical_theme(GraphicalTheme::unicode_nocolor())
                     .build(),
             )
         }))

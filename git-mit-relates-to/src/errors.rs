@@ -4,9 +4,15 @@ use thiserror::Error;
 #[derive(Error, Debug, Diagnostic)]
 pub enum GitRelatesTo {
     #[error("not timeout set")]
-    #[diagnostic()]
+    #[diagnostic(
+        url(docsrs),
+        code(git_mit_relates_to::errors::git_relates_to::no_timeout_set)
+    )]
     NoTimeoutSet,
     #[error("not relates to message set")]
-    #[diagnostic()]
+    #[diagnostic(
+        url(docsrs),
+        code(git_mit_relates_to::errors::git_relates_to::no_relates_to_message_set)
+    )]
     NoRelatesToMessageSet,
 }

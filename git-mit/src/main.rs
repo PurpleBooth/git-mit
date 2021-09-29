@@ -7,7 +7,7 @@ extern crate quickcheck_macros;
 use std::{convert::TryFrom, env, option::Option::None, time::Duration};
 
 use git2::Repository;
-use miette::Result;
+use miette::{GraphicalTheme, Result};
 use mit_commit_message_lints::{
     console::style,
     external::Git2,
@@ -26,6 +26,8 @@ fn main() -> Result<()> {
             Box::new(
                 miette::MietteHandlerOpts::new()
                     .force_graphical(true)
+                    .terminal_links(false)
+                    .graphical_theme(GraphicalTheme::unicode_nocolor())
                     .build(),
             )
         }))

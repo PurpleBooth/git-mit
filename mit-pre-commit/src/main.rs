@@ -1,6 +1,6 @@
 use std::{convert::TryFrom, env};
 
-use miette::{IntoDiagnostic, Result};
+use miette::{GraphicalTheme, IntoDiagnostic, Result};
 use mit_commit_message_lints::{external::Git2, mit::get_commit_coauthor_configuration};
 
 use crate::{cli::app, errors::StaleAuthorError};
@@ -11,6 +11,8 @@ fn main() -> Result<()> {
             Box::new(
                 miette::MietteHandlerOpts::new()
                     .force_graphical(true)
+                    .terminal_links(false)
+                    .graphical_theme(GraphicalTheme::unicode_nocolor())
                     .build(),
             )
         }))

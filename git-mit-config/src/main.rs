@@ -5,7 +5,7 @@ use std::{
 
 use cli::app::app;
 use git2::{Config, Repository};
-use miette::{IntoDiagnostic, Result};
+use miette::{GraphicalTheme, IntoDiagnostic, Result};
 use mit_commit_message_lints::external::Git2;
 use mit_lint::Lint;
 
@@ -24,6 +24,8 @@ fn main() -> Result<()> {
             Box::new(
                 miette::MietteHandlerOpts::new()
                     .force_graphical(true)
+                    .terminal_links(false)
+                    .graphical_theme(GraphicalTheme::unicode_nocolor())
                     .build(),
             )
         }))
