@@ -8,15 +8,16 @@ use miette::{IntoDiagnostic, Result};
 
 use crate::{
     external::Vcs,
-    mit::{cmd::CONFIG_KEY_EXPIRES, Author},
+    mit::{cmd::CONFIG_KEY_EXPIRES, Author, AuthorState},
 };
+
 /// Get the co-authors that are currently defined for this vcs config source
 ///
 /// # Errors
 ///
 /// Will fail if reading or writing from the VCS config fails, or it contains
 /// data in an incorrect format
-pub fn get_commit_coauthor_configuration(config: &mut dyn Vcs) -> Result<Option<Vec<Author>>> {
+pub fn get_commit_coauthor_configuration(config: &mut dyn Vcs) -> Result<AuthorState<Vec<Author>>> {
     let config_value = config.get_i64(CONFIG_KEY_EXPIRES)?;
 
     match config_value {
@@ -26,12 +27,12 @@ pub fn get_commit_coauthor_configuration(config: &mut dyn Vcs) -> Result<Option<
             if now < Duration::from_secs(config_value.try_into().into_diagnostic()?) {
                 let author_config = get_vcs_authors(config)?;
 
-                Ok(Some(author_config))
+                Ok(AuthorState::Some(author_config))
             } else {
-                Ok(None)
+                Ok(AuthorState::Timeout(config_value))
             }
         }
-        None => Ok(None),
+        None => Ok(AuthorState::None),
     }
 }
 
@@ -79,7 +80,11 @@ mod tests {
 
     use crate::{
         external::InMemory,
-        mit::{get_commit_coauthor_configuration, Author},
+        mit::{
+            cmd::get_commit_coauthor_configuration::AuthorState,
+            get_commit_coauthor_configuration,
+            Author,
+        },
     };
 
     #[test]
@@ -94,7 +99,7 @@ mod tests {
 
         let actual =
             get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
-        let expected = None;
+        let expected = AuthorState::Timeout(now_minus_10);
         assert_eq!(
             expected, actual,
             "Expected the mit config to be {:?}, instead got {:?}",
@@ -114,7 +119,7 @@ mod tests {
 
         let actual =
             get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
-        let expected: Option<Vec<Author>> = Some(vec![]);
+        let expected: AuthorState<Vec<Author>> = AuthorState::Some(vec![]);
 
         assert_eq!(
             expected, actual,
@@ -139,7 +144,7 @@ mod tests {
 
         let actual =
             get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
-        let expected = Some(vec![Author::new(
+        let expected = AuthorState::Some(vec![Author::new(
             "Annie Example",
             "annie@example.com",
             None,
@@ -186,7 +191,7 @@ mod tests {
 
         let actual =
             get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
-        let expected = Some(vec![
+        let expected = AuthorState::Some(vec![
             Author::new("Annie Example", "annie@example.com", None),
             Author::new("Joe Bloggs", "joe@example.com", None),
         ]);

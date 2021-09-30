@@ -1,4 +1,12 @@
-pub use vcs::Error as VcsError;
+pub use cmd::errors::Error as VcsError;
 
-pub mod entities;
-pub mod vcs;
+mod cmd;
+mod lib;
+
+pub use self::{
+    cmd::{
+        get_relate_to_configuration::get_relate_to_configuration,
+        set_relates_to::set_relates_to,
+    },
+    lib::relates_to::RelateTo,
+};

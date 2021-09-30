@@ -11,7 +11,6 @@ use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
     external::{Git2, Vcs},
     mit::{get_commit_coauthor_configuration, Author},
-    relates::{entities::RelateTo, vcs::get_relate_to_configuration},
 };
 use serde::Serialize;
 use tinytemplate::TinyTemplate;
@@ -29,6 +28,10 @@ struct Context {
     value: String,
 }
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
+use mit_commit_message_lints::{
+    mit::AuthorState,
+    relates::{get_relate_to_configuration, RelateTo},
+};
 
 fn main() -> Result<()> {
     if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
@@ -55,7 +58,7 @@ fn main() -> Result<()> {
 
     let mut git_config = Git2::try_from(current_dir)?;
 
-    if let Some(authors) = get_commit_coauthor_configuration(&mut git_config)? {
+    if let AuthorState::Some(authors) = get_commit_coauthor_configuration(&mut git_config)? {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?;
     }
 

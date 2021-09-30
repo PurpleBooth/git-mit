@@ -2,15 +2,12 @@ use std::{convert::TryFrom, env};
 
 use cli::{app, args::Args};
 use git2::Repository;
-use mit_commit_message_lints::{
-    console::style,
-    external::Git2,
-    relates::{entities::RelateTo, vcs::set_relates_to},
-};
+use mit_commit_message_lints::{console::style, external::Git2};
 
 mod cli;
 mod errors;
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
+use mit_commit_message_lints::relates::{set_relates_to, RelateTo};
 
 fn main() -> Result<()> {
     if env::var("DEBUG_PRETTY_ERRORS").is_ok() {

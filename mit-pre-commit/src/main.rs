@@ -24,7 +24,7 @@ fn main() -> Result<()> {
     let mut git_config = Git2::try_from(current_dir)?;
     let co_author_configuration = get_commit_coauthor_configuration(&mut git_config)?;
 
-    if co_author_configuration.is_none() {
+    if !co_author_configuration.is_some() {
         return Err(StaleAuthorError {}.into());
     }
 

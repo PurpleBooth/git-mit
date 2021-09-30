@@ -3,11 +3,10 @@ use std::{
     convert::TryInto,
 };
 
-use miette::{Diagnostic, Result, SourceOffset, SourceSpan};
+use miette::{Result, SourceOffset, SourceSpan};
 use mit_lint::{Lint, Lints, CONFIG_KEY_PREFIX};
-use thiserror::Error as ThisError;
 
-use crate::external::Vcs;
+use crate::{external::Vcs, lints::cmd::errors::SerialiseLintError};
 
 /// # Errors
 ///
@@ -63,21 +62,6 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
         .try_into()?;
 
     Ok(vcs_lints.subtract(&to_remove).merge(&to_add))
-}
-
-#[derive(ThisError, Debug, Diagnostic)]
-#[error("could not parse lint configuration")]
-#[diagnostic(
-    url(docsrs),
-    code(mit_commit_message_lints::lints::cmd::read_lint_config::serialise_lint_error),
-    help("you can generate an example using `git mit-config lint generate`")
-)]
-struct SerialiseLintError {
-    #[source_code]
-    src: String,
-    #[label("invalid in toml: {message}")]
-    span: SourceSpan,
-    message: String,
 }
 
 /// Create lints from the VCS configuration

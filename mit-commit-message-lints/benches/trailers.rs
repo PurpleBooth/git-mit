@@ -6,10 +6,7 @@ use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
     external,
     mit::{get_commit_coauthor_configuration, set_commit_authors, Author},
-    relates::{
-        entities::RelateTo,
-        vcs::{get_relate_to_configuration, set_relates_to},
-    },
+    relates::{get_relate_to_configuration, set_relates_to, RelateTo},
 };
 
 const COMMIT_WITH_ALL_FEATURES: &str = indoc!(
