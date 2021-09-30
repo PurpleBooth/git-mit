@@ -26,7 +26,7 @@ indoc = "1.0.3"
 toml = "0.5.8"
 mit-commit = "1.30.0"
 mit-lint = "2.1.0"
-console = "0.14.1"
+
 comfy-table = "4.1.1"
 
   [dependencies.serde]

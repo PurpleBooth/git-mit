@@ -8,23 +8,47 @@ use comfy_table::{
     ContentArrangement,
     Table,
 };
-use console::style;
 use miette::{Diagnostic, GraphicalReportHandler, Severity};
 use mit_lint::Lints;
 use thiserror::Error;
 
 use crate::mit::Authors;
 
+/// Print a advice using our error handler tool
+///
+/// # Panics
+///
+/// Panics on a format failure. This should be impossible
 pub fn success(success: &str, tip: &str) {
-    println!(
-        "{}\n\n{}",
-        style(success).green().bold(),
-        style(tip).italic()
-    );
+    let mut out = String::new();
+    GraphicalReportHandler::default()
+        .render_report(
+            &mut out,
+            &Success {
+                success: success.to_string(),
+                help: Some(tip),
+            },
+        )
+        .unwrap();
+    println!("{}", out);
 }
 
-pub fn problem(error: &str, tip: &str) {
-    eprintln!("{}\n\n{}", style(error).red().bold(), style(tip).italic());
+#[derive(Error, Debug)]
+#[error("{success}")]
+struct Success<'a> {
+    success: String,
+    help: Option<&'a str>,
+}
+
+impl Diagnostic for Success<'_> {
+    fn severity(&self) -> Option<Severity> {
+        Some(Severity::Advice)
+    }
+
+    fn help<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+        self.help
+            .map(|x| Box::new(x.to_string()) as Box<dyn Display>)
+    }
 }
 
 #[derive(Error, Debug)]
