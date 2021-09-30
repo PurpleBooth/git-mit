@@ -528,7 +528,7 @@ checksum = "f0a01e0497841a3b2db4f8afa483cce65f7e96a3498bd6c541734792aeac8fe7"
 
 [[package]]
 name = "git-mit"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -551,7 +551,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-config"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -577,7 +577,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-install"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -598,7 +598,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-relates-to"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -946,7 +946,7 @@ dependencies = [
 
 [[package]]
 name = "mit-build-tools"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -974,7 +974,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-message-lints"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "comfy-table",
  "console",
@@ -998,7 +998,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-msg"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -1025,7 +1025,7 @@ dependencies = [
 
 [[package]]
 name = "mit-hook-test-helper"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "console",
  "git2",
@@ -1051,7 +1051,7 @@ dependencies = [
 
 [[package]]
 name = "mit-pre-commit"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
@@ -1074,7 +1074,7 @@ dependencies = [
 
 [[package]]
 name = "mit-prepare-commit-msg"
-version = "5.8.6"
+version = "5.8.7"
 dependencies = [
  "clap 3.0.0-beta.4",
  "clap_derive",
