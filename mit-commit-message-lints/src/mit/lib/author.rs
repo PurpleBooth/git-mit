@@ -14,7 +14,7 @@ impl Author {
         Author {
             name: name.into(),
             email: email.into(),
-            signingkey: signingkey.map(|key| key.into()),
+            signingkey: signingkey.map(std::convert::Into::into),
         }
     }
 
