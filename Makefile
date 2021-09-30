@@ -11,7 +11,7 @@ show-help:
 .PHONY: test
 ## Test it was built ok
 test:
-	unset GIT_MIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test --locked
+	unset GIT_MIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test
 
 .PHONY: specdown
 ## Test the markdown in the docs directory
@@ -21,7 +21,7 @@ specdown: build
 .PHONY: bench
 ## Benchmark
 bench:
-	cargo bench --locked
+	cargo bench
 
 .PHONY: smoke-test
 ## Run a smoke test and see if the app runs
