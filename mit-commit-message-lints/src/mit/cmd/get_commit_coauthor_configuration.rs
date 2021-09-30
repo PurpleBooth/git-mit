@@ -1,10 +1,7 @@
-use std::{
-    convert::TryInto,
-    option::Option,
-    time::{Duration, SystemTime, UNIX_EPOCH},
-};
+use std::option::Option;
 
-use miette::{IntoDiagnostic, Result};
+use chrono::{TimeZone, Utc};
+use miette::Result;
 
 use crate::{
     external::Vcs,
@@ -22,24 +19,16 @@ pub fn get_commit_coauthor_configuration(config: &mut dyn Vcs) -> Result<AuthorS
 
     match config_value {
         Some(config_value) => {
-            let now = now()?;
-
-            if now < Duration::from_secs(config_value.try_into().into_diagnostic()?) {
+            if Utc::now() < Utc.timestamp(config_value, 0) {
                 let author_config = get_vcs_authors(config)?;
 
                 Ok(AuthorState::Some(author_config))
             } else {
-                Ok(AuthorState::Timeout(config_value))
+                Ok(AuthorState::Timeout(Utc.timestamp(config_value, 0)))
             }
         }
         None => Ok(AuthorState::None),
     }
-}
-
-fn now() -> Result<Duration> {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .into_diagnostic()
 }
 
 fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>> {
@@ -78,6 +67,8 @@ mod tests {
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
 
+    use chrono::{TimeZone, Utc};
+
     use crate::{
         external::InMemory,
         mit::{
@@ -99,7 +90,7 @@ mod tests {
 
         let actual =
             get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
-        let expected = AuthorState::Timeout(now_minus_10);
+        let expected = AuthorState::Timeout(Utc.timestamp(now_minus_10, 0));
         assert_eq!(
             expected, actual,
             "Expected the mit config to be {:?}, instead got {:?}",
