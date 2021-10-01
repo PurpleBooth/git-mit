@@ -1,6 +1,6 @@
 use std::fmt::{Debug, Display};
 
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Local, Utc};
 use miette::{Diagnostic, LabeledSpan, SourceCode};
 use thiserror::Error;
 
@@ -14,7 +14,7 @@ pub struct StaleAuthorError {
 impl StaleAuthorError {
     pub(crate) fn new(last_updated: DateTime<Utc>) -> StaleAuthorError {
         StaleAuthorError {
-            source_code: last_updated.to_string(),
+            source_code: DateTime::<Local>::from(last_updated).to_string(),
             date: last_updated,
         }
     }
@@ -36,7 +36,7 @@ impl Diagnostic for StaleAuthorError {
     fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
         Some(Box::new(
             vec![LabeledSpan::new(
-                Some("Expiry time".to_uppercase()),
+                Some("The previously set authors expired at this time".to_string()),
                 0_usize,
                 self.source_code.len(),
             )]
