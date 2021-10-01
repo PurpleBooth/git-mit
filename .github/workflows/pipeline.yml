@@ -24,8 +24,8 @@ jobs:
           push: false
           pull: true
           cache-from: |
-            type=gha
             type=registry,ref=ghcr.io/purplebooth/git-mit:latest
+            type=gha
           tags: |
             ghcr.io/purplebooth/git-mit:git-${{ github.sha }}
             ghcr.io/purplebooth/git-mit:latest
