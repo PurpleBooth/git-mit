@@ -37,7 +37,7 @@ shell-words = "1.0.0"
 xdg = "2.2.0"
 thiserror = "1.0.29"
 miette = { version = "3.1.0", features = [ "fancy" ] }
-git2 = "0.13.22"
+git2 = "0.13.23"
 openssl = { version = '0.10', optional = true }
 clap = "3.0.0-beta.4"
 clap_derive = "3.0.0-beta.4"
