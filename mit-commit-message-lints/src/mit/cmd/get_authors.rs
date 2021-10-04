@@ -6,12 +6,21 @@ use std::{
 };
 
 use miette::{IntoDiagnostic, Result};
-use mit_commit_message_lints::mit::Authors;
 
-use crate::{cli::args::Args, errors::GitMitError};
+use crate::mit::Authors;
 
-pub(crate) fn load(args: &Args) -> Result<Authors> {
-    let toml = match args.command() {
+pub trait AuthorArgs {
+    fn author_command(&self) -> Option<&str>;
+    fn author_file(&self) -> Option<&str>;
+}
+
+/// Get authors from config
+///
+/// # Errors
+///
+/// miette error on failure of command
+pub fn get_authors(args: &dyn AuthorArgs) -> Result<Authors> {
+    let toml = match args.author_command() {
         Some(command) => from_exec(command),
         None => from_file(args),
     }?;
@@ -20,9 +29,9 @@ pub(crate) fn load(args: &Args) -> Result<Authors> {
     Ok(authors)
 }
 
-fn from_file(args: &Args) -> Result<String> {
+fn from_file(args: &dyn AuthorArgs) -> Result<String> {
     match args.author_file() {
-        None => Err(GitMitError::AuthorFileNotSet.into()),
+        None => Err(super::errors::Error::AuthorFileNotSet.into()),
         Some(path) => Ok(path),
     }
     .and_then(|path| match path {
@@ -69,7 +78,7 @@ fn from_exec(command: &str) -> Result<String> {
         .into_diagnostic()
         .and_then(|output| {
             String::from_utf8(output.stdout).map_err(|source| {
-                GitMitError::ExecUtf8 {
+                super::errors::Error::ExecUtf8 {
                     source,
                     command: command.to_string(),
                 }

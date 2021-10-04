@@ -13,8 +13,9 @@ repository = "https://github.com/PurpleBooth/git-mit"
 description = "Check the correctness of a specific commit message. Designed to be used in tools providing commit-msg style hooks"
 
 [dependencies]
-rayon = "1.5.1"
+shell-words = "1.0.0"
 chrono = "0.4.19"
+xdg = "2.2.0"
 glob = "0.3.0"
 thiserror = "1.0.29"
 miette = { version = "3.1.0", features = [ "fancy" ] }

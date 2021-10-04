@@ -1,4 +1,5 @@
 pub use cmd::{
+    get_authors::{get_authors, AuthorArgs},
     get_commit_coauthor_configuration::get_commit_coauthor_configuration,
     set_commit_authors::set_commit_authors,
     set_config_authors::set_config_authors,

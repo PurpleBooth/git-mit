@@ -11,13 +11,12 @@ use miette::{GraphicalTheme, Result};
 use mit_commit_message_lints::{
     console::style,
     external::Git2,
-    mit::{set_commit_authors, Authors},
+    mit::{get_authors, set_commit_authors, Authors},
 };
 
 use crate::{cli::args::Args, errors::UnknownAuthor};
 
 mod cli;
-mod config;
 mod errors;
 
 fn main() -> Result<()> {
@@ -37,7 +36,7 @@ fn main() -> Result<()> {
     let args: cli::args::Args = cli::app::app().get_matches().into();
 
     let mut git_config = Git2::try_from(Args::cwd()?)?;
-    let file_authors = crate::config::author::load(&args)?;
+    let file_authors = get_authors(&args)?;
     let authors = file_authors.merge(&Authors::try_from(&git_config)?);
     let initials = args.initials()?;
 

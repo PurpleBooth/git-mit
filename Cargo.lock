@@ -974,13 +974,14 @@ dependencies = [
  "mit-hook-test-helper",
  "mit-lint",
  "openssl",
- "rayon",
  "regex",
  "serde",
  "serde_derive",
  "serde_yaml",
+ "shell-words",
  "thiserror",
  "toml",
+ "xdg",
 ]
 
 [[package]]

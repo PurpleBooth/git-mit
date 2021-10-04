@@ -8,6 +8,8 @@ pub struct Args {
     matches: ArgMatches,
 }
 use miette::{IntoDiagnostic, Result};
+use mit_commit_message_lints::mit::AuthorArgs;
+
 impl From<ArgMatches> for Args {
     fn from(matches: ArgMatches) -> Self {
         Args { matches }
@@ -27,18 +29,20 @@ impl Args {
         .and_then(|timeout| timeout.parse().into_diagnostic())
     }
 
-    pub fn command(&self) -> Option<&str> {
-        self.matches.value_of("command")
-    }
-
     pub fn initials(&self) -> Result<Vec<&str>> {
         match self.matches.values_of("initials") {
             None => Err(GitMitError::NoAuthorInitialsProvided.into()),
             Some(value) => Ok(value.collect()),
         }
     }
+}
 
-    pub fn author_file(&self) -> Option<&str> {
+impl AuthorArgs for Args {
+    fn author_command(&self) -> Option<&str> {
+        self.matches.value_of("command")
+    }
+
+    fn author_file(&self) -> Option<&str> {
         self.matches.value_of("file")
     }
 }
@@ -47,6 +51,7 @@ impl Args {
 mod tests {
     use std::{env, ffi::OsString};
 
+    use mit_commit_message_lints::mit::AuthorArgs;
     use quickcheck::TestResult;
 
     use super::{super::app::app, Args};
@@ -109,7 +114,11 @@ mod tests {
         cli.insert(0, OsString::from("eg"));
         cli.insert(0, "git-mit".into());
 
-        TestResult::from_bool(Args::from(app().get_matches_from(cli)).command().is_none())
+        TestResult::from_bool(
+            Args::from(app().get_matches_from(cli))
+                .author_command()
+                .is_none(),
+        )
     }
 
     #[quickcheck]
@@ -140,7 +149,7 @@ mod tests {
         TestResult::from_bool(
             command.into_string().ok()
                 == Args::from(app().get_matches_from(cli))
-                    .command()
+                    .author_command()
                     .map(String::from),
         )
     }

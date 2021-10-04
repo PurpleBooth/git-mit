@@ -1,22 +1,10 @@
-use std::{fmt::Display, string::FromUtf8Error};
+use std::fmt::Display;
 
 use miette::{Diagnostic, LabeledSpan, SourceCode};
 use thiserror::Error;
 
 #[derive(Error, Diagnostic, Debug)]
 pub enum GitMitError {
-    #[error("failed to convert author command output to unicode")]
-    #[diagnostic(
-        url(docsrs),
-        code(git_mit::errors::git_mit_error::exec_utf8),
-        help("all characters must parse as utf8")
-    )]
-    ExecUtf8 {
-        #[source_code]
-        command: String,
-        #[source]
-        source: FromUtf8Error,
-    },
     #[error("no mit initials provided")]
     #[diagnostic(
         url(docsrs),
@@ -26,9 +14,6 @@ pub enum GitMitError {
     #[error("no timeout set")]
     #[diagnostic(url(docsrs), code(git_mit::errors::git_mit_error::no_timeout_set))]
     NoTimeoutSet,
-    #[error("expected a mit file path, didn't find one")]
-    #[diagnostic(url(docsrs), code(git_mit::errors::git_mit_error::author_file_not_set))]
-    AuthorFileNotSet,
 }
 
 #[derive(Error, Debug)]
