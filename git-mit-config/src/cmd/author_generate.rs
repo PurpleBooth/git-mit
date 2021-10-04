@@ -1,17 +1,14 @@
-use std::{
-    convert::TryFrom,
-    env,
-    env::current_dir,
-    fs,
-    path::PathBuf,
-    process::{Command, Stdio},
-};
+use std::convert::TryFrom;
 
 use clap::ArgMatches;
-use miette::{IntoDiagnostic, Result};
-use mit_commit_message_lints::{console::style::author_table, mit::Authors};
+use miette::Result;
+use mit_commit_message_lints::{
+    console::style::author_table,
+    external::Git2,
+    mit::{get_authors, AuthorArgs, Authors},
+};
 
-use crate::{errors::GitMitConfigError, get_vcs};
+use crate::current_dir;
 
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
@@ -23,31 +20,54 @@ pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
         .map(|_| run(matches))
 }
 
-fn run(matches: &ArgMatches) -> Result<()> {
-    let subcommand = matches
-        .subcommand_matches("mit")
-        .and_then(|matches| {
+pub struct Args {
+    matches: ArgMatches,
+}
+
+impl Args {
+    fn is_generate_command(&self) -> bool {
+        self.matches
+            .subcommand_matches("mit")
+            .and_then(|matches| matches.subcommand_matches("generate"))
+            .is_some()
+    }
+
+    fn normalised_args(&self) -> Option<&ArgMatches> {
+        self.matches.subcommand_matches("mit").and_then(|matches| {
             matches
                 .subcommand_matches("generate")
                 .or_else(|| matches.subcommand_matches("available"))
         })
-        .unwrap();
+    }
+}
 
-    let users_config = get_users_config(subcommand)?;
-    let config_authors = Authors::try_from(users_config.as_str())?;
+impl From<&ArgMatches> for Args {
+    fn from(matches: &ArgMatches) -> Self {
+        Args {
+            matches: matches.clone(),
+        }
+    }
+}
 
-    let is_local = Some("local") == matches.value_of("scope");
-    let current_dir = current_dir().into_diagnostic()?;
-    let vcs = get_vcs(is_local, &current_dir)?;
-    let vcs_authors = Authors::try_from(&vcs)?;
+impl AuthorArgs for Args {
+    fn author_command(&self) -> Option<&str> {
+        self.normalised_args()
+            .and_then(|matches| matches.value_of("command"))
+    }
 
-    let authors = config_authors.merge(&vcs_authors);
+    fn author_file(&self) -> Option<&str> {
+        self.normalised_args()
+            .and_then(|matches| matches.value_of("file"))
+    }
+}
 
-    let output: String = if matches
-        .subcommand_matches("mit")
-        .and_then(|x| x.subcommand_matches("generate"))
-        .is_some()
-    {
+fn run(matches: &ArgMatches) -> Result<()> {
+    let args = Args::from(matches);
+    let file_authors = get_authors(&args)?;
+    let git_config = current_dir().and_then(Git2::try_from)?;
+    let authors = file_authors.merge(&Authors::try_from(&git_config)?);
+
+    let output: String = if args.is_generate_command() {
         to_toml(authors)
     } else {
         author_table(&authors)
@@ -59,62 +79,4 @@ fn run(matches: &ArgMatches) -> Result<()> {
 
 fn to_toml(authors: Authors) -> String {
     String::from(authors).trim().to_string()
-}
-
-fn get_users_config(matches: &ArgMatches) -> Result<String> {
-    match matches.value_of("command") {
-        Some(command) => get_author_config_from_exec(command),
-        None => get_author_config_from_file(matches),
-    }
-}
-
-fn get_author_config_from_exec(command: &str) -> Result<String> {
-    let commandline = shell_words::split(command).into_diagnostic()?;
-    let output = Command::new(commandline.first().unwrap_or(&String::from("")))
-        .stderr(Stdio::inherit())
-        .args(commandline.iter().skip(1).collect::<Vec<_>>())
-        .output()
-        .into_diagnostic()?;
-    String::from_utf8(output.stdout).into_diagnostic()
-}
-
-fn get_author_config_from_file(matches: &ArgMatches) -> Result<String> {
-    match get_author_file_path(matches) {
-        None => Err(GitMitConfigError::AuthorFileNotSet.into()),
-        Some("$HOME/.config/git-mit/mit.toml") => config_path(env!("CARGO_PKG_NAME")),
-        Some(path) => Ok(path.into()),
-    }
-    .map(|path: String| fs::read_to_string(&path).unwrap_or_default())
-}
-
-fn get_author_file_path(matches: &ArgMatches) -> Option<&str> {
-    matches.value_of("file")
-}
-
-#[cfg(not(target_os = "windows"))]
-fn config_path(cargo_package_name: &str) -> Result<String> {
-    xdg::BaseDirectories::with_prefix(cargo_package_name.to_string())
-        .into_diagnostic()
-        .and_then(|base| authors_config_file(&base))
-        .map(|path| path.to_string_lossy().into())
-}
-
-#[cfg(target_os = "windows")]
-fn config_path(cargo_package_name: &str) -> Result<String> {
-    std::env::var("APPDATA")
-        .map(|x| {
-            PathBuf::from(x)
-                .join(cargo_package_name)
-                .join("mit.toml")
-                .to_string_lossy()
-                .into()
-        })
-        .into_diagnostic()
-}
-
-#[cfg(not(target_os = "windows"))]
-fn authors_config_file(config_directory: &xdg::BaseDirectories) -> Result<PathBuf> {
-    config_directory
-        .place_config_file("mit.toml")
-        .into_diagnostic()
 }

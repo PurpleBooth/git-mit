@@ -9,12 +9,6 @@ pub enum GitMitConfigError {
         code(git_mit_config::errors::git_mit_config_error::lint_name_not_given)
     )]
     LintNameNotGiven,
-    #[error("author file not set")]
-    #[diagnostic(
-        url(docsrs),
-        code(git_mit_config::errors::git_mit_config_error::author_file_not_set)
-    )]
-    AuthorFileNotSet,
 }
 
 #[derive(Error, Debug, Diagnostic)]

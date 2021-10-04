@@ -1,14 +1,13 @@
 use std::{env, path::PathBuf};
 
 use clap::ArgMatches;
+use miette::{IntoDiagnostic, Result};
+use mit_commit_message_lints::mit::AuthorArgs;
 
 use crate::errors::GitMitError;
-
 pub struct Args {
     matches: ArgMatches,
 }
-use miette::{IntoDiagnostic, Result};
-use mit_commit_message_lints::mit::AuthorArgs;
 
 impl From<ArgMatches> for Args {
     fn from(matches: ArgMatches) -> Self {
