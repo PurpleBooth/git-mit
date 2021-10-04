@@ -24,7 +24,7 @@ fn run(matches: &ArgMatches) -> Result<()> {
     let email = subcommand.value_of("email").unwrap();
     let signingkey = subcommand.value_of("signingkey");
 
-    let is_local = Some("local") == matches.value_of("scope");
+    let is_local = Some("local") == subcommand.value_of("scope");
     let current_dir = current_dir().into_diagnostic()?;
     let mut vcs = get_vcs(is_local, &current_dir)?;
     set_config_authors(&mut vcs, initial, &Author::new(name, email, signingkey))?;

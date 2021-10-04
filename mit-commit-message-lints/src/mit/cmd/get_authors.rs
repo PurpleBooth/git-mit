@@ -9,11 +9,6 @@ use miette::{IntoDiagnostic, Result};
 
 use crate::mit::Authors;
 
-pub enum AuthorArgsScope {
-    Global,
-    Local,
-}
-
 pub trait AuthorArgs {
     fn author_command(&self) -> Option<&str>;
     fn author_file(&self) -> Option<&str>;

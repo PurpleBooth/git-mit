@@ -6,6 +6,7 @@ use mit_commit_message_lints::external;
 use mit_lint::Lints;
 
 use crate::{errors::GitMitConfigError::LintNameNotGiven, get_vcs};
+
 pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
         .subcommand_matches("lint")
@@ -19,7 +20,7 @@ fn run(matches: &ArgMatches) -> Result<()> {
         .and_then(|x| x.subcommand_matches("enable"))
         .unwrap();
 
-    let is_local = Some("local") == matches.value_of("scope");
+    let is_local = Some("local") == subcommand.value_of("scope");
     let current_dir = current_dir().into_diagnostic()?;
     let mut vcs = get_vcs(is_local, &current_dir)?;
     let toml = external::read_toml(current_dir)?;

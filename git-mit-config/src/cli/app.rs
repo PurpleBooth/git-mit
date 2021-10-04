@@ -13,35 +13,65 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
-        .arg(
-            Arg::new("scope")
-                .long("scope")
-                .short('s')
-                .possible_values(&["local", "global"])
-                .default_value("local"),
-        )
         .subcommand(
             App::new("lint")
                 .about("Manage active lints")
                 .subcommand(
                     App::new("generate")
+                        .arg(
+                            Arg::new("scope")
+                                .long("scope")
+                                .short('s')
+                                .possible_values(&["local", "global"])
+                                .default_value("local"),
+                        )
                         .about("Generate the config file for your current settings"),
                 )
-                .subcommand(App::new("available").about("List the available lints"))
-                .subcommand(App::new("enabled").about("List the enabled lints"))
+                .subcommand(App::new("available").arg(
+                    Arg::new("scope")
+                        .long("scope")
+                        .short('s')
+                        .possible_values(&["local", "global"])
+                        .default_value("local"),
+                ).about("List the available lints"))
+                .subcommand(App::new("enabled").arg(
+                    Arg::new("scope")
+                        .long("scope")
+                        .short('s')
+                        .possible_values(&["local", "global"])
+                        .default_value("local"),
+                ).about("List the enabled lints"))
                 .subcommand(
-                    App::new("status")
+                    App::new("status").arg(
+                        Arg::new("scope")
+                            .long("scope")
+                            .short('s')
+                            .possible_values(&["local", "global"])
+                            .default_value("local"),
+                    )
                         .about("Get status of a lint")
                         .arg(lint_argument.clone()),
                 )
                 .subcommand(
                     App::new("enable")
-                        .about("Enable a lint")
+                        .about("Enable a lint").arg(
+                        Arg::new("scope")
+                            .long("scope")
+                            .short('s')
+                            .possible_values(&["local", "global"])
+                            .default_value("local"),
+                    )
                         .arg(lint_argument.clone()),
                 )
                 .subcommand(
                     App::new("disable")
-                        .about("Disable a lint")
+                        .about("Disable a lint").arg(
+                        Arg::new("scope")
+                            .long("scope")
+                            .short('s')
+                            .possible_values(&["local", "global"])
+                            .default_value("local"),
+                    )
                         .arg(lint_argument.clone()),
                 )
                 .setting(AppSettings::SubcommandRequiredElseHelp),
@@ -51,6 +81,13 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                 .about("Manage mit configuration")
                 .subcommand(
                     App::new("set")
+                        .arg(
+                            Arg::new("scope")
+                                .long("scope")
+                                .short('s')
+                                .possible_values(&["local", "global"])
+                                .default_value("local"),
+                        )
                         .arg(
                             Arg::new("initial")
                                 .about("Initial of the mit to update or add")
@@ -136,7 +173,13 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
             App::new("relates-to")
                 .about("Manage relates-to settings")
                 .subcommand(
-                    App::new("template")
+                    App::new("template").arg(
+                        Arg::new("scope")
+                            .long("scope")
+                            .short('s')
+                            .possible_values(&["local", "global"])
+                            .default_value("local"),
+                    )
                         .arg(
                             Arg::new("template")
                                 .about(

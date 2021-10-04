@@ -20,7 +20,7 @@ fn run(matches: &ArgMatches) -> Result<()> {
         .and_then(|x| x.subcommand_matches("disable"))
         .unwrap();
 
-    let is_local = Some("local") == matches.value_of("scope");
+    let is_local = Some("local") == subcommand.value_of("scope");
     let current_dir = current_dir().into_diagnostic()?;
     let mut vcs = get_vcs(is_local, &current_dir)?;
     let toml = external::read_toml(current_dir)?;
