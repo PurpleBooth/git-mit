@@ -35,7 +35,7 @@ clap_derive = "3.0.0-beta.4"
 clap_generate = "3.0.0-beta.2"
 git2 = "0.13.22"
 openssl = { version = '0.10', optional = true }
-miette = { version = "3.0.0", features = [ "fancy" ] }
+miette = { version = "3.1.0", features = [ "fancy" ] }
 mit-commit = "1.30.0"
 
 copypasta = "0.7.1"
