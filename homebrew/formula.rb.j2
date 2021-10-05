@@ -21,8 +21,7 @@ class GitMit < Formula
     system "cargo", "install", "--root", prefix, "--path", "./git-mit-install/"
 
     Pathname.glob("**/bash_completion/*").each do |file|
-      base = file.basename(".bash")
-      bash_completion.install file => base
+      bash_completion.install file => file
     end
 
     Pathname.glob("**/fish_completion/*").each do |file|
