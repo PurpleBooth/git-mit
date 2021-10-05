@@ -186,7 +186,12 @@ jobs:
       - run: make specdown
         shell: bash
   lints:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+          - os: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: actions/cache@v2.1.6

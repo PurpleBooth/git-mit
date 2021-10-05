@@ -2,7 +2,8 @@ queue_rules:
   - name: default
     conditions:
       - status-success=lint-markdown
-      - status-success=lints
+      - status-success=lints (windows-latest)
+      - status-success=lints (ubuntu-latest)
       - status-success=specdown (windows-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-...
       - status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-x...
       - status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-x8...
@@ -28,7 +29,8 @@ pull_request_rules:
   - name: automatic rebase for dependencies
     conditions:
       - status-success=lint-markdown
-      - status-success=lints
+      - status-success=lints (windows-latest)
+      - status-success=lints (ubuntu-latest)
       - status-success=specdown (windows-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-...
       - status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-x...
       - status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-x8...
