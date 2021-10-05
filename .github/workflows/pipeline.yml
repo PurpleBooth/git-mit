@@ -10,8 +10,6 @@ jobs:
 
   security-audit:
     uses: PurpleBooth/common-pipelines/.github/workflows/rust-security.yml@main
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
   lint-markdown:
     runs-on: ubuntu-latest
     steps:
