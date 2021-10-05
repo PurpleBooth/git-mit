@@ -9,20 +9,10 @@ jobs:
     uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@main
 
   security-audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2.3.4
-      - uses: actions/cache@v2.1.6
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/audit-check@v1.2.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+    uses: PurpleBooth/common-pipelines/.github/workflows/rust-security.yml@main
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+
   lint-markdown:
     runs-on: ubuntu-latest
     steps:
