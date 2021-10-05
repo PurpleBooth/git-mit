@@ -10,6 +10,9 @@ jobs:
 
   security-audit:
     uses: PurpleBooth/common-pipelines/.github/workflows/rust-security.yml@main
+    with:
+      ubuntu_install_deps: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+
   lint-markdown:
     runs-on: ubuntu-latest
     steps:
