@@ -8,11 +8,26 @@ jobs:
   docker-build:
     uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@main
 
-  security-audit:
-    uses: PurpleBooth/common-pipelines/.github/workflows/rust-security.yml@main
+  rust-check:
+    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
     with:
       ubuntu_install_deps: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/cache@v2.1.6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/audit-check@v1.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
   lint-markdown:
     runs-on: ubuntu-latest
     steps:
@@ -180,6 +195,7 @@ jobs:
       - run: cargo fmt --all -- --check
       - run: cargo clippy --all-targets --all-features -- -D warnings -D "clippy::all" -D "clippy::pedantic" -D "clippy::cargo"
       - uses: creyD/prettier_action@v4.0
+        if: matrix.os == 'ubuntu-latest'
         with:
           prettier_options: --check **/*.{yml,yaml}
 
