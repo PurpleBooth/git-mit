@@ -9,7 +9,9 @@ mod errors;
 mod hook;
 use std::env;
 
+use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use miette::{GraphicalTheme, Result};
+use mit_build_tools::completion::print_completions;
 
 fn main() -> Result<()> {
     if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
@@ -25,7 +27,22 @@ fn main() -> Result<()> {
         .unwrap();
     }
 
-    let args: Args = app::app().get_matches().into();
+    let mut app = app::app();
+    let args: Args = app.clone().get_matches().into();
+
+    // Simply print and exit if completion option is given.
+    if let Some(completion) = args.completion() {
+        match completion {
+            "bash" => print_completions::<Bash>(&mut app),
+            "elvish" => print_completions::<Elvish>(&mut app),
+            "fish" => print_completions::<Fish>(&mut app),
+            "powershell" => print_completions::<PowerShell>(&mut app),
+            "zsh" => print_completions::<Zsh>(&mut app),
+            _ => println!("Unknown completion"), // Never reached
+        }
+
+        std::process::exit(0);
+    }
 
     let hooks = dir::create(args.scope().is_global())?;
 

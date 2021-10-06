@@ -6,8 +6,10 @@ extern crate quickcheck_macros;
 
 use std::{convert::TryFrom, env, option::Option::None, time::Duration};
 
+use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use git2::Repository;
 use miette::{GraphicalTheme, Result};
+use mit_build_tools::completion::print_completions;
 use mit_commit_message_lints::{
     console::style,
     external::Git2,
@@ -33,7 +35,22 @@ fn main() -> Result<()> {
         .unwrap();
     }
 
-    let args: cli::args::Args = cli::app::app().get_matches().into();
+    let mut app = cli::app::app();
+    let args: cli::args::Args = app.clone().get_matches().into();
+
+    // Simply print and exit if completion option is given.
+    if let Some(completion) = args.completion() {
+        match completion {
+            "bash" => print_completions::<Bash>(&mut app),
+            "elvish" => print_completions::<Elvish>(&mut app),
+            "fish" => print_completions::<Fish>(&mut app),
+            "powershell" => print_completions::<PowerShell>(&mut app),
+            "zsh" => print_completions::<Zsh>(&mut app),
+            _ => println!("Unknown completion"), // Never reached
+        }
+
+        std::process::exit(0);
+    }
 
     let mut git_config = Git2::try_from(Args::cwd()?)?;
     let file_authors = get_authors(&args)?;

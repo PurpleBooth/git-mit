@@ -1,3 +1,3 @@
-pub use generate::generate;
-
 mod generate;
+
+pub use generate::print_completions;

@@ -32,4 +32,8 @@ impl Args {
         .map(|timeout: u64| timeout * 60)
         .map(Duration::from_secs)
     }
+
+    pub fn completion(&self) -> Option<&str> {
+        self.matches.value_of("completion")
+    }
 }

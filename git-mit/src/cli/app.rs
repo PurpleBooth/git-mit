@@ -44,8 +44,7 @@ pub fn app() -> App<'static> {
             Arg::new("initials")
                 .about("Initials of the mit to put in the commit")
                 .multiple_values(true)
-                .required(true)
-                .min_values(1),
+                .required_unless_present("completion"),
         )
         .arg(
             Arg::new("file")
@@ -76,6 +75,12 @@ pub fn app() -> App<'static> {
                 .env("GIT_MIT_AUTHORS_TIMEOUT")
                 .takes_value(true)
                 .default_value("60"),
+        )
+        .arg(
+            Arg::new("completion")
+                .short('c')
+                .long("completion")
+                .possible_values(&["bash", "elvish", "fish", "powershell", "zsh"]),
         )
 }
 

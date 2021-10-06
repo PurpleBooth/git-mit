@@ -34,6 +34,10 @@ impl Args {
             Some(value) => Ok(value.collect()),
         }
     }
+
+    pub fn completion(&self) -> Option<&str> {
+        self.matches.value_of("completion")
+    }
 }
 
 impl AuthorArgs for Args {

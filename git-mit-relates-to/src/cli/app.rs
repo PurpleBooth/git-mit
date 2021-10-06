@@ -9,7 +9,7 @@ pub fn app() -> App<'static> {
         .arg(
             Arg::new("issue-number")
                 .about("The issue number or other string to place into the Relates-to trailer")
-                .required(true),
+                .required_unless_present("completion"),
         )
         .arg(
             Arg::new("timeout")
@@ -19,5 +19,11 @@ pub fn app() -> App<'static> {
                 .env("GIT_MIT_RELATES_TO_TIMEOUT")
                 .default_value("60")
                 .takes_value(true),
+        )
+        .arg(
+            Arg::new("completion")
+                .short('c')
+                .long("completion")
+                .possible_values(&["bash", "elvish", "fish", "powershell", "zsh"]),
         )
 }

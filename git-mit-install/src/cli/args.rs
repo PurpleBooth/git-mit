@@ -12,6 +12,10 @@ impl Args {
             Scope::Local
         }
     }
+
+    pub fn completion(&self) -> Option<&str> {
+        self.matches.value_of("completion")
+    }
 }
 
 #[derive(Ord, PartialOrd, Eq, PartialEq, Debug)]
