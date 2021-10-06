@@ -7,11 +7,11 @@ on:
 jobs:
   docker-build:
     uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@main
-#
-#  rust-check:
-#    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
-#    with:
-#      ubuntu_install_deps: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+  #
+  #  rust-check:
+  #    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
+  #    with:
+  #      ubuntu_install_deps: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
   security-audit:
     runs-on: ubuntu-latest
