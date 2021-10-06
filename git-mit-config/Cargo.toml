@@ -44,6 +44,7 @@ clap_derive = "3.0.0-beta.4"
 clap_generate = "3.0.0-beta.2"
 
 comfy-table = "4.1.1"
+mit-build-tools = { path = "../mit-build-tools" }
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"

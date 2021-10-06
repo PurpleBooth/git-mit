@@ -7,6 +7,8 @@ use std::{
     process::{Command, Stdio},
 };
 extern crate tinytemplate;
+use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
+use mit_build_tools::completion::print_completions;
 use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
     external::{Git2, Vcs},
@@ -46,7 +48,22 @@ fn main() -> Result<()> {
         }))
         .unwrap();
     }
-    let matches = app().get_matches();
+    let mut app = app();
+    let matches = app.clone().get_matches();
+
+    // Simply print and exit if completion option is given.
+    if let Some(completion) = matches.value_of("completion") {
+        match completion {
+            "bash" => print_completions::<Bash>(&mut app),
+            "elvish" => print_completions::<Elvish>(&mut app),
+            "fish" => print_completions::<Fish>(&mut app),
+            "powershell" => print_completions::<PowerShell>(&mut app),
+            "zsh" => print_completions::<Zsh>(&mut app),
+            _ => println!("Unknown completion"), // Never reached
+        }
+
+        std::process::exit(0);
+    }
 
     let commit_message_path = match matches.value_of("commit-message-path") {
         None => Err(MissingCommitFilePath),

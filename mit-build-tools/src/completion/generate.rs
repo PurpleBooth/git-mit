@@ -1,23 +1,9 @@
-use std::{fs, path::Path};
+use std::io;
 
 use clap::App;
-use clap_generate::{generate_to, Generator};
+use clap_generate::{generate, Generator};
 
-/// # Panics
-///
-/// Will panic if it can't work out the application's binary name, or create the
-/// build directory
-pub fn generate<T>(app: &App, dir: &Path)
-where
-    T: Generator,
-{
-    if dir.exists() {
-        fs::remove_dir_all(dir).unwrap();
-    }
-
-    let name = app.get_bin_name().unwrap();
-    let mut app = app.clone();
-
-    fs::create_dir(dir.to_path_buf()).unwrap();
-    generate_to::<T, _, _>(&mut app, name, &dir).unwrap();
+/// Prints completions to the stdout
+pub fn print_completions<G: Generator>(app: &mut App) {
+    generate::<G, _>(app, app.get_name().to_string(), &mut io::stdout());
 }

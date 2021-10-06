@@ -13,7 +13,7 @@ pub fn app() -> App<'static> {
                      developer",
                 )
                 .index(1)
-                .required(true),
+                .required_unless_present("completion"),
         )
         .arg(
             Arg::new("copy-message-to-clipboard")
@@ -22,5 +22,11 @@ pub fn app() -> App<'static> {
                 .env("GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD")
                 .takes_value(true)
                 .default_value("true"),
+        )
+        .arg(
+            Arg::new("completion")
+                .short('c')
+                .long("completion")
+                .possible_values(&["bash", "elvish", "fish", "powershell", "zsh"]),
         )
 }

@@ -13,4 +13,10 @@ pub fn app() -> App<'static> {
                 .possible_values(&["local", "global"])
                 .default_value("local"),
         )
+        .arg(
+            Arg::new("completion")
+                .short('c')
+                .long("completion")
+                .possible_values(&["bash", "elvish", "fish", "powershell", "zsh"]),
+        )
 }

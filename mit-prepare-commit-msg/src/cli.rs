@@ -10,7 +10,7 @@ pub fn app() -> App<'static> {
             Arg::new("commit-message-path")
                 .about("The name of the file that contains the commit log message")
                 .index(1)
-                .required(true),
+                .required_unless_present("completion"),
         )
         .arg(
             Arg::new("commit-message-source")
@@ -45,5 +45,11 @@ pub fn app() -> App<'static> {
                 .env("GIT_MIT_RELATES_TO_TEMPLATE")
                 .takes_value(true)
                 .required(false),
+        )
+        .arg(
+            Arg::new("completion")
+                .short('c')
+                .long("completion")
+                .possible_values(&["bash", "elvish", "fish", "powershell", "zsh"]),
         )
 }

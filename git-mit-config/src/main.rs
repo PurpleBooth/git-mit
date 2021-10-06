@@ -3,9 +3,11 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use cli::app::app;
 use git2::{Config, Repository};
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
+use mit_build_tools::completion::print_completions;
 use mit_commit_message_lints::external::Git2;
 use mit_lint::Lint;
 
@@ -33,7 +35,22 @@ fn main() -> Result<()> {
     }
 
     let lint_names: Vec<&str> = Lint::all_lints().map(Lint::name).collect();
-    let matches = app(&lint_names).get_matches();
+    let mut app = app(&lint_names);
+    let matches = app.clone().get_matches();
+
+    // Simply print and exit if completion option is given.
+    if let Some(completion) = matches.value_of("completion") {
+        match completion {
+            "bash" => print_completions::<Bash>(&mut app),
+            "elvish" => print_completions::<Elvish>(&mut app),
+            "fish" => print_completions::<Fish>(&mut app),
+            "powershell" => print_completions::<PowerShell>(&mut app),
+            "zsh" => print_completions::<Zsh>(&mut app),
+            _ => println!("Unknown completion"), // Never reached
+        }
+
+        std::process::exit(0);
+    }
 
     let possible: Option<Result<()>> = [
         cmd::author_example::run_on_match,
