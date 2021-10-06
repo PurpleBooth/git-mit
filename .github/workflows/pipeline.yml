@@ -5,14 +5,34 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
-  docker-build:
-    uses: purplebooth/common-pipelines/.github/workflows/docker-build.yml@main
+  #  docker-build:
+  #    uses: purplebooth/common-pipelines/.github/workflows/docker-build.yml@main
   #
   #  rust-check:
   #    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
   #    with:
   #      ubuntu_install_deps: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
-
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1.6.0
+      - name: Test build
+        uses: docker/build-push-action@v2.7.0
+        with:
+          context: .
+          push: false
+          pull: true
+          cache-from: |
+            type=registry,ref=${{ github.repository }}:latest
+            type=registry,ref=${{ github.repository }}:cache
+          tags: |
+            ${{ github.repository }}:git-${{ github.sha }}
+            ${{ github.repository }}:latest
   security-audit:
     runs-on: ubuntu-latest
     steps:
