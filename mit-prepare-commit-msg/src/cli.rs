@@ -46,10 +46,11 @@ pub fn app() -> App<'static> {
                 .takes_value(true)
                 .required(false),
         )
-        .arg(
-            Arg::new("completion")
-                .short('c')
-                .long("completion")
-                .possible_values(&["bash", "elvish", "fish", "powershell", "zsh"]),
-        )
+        .arg(Arg::new("completion").long("completion").possible_values(&[
+            "bash",
+            "elvish",
+            "fish",
+            "powershell",
+            "zsh",
+        ]))
 }
