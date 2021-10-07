@@ -76,12 +76,13 @@ pub fn app() -> App<'static> {
                 .takes_value(true)
                 .default_value("60"),
         )
-        .arg(
-            Arg::new("completion")
-                .short('c')
-                .long("completion")
-                .possible_values(&["bash", "elvish", "fish", "powershell", "zsh"]),
-        )
+        .arg(Arg::new("completion").long("completion").possible_values(&[
+            "bash",
+            "elvish",
+            "fish",
+            "powershell",
+            "zsh",
+        ]))
 }
 
 #[cfg(test)]

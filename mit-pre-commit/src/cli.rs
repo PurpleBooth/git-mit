@@ -6,10 +6,11 @@ pub fn app() -> App<'static> {
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
-        .arg(
-            Arg::new("completion")
-                .short('c')
-                .long("completion")
-                .possible_values(&["bash", "elvish", "fish", "powershell", "zsh"]),
-        )
+        .arg(Arg::new("completion").long("completion").possible_values(&[
+            "bash",
+            "elvish",
+            "fish",
+            "powershell",
+            "zsh",
+        ]))
 }

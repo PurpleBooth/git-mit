@@ -202,7 +202,6 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
         )
         .arg(
             Arg::new("completion")
-                .short('c')
                 .long("completion")
                 .possible_values(&["bash", "elvish", "fish", "powershell", "zsh",]),
         )
