@@ -90,4 +90,5 @@ projects:
 
 sizes:
     use_angular: true
-    none: [ci, "-"]
+    minor: [revert]
+    none: [ci, ignore, "-"]
