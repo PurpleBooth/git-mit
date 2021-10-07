@@ -293,9 +293,9 @@ Error: SubjectLongerThan72Characters (https://git-scm.com/book/en/v2/Distributed
 
   × Your subject is longer than 72 characters
    ╭─[1:1]
- 1 │ 
-   · ┬
-   · ╰── Too long
+ 1 │ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+   ·                                                                          ┬
+   ·                                                                          ╰── Too long
  2 │ 
  3 │ Demonstration Commit Message
    ╰────
@@ -549,9 +549,9 @@ Error: SubjectEndsWithPeriod (https://git-scm.com/book/en/v2/Distributed-Git-Con
 
   × Your commit message ends with a period
    ╭─[1:1]
- 1 │ .
-   · ┬
-   · ╰── Unneeded period
+ 1 │ Demonstration Commit Message.
+   ·                             ┬
+   ·                             ╰── Unneeded period
  2 │ 
    ╰────
   help: It's important to keep your commits short, because we only have a

@@ -1,6 +1,6 @@
 [package]
 name = "mit-pre-commit"
-version = "5.9.7"
+version = "5.9.9"
 authors = [ "Billie Thompson <billie+mit-pre-commit@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -24,12 +24,12 @@ serde_derive = "1.0.125"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
-  version = "5.9.7"
+  version = "5.9.9"
 
 [dependencies]
 chrono = "0.4.19"
 thiserror = "1.0.29"
-miette = { version = "3.1.0", features = [ "fancy" ] }
+miette = { version = "3.2.0", features = [ "fancy" ] }
 clap = "3.0.0-beta.4"
 clap_derive = "3.0.0-beta.4"
 clap_generate = "3.0.0-beta.2"
@@ -42,7 +42,7 @@ mit-build-tools = { path = "../mit-build-tools" }
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "5.9.7"
+  version = "5.9.9"
 
 [features]
 default = []
@@ -55,4 +55,4 @@ indoc = "1.0.3"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "5.9.7"
+  version = "5.9.9"

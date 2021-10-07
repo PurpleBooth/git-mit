@@ -35,37 +35,33 @@ fn from_file(args: &dyn AuthorArgs) -> Result<String> {
         Some(path) => Ok(path),
     }
     .and_then(|path| match path {
-        "$HOME/.config/git-mit/mit.toml" => author_file_path(env!("CARGO_PKG_NAME")),
+        "$HOME/.config/git-mit/mit.toml" => author_file_path(),
         _ => Ok(path.into()),
     })
     .map(|path| fs::read_to_string(&path).unwrap_or_default())
 }
 
 #[cfg(not(target_os = "windows"))]
-fn author_file_path(cargo_package_name: &str) -> Result<String> {
-    xdg::BaseDirectories::with_prefix(cargo_package_name.to_string())
-        .into_diagnostic()
-        .and_then(|base| xdg_location(&base))
-        .map(|path| path.to_string_lossy().into())
+fn author_file_path() -> Result<String> {
+    let home: PathBuf = std::env::var("HOME").into_diagnostic()?.into();
+    return Ok(home
+        .join(".config")
+        .join("git-mit")
+        .join("mit.toml")
+        .to_string_lossy()
+        .to_string());
 }
 
 #[cfg(target_os = "windows")]
-fn author_file_path(cargo_package_name: &str) -> Result<String> {
+fn author_file_path() -> Result<String> {
     std::env::var("APPDATA")
         .map(|x| {
             PathBuf::from(x)
-                .join(cargo_package_name)
+                .join("git-mit")
                 .join("mit.toml")
                 .to_string_lossy()
                 .into()
         })
-        .into_diagnostic()
-}
-
-#[cfg(not(target_os = "windows"))]
-fn xdg_location(config_directory: &xdg::BaseDirectories) -> Result<PathBuf> {
-    config_directory
-        .place_config_file("mit.toml")
         .into_diagnostic()
 }
 
