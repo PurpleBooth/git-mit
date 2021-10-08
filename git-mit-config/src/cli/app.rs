@@ -205,5 +205,4 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                 .long("completion")
                 .possible_values(&["bash", "elvish", "fish", "powershell", "zsh",]),
         )
-        .setting(AppSettings::SubcommandRequiredElseHelp)
 }
