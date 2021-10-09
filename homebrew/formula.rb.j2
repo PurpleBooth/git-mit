@@ -20,17 +20,57 @@ class GitMit < Formula
     system "cargo", "install", "--root", prefix, "--path", "./git-mit-relates-to/"
     system "cargo", "install", "--root", prefix, "--path", "./git-mit-install/"
 
-    Pathname.glob("**/bash_completion/*").each do |file|
-      bash_completion.install file
-    end
+    # Install bash completion
+    output = Utils.safe_popen_read("#{bin}/mit-commit-msg", "completion", "bash")
+    (bash_completion/"mit-commit-msg").write output
+    output = Utils.safe_popen_read("#{bin}/mit-pre-commit", "completion", "bash")
+    (bash_completion/"mit-pre-commit").write output
+    output = Utils.safe_popen_read("#{bin}/mit-prepare-commit-msg", "completion", "bash")
+    (bash_completion/"mit-prepare-commit-msg").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit", "completion", "bash")
+    (bash_completion/"git-mit").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit-config", "completion", "bash")
+    (bash_completion/"git-mit-config").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit-relates-to", "completion", "bash")
+    (bash_completion/"git-mit-relates-to").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit-install", "completion", "bash")
+    (bash_completion/"git-mit-install").write output
 
-    Pathname.glob("**/fish_completion/*").each do |file|
-      fish_completion.install file
-    end
+    # Install zsh completion
+    output = Utils.safe_popen_read("#{bin}/mit-commit-msg", "completion", "zsh")
+    (zsh_completion/"_mit-commit-msg").write output
+    output = Utils.safe_popen_read("#{bin}/mit-pre-commit", "completion", "zsh")
+    (zsh_completion/"_mit-pre-commit").write output
+    output = Utils.safe_popen_read("#{bin}/mit-prepare-commit-msg", "completion", "zsh")
+    (zsh_completion/"_mit-prepare-commit-msg").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit", "completion", "zsh")
+    (zsh_completion/"_git-mit").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit-config", "completion", "zsh")
+    (zsh_completion/"_git-mit-config").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit-relates-to", "completion", "zsh")
+    (zsh_completion/"_git-mit-relates-to").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit-install", "completion", "zsh")
+    (zsh_completion/"_git-mit-install").write output
 
-    Pathname.glob("**/zsh_completion/*").each do |file|
-      zsh_completion.install file
-    end
+    # Install fish completion
+    output = Utils.safe_popen_read("#{bin}/specdown", "completion", "fish")
+    (fish_completion/"specdown.fish").write output
+
+    # Install fish completion
+    output = Utils.safe_popen_read("#{bin}/mit-commit-msg", "completion", "fish")
+    (fish_completion/"mit-commit-msg.fish").write output
+    output = Utils.safe_popen_read("#{bin}/mit-pre-commit", "completion", "fish")
+    (fish_completion/"mit-pre-commit.fish").write output
+    output = Utils.safe_popen_read("#{bin}/mit-prepare-commit-msg", "completion", "fish")
+    (fish_completion/"mit-prepare-commit-msg.fish").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit", "completion", "fish")
+    (fish_completion/"git-mit.fish").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit-config", "completion", "fish")
+    (fish_completion/"git-mit-config.fish").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit-relates-to", "completion", "fish")
+    (fish_completion/"git-mit-relates-to.fish").write output
+    output = Utils.safe_popen_read("#{bin}/git-mit-install", "completion", "fish")
+    (fish_completion/"git-mit-install.fish").write output
 
     Pathname.glob("**/*.man.md").each do |file|
       base = file.basename(".man.md")
