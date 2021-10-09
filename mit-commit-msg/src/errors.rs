@@ -8,7 +8,7 @@ use thiserror::Error;
 pub(crate) enum MitCommitMsgError {
     #[error("expected file path name")]
     #[diagnostic(
-        url(docsrs),
+
         code(mit_commit_msg::errors::mit_commit_msg_error::commit_path_missing)
     )]
     CommitPathMissing,

@@ -7,12 +7,12 @@ use thiserror::Error;
 pub enum GitMitError {
     #[error("no mit initials provided")]
     #[diagnostic(
-        url(docsrs),
+
         code(git_mit::errors::git_mit_error::no_author_initials_provided)
     )]
     NoAuthorInitialsProvided,
     #[error("no timeout set")]
-    #[diagnostic(url(docsrs), code(git_mit::errors::git_mit_error::no_timeout_set))]
+    #[diagnostic( code(git_mit::errors::git_mit_error::no_timeout_set))]
     NoTimeoutSet,
 }
 
