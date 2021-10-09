@@ -4,15 +4,14 @@ use std::{convert::TryFrom, env, path::PathBuf};
 
 use arboard::Clipboard;
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
-use miette::{GraphicalTheme, IntoDiagnostic, Result};
+use miette::{IntoDiagnostic, Result};
 use mit_commit::CommitMessage;
 use mit_commit_message_lints::{
-    console::style::print_completions,
+    console::style::{miette_install, print_completions},
     external,
     lints::read_from_toml_or_else_vcs,
 };
 use mit_lint::async_lint;
-use mit_commit_message_lints::console::style::miette_install;
 
 use crate::{cli::app, errors::AggregateProblem};
 

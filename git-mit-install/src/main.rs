@@ -7,10 +7,9 @@ use crate::cli::args::Args;
 mod cli;
 mod errors;
 mod hook;
-use std::env;
 
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
-use miette::{GraphicalTheme, Result};
+use miette::Result;
 use mit_commit_message_lints::console::style::{miette_install, print_completions};
 
 fn main() -> Result<()> {

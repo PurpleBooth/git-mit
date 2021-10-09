@@ -8,13 +8,15 @@ use std::{convert::TryFrom, env, option::Option::None, time::Duration};
 
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use git2::Repository;
-use miette::{GraphicalTheme, Result};
+use miette::Result;
 use mit_commit_message_lints::{
-    console::{style, style::print_completions},
+    console::{
+        style,
+        style::{miette_install, print_completions},
+    },
     external::Git2,
     mit::{get_authors, set_commit_authors, Authors},
 };
-use mit_commit_message_lints::console::style::miette_install;
 
 use crate::{cli::args::Args, errors::UnknownAuthor};
 

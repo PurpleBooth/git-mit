@@ -6,10 +6,12 @@ use std::{
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use cli::app::app;
 use git2::{Config, Repository};
-use miette::{GraphicalTheme, IntoDiagnostic, Result};
-use mit_commit_message_lints::{console::style::print_completions, external::Git2};
+use miette::{IntoDiagnostic, Result};
+use mit_commit_message_lints::{
+    console::style::{miette_install, print_completions},
+    external::Git2,
+};
 use mit_lint::Lint;
-use mit_commit_message_lints::console::style::miette_install;
 
 use crate::errors::{
     LibGit2::{DiscoverGitRepository, ReadConfigFromGitRepository, ReadUserConfigFromGit},

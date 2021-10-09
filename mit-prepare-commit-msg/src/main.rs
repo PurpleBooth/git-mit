@@ -28,13 +28,12 @@ mod errors;
 struct Context {
     value: String,
 }
-use miette::{GraphicalTheme, IntoDiagnostic, Result};
+use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
-    console::style::print_completions,
+    console::style::{miette_install, print_completions},
     mit::AuthorState,
     relates::{get_relate_to_configuration, RelateTo},
 };
-use mit_commit_message_lints::console::style::miette_install;
 
 fn main() -> Result<()> {
     miette_install();
