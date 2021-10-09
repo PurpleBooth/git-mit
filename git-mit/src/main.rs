@@ -14,6 +14,7 @@ use mit_commit_message_lints::{
     external::Git2,
     mit::{get_authors, set_commit_authors, Authors},
 };
+use mit_commit_message_lints::console::style::miette_install;
 
 use crate::{cli::args::Args, errors::UnknownAuthor};
 
@@ -21,19 +22,7 @@ mod cli;
 mod errors;
 
 fn main() -> Result<()> {
-    miette::set_panic_hook();
-    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
-        miette::set_hook(Box::new(|_| {
-            Box::new(
-                miette::MietteHandlerOpts::new()
-                    .force_graphical(true)
-                    .terminal_links(false)
-                    .graphical_theme(GraphicalTheme::unicode_nocolor())
-                    .build(),
-            )
-        }))
-        .unwrap();
-    }
+    miette_install();
 
     let mut app = cli::app::app();
     let args: cli::args::Args = app.clone().get_matches().into();

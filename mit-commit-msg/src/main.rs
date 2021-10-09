@@ -12,24 +12,13 @@ use mit_commit_message_lints::{
     lints::read_from_toml_or_else_vcs,
 };
 use mit_lint::async_lint;
+use mit_commit_message_lints::console::style::miette_install;
 
 use crate::{cli::app, errors::AggregateProblem};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    miette::set_panic_hook();
-    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
-        miette::set_hook(Box::new(|_| {
-            Box::new(
-                miette::MietteHandlerOpts::new()
-                    .force_graphical(true)
-                    .terminal_links(false)
-                    .graphical_theme(GraphicalTheme::unicode_nocolor())
-                    .build(),
-            )
-        }))
-        .unwrap();
-    }
+    miette_install();
 
     let mut app = app();
     let matches = app.clone().get_matches();

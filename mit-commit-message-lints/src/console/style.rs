@@ -1,4 +1,4 @@
-use std::{fmt::Display, io};
+use std::{env, fmt::Display, io};
 
 use clap::App;
 use clap_generate::{generate, Generator};
@@ -10,7 +10,7 @@ use comfy_table::{
     ContentArrangement,
     Table,
 };
-use miette::{Diagnostic, GraphicalReportHandler, Severity};
+use miette::{Diagnostic, GraphicalReportHandler, Severity, GraphicalTheme};
 use mit_lint::Lints;
 use thiserror::Error;
 
@@ -149,4 +149,21 @@ pub fn author_table(authors: &Authors) -> String {
 /// Prints completions to stdout
 pub fn print_completions<G: Generator>(app: &mut App) {
     generate::<G, _>(app, app.get_name().to_string(), &mut io::stdout());
+}
+
+
+pub fn miette_install() {
+    miette::set_panic_hook();
+    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
+        miette::set_hook(Box::new(|_| {
+            Box::new(
+                miette::MietteHandlerOpts::new()
+                    .force_graphical(true)
+                    .terminal_links(false)
+                    .graphical_theme(GraphicalTheme::unicode_nocolor())
+                    .build(),
+            )
+        }))
+            .expect("failed to install debug print handler");
+    }
 }

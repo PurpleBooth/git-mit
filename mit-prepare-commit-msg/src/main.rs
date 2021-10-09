@@ -34,21 +34,10 @@ use mit_commit_message_lints::{
     mit::AuthorState,
     relates::{get_relate_to_configuration, RelateTo},
 };
+use mit_commit_message_lints::console::style::miette_install;
 
 fn main() -> Result<()> {
-    miette::set_panic_hook();
-    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
-        miette::set_hook(Box::new(|_| {
-            Box::new(
-                miette::MietteHandlerOpts::new()
-                    .force_graphical(true)
-                    .terminal_links(false)
-                    .graphical_theme(GraphicalTheme::unicode_nocolor())
-                    .build(),
-            )
-        }))
-        .unwrap();
-    }
+    miette_install();
     let mut app = app();
     let matches = app.clone().get_matches();
 

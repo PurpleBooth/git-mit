@@ -9,6 +9,7 @@ use git2::{Config, Repository};
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
 use mit_commit_message_lints::{console::style::print_completions, external::Git2};
 use mit_lint::Lint;
+use mit_commit_message_lints::console::style::miette_install;
 
 use crate::errors::{
     LibGit2::{DiscoverGitRepository, ReadConfigFromGitRepository, ReadUserConfigFromGit},
@@ -20,19 +21,7 @@ mod cmd;
 mod errors;
 
 fn main() -> Result<()> {
-    miette::set_panic_hook();
-    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
-        miette::set_hook(Box::new(|_| {
-            Box::new(
-                miette::MietteHandlerOpts::new()
-                    .force_graphical(true)
-                    .terminal_links(false)
-                    .graphical_theme(GraphicalTheme::unicode_nocolor())
-                    .build(),
-            )
-        }))
-        .unwrap();
-    }
+    miette_install();
 
     let lint_names: Vec<&str> = Lint::all_lints().map(Lint::name).collect();
     let mut app = app(&lint_names);

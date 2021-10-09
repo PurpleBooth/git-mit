@@ -12,21 +12,10 @@ use mit_commit_message_lints::{
     console::style::print_completions,
     relates::{set_relates_to, RelateTo},
 };
+use mit_commit_message_lints::console::style::miette_install;
 
 fn main() -> Result<()> {
-    miette::set_panic_hook();
-    if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
-        miette::set_hook(Box::new(|_| {
-            Box::new(
-                miette::MietteHandlerOpts::new()
-                    .force_graphical(true)
-                    .terminal_links(false)
-                    .graphical_theme(GraphicalTheme::unicode_nocolor())
-                    .build(),
-            )
-        }))
-        .unwrap();
-    }
+    miette_install();
 
     let mut app = app::app();
     let args: Args = app.clone().get_matches().into();
