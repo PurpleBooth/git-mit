@@ -134,11 +134,10 @@ pub fn author_table(authors: &Authors) -> String {
                 Cell::new(initial),
                 Cell::new(author.name()),
                 Cell::new(author.email()),
-                if let Some(key) = author.signingkey() {
-                    Cell::new(key)
-                } else {
-                    Cell::new("None".to_string()).add_attributes(vec![Attribute::Italic])
-                },
+                author.signingkey().map_or_else(
+                    || Cell::new("None".to_string()).add_attributes(vec![Attribute::Italic]),
+                    Cell::new,
+                ),
             ]);
             table
         });

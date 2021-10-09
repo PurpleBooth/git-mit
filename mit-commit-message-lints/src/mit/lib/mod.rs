@@ -7,3 +7,4 @@ pub(crate) mod author_test;
 pub(crate) mod authors;
 #[cfg(test)]
 mod authors_test;
+mod errors;

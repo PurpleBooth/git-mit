@@ -54,7 +54,7 @@ fn subtract_10_seconds(x: Duration) -> Duration {
     x.sub(Duration::from_secs(10))
 }
 
-fn into_seconds(x: Duration) -> u64 {
+const fn into_seconds(x: Duration) -> u64 {
     x.as_secs()
 }
 

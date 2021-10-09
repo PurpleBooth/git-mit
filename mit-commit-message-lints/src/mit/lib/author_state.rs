@@ -8,15 +8,15 @@ pub enum AuthorState<T> {
 }
 
 impl<T> AuthorState<T> {
-    pub fn is_none(&self) -> bool {
+    pub const fn is_none(&self) -> bool {
         matches!(self, AuthorState::<T>::None)
     }
 
-    pub fn is_timeout(&self) -> bool {
+    pub const fn is_timeout(&self) -> bool {
         matches!(self, AuthorState::<T>::Timeout(_))
     }
 
-    pub fn is_some(&self) -> bool {
+    pub const fn is_some(&self) -> bool {
         matches!(self, AuthorState::<T>::Some(_))
     }
 

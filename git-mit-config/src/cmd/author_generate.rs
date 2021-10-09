@@ -68,7 +68,7 @@ fn run(matches: &ArgMatches) -> Result<()> {
     let authors = file_authors.merge(&Authors::try_from(&git_config)?);
 
     let output: String = if args.is_generate_command() {
-        to_toml(authors)
+        to_toml(authors)?
     } else {
         author_table(&authors)
     };
@@ -77,6 +77,6 @@ fn run(matches: &ArgMatches) -> Result<()> {
     Ok(())
 }
 
-fn to_toml(authors: Authors) -> String {
-    String::from(authors).trim().to_string()
+fn to_toml(authors: Authors) -> Result<String> {
+    Ok(String::try_from(authors)?.trim().to_string())
 }
