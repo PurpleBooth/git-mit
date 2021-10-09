@@ -270,8 +270,19 @@ You can also manually download them from the releases page.
 
 ## Docs
 
+### Common Tasks
+
 -   [Using the pair programming part of the tool](./docs/mit.md)
--   [Using the issue number inserting part of the
-    tool](./docs/mit-relates-to.md)
+-   [Using the issue number inserting part of the tool](./docs/mit-relates-to.md)
 -   [Configuring lints](./docs/lints/configuring.md)
 -   [Lint list](./docs/lints/index.md)
+
+### Usage
+
+- [git-mit](./docs/binaries/git-mit.md)
+- [git-mit-config](./docs/binaries/git-mit-config.md)
+- [git-mit-install](./docs/binaries/git-mit-install.md)
+- [git-mit-relates-to](./docs/binaries/git-mit-relates-to.md)
+- [Hook: mit-commit-msg](./docs/binaries/mit-commit-msg.md)
+- [Hook: mit-pre-commit](./docs/binaries/mit-pre-commit.md)
+- [Hook: mit-prepare-commit-msg](./docs/binaries/mit-prepare-commit-msg.md)
