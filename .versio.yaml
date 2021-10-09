@@ -11,19 +11,19 @@ projects:
           toml: package.version
       also:
           - file: ./docs/binaries/git-mit.md
-            pattern: git-moves-together (\d+\.\d+\.\d+)
+            pattern: git-mit (\d+\.\d+\.\d+)
           - file: ./docs/binaries/git-mit-config.md
-            pattern: git-moves-together (\d+\.\d+\.\d+)
+            pattern: git-mit-config (\d+\.\d+\.\d+)
           - file: ./docs/binaries/git-mit-install.md
-            pattern: git-moves-together (\d+\.\d+\.\d+)
+            pattern: git-mit-install (\d+\.\d+\.\d+)
           - file: ./docs/binaries/git-mit-relates-to.md
-            pattern: git-moves-together (\d+\.\d+\.\d+)
+            pattern: git-mit-relates-to (\d+\.\d+\.\d+)
           - file: ./docs/binaries/mit-commit-msg.md
-            pattern: git-moves-together (\d+\.\d+\.\d+)
+            pattern: mit-commit-msg (\d+\.\d+\.\d+)
           - file: ./docs/binaries/mit-pre-commit.md
-            pattern: git-moves-together (\d+\.\d+\.\d+)
+            pattern: mit-pre-commit (\d+\.\d+\.\d+)
           - file: ./docs/binaries/mit-prepare-commit-msg.md
-            pattern: git-moves-together (\d+\.\d+\.\d+)
+            pattern: mit-prepare-commit-msg (\d+\.\d+\.\d+)
           - file: git-mit-config/Cargo.toml
             toml: package.version
           - file: git-mit-config/Cargo.toml
