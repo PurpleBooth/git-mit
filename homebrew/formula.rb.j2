@@ -53,10 +53,6 @@ class GitMit < Formula
     (zsh_completion/"_git-mit-install").write output
 
     # Install fish completion
-    output = Utils.safe_popen_read("#{bin}/specdown", "--completion", "fish")
-    (fish_completion/"specdown.fish").write output
-
-    # Install fish completion
     output = Utils.safe_popen_read("#{bin}/mit-commit-msg", "--completion", "fish")
     (fish_completion/"mit-commit-msg.fish").write output
     output = Utils.safe_popen_read("#{bin}/mit-pre-commit", "--completion", "fish")
