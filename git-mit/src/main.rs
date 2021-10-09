@@ -82,7 +82,7 @@ fn main() -> Result<()> {
 }
 
 fn not_setup_warning() {
-    style::warning("Hooks not found in this repository, your commits won't contain trailers, and lints will not be checked", Some("git mit-install\n\nwill fix this"));
+    style::warning("Hooks not found in this repository, your commits won't contain trailers, and lints will not be checked", Some("`git mit-install` will fix this"));
 }
 
 fn is_hook_present() -> bool {
