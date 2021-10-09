@@ -113,7 +113,7 @@ Otherwise an error will be generated
 git-mit-config
 ```
 ``` shell,verify(stream=stderr)
-Error: git_mit_config::errors::unrecognised_lint_command (https://docs.rs/git-mit-config/5.9.11/git-mit-config/struct.UnrecognisedLintCommand.html)
+Error: git_mit_config::errors::unrecognised_lint_command
 
   × unrecognised subcommand
   help: try `git mit-config --help`

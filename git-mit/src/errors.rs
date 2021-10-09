@@ -6,13 +6,10 @@ use thiserror::Error;
 #[derive(Error, Diagnostic, Debug)]
 pub enum GitMitError {
     #[error("no mit initials provided")]
-    #[diagnostic(
-
-        code(git_mit::errors::git_mit_error::no_author_initials_provided)
-    )]
+    #[diagnostic(code(git_mit::errors::git_mit_error::no_author_initials_provided))]
     NoAuthorInitialsProvided,
     #[error("no timeout set")]
-    #[diagnostic( code(git_mit::errors::git_mit_error::no_timeout_set))]
+    #[diagnostic(code(git_mit::errors::git_mit_error::no_timeout_set))]
     NoTimeoutSet,
 }
 

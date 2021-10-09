@@ -7,10 +7,7 @@ use thiserror::Error;
 #[derive(Error, Debug, Diagnostic)]
 pub(crate) enum MitCommitMsgError {
     #[error("expected file path name")]
-    #[diagnostic(
-
-        code(mit_commit_msg::errors::mit_commit_msg_error::commit_path_missing)
-    )]
+    #[diagnostic(code(mit_commit_msg::errors::mit_commit_msg_error::commit_path_missing))]
     CommitPathMissing,
 }
 

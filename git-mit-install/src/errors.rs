@@ -4,7 +4,6 @@ pub enum GitMitInstallError {
     #[error("failed to install hook")]
     #[diagnostic(
         code(git_mit_install::errors::git_mit_install_error::existing_hook),
-
         help("{0} already exists, you need to remove this before continuing")
     )]
     ExistingHook(String),
