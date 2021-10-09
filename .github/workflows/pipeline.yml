@@ -443,38 +443,10 @@ jobs:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
         run: mv ./target/release/git-mit$EXTENSION ./git-mit-$TARGET$EXTENSION
         shell: bash
-      - name: Package completions "power_shell_completion"
-        run: find . -name "power_shell_completion" -type d | tar --strip-components=6 -czf power_shell_completion.tar.gz -T -
-        shell: bash
-      - name: Package completions "bash_completion"
-        run: find . -name "bash_completion" -type d | tar --strip-components=6 -czf bash_completion.tar.gz -T -
-        shell: bash
-      - name: Package completions "fish_completion"
-        run: find . -name "fish_completion" -type d | tar --strip-components=6 -czf fish_completion.tar.gz -T -
-        shell: bash
-      - name: Package completions "zsh_completion"
-        run: find . -name "zsh_completion" -type d | tar --strip-components=6 -czf zsh_completion.tar.gz -T -
-        shell: bash
       - uses: actions/upload-artifact@v2
         with:
           name: bins
           path: ./*${{ matrix.target }}${{ matrix.suffix }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: bash_completion
-          path: ./bash_completion.tar.gz
-      - uses: actions/upload-artifact@v2
-        with:
-          name: fish_completion
-          path: ./fish_completion.tar.gz
-      - uses: actions/upload-artifact@v2
-        with:
-          name: zsh_completion
-          path: ./zsh_completion.tar.gz
-      - uses: actions/upload-artifact@v2
-        with:
-          name: power_shell_completion
-          path: ./power_shell_completion.tar.gz
     strategy:
       matrix:
         include:
@@ -518,7 +490,7 @@ jobs:
           bodyFile: "CHANGELOG.md"
           name: Release v${{ needs.release.outputs.current_version }}
           tag: v${{ needs.release.outputs.current_version }}
-          artifacts: ./bins/*,./bash_completion/*,./fish_completion/*,./zsh_completion/*,./power_shell_completion/*
+          artifacts: ./bins/*
 
   docker-push:
     if: needs.release.outputs.version_bump
