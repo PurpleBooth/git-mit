@@ -17,6 +17,7 @@ use crate::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    miette::set_panic_hook();
     if env::var("DEBUG_PRETTY_ERRORS").is_ok() {
         miette::set_hook(Box::new(|_| {
             Box::new(
