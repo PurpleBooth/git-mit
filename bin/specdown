@@ -71,6 +71,9 @@ email = "someone@example.com"
 EOF
 
             mkdir -p "$TEMPORARY_DIR/.config/git-mit/"
+            mkdir -p "$TEMPORARY_DIR/git-mit"
+
+            cp "$TEMPORARY_DIR/git-mit.toml" "$TEMPORARY_DIR/git-mit/mit.toml"
             cp "$TEMPORARY_DIR/git-mit.toml" "$TEMPORARY_DIR/.config/git-mit/mit.toml"
 
             mkdir "$TEMPORARY_DIR/repo"
@@ -78,6 +81,7 @@ EOF
             cd "$TEMPORARY_DIR/repo"
             export PATH="$REPOSITORY_DIR/target/release/:$PATH"
             export HOME="$TEMPORARY_DIR"
+            export APPDATA="$TEMPORARY_DIR"
             echo "$MARKDOWN_PATH"
             git config --global core.autocrlf false
             specdown run "$MARKDOWN_PATH"
