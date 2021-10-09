@@ -7,8 +7,7 @@ use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use cli::app::app;
 use git2::{Config, Repository};
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
-use mit_build_tools::completion::print_completions;
-use mit_commit_message_lints::external::Git2;
+use mit_commit_message_lints::{console::style::print_completions, external::Git2};
 use mit_lint::Lint;
 
 use crate::errors::{

@@ -32,7 +32,6 @@ git2 = "0.13.23"
 openssl = { version = '0.10', optional = true }
 
 indoc = "1.0.3"
-mit-build-tools = { path = "../mit-build-tools" }
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"

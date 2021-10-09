@@ -1056,6 +1056,8 @@ name = "mit-commit-message-lints"
 version = "5.10.0"
 dependencies = [
  "chrono",
+ "clap 3.0.0-beta.4",
+ "clap_generate",
  "comfy-table",
  "criterion",
  "git2",

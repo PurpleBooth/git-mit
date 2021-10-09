@@ -5,9 +5,12 @@ use std::{convert::TryFrom, env, path::PathBuf};
 use arboard::Clipboard;
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
-use mit_build_tools::completion::print_completions;
 use mit_commit::CommitMessage;
-use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
+use mit_commit_message_lints::{
+    console::style::print_completions,
+    external,
+    lints::read_from_toml_or_else_vcs,
+};
 use mit_lint::async_lint;
 
 use crate::{cli::app, errors::AggregateProblem};

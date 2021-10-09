@@ -11,7 +11,7 @@ use std::env;
 
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use miette::{GraphicalTheme, Result};
-use mit_build_tools::completion::print_completions;
+use mit_commit_message_lints::console::style::print_completions;
 
 fn main() -> Result<()> {
     miette::set_panic_hook();

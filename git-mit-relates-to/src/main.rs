@@ -3,13 +3,15 @@ use std::{convert::TryFrom, env};
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use cli::{app, args::Args};
 use git2::Repository;
-use mit_build_tools::completion::print_completions;
 use mit_commit_message_lints::{console::style, external::Git2};
 
 mod cli;
 mod errors;
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
-use mit_commit_message_lints::relates::{set_relates_to, RelateTo};
+use mit_commit_message_lints::{
+    console::style::print_completions,
+    relates::{set_relates_to, RelateTo},
+};
 
 fn main() -> Result<()> {
     miette::set_panic_hook();

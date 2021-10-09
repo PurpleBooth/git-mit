@@ -2,8 +2,8 @@ use std::{convert::TryFrom, env};
 
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
-use mit_build_tools::completion::print_completions;
 use mit_commit_message_lints::{
+    console::style::print_completions,
     external::Git2,
     mit::{get_commit_coauthor_configuration, AuthorState},
 };

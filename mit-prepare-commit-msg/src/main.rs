@@ -8,7 +8,6 @@ use std::{
 };
 extern crate tinytemplate;
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
-use mit_build_tools::completion::print_completions;
 use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
     external::{Git2, Vcs},
@@ -31,6 +30,7 @@ struct Context {
 }
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
 use mit_commit_message_lints::{
+    console::style::print_completions,
     mit::AuthorState,
     relates::{get_relate_to_configuration, RelateTo},
 };

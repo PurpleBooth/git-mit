@@ -9,9 +9,8 @@ use std::{convert::TryFrom, env, option::Option::None, time::Duration};
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use git2::Repository;
 use miette::{GraphicalTheme, Result};
-use mit_build_tools::completion::print_completions;
 use mit_commit_message_lints::{
-    console::style,
+    console::{style, style::print_completions},
     external::Git2,
     mit::{get_authors, set_commit_authors, Authors},
 };
