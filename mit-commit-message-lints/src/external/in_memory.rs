@@ -94,7 +94,7 @@ impl TryFrom<&'_ InMemory<'_>> for Authors {
                 },
             )?;
 
-        Ok(Authors::new(
+        Ok(Self::new(
             raw_entries
                 .iter()
                 .filter_map(|(key, cfg)| {

@@ -7,8 +7,8 @@ pub struct RelateTo {
 
 impl RelateTo {
     #[must_use]
-    pub fn new(relates: &str) -> RelateTo {
-        RelateTo {
+    pub fn new(relates: &str) -> Self {
+        Self {
             relates: relates.into(),
         }
     }
@@ -16,19 +16,5 @@ impl RelateTo {
     #[must_use]
     pub fn to(&self) -> String {
         self.relates.clone()
-    }
-}
-
-#[cfg(test)]
-mod tests_relate_to {
-    #![allow(clippy::wildcard_imports)]
-
-    use super::*;
-
-    #[test]
-    fn has_a_relate_to_string() {
-        let relate = RelateTo::new("[#12343567]");
-
-        assert_eq!(relate.to(), "[#12343567]");
     }
 }

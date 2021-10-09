@@ -1,14 +1,17 @@
 use std::{
     env,
+    io::stdout,
     path::{Path, PathBuf},
 };
 
-use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use cli::app::app;
 use git2::{Config, Repository};
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
-    console::style::{miette_install, print_completions},
+    console::{
+        completion::{print_completions, Shell},
+        error_handling::miette_install,
+    },
     external::Git2,
 };
 use mit_lint::Lint;
@@ -30,15 +33,8 @@ fn main() -> Result<()> {
     let matches = app.clone().get_matches();
 
     // Simply print and exit if completion option is given.
-    if let Some(completion) = matches.value_of("completion") {
-        match completion {
-            "bash" => print_completions::<Bash>(&mut app),
-            "elvish" => print_completions::<Elvish>(&mut app),
-            "fish" => print_completions::<Fish>(&mut app),
-            "powershell" => print_completions::<PowerShell>(&mut app),
-            "zsh" => print_completions::<Zsh>(&mut app),
-            _ => println!("Unknown completion"), // Never reached
-        }
+    if let Ok(completion) = matches.value_of_t::<Shell>("completion") {
+        print_completions(&mut stdout(), &mut app, completion);
 
         std::process::exit(0);
     }

@@ -43,7 +43,7 @@ build:
 ## Lint it
 lint:
 	cargo fmt --all -- --check
-	cargo +nightly clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
+	cargo +nightly clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo
 	cargo check
 	cargo audit
 	npx prettier --check **.yml **.yaml
@@ -71,7 +71,7 @@ release:
 ## Format what can be formatted
 fmt:
 	cargo fix --allow-dirty --allow-staged
-	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
+	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -D clippy::nursery
 	cargo fmt --all
 	npx prettier --write **.yml **.yaml
 

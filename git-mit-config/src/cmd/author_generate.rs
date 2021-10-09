@@ -10,7 +10,7 @@ use mit_commit_message_lints::{
 
 use crate::current_dir;
 
-pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
+pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
         .subcommand_matches("mit")
         .filter(|subcommand| {
@@ -43,7 +43,7 @@ impl Args {
 
 impl From<&ArgMatches> for Args {
     fn from(matches: &ArgMatches) -> Self {
-        Args {
+        Self {
             matches: matches.clone(),
         }
     }

@@ -12,8 +12,8 @@ pub struct StaleAuthorError {
 }
 
 impl StaleAuthorError {
-    pub(crate) fn new(last_updated: DateTime<Utc>) -> StaleAuthorError {
-        StaleAuthorError {
+    pub(crate) fn new(last_updated: DateTime<Utc>) -> Self {
+        Self {
             source_code: DateTime::<Local>::from(last_updated).to_string(),
             date: last_updated,
         }

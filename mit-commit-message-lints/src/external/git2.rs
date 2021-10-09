@@ -17,8 +17,8 @@ impl Git2 {
     ///
     /// Will panic if it can't open the git config in snapshot mode
     #[must_use]
-    pub fn new(mut config: git2::Config) -> Git2 {
-        Git2 {
+    pub fn new(mut config: git2::Config) -> Self {
+        Self {
             config_snapshot: config.snapshot().unwrap(),
             config_live: config,
         }
@@ -114,7 +114,7 @@ impl TryFrom<PathBuf> for Git2 {
         Repository::discover(current_dir)
             .and_then(|x| x.config())
             .or_else(|_| Config::open_default())
-            .map(Git2::new)
+            .map(Self::new)
             .into_diagnostic()
     }
 }
@@ -144,7 +144,7 @@ impl TryFrom<&'_ Git2> for Authors {
                 },
             )?;
 
-        Ok(Authors::new(
+        Ok(Self::new(
             raw_entries
                 .iter()
                 .filter_map(|(key, cfg)| {

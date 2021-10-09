@@ -2,25 +2,29 @@ use std::{
     convert::TryFrom,
     env,
     fs::File,
-    io::Write,
+    io::{stdout, Write},
     path::PathBuf,
     process::{Command, Stdio},
 };
-extern crate tinytemplate;
-use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
+
+use miette::{IntoDiagnostic, Result};
 use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
+    console::{
+        completion::{print_completions, Shell},
+        error_handling::miette_install,
+    },
     external::{Git2, Vcs},
-    mit::{get_commit_coauthor_configuration, Author},
+    mit::{get_commit_coauthor_configuration, Author, AuthorState},
+    relates::{get_relate_to_configuration, RelateTo},
 };
 use serde::Serialize;
 use tinytemplate::TinyTemplate;
 
-use crate::{
-    cli::app,
-    errors::MitPrepareCommitMessageError,
-    MitPrepareCommitMessageError::MissingCommitFilePath,
-};
+use crate::{cli::app, errors::MitPrepareCommitMessageError::MissingCommitFilePath};
+
+extern crate tinytemplate;
+
 mod cli;
 mod errors;
 
@@ -28,12 +32,6 @@ mod errors;
 struct Context {
     value: String,
 }
-use miette::{IntoDiagnostic, Result};
-use mit_commit_message_lints::{
-    console::style::{miette_install, print_completions},
-    mit::AuthorState,
-    relates::{get_relate_to_configuration, RelateTo},
-};
 
 fn main() -> Result<()> {
     miette_install();
@@ -41,15 +39,8 @@ fn main() -> Result<()> {
     let matches = app.clone().get_matches();
 
     // Simply print and exit if completion option is given.
-    if let Some(completion) = matches.value_of("completion") {
-        match completion {
-            "bash" => print_completions::<Bash>(&mut app),
-            "elvish" => print_completions::<Elvish>(&mut app),
-            "fish" => print_completions::<Fish>(&mut app),
-            "powershell" => print_completions::<PowerShell>(&mut app),
-            "zsh" => print_completions::<Zsh>(&mut app),
-            _ => println!("Unknown completion"), // Never reached
-        }
+    if let Ok(completion) = matches.value_of_t::<Shell>("completion") {
+        print_completions(&mut stdout(), &mut app, completion);
 
         std::process::exit(0);
     }

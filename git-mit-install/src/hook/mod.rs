@@ -1,2 +1,2 @@
-pub(crate) mod dir;
-pub(crate) mod install;
+pub mod dir;
+pub mod install;

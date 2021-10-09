@@ -6,7 +6,7 @@ use mit_commit_message_lints::mit::{set_config_authors, Author};
 
 use crate::get_vcs;
 
-pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
+pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
         .subcommand_matches("mit")
         .filter(|subcommand| subcommand.subcommand_matches("set").is_some())

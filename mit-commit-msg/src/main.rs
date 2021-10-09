@@ -1,13 +1,15 @@
 extern crate mit_commit_message_lints;
 
-use std::{convert::TryFrom, env, path::PathBuf};
+use std::{convert::TryFrom, env, io::stdout, path::PathBuf};
 
 use arboard::Clipboard;
-use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use miette::{IntoDiagnostic, Result};
 use mit_commit::CommitMessage;
 use mit_commit_message_lints::{
-    console::style::{miette_install, print_completions},
+    console::{
+        completion::{print_completions, Shell},
+        error_handling::miette_install,
+    },
     external,
     lints::read_from_toml_or_else_vcs,
 };
@@ -23,15 +25,8 @@ async fn main() -> Result<()> {
     let matches = app.clone().get_matches();
 
     // Simply print and exit if completion option is given.
-    if let Some(completion) = matches.value_of("completion") {
-        match completion {
-            "bash" => print_completions::<Bash>(&mut app),
-            "elvish" => print_completions::<Elvish>(&mut app),
-            "fish" => print_completions::<Fish>(&mut app),
-            "powershell" => print_completions::<PowerShell>(&mut app),
-            "zsh" => print_completions::<Zsh>(&mut app),
-            _ => println!("Unknown completion"), // Never reached
-        }
+    if let Ok(completion) = matches.value_of_t::<Shell>("completion") {
+        print_completions(&mut stdout(), &mut app, completion);
 
         std::process::exit(0);
     }
@@ -67,7 +62,6 @@ async fn main() -> Result<()> {
             };
 
             clipboard.set_text(trimmed_commit).into_diagnostic()?;
-        } else {
         };
 
         return AggregateProblem::to(lint_problems);
@@ -77,5 +71,4 @@ async fn main() -> Result<()> {
 }
 
 mod cli;
-
 mod errors;

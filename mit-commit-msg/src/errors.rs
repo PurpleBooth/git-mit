@@ -5,7 +5,7 @@ use mit_lint::Problem;
 use thiserror::Error;
 
 #[derive(Error, Debug, Diagnostic)]
-pub(crate) enum MitCommitMsgError {
+pub enum MitCommitMsgError {
     #[error("expected file path name")]
     #[diagnostic(code(mit_commit_msg::errors::mit_commit_msg_error::commit_path_missing))]
     CommitPathMissing,
@@ -13,7 +13,7 @@ pub(crate) enum MitCommitMsgError {
 
 #[derive(Error, Debug)]
 #[error("multiple lint problems")]
-pub(crate) struct AggregateProblem(Vec<Problem>);
+pub struct AggregateProblem(Vec<Problem>);
 
 impl AggregateProblem {
     pub(crate) fn to(problems: Vec<Problem>) -> Result<()> {
@@ -22,7 +22,7 @@ impl AggregateProblem {
         } else if problems.is_empty() {
             Ok(())
         } else {
-            Err(AggregateProblem(problems).into())
+            Err(Self(problems).into())
         }
     }
 }

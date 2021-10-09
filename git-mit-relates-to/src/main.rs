@@ -1,17 +1,22 @@
-use std::{convert::TryFrom, env};
+#[cfg(test)]
+extern crate quickcheck;
+#[cfg(test)]
+#[macro_use(quickcheck)]
+extern crate quickcheck_macros;
 
-use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
+use std::{convert::TryFrom, env, io::stdout};
+
 use cli::{app, args::Args};
 use git2::Repository;
-use mit_commit_message_lints::{console::style, external::Git2};
+use miette::{IntoDiagnostic, Result};
+use mit_commit_message_lints::{
+    console::{completion::print_completions, error_handling::miette_install, style},
+    external::Git2,
+    relates::{set_relates_to, RelateTo},
+};
 
 mod cli;
 mod errors;
-use miette::{IntoDiagnostic, Result};
-use mit_commit_message_lints::{
-    console::style::{miette_install, print_completions},
-    relates::{set_relates_to, RelateTo},
-};
 
 fn main() -> Result<()> {
     miette_install();
@@ -21,14 +26,7 @@ fn main() -> Result<()> {
 
     // Simply print and exit if completion option is given.
     if let Some(completion) = args.completion() {
-        match completion {
-            "bash" => print_completions::<Bash>(&mut app),
-            "elvish" => print_completions::<Elvish>(&mut app),
-            "fish" => print_completions::<Fish>(&mut app),
-            "powershell" => print_completions::<PowerShell>(&mut app),
-            "zsh" => print_completions::<Zsh>(&mut app),
-            _ => println!("Unknown completion"), // Never reached
-        }
+        print_completions(&mut stdout(), &mut app, completion);
 
         std::process::exit(0);
     }

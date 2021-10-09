@@ -10,10 +10,11 @@ pub struct Args {
 
 impl From<ArgMatches> for Args {
     fn from(matches: ArgMatches) -> Self {
-        Args { matches }
+        Self { matches }
     }
 }
 use miette::{IntoDiagnostic, Result};
+use mit_commit_message_lints::console::completion::Shell;
 
 impl Args {
     pub(crate) fn issue_number(&self) -> Result<&str> {
@@ -33,7 +34,7 @@ impl Args {
         .map(Duration::from_secs)
     }
 
-    pub fn completion(&self) -> Option<&str> {
-        self.matches.value_of("completion")
+    pub fn completion(&self) -> Option<Shell> {
+        self.matches.value_of_t::<Shell>("completion").ok()
     }
 }

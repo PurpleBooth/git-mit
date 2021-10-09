@@ -12,7 +12,7 @@ pub struct Args {
 
 impl From<ArgMatches> for Args {
     fn from(matches: ArgMatches) -> Self {
-        Args { matches }
+        Self { matches }
     }
 }
 

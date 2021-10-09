@@ -4,7 +4,7 @@ use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 
 use crate::{current_dir, get_vcs};
 
-pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
+pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
         .subcommand_matches("lint")
         .filter(|subcommand| subcommand.subcommand_matches("enabled").is_some())

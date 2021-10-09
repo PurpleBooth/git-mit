@@ -7,7 +7,7 @@ use mit_lint::Lints;
 
 use crate::{errors::GitMitConfigError::LintNameNotGiven, get_vcs};
 
-pub(crate) fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
+pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
         .subcommand_matches("lint")
         .filter(|subcommand| subcommand.subcommand_matches("enable").is_some())

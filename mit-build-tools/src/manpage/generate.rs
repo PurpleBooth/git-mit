@@ -44,8 +44,8 @@ pub fn generate(app: &App, out_dir: &Path, md_template: &str) {
 }
 
 impl<'a> Context {
-    fn new(app: &App) -> Context {
-        Context {
+    fn new(app: &App) -> Self {
+        Self {
             bin: existing::existing(app, "{bin}"),
             version: existing::existing(app, "{version}"),
             author: existing::existing(app, "{mit}"),
@@ -66,7 +66,7 @@ impl<'a> Context {
 mod existing {
     use clap::App;
 
-    pub(crate) fn existing(app: &App, variable: &'static str) -> String {
+    pub fn existing(app: &App, variable: &'static str) -> String {
         let mut copy = app.clone().help_template(variable);
 
         let mut version_buffer: Vec<u8> = vec![];

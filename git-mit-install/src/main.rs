@@ -1,16 +1,24 @@
+use std::io::stdout;
+
 use hook::{dir, install};
 use indoc::indoc;
+use miette::Result;
+use mit_commit_message_lints::console::{
+    completion::print_completions,
+    error_handling::miette_install,
+};
 
 pub(crate) use crate::cli::app;
 use crate::cli::args::Args;
 
+#[cfg(test)]
+extern crate quickcheck;
+#[cfg(test)]
+#[macro_use(quickcheck)]
+extern crate quickcheck_macros;
 mod cli;
 mod errors;
 mod hook;
-
-use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
-use miette::Result;
-use mit_commit_message_lints::console::style::{miette_install, print_completions};
 
 fn main() -> Result<()> {
     miette_install();
@@ -20,15 +28,7 @@ fn main() -> Result<()> {
 
     // Simply print and exit if completion option is given.
     if let Some(completion) = args.completion() {
-        match completion {
-            "bash" => print_completions::<Bash>(&mut app),
-            "elvish" => print_completions::<Elvish>(&mut app),
-            "fish" => print_completions::<Fish>(&mut app),
-            "powershell" => print_completions::<PowerShell>(&mut app),
-            "zsh" => print_completions::<Zsh>(&mut app),
-            _ => println!("Unknown completion"), // Never reached
-        }
-
+        print_completions(&mut stdout(), &mut app, completion);
         std::process::exit(0);
     }
 

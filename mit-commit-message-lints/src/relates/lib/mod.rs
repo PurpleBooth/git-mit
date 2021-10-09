@@ -1,1 +1,3 @@
-pub(crate) mod relates_to;
+pub mod relates_to;
+#[cfg(test)]
+mod relates_to_test;

@@ -674,6 +674,8 @@ dependencies = [
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
+ "quickcheck",
+ "quickcheck_macros",
  "tempfile",
  "thiserror",
  "which",
@@ -693,6 +695,8 @@ dependencies = [
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
+ "quickcheck",
+ "quickcheck_macros",
  "tempfile",
  "thiserror",
 ]

@@ -19,22 +19,22 @@ pub enum Shell {
 impl Arbitrary for Shell {
     fn arbitrary(g: &mut Gen) -> Self {
         *g.choose(&[
-            Shell::Bash,
-            Shell::Elvish,
-            Shell::Fish,
-            Shell::PowerShell,
-            Shell::Zsh,
+            Self::Bash,
+            Self::Elvish,
+            Self::Fish,
+            Self::PowerShell,
+            Self::Zsh,
         ])
         .unwrap()
     }
 
     fn shrink(&self) -> Box<dyn Iterator<Item = Self>> {
         let options = [
-            Shell::Bash,
-            Shell::Elvish,
-            Shell::Fish,
-            Shell::PowerShell,
-            Shell::Zsh,
+            Self::Bash,
+            Self::Elvish,
+            Self::Fish,
+            Self::PowerShell,
+            Self::Zsh,
         ];
         let index = options.iter().position(|other| self.eq(other));
 
@@ -54,11 +54,11 @@ impl FromStr for Shell {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "bash" => Ok(Shell::Bash),
-            "fish" => Ok(Shell::Fish),
-            "elvish" => Ok(Shell::Elvish),
-            "powershell" => Ok(Shell::PowerShell),
-            "zsh" => Ok(Shell::Zsh),
+            "bash" => Ok(Self::Bash),
+            "fish" => Ok(Self::Fish),
+            "elvish" => Ok(Self::Elvish),
+            "powershell" => Ok(Self::PowerShell),
+            "zsh" => Ok(Self::Zsh),
             _ => Err(ShellFromStrError {
                 source_code: s.to_string(),
                 underline: (0, s.len()).into(),

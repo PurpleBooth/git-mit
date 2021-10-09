@@ -3,7 +3,7 @@ use miette::{Result, WrapErr};
 use crate::external::Vcs;
 
 #[allow(clippy::maybe_infinite_iter)]
-pub(crate) fn get_vcs_coauthors_config<'a>(
+pub fn get_vcs_coauthors_config<'a>(
     config: &'a dyn Vcs,
     key: &'a str,
 ) -> Result<Vec<Option<&'a str>>> {
@@ -18,14 +18,14 @@ pub(crate) fn get_vcs_coauthors_config<'a>(
         })
 }
 
-pub(crate) fn has_vcs_coauthor(config: &dyn Vcs, index: i32) -> bool {
+pub fn has_vcs_coauthor(config: &dyn Vcs, index: i32) -> bool {
     let email = get_vcs_coauthor_config(config, "email", index);
     let name = get_vcs_coauthor_config(config, "name", index);
 
     matches!((name, email), (Ok(Some(_)), Ok(Some(_))))
 }
 
-pub(crate) fn get_vcs_coauthor_config<'a>(
+pub fn get_vcs_coauthor_config<'a>(
     config: &'a dyn Vcs,
     key: &str,
     index: i32,

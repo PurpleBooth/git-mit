@@ -9,7 +9,7 @@ use std::{convert::TryFrom, env, io::stdout, option::Option::None, time::Duratio
 use git2::Repository;
 use miette::Result;
 use mit_commit_message_lints::{
-    console::{completion::print_completions, style, style::miette_install},
+    console::{completion::print_completions, error_handling::miette_install, style},
     external::Git2,
     mit::{get_authors, set_commit_authors, Authors},
 };

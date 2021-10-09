@@ -10,8 +10,8 @@ pub struct Author {
 
 impl Author {
     #[must_use]
-    pub fn new(name: &str, email: &str, signingkey: Option<&str>) -> Author {
-        Author {
+    pub fn new(name: &str, email: &str, signingkey: Option<&str>) -> Self {
+        Self {
             name: name.into(),
             email: email.into(),
             signingkey: signingkey.map(std::convert::Into::into),
@@ -31,28 +31,5 @@ impl Author {
     #[must_use]
     pub fn signingkey(&self) -> Option<String> {
         self.signingkey.clone()
-    }
-}
-
-#[cfg(test)]
-mod tests_author {
-    #![allow(clippy::wildcard_imports)]
-
-    use super::*;
-
-    #[test]
-    fn has_an_author() {
-        let author = Author::new("The Name", "email@example.com", None);
-
-        assert_eq!(author.name(), "The Name");
-        assert_eq!(author.email(), "email@example.com");
-        assert_eq!(author.signingkey(), None);
-    }
-
-    #[test]
-    fn has_an_signing_key() {
-        let author = Author::new("The Name", "email@example.com", Some("0A46826A"));
-
-        assert_eq!(author.signingkey(), Some("0A46826A".into()));
     }
 }

@@ -1,3 +1,7 @@
-pub(crate) mod errors;
-pub(crate) mod get_relate_to_configuration;
-pub(crate) mod set_relates_to;
+pub mod errors;
+pub mod get_relate_to_configuration;
+#[cfg(test)]
+mod get_relate_to_configuration_test;
+pub mod set_relates_to;
+#[cfg(test)]
+mod set_relates_to_test;
