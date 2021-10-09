@@ -1,19 +1,16 @@
 extern crate mit_commit_message_lints;
 
-use std::{convert::TryFrom, env, path::PathBuf, str::FromStr};
+use std::{convert::TryFrom, env, path::PathBuf};
 
+use arboard::Clipboard;
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
-use copypasta::{ClipboardContext, ClipboardProvider};
 use miette::{GraphicalTheme, IntoDiagnostic, Result};
 use mit_build_tools::completion::print_completions;
 use mit_commit::CommitMessage;
 use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 use mit_lint::async_lint;
 
-use crate::{
-    cli::app,
-    errors::{AggregateProblem, MitCommitMsgError},
-};
+use crate::{cli::app, errors::AggregateProblem};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -62,30 +59,25 @@ async fn main() -> Result<()> {
 
     let lint_problems = async_lint(&commit_message, lint_config).await;
     if !lint_problems.is_empty() {
-        let _clipboard_used =
-            if !FromStr::from_str(matches.value_of("copy-message-to-clipboard").unwrap())
-                .unwrap_or(true)
-            {
-                false
-            } else if let Ok(mut clipboard) = ClipboardContext::new() {
-                let body = commit_message.get_body().to_string().trim().to_string();
-                let trimmed_commit = if body.is_empty() {
-                    format!("{}", commit_message.get_subject())
-                } else {
-                    format!(
-                        "{}\n{}",
-                        commit_message.get_subject(),
-                        commit_message.get_body()
-                    )
-                };
-
-                clipboard
-                    .set_contents(trimmed_commit)
-                    .map_err(|e| MitCommitMsgError::Clipboard(e))?;
-                true
+        if !matches
+            .value_of_t::<bool>("copy-message-to-clipboard")
+            .unwrap()
+        {
+        } else if let Ok(mut clipboard) = Clipboard::new() {
+            let body = commit_message.get_body().to_string().trim().to_string();
+            let trimmed_commit = if body.is_empty() {
+                format!("{}", commit_message.get_subject())
             } else {
-                false
+                format!(
+                    "{}\n{}",
+                    commit_message.get_subject(),
+                    commit_message.get_body()
+                )
             };
+
+            clipboard.set_text(trimmed_commit).into_diagnostic()?;
+        } else {
+        };
 
         return AggregateProblem::to(lint_problems);
     }

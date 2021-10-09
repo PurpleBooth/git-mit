@@ -1,4 +1,4 @@
-use std::{error, fmt::Display};
+use std::fmt::Display;
 
 use miette::{Diagnostic, LabeledSpan, Result, Severity, SourceCode};
 use mit_lint::Problem;
@@ -12,12 +12,6 @@ pub(crate) enum MitCommitMsgError {
         code(mit_commit_msg::errors::mit_commit_msg_error::commit_path_missing)
     )]
     CommitPathMissing,
-    #[error("{0}")]
-    #[diagnostic(
-        url(docsrs),
-        code(mit_commit_msg::errors::mit_commit_msg_error::clipboard)
-    )]
-    Clipboard(#[source] Box<dyn error::Error + Sync + Send>),
 }
 
 #[derive(Error, Debug)]

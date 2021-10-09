@@ -38,7 +38,7 @@ openssl = { version = '0.10', optional = true }
 miette = { version = "3.2.0", features = [ "fancy" ] }
 mit-commit = "1.30.0"
 
-copypasta = "0.7.1"
+arboard = "2.0.0"
 mit-build-tools = { path = "../mit-build-tools" }
 
   [dependencies.mit-commit-message-lints]

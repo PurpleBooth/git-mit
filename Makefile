@@ -45,7 +45,7 @@ lint:
 	cargo fmt --all -- --check
 	cargo +nightly clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic
 	cargo check
-	cargo audit
+	cargo audit --ignore  RUSTSEC-2021-0119
 	npx prettier --check **.yml **.yaml
 
 .PHONY: publish-to-crates
