@@ -30,13 +30,14 @@ mit-lint = "2.2.2"
 comfy-table = "4.1.1"
 clap_generate = "3.0.0-beta.2"
 clap = "3.0.0-beta.4"
+quickcheck_macros = "1"
+quickcheck = "1"
 
   [dependencies.serde]
   version = "1.0.125"
   features = [ "derive" ]
 
 [dev-dependencies]
-
 criterion = "0.3.5"
 
   [dev-dependencies.mit-hook-test-helper]
