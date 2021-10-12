@@ -1,6 +1,6 @@
 [package]
 name = "mit-pre-commit"
-version = "5.10.2"
+version = "5.10.3"
 authors = [ "Billie Thompson <billie+mit-pre-commit@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -24,7 +24,7 @@ serde_derive = "1.0.125"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
-  version = "5.10.2"
+  version = "5.10.3"
 
 [dependencies]
 chrono = "0.4.19"
@@ -41,7 +41,7 @@ mit-commit = "1.30.0"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "5.10.2"
+  version = "5.10.3"
 
 [features]
 default = []
@@ -54,4 +54,4 @@ indoc = "1.0.3"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "5.10.2"
+  version = "5.10.3"
