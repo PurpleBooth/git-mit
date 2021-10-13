@@ -9,7 +9,7 @@ mit-prepare-commit-msg --help
 ```
 
 ``` shell,verify(stream=stdout)
-mit-prepare-commit-msg 5.10.4
+mit-prepare-commit-msg 5.10.5
 
 Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>
 
