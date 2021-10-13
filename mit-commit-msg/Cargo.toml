@@ -36,7 +36,7 @@ clap_generate = "3.0.0-beta.2"
 git2 = "0.13.23"
 openssl = { version = '0.10', optional = true }
 miette = { version = "3.2.0", features = [ "fancy" ] }
-mit-commit = "1.30.0"
+mit-commit = "1.30.2"
 
 arboard = "2.0.0"
 
