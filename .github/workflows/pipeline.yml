@@ -292,80 +292,10 @@ jobs:
     name: Generate Homebrew Formula
     runs-on: ubuntu-latest
     steps:
-      - id: get_repository_name
-        name: Work out repository name
-        run:
-          echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" |
-          awk -F / '{print $2}' | sed -e "s/:refs//")"
-        shell: bash
-      - uses: actions/checkout@v2.3.5
-        name: Checkout this repository
+      - uses: PurpleBooth/generate-formula-action@v0.1.0
         with:
-          lfs: true
-          fetch-depth: 0
-          path: main-repo
-          ref: v${{ needs.release.outputs.current_version }}
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v4
-        with:
+          current_version: ${{ needs.release.outputs.current_version }}
+          previous_version: ${{ needs.release.outputs.previous_version }}
+          committer_token: ${{ secrets.COMMITTER_TOKEN }}
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-          git_tag_gpgsign: true
-          workdir: main-repo
-      - uses: actions/checkout@v2.3.5
-        with:
-          repository: PurpleBooth/homebrew-repo
-          token: ${{ secrets.COMMITTER_TOKEN }}
-          path: homebrew-repo
-          ref: main
-        name: Checkout the custom tap
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v4
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-          git_tag_gpgsign: true
-          workdir: homebrew-repo
-      - run: |
-          curl -Lo file.tar.gz "https://github.com/$GIT_REPO/archive/$GIT_TAG.tar.gz"
-          sha256sum -b file.tar.gz | awk '{ print $1 }' > hash
-          echo ::set-output "name=SHA256::$( cat hash )"
-        id: hash
-        shell: bash
-        env:
-          GIT_REPO: ${{ github.repository }}
-          GIT_TAG: v${{ needs.release.outputs.current_version }}
-        name: Calculate the binary hash
-      - uses: cuchi/jinja2-action@v1.2.0
-        with:
-          template: main-repo/homebrew/formula.rb.j2
-          output_file: formula.rb
-          variables: |
-            github_repo=${{ github.repository }}
-            git_tag=v${{ needs.release.outputs.current_version }}
-            file_sha=${{ steps.hash.outputs.SHA256 }}
-        name: Generate the template
-      - name: Generate a changelog
-        uses: PurpleBooth/changelog-action@v0.1.1
-        with:
-          config: main-repo/cliff.toml
-          args: --verbose --latest --repository main-repo
-          output: CHANGELOG.md
-      - shell: bash
-        name: Open a PR on the custom tap repository
-        run: |
-          VERSION="$(echo $GIT_TAG | sed 's/^refs\/tags\///')"
-          git -C homebrew-repo switch -c "$REPOSITORY_NAME-$VERSION"
-          cp formula.rb "homebrew-repo/Formula/$REPOSITORY_NAME.rb"
-          git -C homebrew-repo add "Formula/$REPOSITORY_NAME.rb"
-          git -C homebrew-repo commit -m "fix: Update $REPOSITORY_NAME to $VERSION"
-          git -C homebrew-repo push origin "$REPOSITORY_NAME-$VERSION"
-          (cd homebrew-repo && gh pr create --body-file "../CHANGELOG.md" --label releases --base main --fill)
-        env:
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-          GIT_TAG: v${{ needs.release.outputs.current_version }}
-          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+          gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
