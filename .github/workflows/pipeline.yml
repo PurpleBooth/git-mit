@@ -23,82 +23,9 @@ jobs:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
   specdown:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: windows-latest
-            specdown: https://github.com/specdown/specdown/releases/latest/download/specdown-x86_64-pc-windows-msvc.exe
-            install: echo nothing-to-install
-          - os: macos-latest
-            specdown: https://github.com/specdown/specdown/releases/latest/download/specdown-x86_64-apple-darwin
-            install: echo nothing-to-install
-          - os: ubuntu-latest
-            specdown: https://github.com/specdown/specdown/releases/latest/download/specdown-x86_64-unknown-linux-gnu
-            install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
-    steps:
-      - run: ${{ matrix.install }}
-        env:
-          DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v2.3.5
-      - uses: actions/cache@v2.1.6
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: |
-          set -euo pipefail
-          mkdir -p "$GITHUB_WORKSPACE/target/assorted/bin"
-          curl -Lo "$GITHUB_WORKSPACE/target/assorted/bin/specdown" "$SPECDOWN_URL"
-          chmod +x "$GITHUB_WORKSPACE/target/assorted/bin/specdown"
-          echo "$GITHUB_WORKSPACE/target/assorted/bin" >> "$GITHUB_PATH"
-        env:
-          SPECDOWN_URL: ${{ matrix.specdown }}
-        shell: bash
-      - uses: actions-rs/toolchain@v1.0.7
-        with:
-          toolchain: stable
-          profile: default
-      - name: Rename wsl bash
-        if: runner.os == 'Windows'
-        run: |
-          takeown /F C:\Windows\System32\bash.exe
-          icacls C:\Windows\System32\bash.exe /grant administrators:F
-          ren C:\Windows\System32\bash.exe wsl-bash.exe
-      - run: make specdown
-        shell: bash
-  lints:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: windows-latest
-          - os: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2.3.5
-      - uses: actions/cache@v2.1.6
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          profile: default
-          default: true
-          components: rustfmt, clippy
-      - run: cargo fmt --all -- --check
-      - run: cargo clippy --all-targets --all-features -- -D warnings -D "clippy::all" -D "clippy::pedantic" -D "clippy::cargo"
-      - uses: creyD/prettier_action@v4.0
-        if: matrix.os == 'ubuntu-latest'
-        with:
-          prettier_options: --check **/*.{yml,yaml}
+    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@main
+    with:
+      ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
   release:
     if: github.ref == 'refs/heads/main'
