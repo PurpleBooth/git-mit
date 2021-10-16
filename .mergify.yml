@@ -27,6 +27,7 @@ pull_request_rules:
       - status-success~=^rust-check
       - base=main
       - label=dependencies
+      - author~=^dependabot(|-preview)\[bot\]$
     actions:
       queue:
         method: rebase
