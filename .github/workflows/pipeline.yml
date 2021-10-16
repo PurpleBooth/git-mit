@@ -476,12 +476,11 @@ jobs:
           ref: v${{ needs.release.outputs.current_version }}
       - uses: actions/download-artifact@v2
       - name: Generate a changelog
-        uses: orhun/git-cliff-action@v1
+        uses: PurpleBooth/changelog-action@v0.1.0
         with:
           config: cliff.toml
           args: --verbose --latest
-        env:
-          OUTPUT: CHANGELOG.md
+          output: CHANGELOG.md
       - id: create_release
         uses: ncipollo/release-action@v1.8.10
         with:
@@ -593,12 +592,11 @@ jobs:
             file_sha=${{ steps.hash.outputs.SHA256 }}
         name: Generate the template
       - name: Generate a changelog
-        uses: orhun/git-cliff-action@v1
+        uses: PurpleBooth/changelog-action@v0.1.0
         with:
           config: main-repo/cliff.toml
           args: --verbose --latest --repository main-repo
-        env:
-          OUTPUT: CHANGELOG.md
+          output: CHANGELOG.md
       - shell: bash
         name: Open a PR on the custom tap repository
         run: |
