@@ -3,21 +3,14 @@ queue_rules:
     speculative_checks: 20
     batch_size: 20
     conditions:
-      - status-success=lint-markdown
-      - status-success=lints (windows-latest)
-      - status-success=lints (ubuntu-latest)
-      - status-success=specdown (windows-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-...
-      - status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-x...
-      - status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-x8...
-      - status-success=bench (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev
-        libxcb-xfixes0-dev libxkbcommon-dev)
-      - status-success=bench (macos-latest, echo nothing-to-install)
-      - status-success=version
-      - status-success=test (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev
-        libxcb-xfixes0-dev libxkbcommon-dev)
-      - status-success=test (macos-latest, echo nothing-to-install)
-      - status-success=security-audit
-      - status-success=check
+      - status-success~=^lint-markdown
+      - status-success~=^lints
+      - status-success~=^specdown
+      - status-success~=^bench
+      - status-success~=^version
+      - status-success~=^test
+      - status-success~=^security-audit
+      - status-success~=^check
 
 pull_request_rules:
   - name: request review on external contributor
@@ -30,21 +23,14 @@ pull_request_rules:
 
   - name: automatic rebase for dependencies
     conditions:
-      - status-success=lint-markdown
-      - status-success=lints (windows-latest)
-      - status-success=lints (ubuntu-latest)
-      - status-success=specdown (windows-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-...
-      - status-success=specdown (ubuntu-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-x...
-      - status-success=specdown (macos-latest, https://github.com/specdown/specdown/releases/latest/download/specdown-x8...
-      - status-success=bench (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev
-        libxcb-xfixes0-dev libxkbcommon-dev)
-      - status-success=bench (macos-latest, echo nothing-to-install)
-      - status-success=version
-      - status-success=test (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev
-        libxcb-xfixes0-dev libxkbcommon-dev)
-      - status-success=test (macos-latest, echo nothing-to-install)
-      - status-success=security-audit
-      - status-success=check
+      - status-success~=^lint-markdown
+      - status-success~=^lints
+      - status-success~=^specdown
+      - status-success~=^bench
+      - status-success~=^version
+      - status-success~=^test
+      - status-success~=^security-audit
+      - status-success~=^check
       - base=main
       - label=dependencies
     actions:
