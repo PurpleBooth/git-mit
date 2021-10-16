@@ -281,7 +281,7 @@ jobs:
     if: needs.release.outputs.version_bump
     needs:
       - release
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@v0.2.0
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@v0.2.0
     with:
       current_version: ${{ needs.release.outputs.current_version }}
 
