@@ -7,23 +7,23 @@ on:
 
 jobs:
   docker-build:
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@v0.2.0
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@v0.4.4
 
   lint-markdown:
-    uses: PurpleBooth/common-pipelines/.github/workflows/markdown-check.yml@v0.2.0
+    uses: PurpleBooth/common-pipelines/.github/workflows/markdown-check.yml@v0.4.4
     with:
       skip_formatting: true
 
   version:
-    uses: PurpleBooth/common-pipelines/.github/workflows/commit-check.yml@v0.2.0
+    uses: PurpleBooth/common-pipelines/.github/workflows/commit-check.yml@v0.4.4
 
   rust-check:
-    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@v0.2.0
+    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@v0.4.4
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
   specdown:
-    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@v0.2.0
+    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@v0.4.4
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
