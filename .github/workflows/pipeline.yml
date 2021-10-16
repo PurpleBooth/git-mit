@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1.2.0
       - name: Set up Docker Buildx
@@ -36,7 +36,7 @@ jobs:
   security-audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - uses: actions/cache@v2.1.6
         with:
           path: |
@@ -51,13 +51,13 @@ jobs:
   lint-markdown:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.5
       - uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
   version:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
         with:
           fetch-depth: 0
       - uses: chaaz/versio-actions/install@v1.2
@@ -69,7 +69,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - uses: actions/cache@v2.1.6
         with:
           path: |
@@ -98,7 +98,7 @@ jobs:
       - run: ${{ matrix.install }}
         env:
           DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - uses: actions/cache@v2.1.6
         with:
           path: |
@@ -127,7 +127,7 @@ jobs:
       - run: ${{ matrix.install }}
         env:
           DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - uses: actions/cache@v2.1.6
         with:
           path: |
@@ -159,7 +159,7 @@ jobs:
       - run: ${{ matrix.install }}
         env:
           DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - uses: actions/cache@v2.1.6
         with:
           path: |
@@ -197,7 +197,7 @@ jobs:
           - os: windows-latest
           - os: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - uses: actions/cache@v2.1.6
         with:
           path: |
@@ -239,7 +239,7 @@ jobs:
       previous_version: ${{ steps.previous_version.outputs.previous_version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
         with:
           fetch-depth: 0
       - uses: chaaz/versio-actions/install@v1.2
@@ -264,7 +264,7 @@ jobs:
       - release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
         name: Checkout the repository
         with:
           ref: v${{ needs.release.outputs.current_version }}
@@ -383,7 +383,7 @@ jobs:
       - run: ${{ matrix.install }}
         env:
           DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
         with:
           lfs: true
           ref: v${{ needs.release.outputs.current_version }}
@@ -469,7 +469,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
         with:
           lfs: true
           fetch-depth: 0
@@ -499,7 +499,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
         with:
           lfs: true
           fetch-depth: 0
@@ -541,7 +541,7 @@ jobs:
           echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" |
           awk -F / '{print $2}' | sed -e "s/:refs//")"
         shell: bash
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
         name: Checkout this repository
         with:
           lfs: true
@@ -557,7 +557,7 @@ jobs:
           git_commit_gpgsign: true
           git_tag_gpgsign: true
           workdir: main-repo
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
         with:
           repository: PurpleBooth/homebrew-repo
           token: ${{ secrets.COMMITTER_TOKEN }}
