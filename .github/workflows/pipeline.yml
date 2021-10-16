@@ -29,9 +29,6 @@ jobs:
 
   release:
     if: github.ref == 'refs/heads/main'
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_USER: ${{ github.actor }}
     needs:
       - docker-build
       - version
@@ -39,29 +36,13 @@ jobs:
       - lint-markdown
       - rust-check
     outputs:
-      version_bump: ${{ steps.version_bump.outputs.version_bump }}
-      current_version: ${{ steps.current_version.outputs.current_version }}
-      previous_version: ${{ steps.previous_version.outputs.previous_version }}
+      version_bump: ${{ steps.release.outputs.version_bump }}
+      current_version: ${{ steps.release.outputs.current_version }}
+      previous_version: ${{ steps.release.outputs.previous_version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.5
-        with:
-          fetch-depth: 0
-      - uses: chaaz/versio-actions/install@v1.2
-        name: Install versio
-      - id: previous_version
-        run: echo ::set-output "name=previous_version::$( versio get --id 1 -v )"
-      - run: echo ::set-output "name=BUMP::$( versio release --dry-run )"
-        id: get_versio_plan
-      - name: Generate release
-        if: ${{ contains(steps.get_versio_plan.outputs.BUMP, ' -> ') }}
-        run: |
-          versio release
-      - run: echo ::set-output "name=current_version::$( versio get --id 1 -v )"
-        id: current_version
-      - run: echo ::set-output "name=version_bump::true"
-        if: steps.current_version.outputs.current_version != steps.previous_version.outputs.previous_version
-        id: version_bump
+      - uses: PurpleBooth/versio-release-action@v0.1.2
+        id: release
 
   cargo-publish:
     if: needs.release.outputs.version_bump
