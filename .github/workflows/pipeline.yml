@@ -4,15 +4,12 @@ on:
       - "*"
   pull_request:
   workflow_dispatch:
+
 jobs:
-  #  docker-build:
-  #    uses: purplebooth/common-pipelines/.github/workflows/docker-build.yml@main
-  #
-  #  rust-check:
-  #    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
-  #    with:
-  #      ubuntu_install_deps: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
   docker-build:
+    concurrency: 
+      group: docker-build-${{ github.head_ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,6 +31,9 @@ jobs:
             ${{ github.repository }}:git-${{ github.sha }}
             ${{ github.repository }}:latest
   security-audit:
+    concurrency: 
+      group: security-audit-${{ github.head_ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.5
@@ -49,11 +49,17 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
   lint-markdown:
+    concurrency: 
+      group: lint-markdown-${{ github.head_ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.5
       - uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
   version:
+    concurrency: 
+      group: version-${{ github.head_ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -67,6 +73,9 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_USER: ${{ github.actor }}
   check:
+    concurrency: 
+      group: check-${{ github.head_ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.5
@@ -84,6 +93,9 @@ jobs:
           profile: default
       - run: cargo check
   test:
+    concurrency: 
+      group: test-${{ github.head_ref }}
+      cancel-in-progress: true
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -113,6 +125,9 @@ jobs:
           profile: default
       - run: cargo test
   bench:
+    concurrency: 
+      group: bench-${{ github.head_ref }}
+      cancel-in-progress: true
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -142,6 +157,9 @@ jobs:
           profile: default
       - run: cargo bench
   specdown:
+    concurrency: 
+      group: specdown-${{ github.head_ref }}
+      cancel-in-progress: true
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -190,6 +208,9 @@ jobs:
       - run: make specdown
         shell: bash
   lints:
+    concurrency: 
+      group: lints-${{ github.head_ref }}
+      cancel-in-progress: true
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
