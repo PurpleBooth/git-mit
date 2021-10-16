@@ -8,103 +8,20 @@ on:
 jobs:
   docker-build:
     uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@main
-  security-audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2.3.5
-      - uses: actions/cache@v2.1.6
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/audit-check@v1.2.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+
   lint-markdown:
     uses: PurpleBooth/common-pipelines/.github/workflows/markdown-check.yml@main
     with:
       skip_formatting: true
+
   version:
     uses: PurpleBooth/common-pipelines/.github/workflows/commit-check.yml@main
 
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2.3.5
-      - uses: actions/cache@v2.1.6
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/toolchain@v1.0.7
-        with:
-          toolchain: stable
-          profile: default
-      - run: cargo check
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: macos-latest
-            install: echo nothing-to-install
-          - os: ubuntu-latest
-            install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
-          - os: windows-latest
-            install: echo nothing-to-install
-    steps:
-      - run: ${{ matrix.install }}
-        env:
-          DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v2.3.5
-      - uses: actions/cache@v2.1.6
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/toolchain@v1.0.7
-        with:
-          toolchain: stable
-          profile: default
-      - run: cargo test
-  bench:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: macos-latest
-            install: echo nothing-to-install
-          - os: ubuntu-latest
-            install: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
-          - os: windows-latest
-            install: echo nothing-to-install
-    steps:
-      - run: ${{ matrix.install }}
-        env:
-          DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v2.3.5
-      - uses: actions/cache@v2.1.6
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/toolchain@v1.0.7
-        with:
-          toolchain: stable
-          profile: default
-      - run: cargo bench
+  rust-check:
+    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
+    with:
+      ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+
   specdown:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -192,11 +109,8 @@ jobs:
       - docker-build
       - version
       - specdown
-      - test
-      - lints
       - lint-markdown
-      - check
-      - security-audit
+      - rust-check
     outputs:
       version_bump: ${{ steps.version_bump.outputs.version_bump }}
       current_version: ${{ steps.current_version.outputs.current_version }}

@@ -5,13 +5,9 @@ queue_rules:
     conditions:
       - status-success~=^docker-build
       - status-success~=^lint-markdown
-      - status-success~=^lints
       - status-success~=^specdown
-      - status-success~=^bench
       - status-success~=^version
-      - status-success~=^test
-      - status-success~=^security-audit
-      - status-success~=^check
+      - status-success~=^rust-check
 
 pull_request_rules:
   - name: request review on external contributor
@@ -26,13 +22,9 @@ pull_request_rules:
     conditions:
       - status-success~=^docker-build
       - status-success~=^lint-markdown
-      - status-success~=^lints
       - status-success~=^specdown
-      - status-success~=^bench
       - status-success~=^version
-      - status-success~=^test
-      - status-success~=^security-audit
-      - status-success~=^check
+      - status-success~=^rust-check
       - base=main
       - label=dependencies
     actions:
