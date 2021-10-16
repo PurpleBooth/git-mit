@@ -476,7 +476,7 @@ jobs:
           ref: v${{ needs.release.outputs.current_version }}
       - uses: actions/download-artifact@v2
       - name: Generate a changelog
-        uses: PurpleBooth/changelog-action@v0.1.0
+        uses: PurpleBooth/changelog-action@v0.1.1
         with:
           config: cliff.toml
           args: --verbose --latest
@@ -592,7 +592,7 @@ jobs:
             file_sha=${{ steps.hash.outputs.SHA256 }}
         name: Generate the template
       - name: Generate a changelog
-        uses: PurpleBooth/changelog-action@v0.1.0
+        uses: PurpleBooth/changelog-action@v0.1.1
         with:
           config: main-repo/cliff.toml
           args: --verbose --latest --repository main-repo
