@@ -7,26 +7,7 @@ on:
 
 jobs:
   docker-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2.3.5
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1.2.0
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1.6.0
-      - name: Test build
-        uses: docker/build-push-action@v2.7.0
-        with:
-          context: .
-          push: false
-          pull: true
-          cache-from: |
-            type=registry,ref=${{ github.repository }}:latest
-            type=registry,ref=${{ github.repository }}:cache
-          tags: |
-            ${{ github.repository }}:git-${{ github.sha }}
-            ${{ github.repository }}:latest
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@main
   security-audit:
     runs-on: ubuntu-latest
     steps:

@@ -3,6 +3,7 @@ queue_rules:
     speculative_checks: 20
     batch_size: 20
     conditions:
+      - status-success~=^docker-build
       - status-success~=^lint-markdown
       - status-success~=^lints
       - status-success~=^specdown
@@ -23,6 +24,7 @@ pull_request_rules:
 
   - name: automatic rebase for dependencies
     conditions:
+      - status-success~=^docker-build
       - status-success~=^lint-markdown
       - status-success~=^lints
       - status-success~=^specdown
