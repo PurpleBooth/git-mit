@@ -1,5 +1,10 @@
 FROM rust:1.55.0 as builder
 
+## Update the system generally
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /root/app
 
 ## Build deps for git-mit
@@ -14,15 +19,20 @@ RUN make build generate-manpages
 FROM debian:11.1
 ENV DEBIAN_FRONTEND noninteractive
 
+## Update the system generally
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
+
 ### Nice things if for actually using the tool
+## Bash
+RUN apt-get update && \
+    apt-get install -y bash bash-completion && \
+    rm -rf /var/lib/apt/lists/*
+
 ## Git
 RUN apt-get update && \
     apt-get install -y git && \
-    rm -rf /var/lib/apt/lists/*
-
-## Bash
-RUN apt-get update && \
-    apt-get install -y bash && \
     rm -rf /var/lib/apt/lists/*
 
 ## Vim
@@ -45,46 +55,35 @@ COPY --from=builder \
     /root/app/target/release/mit-commit-msg \
     /usr/local/bin/mit-commit-msg
 COPY --from=builder \
-    /root/app/target/release/build/mit-commit-msg-*/out/bash_completion/mit-commit-msg.bash \
-    /usr/local/share/bash-completion/completions/mit-commit-msg
-COPY --from=builder \
     /root/app/target/release/mit-pre-commit \
     /usr/local/bin/mit-pre-commit
-COPY --from=builder \
-    /root/app/target/release/build/mit-pre-commit-*/out/bash_completion/mit-pre-commit.bash \
-    /usr/local/share/bash-completion/completions/mit-pre-commit
 COPY --from=builder \
     /root/app/target/release/mit-prepare-commit-msg \
     /usr/local/bin/mit-prepare-commit-msg
 COPY --from=builder \
-    /root/app/target/release/build/mit-prepare-commit-msg-*/out/bash_completion/mit-prepare-commit-msg.bash \
-    /usr/local/share/bash-completion/completions/mit-prepare-commit-msg
-COPY --from=builder \
     /root/app/target/release/git-mit \
     /usr/local/bin/git-mit
-COPY --from=builder \
-    /root/app/target/release/build/git-mit-*/out/bash_completion/git-mit.bash \
-    /usr/local/share/bash-completion/completions/git-mit
 COPY --from=builder \
     /root/app/target/release/git-mit-config \
     /usr/local/bin/git-mit-config
 COPY --from=builder \
-    /root/app/target/release/build/git-mit-config-*/out/bash_completion/git-mit-config.bash \
-    /usr/local/share/bash-completion/completions/git-mit-config
-COPY --from=builder \
     /root/app/target/release/git-mit-relates-to \
     /usr/local/bin/git-mit-relates-to
-COPY --from=builder \
-    /root/app/target/release/build/git-mit-relates-to-*/out/bash_completion/git-mit-relates-to.bash \
-    /usr/local/share/bash-completion/completions/git-mit-relates-to
 COPY --from=builder \
     /root/app/target/release/git-mit-install \
     /usr/local/bin/git-mit-install
 COPY --from=builder \
-    /root/app/target/release/build/git-mit-install-*/out/bash_completion/git-mit-install.bash \
-    /usr/local/share/bash-completion/completions/git-mit-install
-COPY --from=builder \
     /root/app/target/*.1 \
     /usr/local/share/man/man1/
+
+RUN mkdir -p $HOME/.local/share/bash-completion/completions
+RUN mit-commit-msg --completion bash > $HOME/.local/share/bash-completion/completions/mit-commit-msg
+RUN mit-pre-commit --completion bash > $HOME/.local/share/bash-completion/completions/mit-pre-commit
+RUN mit-prepare-commit-msg --completion bash > $HOME/.local/share/bash-completion/completions/mit-prepare-commit-msg
+RUN git-mit --completion bash > $HOME/.local/share/bash-completion/completions/git-mit
+RUN git-mit-config --completion bash > $HOME/.local/share/bash-completion/completions/git-mit-config
+RUN git-mit-relates-to --completion bash > $HOME/.local/share/bash-completion/completions/git-mit-relates-to
+RUN git-mit-install --completion bash > $HOME/.local/share/bash-completion/completions/git-mit-install
+
 RUN git-mit-install --scope=global
 
