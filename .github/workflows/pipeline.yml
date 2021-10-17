@@ -7,7 +7,7 @@ on:
 
 jobs:
   docker-build:
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@v0.4.4
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@v0.4.5
 
   lint-markdown:
     uses: PurpleBooth/common-pipelines/.github/workflows/markdown-check.yml@v0.4.4
