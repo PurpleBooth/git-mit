@@ -158,19 +158,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
-name = "chrono"
-version = "0.4.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "670ad68c9088c2a963aaa298cb369688cf3f9465ce5e2d4ca10e6e0098a1ce73"
-dependencies = [
- "libc",
- "num-integer",
- "num-traits",
- "time",
- "winapi",
-]
-
-[[package]]
 name = "clap"
 version = "2.33.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1059,7 +1046,6 @@ dependencies = [
 name = "mit-commit-message-lints"
 version = "5.11.2"
 dependencies = [
- "chrono",
  "clap 3.0.0-beta.4",
  "clap_generate",
  "comfy-table",
@@ -1080,6 +1066,7 @@ dependencies = [
  "serde_yaml",
  "shell-words",
  "thiserror",
+ "time",
  "toml",
 ]
 
@@ -1141,7 +1128,6 @@ dependencies = [
 name = "mit-pre-commit"
 version = "5.11.2"
 dependencies = [
- "chrono",
  "clap 3.0.0-beta.4",
  "clap_derive",
  "clap_generate",
@@ -1157,6 +1143,7 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "thiserror",
+ "time",
  "tinytemplate",
 ]
 
@@ -1963,13 +1950,11 @@ dependencies = [
 
 [[package]]
 name = "time"
-version = "0.1.44"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6db9e6914ab8b1ae1c260a4ae7a49b6c5611b40328a735b21862567685e73255"
+checksum = "cde1cf55178e0293453ba2cca0d5f8392a922e52aa958aee9c28ed02becc6d03"
 dependencies = [
  "libc",
- "wasi",
- "winapi",
 ]
 
 [[package]]

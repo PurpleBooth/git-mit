@@ -1,6 +1,6 @@
 use std::time::SystemTime;
 
-use chrono::{DateTime, TimeZone, Utc};
+use time::OffsetDateTime;
 
 use crate::mit::AuthorState;
 
@@ -18,7 +18,9 @@ fn unwrap_with_none() {
 #[test]
 #[should_panic]
 fn unwrap_with_timeout() {
-    assert!(AuthorState::<bool>::Timeout(Utc.timestamp(10, 0)).unwrap());
+    assert!(
+        AuthorState::<bool>::Timeout(OffsetDateTime::from_unix_timestamp(10).unwrap()).unwrap()
+    );
 }
 
 #[test]
@@ -53,17 +55,17 @@ fn none_is_timeout() {
 
 #[test]
 fn timeout_is_some() {
-    assert!(!AuthorState::<bool>::Timeout(DateTime::from(SystemTime::now())).is_some());
+    assert!(!AuthorState::<bool>::Timeout(OffsetDateTime::now_utc()).is_some());
 }
 
 #[test]
 fn timeout_is_none() {
-    assert!(!AuthorState::<bool>::Timeout(DateTime::from(SystemTime::now())).is_none());
+    assert!(!AuthorState::<bool>::Timeout(OffsetDateTime::now_utc()).is_none());
 }
 
 #[test]
 fn timeout_is_timeout() {
-    assert!(AuthorState::<bool>::Timeout(DateTime::from(SystemTime::now())).is_timeout());
+    assert!(AuthorState::<bool>::Timeout(OffsetDateTime::now_utc()).is_timeout());
 }
 
 #[test]

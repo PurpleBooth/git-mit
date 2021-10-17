@@ -27,7 +27,7 @@ serde_derive = "1.0.130"
   version = "5.11.2"
 
 [dependencies]
-chrono = "0.4.19"
+time = "0.3.3"
 thiserror = "1.0.30"
 miette = { version = "3.2.0", features = [ "fancy" ] }
 clap = "3.0.0-beta.4"

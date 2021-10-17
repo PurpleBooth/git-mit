@@ -1,9 +1,9 @@
-use chrono::{DateTime, Utc};
+use time::OffsetDateTime;
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum AuthorState<T> {
     Some(T),
-    Timeout(DateTime<Utc>),
+    Timeout(OffsetDateTime),
     None,
 }
 

@@ -5,7 +5,7 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use chrono::{TimeZone, Utc};
+use time::OffsetDateTime;
 
 use crate::{
     external::InMemory,
@@ -23,7 +23,7 @@ fn there_is_no_author_config_if_it_has_expired() {
     let mut vcs = InMemory::new(&mut strings);
 
     let actual = get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
-    let expected = AuthorState::Timeout(Utc.timestamp(now_minus_10, 0));
+    let expected = AuthorState::Timeout(OffsetDateTime::from_unix_timestamp(now_minus_10).unwrap());
     assert_eq!(
         expected, actual,
         "Expected the mit config to be {:?}, instead got {:?}",

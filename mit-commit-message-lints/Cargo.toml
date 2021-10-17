@@ -14,7 +14,7 @@ description = "Check the correctness of a specific commit message. Designed to b
 
 [dependencies]
 shell-words = "1.0.0"
-chrono = "0.4.19"
+time = { version = "0.3.3", features = ["local-offset"] }
 glob = "0.3.0"
 thiserror = "1.0.30"
 miette = { version = "3.2.0", features = [ "fancy" ] }

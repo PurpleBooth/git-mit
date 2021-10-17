@@ -1,20 +1,22 @@
 use std::fmt::{Debug, Display};
 
-use chrono::{DateTime, Local, Utc};
 use miette::{Diagnostic, LabeledSpan, SourceCode};
 use thiserror::Error;
+use time::{OffsetDateTime, UtcOffset};
 
 #[derive(Error, Debug)]
 #[error("The details of the author of this commit are stale")]
 pub struct StaleAuthorError {
     source_code: String,
-    date: DateTime<Utc>,
+    date: OffsetDateTime,
 }
 
 impl StaleAuthorError {
-    pub(crate) fn new(last_updated: DateTime<Utc>) -> Self {
+    pub(crate) fn new(last_updated: OffsetDateTime) -> Self {
         Self {
-            source_code: DateTime::<Local>::from(last_updated).to_string(),
+            source_code: last_updated
+                .to_offset(UtcOffset::current_local_offset().unwrap_or(UtcOffset::UTC))
+                .to_string(),
             date: last_updated,
         }
     }

@@ -1,7 +1,7 @@
 use std::option::Option;
 
-use chrono::{TimeZone, Utc};
-use miette::Result;
+use miette::{IntoDiagnostic, Result};
+use time::OffsetDateTime;
 
 use crate::{
     external::Vcs,
@@ -19,12 +19,14 @@ pub fn get_commit_coauthor_configuration(config: &mut dyn Vcs) -> Result<AuthorS
 
     match config_value {
         Some(config_value) => {
-            if Utc::now() < Utc.timestamp(config_value, 0) {
+            let config_time =
+                OffsetDateTime::from_unix_timestamp(config_value).into_diagnostic()?;
+            if OffsetDateTime::now_utc() < config_time {
                 let author_config = get_vcs_authors(config)?;
 
                 Ok(AuthorState::Some(author_config))
             } else {
-                Ok(AuthorState::Timeout(Utc.timestamp(config_value, 0)))
+                Ok(AuthorState::Timeout(config_time))
             }
         }
         None => Ok(AuthorState::None),
