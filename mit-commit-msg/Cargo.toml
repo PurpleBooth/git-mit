@@ -13,13 +13,13 @@ repository = "https://github.com/PurpleBooth/git-mit"
 [build-dependencies]
 clap = "3.0.0-beta.4"
 clap_derive = "3.0.0-beta.4"
-clap_generate = "3.0.0-beta.2"
+clap_generate = "3.0.0-beta.4"
 tinytemplate = "1.2.1"
 serde_json = "1.0.68"
-serde_derive = "1.0.125"
+serde_derive = "1.0.130"
 
   [build-dependencies.serde]
-  version = "1.0.125"
+  version = "1.0.130"
   features = [ "derive" ]
 
   [build-dependencies.mit-build-tools]
@@ -27,14 +27,14 @@ serde_derive = "1.0.125"
   version = "5.11.2"
 
 [dependencies]
-thiserror = "1.0.29"
+thiserror = "1.0.30"
 tokio = { version = "1.12.0", features = ["full"] }
 mit-lint = "2.2.4"
 clap = "3.0.0-beta.4"
 clap_derive = "3.0.0-beta.4"
-clap_generate = "3.0.0-beta.2"
+clap_generate = "3.0.0-beta.4"
 git2 = "0.13.23"
-openssl = { version = '0.10', optional = true }
+openssl = { version = "0.10.36", optional = true }
 miette = { version = "3.2.0", features = [ "fancy" ] }
 mit-commit = "1.33.2"
 

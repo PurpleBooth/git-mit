@@ -15,20 +15,20 @@ repository = "https://github.com/PurpleBooth/git-mit"
 [build-dependencies]
 clap = "3.0.0-beta.4"
 clap_derive = "3.0.0-beta.4"
-clap_generate = "3.0.0-beta.2"
+clap_generate = "3.0.0-beta.4"
 
   [build-dependencies.mit-build-tools]
   path = "../mit-build-tools"
   version = "5.11.2"
 
 [dependencies]
-thiserror = "1.0.29"
+thiserror = "1.0.30"
 miette = { version = "3.2.0", features = [ "fancy" ] }
 clap = "3.0.0-beta.4"
-clap_generate = "3.0.0-beta.2"
+clap_generate = "3.0.0-beta.4"
 clap_derive = "3.0.0-beta.4"
 git2 = "0.13.23"
-openssl = { version = '0.10', optional = true }
+openssl = { version = "0.10.36", optional = true }
 
 
   [dependencies.mit-commit-message-lints]
@@ -40,8 +40,8 @@ default = []
 vendored-openssl = ["openssl/vendored"]
 
 [dev-dependencies]
-quickcheck = "1"
-quickcheck_macros = "1"
+quickcheck = "1.0.3"
+quickcheck_macros = "1.0.0"
 indoc = "1.0.3"
 tempfile = "3.2.0"
 
