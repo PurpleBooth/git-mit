@@ -13,7 +13,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 [build-dependencies]
 indoc = "1.0.3"
 clap = "3.0.0-beta.4"
-clap_derive = "3.0.0-beta.4"
+clap_derive = "3.0.0-beta.5"
 clap_generate = "3.0.0-beta.4"
 
   [build-dependencies.mit-build-tools]
@@ -26,7 +26,7 @@ indoc = "1.0.3"
 thiserror = "1.0.30"
 miette = { version = "3.2.0", features = [ "fancy" ] }
 clap = "3.0.0-beta.4"
-clap_derive = "3.0.0-beta.4"
+clap_derive = "3.0.0-beta.5"
 clap_generate = "3.0.0-beta.4"
 git2 = "0.13.23"
 openssl = { version = "0.10.36", optional = true }
