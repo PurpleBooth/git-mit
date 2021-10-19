@@ -95,12 +95,19 @@ pub struct ShellFromStrError {
 
 pub fn print_completions(writer: &mut dyn io::Write, app: &mut App, shell: Shell) {
     match shell {
-        Shell::Bash => generate::<generators::Bash, _>(app, app.get_name().to_string(), writer),
-        Shell::Elvish => generate::<generators::Elvish, _>(app, app.get_name().to_string(), writer),
-        Shell::Fish => generate::<generators::Fish, _>(app, app.get_name().to_string(), writer),
-        Shell::PowerShell => {
-            generate::<generators::PowerShell, _>(app, app.get_name().to_string(), writer);
+        Shell::Bash => generate::<_, _>(generators::Bash, app, app.get_name().to_string(), writer),
+        Shell::Elvish => {
+            generate::<_, _>(generators::Elvish, app, app.get_name().to_string(), writer);
         }
-        Shell::Zsh => generate::<generators::Zsh, _>(app, app.get_name().to_string(), writer),
+        Shell::Fish => generate::<_, _>(generators::Fish, app, app.get_name().to_string(), writer),
+        Shell::PowerShell => {
+            generate::<_, _>(
+                generators::PowerShell,
+                app,
+                app.get_name().to_string(),
+                writer,
+            );
+        }
+        Shell::Zsh => generate::<_, _>(generators::Zsh, app, app.get_name().to_string(), writer),
     }
 }

@@ -1,7 +1,5 @@
-use std::{fmt::Display, io};
+use std::fmt::Display;
 
-use clap::App;
-use clap_generate::{generate, Generator};
 use comfy_table::{
     modifiers::UTF8_ROUND_CORNERS,
     presets::UTF8_FULL,
@@ -143,9 +141,4 @@ pub fn author_table(authors: &Authors) -> String {
         });
 
     format!("{}", rows)
-}
-
-/// Prints completions to stdout
-pub fn print_completions<G: Generator>(app: &mut App) {
-    generate::<G, _>(app, app.get_name().to_string(), &mut io::stdout());
 }

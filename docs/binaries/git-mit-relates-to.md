@@ -19,14 +19,12 @@ USAGE:
 ARGS:
     <issue-number>    The issue number or other string to place into the Relates-to trailer
 
-FLAGS:
-    -h, --help       Print help information
-    -V, --version    Print version information
-
 OPTIONS:
         --completion <completion>    [possible values: bash, elvish, fish, powershell, zsh]
+    -h, --help                       Print help information
     -t, --timeout <timeout>          Number of minutes to expire the configuration in [env:
                                      GIT_MIT_RELATES_TO_TIMEOUT=] [default: 60]
+    -V, --version                    Print version information
 ```
 
 You can generate completion with

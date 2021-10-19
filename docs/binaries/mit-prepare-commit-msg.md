@@ -28,13 +28,12 @@ ARGS:
                                (if a .git/SQUASH_MSG file exists); or commit
     <commit-sha>               Commit SHA-1 (if a -c, -C or --amend option was given to git).
 
-FLAGS:
-    -h, --help       Print help information
-    -V, --version    Print version information
-
 OPTIONS:
         --completion <completion>
             [possible values: bash, elvish, fish, powershell, zsh]
+
+    -h, --help
+            Print help information
 
         --relates-to-exec <relates-to-exec>
             A command to execute to get the value for the relates to trailer [env:
@@ -42,6 +41,9 @@ OPTIONS:
 
         --relates-to-template <relates-to-template>
             A template to apply to the relates to trailer [env: GIT_MIT_RELATES_TO_TEMPLATE=]
+
+    -V, --version
+            Print version information
 ```
 
 You can generate completion with

@@ -19,10 +19,6 @@ USAGE:
 ARGS:
     <initials>...    Initials of the mit to put in the commit
 
-FLAGS:
-    -h, --help       Print help information
-    -V, --version    Print version information
-
 OPTIONS:
     -c, --config <file>              Path to a file where mit initials, emails and names can be
                                      found [env: GIT_MIT_AUTHORS_CONFIG=] [default: $HOME/.config/
@@ -32,8 +28,10 @@ OPTIONS:
                                      will be captured and used instead of the file, if both
                                      this and the file is present, this takes precedence [env:
                                      GIT_MIT_AUTHORS_EXEC=]
+    -h, --help                       Print help information
     -t, --timeout <timeout>          Number of minutes to expire the configuration in [env:
                                      GIT_MIT_AUTHORS_TIMEOUT=] [default: 60]
+    -V, --version                    Print version information
 
 COMMON TASKS:
     You can install git-mit into a new repository using

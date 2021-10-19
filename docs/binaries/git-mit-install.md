@@ -16,13 +16,11 @@ Install git-mit into a repository
 USAGE:
     git-mit-install [OPTIONS]
 
-FLAGS:
-    -h, --help       Print help information
-    -V, --version    Print version information
-
 OPTIONS:
         --completion <completion>    [possible values: bash, elvish, fish, powershell, zsh]
+    -h, --help                       Print help information
     -s, --scope <scope>              [default: local] [possible values: local, global]
+    -V, --version                    Print version information
 ```
 
 You can generate completion with

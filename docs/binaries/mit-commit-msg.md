@@ -22,10 +22,6 @@ ARGS:
     <commit-file-path>    Path to a temporary file that contains the commit message written by
                           the developer
 
-FLAGS:
-    -h, --help       Print help information
-    -V, --version    Print version information
-
 OPTIONS:
         --completion <completion>
             [possible values: bash, elvish, fish, powershell, zsh]
@@ -33,6 +29,12 @@ OPTIONS:
         --copy-message-to-clipboard <copy-message-to-clipboard>
             On lint failure copy the message to clipboard [env: GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD=]
             [default: true]
+
+    -h, --help
+            Print help information
+
+    -V, --version
+            Print version information
 ```
 
 You can generate completion with

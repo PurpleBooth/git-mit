@@ -16,12 +16,10 @@ A command for enabling and disabling git lints
 USAGE:
     git-mit-config [OPTIONS] [SUBCOMMAND]
 
-FLAGS:
-    -h, --help       Print help information
-    -V, --version    Print version information
-
 OPTIONS:
         --completion <completion>    [possible values: bash, elvish, fish, powershell, zsh]
+    -h, --help                       Print help information
+    -V, --version                    Print version information
 
 SUBCOMMANDS:
     help          Print this message or the help of the given subcommand(s)
@@ -42,9 +40,8 @@ Manage active lints
 USAGE:
     git-mit-config lint <SUBCOMMAND>
 
-FLAGS:
-    -h, --help       Print help information
-    -V, --version    Print version information
+OPTIONS:
+    -h, --help    Print help information
 
 SUBCOMMANDS:
     available    List the available lints
@@ -68,9 +65,8 @@ Manage mit configuration
 USAGE:
     git-mit-config mit <SUBCOMMAND>
 
-FLAGS:
-    -h, --help       Print help information
-    -V, --version    Print version information
+OPTIONS:
+    -h, --help    Print help information
 
 SUBCOMMANDS:
     available    List available authors
@@ -92,9 +88,8 @@ Manage relates-to settings
 USAGE:
     git-mit-config relates-to <SUBCOMMAND>
 
-FLAGS:
-    -h, --help       Print help information
-    -V, --version    Print version information
+OPTIONS:
+    -h, --help    Print help information
 
 SUBCOMMANDS:
     help        Print this message or the help of the given subcommand(s)

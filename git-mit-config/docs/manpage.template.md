@@ -27,7 +27,7 @@ Options
 -------
 
 ```
-{unified|unescape}
+{options|unescape}
 ```
 
 FILES
