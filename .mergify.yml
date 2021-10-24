@@ -8,6 +8,8 @@ queue_rules:
       - status-success~=^specdown
       - status-success~=^version
       - status-success~=^rust-check
+      - "#check-pending=0"
+      - "#check-success>5"
 
 pull_request_rules:
   - name: request review on external contributor
@@ -26,6 +28,8 @@ pull_request_rules:
       - status-success~=^version
       - status-success~=^rust-check
       - base=main
+      - "#check-pending=0"
+      - "#check-success>5"
       - label=dependencies
       - author~=^dependabot(|-preview)\[bot\]$
     actions:
