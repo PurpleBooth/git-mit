@@ -8,13 +8,18 @@ use crate::{
     mit::{Author, Authors},
 };
 
+/// An in memory vcs implementation
+///
+/// Mostly used for testing
+#[derive(Debug)]
 pub struct InMemory<'a> {
     store: &'a mut BTreeMap<String, String>,
 }
 
 impl InMemory<'_> {
+    /// Create a new in memory vcs
     #[must_use]
-    pub fn new(store: &mut BTreeMap<String, String>) -> InMemory {
+    pub fn new(store: &mut BTreeMap<String, String>) -> InMemory<'_> {
         InMemory { store }
     }
 }
@@ -72,7 +77,7 @@ impl Vcs for InMemory<'_> {
 impl TryFrom<&'_ InMemory<'_>> for Authors {
     type Error = Report;
 
-    fn try_from(vcs: &'_ InMemory) -> Result<Self, Self::Error> {
+    fn try_from(vcs: &'_ InMemory<'_>) -> Result<Self, Self::Error> {
         let raw_entries: BTreeMap<String, BTreeMap<String, String>> = vcs
             .entries(Some("mit.author.config.*"))?
             .iter()

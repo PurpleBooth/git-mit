@@ -1,3 +1,5 @@
+//! Tooling for generating completions
+
 use std::{io, str::FromStr};
 
 use clap::App;
@@ -6,13 +8,19 @@ use miette::{Diagnostic, SourceSpan};
 use quickcheck::{Arbitrary, Gen};
 use thiserror::Error;
 
+/// The shell the user has selected
 #[allow(clippy::enum_variant_names)]
 #[derive(Eq, PartialEq, Debug, Clone, clap::ArgEnum, Copy)]
 pub enum Shell {
+    /// Generate for bash
     Bash,
+    /// Generate for elvish
     Elvish,
+    /// Generate for Fish
     Fish,
+    /// Generate for powershell
     PowerShell,
+    /// Generate for zsh
     Zsh,
 }
 
@@ -80,6 +88,7 @@ impl From<Shell> for String {
     }
 }
 
+/// Error when we could not parse a shell from the given string
 #[derive(Debug, Eq, PartialEq, Error, Diagnostic)]
 #[error("could not parse a shell from the given string")]
 #[diagnostic(
@@ -93,7 +102,8 @@ pub struct ShellFromStrError {
     underline: SourceSpan,
 }
 
-pub fn print_completions(writer: &mut dyn io::Write, app: &mut App, shell: Shell) {
+/// Print completion for the given shell
+pub fn print_completions(writer: &mut dyn io::Write, app: &mut App<'_>, shell: Shell) {
     match shell {
         Shell::Bash => generate::<_, _>(generators::Bash, app, app.get_name().to_string(), writer),
         Shell::Elvish => {

@@ -7,6 +7,9 @@ use crate::{
     external::Vcs,
     mit::{Author, Authors},
 };
+
+/// Libgit2 vcs implementation
+#[allow(missing_debug_implementations)]
 pub struct Git2 {
     config_snapshot: git2::Config,
     config_live: git2::Config,

@@ -1,3 +1,5 @@
+//! Tooling to create a standard CLI experience
+
 pub mod completion;
 #[cfg(test)]
 mod completion_test;

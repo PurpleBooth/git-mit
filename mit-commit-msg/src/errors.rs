@@ -1,3 +1,4 @@
+//! Errors relating to the commit-msg hook
 use std::fmt::Display;
 
 use miette::{Diagnostic, LabeledSpan, Result, Severity, SourceCode};

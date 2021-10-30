@@ -1,3 +1,5 @@
+//! Default interactions for git-mit relates-to logic
+
 pub use cmd::errors::Error as VcsError;
 
 mod cmd;

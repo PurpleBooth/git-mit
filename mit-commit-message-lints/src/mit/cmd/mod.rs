@@ -1,3 +1,4 @@
+//! Mit commands
 const CONFIG_KEY_EXPIRES: &str = "mit.author.expires";
 
 pub(crate) mod get_authors;

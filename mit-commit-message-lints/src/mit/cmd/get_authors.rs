@@ -9,8 +9,12 @@ use miette::{IntoDiagnostic, Result};
 
 use crate::mit::Authors;
 
+/// From a cli args, get the author configuration
 pub trait AuthorArgs {
+    /// Get the command to run to generate the authors file
     fn author_command(&self) -> Option<&str>;
+
+    /// Get path to author file
     fn author_file(&self) -> Option<&str>;
 }
 

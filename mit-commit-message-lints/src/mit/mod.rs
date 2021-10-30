@@ -1,3 +1,5 @@
+//! Interactions relating to reading and setting authors
+
 pub use cmd::{
     get_authors::{get_authors, AuthorArgs},
     get_commit_coauthor_configuration::get_commit_coauthor_configuration,

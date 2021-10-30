@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+/// An author that might be developing
 #[derive(Debug, Eq, PartialEq, Serialize, Deserialize, Clone)]
 pub struct Author {
     name: String,
@@ -9,6 +10,7 @@ pub struct Author {
 }
 
 impl Author {
+    /// Create a new author
     #[must_use]
     pub fn new(name: &str, email: &str, signingkey: Option<&str>) -> Self {
         Self {
@@ -18,16 +20,19 @@ impl Author {
         }
     }
 
+    /// The authors name
     #[must_use]
     pub fn name(&self) -> String {
         self.name.clone()
     }
 
+    /// The authors email
     #[must_use]
     pub fn email(&self) -> String {
         self.email.clone()
     }
 
+    /// The authors gpg key
     #[must_use]
     pub fn signingkey(&self) -> Option<String> {
         self.signingkey.clone()

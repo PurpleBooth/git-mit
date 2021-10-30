@@ -24,7 +24,7 @@ struct Context {
 /// # Panics
 ///
 /// Will panic if it can't render the template
-pub fn generate(app: &App, out_dir: &Path, md_template: &str) {
+pub fn generate(app: &App<'_>, out_dir: &Path, md_template: &str) {
     let mut tt = TinyTemplate::new();
     let manpage_template = fs::read_to_string(md_template).unwrap();
     tt.set_default_formatter(&formatters::format_escape);
@@ -42,7 +42,7 @@ pub fn generate(app: &App, out_dir: &Path, md_template: &str) {
 }
 
 impl<'a> Context {
-    fn new(app: &App) -> Self {
+    fn new(app: &App<'_>) -> Self {
         Self {
             bin: existing::existing(app, "{bin}"),
             version: existing::existing(app, "{version}"),
@@ -62,7 +62,7 @@ impl<'a> Context {
 mod existing {
     use clap::App;
 
-    pub fn existing(app: &App, variable: &'static str) -> String {
+    pub fn existing(app: &App<'_>, variable: &'static str) -> String {
         let mut copy = app.clone().help_template(variable);
 
         let mut version_buffer: Vec<u8> = vec![];

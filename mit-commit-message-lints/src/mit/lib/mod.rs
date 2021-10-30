@@ -1,3 +1,5 @@
+//! Domain objects for author options
+
 pub(crate) mod author;
 pub(crate) mod author_state;
 #[cfg(test)]

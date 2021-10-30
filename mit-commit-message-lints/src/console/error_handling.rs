@@ -1,7 +1,13 @@
+//! Setup miette's pretty stack trace handling
+
 use std::env;
 
 use miette::GraphicalTheme;
 
+/// Setup miette's pretty stack trace handling
+///
+/// We also have a secret env `DEBUG_PRETTY_ERRORS` that disables all fancy
+/// output for the specdwon tests
 pub fn miette_install() {
     miette::set_panic_hook();
     if env::var("DEBUG_PRETTY_ERRORS").is_ok() {

@@ -1,4 +1,15 @@
-extern crate mit_commit_message_lints;
+//! The binary for the commit-msg hook
+
+#![warn(
+    rust_2018_idioms,
+    unused,
+    rust_2021_compatibility,
+    nonstandard_style,
+    future_incompatible,
+    missing_copy_implementations,
+    missing_debug_implementations,
+    missing_docs
+)]
 
 use std::{convert::TryFrom, env, io::stdout, path::PathBuf};
 

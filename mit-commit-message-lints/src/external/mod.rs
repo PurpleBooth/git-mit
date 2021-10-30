@@ -1,3 +1,5 @@
+//! Implementations of VCS we can interact with
+
 pub use self::{
     config::read_toml,
     git2::Git2,

@@ -1,3 +1,16 @@
+//! Tools for making tests less filled with boilerplate
+
+#![warn(
+    rust_2018_idioms,
+    unused,
+    rust_2021_compatibility,
+    nonstandard_style,
+    future_incompatible,
+    missing_copy_implementations,
+    missing_debug_implementations,
+    missing_docs
+)]
+
 use std::{
     env,
     error::Error,
@@ -12,6 +25,7 @@ use std::{
 use git2::{Config, Repository};
 use tempfile::TempDir;
 
+/// Run a specific hook binary
 #[must_use]
 pub fn run_hook(working_dir: &Path, package: &str, arguments: Vec<&str>) -> Output {
     let toml_path = calculate_cargo_toml_path(package);
@@ -42,7 +56,7 @@ impl Display for PathError {
         write!(f, "Path not found")
     }
 }
-
+/// set the co-authors via the git binary
 pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, index: i64) {
     Command::new("git")
         .current_dir(&working_dir)
@@ -62,6 +76,7 @@ pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, 
         .expect("failed to execute process");
 }
 
+/// Set the authors expires time via the git binary
 pub fn set_author_expires(expiration_time: Duration, working_dir: &Path) {
     let now = format!("{}", expiration_time.as_secs());
     Command::new("git")
@@ -99,6 +114,7 @@ pub fn calculate_cargo_toml_path(package: &str) -> String {
         .unwrap()
 }
 
+/// Make a config object on a repo in a temporary directory
 #[must_use]
 pub fn make_config() -> Config {
     let add_repository_to_path = |x: PathBuf| x.join("repository");
@@ -152,6 +168,9 @@ pub fn assert_output(
     );
 }
 
+/// Get working directory
+///
+/// This is a new temporary directory with a git repo in it
 #[must_use]
 pub fn setup_working_dir() -> PathBuf {
     let add_repository = |x: PathBuf| x.join("repository");

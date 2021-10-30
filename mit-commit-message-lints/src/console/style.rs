@@ -1,3 +1,5 @@
+//! Visual styling for the output
+
 use std::fmt::Display;
 
 use comfy_table::{
@@ -88,10 +90,12 @@ pub fn warning(warning: &str, tip: Option<&str>) {
     eprintln!("{}", out);
 }
 
+/// Print entirely undecorated to stdout
 pub fn to_be_piped(output: &str) {
     println!("{}", output);
 }
 
+/// Print a table of lints
 pub fn lint_table(list: &Lints, enabled: &Lints) {
     let mut table = Table::new();
     table
@@ -115,6 +119,7 @@ pub fn lint_table(list: &Lints, enabled: &Lints) {
     println!("{}", rows);
 }
 
+/// Print a table of authors
 #[must_use]
 pub fn author_table(authors: &Authors) -> String {
     let mut table = Table::new();
