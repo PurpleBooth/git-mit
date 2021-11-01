@@ -17,7 +17,7 @@ fn the_first_initial_becomes_the_author() {
 
     let mut vcs_config = InMemory::new(&mut buffer);
 
-    let author = Author::new("Billie Thompson", "billie@example.com", None);
+    let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
     let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
     assert!(actual.is_ok());
@@ -36,7 +36,11 @@ fn the_first_initial_sets_signing_key_if_it_is_there() {
     let mut str_map = BTreeMap::new();
     let mut vcs_config = InMemory::new(&mut str_map);
 
-    let author = Author::new("Billie Thompson", "billie@example.com", Some("0A46826A"));
+    let author = Author::new(
+        "Billie Thompson".into(),
+        "billie@example.com".into(),
+        Some("0A46826A".into()),
+    );
     let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
     assert!(actual.is_ok());
@@ -53,7 +57,7 @@ fn the_first_initial_removes_if_it_is_there_and_not_present() {
 
     let mut vcs_config = InMemory::new(&mut buffer);
 
-    let author = Author::new("Billie Thompson", "billie@example.com", None);
+    let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
     let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
     assert!(actual.is_ok());
@@ -65,9 +69,9 @@ fn multiple_authors_become_coauthors() {
     let mut buffer = BTreeMap::new();
     let mut vcs_config = InMemory::new(&mut buffer);
 
-    let author_1 = Author::new("Billie Thompson", "billie@example.com", None);
-    let author_2 = Author::new("Somebody Else", "somebody@example.com", None);
-    let author_3 = Author::new("Annie Example", "annie@example.com", None);
+    let author_1 = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
+    let author_2 = Author::new("Somebody Else".into(), "somebody@example.com".into(), None);
+    let author_3 = Author::new("Annie Example".into(), "annie@example.com".into(), None);
     let inputs = vec![&author_1, &author_2, &author_3];
 
     let actual = set_commit_authors(&mut vcs_config, &inputs, Duration::from_secs(60 * 60));
@@ -123,7 +127,7 @@ fn old_co_authors_are_removed() {
         "different@example.com".into(),
     );
     let mut vcs_config = InMemory::new(&mut buffer);
-    let author = Author::new("Billie Thompson", "billie@example.com", None);
+    let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
     let inputs = vec![&author];
 
     let actual = set_commit_authors(&mut vcs_config, &inputs, Duration::from_secs(60 * 60));
@@ -146,7 +150,7 @@ fn sets_the_expiry_time() {
     let mut buffer = BTreeMap::new();
     let mut vcs_config = InMemory::new(&mut buffer);
 
-    let author = Author::new("Billie Thompson", "billie@example.com", None);
+    let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
     let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
     assert!(actual.is_ok());

@@ -1,23 +1,38 @@
+use std::borrow::Cow;
+
 use serde::{Deserialize, Serialize};
 
 /// User input data for the relates to trailer
 #[derive(Debug, Eq, PartialEq, Serialize, Deserialize, Clone)]
-pub struct RelateTo {
-    relates: String,
+pub struct RelateTo<'a> {
+    relates: Cow<'a, str>,
 }
 
-impl RelateTo {
+impl<'a> RelateTo<'a> {
     /// Create a new relates to
     #[must_use]
-    pub fn new(relates: &str) -> Self {
-        Self {
-            relates: relates.into(),
-        }
+    pub const fn new(relates: Cow<'a, str>) -> Self {
+        Self { relates }
     }
 
     /// What this relates to
     #[must_use]
-    pub fn to(&self) -> String {
-        self.relates.clone()
+    pub fn to(&self) -> &str {
+        &self.relates
+    }
+}
+
+impl<'a> From<&'a str> for RelateTo<'a> {
+    fn from(input: &'a str) -> Self {
+        RelateTo {
+            relates: Cow::Borrowed(input),
+        }
+    }
+}
+impl<'a> From<String> for RelateTo<'a> {
+    fn from(input: String) -> Self {
+        RelateTo {
+            relates: Cow::Owned(input),
+        }
     }
 }

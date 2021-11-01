@@ -37,7 +37,7 @@ fn we_get_relate_to_config_back_if_there_is_any() {
     let mut vcs = InMemory::new(&mut buffer);
 
     let actual = get_relate_to_configuration(&mut vcs).expect("Failed to read VCS config");
-    let expected = Some(RelateTo::new("[#12345678]"));
+    let expected = Some(RelateTo::from("[#12345678]"));
 
     assert_eq!(
         expected, actual,

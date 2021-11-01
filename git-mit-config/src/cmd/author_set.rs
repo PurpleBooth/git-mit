@@ -27,7 +27,15 @@ fn run(matches: &ArgMatches) -> Result<()> {
     let is_local = Some("local") == subcommand.value_of("scope");
     let current_dir = current_dir().into_diagnostic()?;
     let mut vcs = get_vcs(is_local, &current_dir)?;
-    set_config_authors(&mut vcs, initial, &Author::new(name, email, signingkey))?;
+    set_config_authors(
+        &mut vcs,
+        initial,
+        &Author::new(
+            name.into(),
+            email.into(),
+            signingkey.map(std::convert::Into::into),
+        ),
+    )?;
 
     Ok(())
 }

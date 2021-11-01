@@ -52,7 +52,7 @@ fn main() -> Result<()> {
 
     let current_dir = env::current_dir().into_diagnostic()?;
     let mut vcs = Git2::try_from(current_dir)?;
-    set_relates_to(&mut vcs, &RelateTo::new(relates_to), args.timeout()?)?;
+    set_relates_to(&mut vcs, &RelateTo::from(relates_to), args.timeout()?)?;
 
     Ok(())
 }

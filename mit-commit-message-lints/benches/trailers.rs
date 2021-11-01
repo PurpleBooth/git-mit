@@ -73,7 +73,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
                 set_relates_to(
                     &mut vcs,
-                    &RelateTo::new("#12345678"),
+                    &RelateTo::from("#12345678"),
                     Duration::from_secs(60 * 60),
                 )
                 .unwrap();
@@ -81,8 +81,8 @@ pub fn criterion_benchmark(c: &mut Criterion) {
                 set_commit_authors(
                     &mut vcs,
                     &[
-                        &Author::new("Someone Else", "someone@example.com", None),
-                        &Author::new("Anyone Else", "anyone@example.com", None),
+                        &Author::new("Someone Else".into(), "someone@example.com".into(), None),
+                        &Author::new("Anyone Else".into(), "anyone@example.com".into(), None),
                     ],
                     Duration::from_secs(60 * 60),
                 )
@@ -90,8 +90,12 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
                 let message =
                     CommitMessage::from(String::from(*message)).add_trailer(Trailer::new(
-                        "Relates-to".to_string(),
-                        get_relate_to_configuration(&mut vcs).unwrap().unwrap().to(),
+                        "Relates-to".into(),
+                        get_relate_to_configuration(&mut vcs)
+                            .unwrap()
+                            .unwrap()
+                            .to()
+                            .into(),
                     ));
                 get_commit_coauthor_configuration(&mut vcs)
                     .unwrap()
@@ -99,8 +103,8 @@ pub fn criterion_benchmark(c: &mut Criterion) {
                     .iter()
                     .map(|x| {
                         Trailer::new(
-                            "Co-authored-by".to_string(),
-                            format!("{} <{}>", x.name(), x.email()),
+                            "Co-authored-by".into(),
+                            format!("{} <{}>", x.name(), x.email()).into(),
                         )
                     })
                     .fold(message.clone(), |_acc, author| message.add_trailer(author))

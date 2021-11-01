@@ -121,7 +121,7 @@ pub fn lint_table(list: &Lints, enabled: &Lints) {
 
 /// Print a table of authors
 #[must_use]
-pub fn author_table(authors: &Authors) -> String {
+pub fn author_table(authors: &Authors<'_>) -> String {
     let mut table = Table::new();
     table
         .load_preset(UTF8_FULL)

@@ -17,7 +17,7 @@ fn is_is_iterable() {
     let mut store = BTreeMap::new();
     store.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", None),
+        Author::new("Billie Thompson".into(), "billie@example.com".into(), None),
     );
     let actual = Authors::new(store);
 
@@ -25,7 +25,7 @@ fn is_is_iterable() {
         actual.into_iter().collect::<Vec<_>>(),
         vec![(
             "bt".to_string(),
-            Author::new("Billie Thompson", "billie@example.com", None)
+            Author::new("Billie Thompson".into(), "billie@example.com".into(), None)
         )]
     );
 }
@@ -35,36 +35,48 @@ fn it_can_get_an_author_in_it() {
     let mut store = BTreeMap::new();
     store.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", None),
+        Author::new("Billie Thompson".into(), "billie@example.com".into(), None),
     );
     let actual = Authors::new(store);
 
     assert_eq!(
         actual.get(&["bt"]),
-        vec![&Author::new("Billie Thompson", "billie@example.com", None)]
+        vec![&Author::new(
+            "Billie Thompson".into(),
+            "billie@example.com".into(),
+            None
+        )]
     );
 }
 
 #[test]
 fn i_can_get_multiple_authors_out_at_the_same_time() {
-    let mut store: BTreeMap<String, Author> = BTreeMap::new();
+    let mut store: BTreeMap<String, Author<'_>> = BTreeMap::new();
     store.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", None),
+        Author::new("Billie Thompson".into(), "billie@example.com".into(), None),
     );
     store.insert(
         "se".into(),
-        Author::new("Somebody Else", "somebody@example.com", None),
+        Author::new("Somebody Else".into(), "somebody@example.com".into(), None),
     );
     let actual = Authors::new(store);
 
     assert_eq!(
         actual.get(&["bt"]),
-        vec![&Author::new("Billie Thompson", "billie@example.com", None)]
+        vec![&Author::new(
+            "Billie Thompson".into(),
+            "billie@example.com".into(),
+            None
+        )]
     );
     assert_eq!(
         actual.get(&["se"]),
-        vec![&Author::new("Somebody Else", "somebody@example.com", None)]
+        vec![&Author::new(
+            "Somebody Else".into(),
+            "somebody@example.com".into(),
+            None
+        )]
     );
 }
 
@@ -73,15 +85,19 @@ fn there_is_an_example_constructor() {
     let mut store = BTreeMap::new();
     store.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
+        Author::new(
+            "Billie Thompson".into(),
+            "billie@example.com".into(),
+            Some("0A46826A".into()),
+        ),
     );
     store.insert(
         "se".into(),
-        Author::new("Someone Else", "someone@example.com", None),
+        Author::new("Someone Else".into(), "someone@example.com".into(), None),
     );
     store.insert(
         "ae".into(),
-        Author::new("Anyone Else", "anyone@example.com", None),
+        Author::new("Anyone Else".into(), "anyone@example.com".into(), None),
     );
     let expected = Authors::new(store);
 
@@ -90,44 +106,44 @@ fn there_is_an_example_constructor() {
 
 #[test]
 fn merge_multiple_authors_together() {
-    let mut map1: BTreeMap<String, Author> = BTreeMap::new();
+    let mut map1: BTreeMap<String, Author<'_>> = BTreeMap::new();
     map1.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", None),
+        Author::new("Billie Thompson".into(), "billie@example.com".into(), None),
     );
     map1.insert(
         "se".into(),
-        Author::new("Someone Else", "someone@example.com", None),
+        Author::new("Someone Else".into(), "someone@example.com".into(), None),
     );
-    let input1: Authors = Authors::new(map1);
+    let input1: Authors<'_> = Authors::new(map1);
 
-    let mut map2: BTreeMap<String, Author> = BTreeMap::new();
+    let mut map2: BTreeMap<String, Author<'_>> = BTreeMap::new();
     map2.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "bt@example.com", None),
+        Author::new("Billie Thompson".into(), "bt@example.com".into(), None),
     );
     map2.insert(
         "ae".into(),
-        Author::new("Anyone Else", "anyone@example.com", None),
+        Author::new("Anyone Else".into(), "anyone@example.com".into(), None),
     );
-    let input2: Authors = Authors::new(map2);
+    let input2: Authors<'_> = Authors::new(map2);
 
-    let mut expected_map: BTreeMap<String, Author> = BTreeMap::new();
+    let mut expected_map: BTreeMap<String, Author<'_>> = BTreeMap::new();
 
     expected_map.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "bt@example.com", None),
+        Author::new("Billie Thompson".into(), "bt@example.com".into(), None),
     );
     expected_map.insert(
         "se".into(),
-        Author::new("Someone Else", "someone@example.com", None),
+        Author::new("Someone Else".into(), "someone@example.com".into(), None),
     );
     expected_map.insert(
         "ae".into(),
-        Author::new("Anyone Else", "anyone@example.com", None),
+        Author::new("Anyone Else".into(), "anyone@example.com".into(), None),
     );
 
-    let expected: Authors = Authors::new(expected_map);
+    let expected: Authors<'_> = Authors::new(expected_map);
 
     assert_eq!(expected, input1.merge(&input2));
 }
@@ -137,7 +153,7 @@ fn it_can_tell_me_if_initials_are_not_in() {
     let mut store = BTreeMap::new();
     store.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", None),
+        Author::new("Billie Thompson".into(), "billie@example.com".into(), None),
     );
     let actual = Authors::new(store);
 
@@ -161,10 +177,10 @@ fn it_can_parse_a_standard_toml_file() {
     ))
     .expect("Failed to parse yaml");
 
-    let mut input: BTreeMap<String, Author> = BTreeMap::new();
+    let mut input: BTreeMap<String, Author<'_>> = BTreeMap::new();
     input.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", None),
+        Author::new("Billie Thompson".into(), "billie@example.com".into(), None),
     );
     let expected = Authors::new(input);
 
@@ -192,10 +208,10 @@ fn it_can_parse_a_standard_yaml_file() {
     ))
     .expect("Failed to parse yaml");
 
-    let mut input: BTreeMap<String, Author> = BTreeMap::new();
+    let mut input: BTreeMap<String, Author<'_>> = BTreeMap::new();
     input.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", None),
+        Author::new("Billie Thompson".into(), "billie@example.com".into(), None),
     );
     let expected = Authors::new(input);
 
@@ -215,10 +231,14 @@ fn yaml_files_can_contain_signing_keys() {
     ))
     .expect("Failed to parse yaml");
 
-    let mut expected_authors: BTreeMap<String, Author> = BTreeMap::new();
+    let mut expected_authors: BTreeMap<String, Author<'_>> = BTreeMap::new();
     expected_authors.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
+        Author::new(
+            "Billie Thompson".into(),
+            "billie@example.com".into(),
+            Some("0A46826A".into()),
+        ),
     );
     let expected = Authors::new(expected_authors);
 
@@ -227,10 +247,10 @@ fn yaml_files_can_contain_signing_keys() {
 
 #[test]
 fn it_converts_to_standard_toml() {
-    let mut map: BTreeMap<String, Author> = BTreeMap::new();
+    let mut map: BTreeMap<String, Author<'_>> = BTreeMap::new();
     map.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", None),
+        Author::new("Billie Thompson".into(), "billie@example.com".into(), None),
     );
     let actual: String = Authors::new(map).try_into().unwrap();
     let expected = indoc!(
@@ -247,10 +267,14 @@ fn it_converts_to_standard_toml() {
 
 #[test]
 fn it_includes_the_signing_key_if_set() {
-    let mut map: BTreeMap<String, Author> = BTreeMap::new();
+    let mut map: BTreeMap<String, Author<'_>> = BTreeMap::new();
     map.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
+        Author::new(
+            "Billie Thompson".into(),
+            "billie@example.com".into(),
+            Some("0A46826A".into()),
+        ),
     );
     let actual: String = Authors::new(map).try_into().unwrap();
     let expected = indoc!(
@@ -274,7 +298,7 @@ fn it_can_give_me_an_author() {
     let vcs = InMemory::new(&mut strings);
 
     let actual = Authors::try_from(&vcs).expect("Failed to read VCS config");
-    let expected_author = Author::new("Z Y", "zy@example.com", None);
+    let expected_author = Author::new("Z Y".into(), "zy@example.com".into(), None);
     let mut store = BTreeMap::new();
     store.insert("zy".into(), expected_author);
     let expected = Authors::new(store);
@@ -300,10 +324,17 @@ fn it_can_give_me_multiple_authors() {
 
     let actual = Authors::try_from(&vcs).expect("Failed to read VCS config");
     let mut store = BTreeMap::new();
-    store.insert("zy".into(), Author::new("Z Y", "zy@example.com", None));
+    store.insert(
+        "zy".into(),
+        Author::new("Z Y".into(), "zy@example.com".into(), None),
+    );
     store.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", Some("ABC")),
+        Author::new(
+            "Billie Thompson".into(),
+            "billie@example.com".into(),
+            Some("ABC".into()),
+        ),
     );
     let expected = Authors::new(store);
     assert_eq!(
@@ -329,7 +360,11 @@ fn broken_authors_are_skipped() {
     let mut store = BTreeMap::new();
     store.insert(
         "bt".into(),
-        Author::new("Billie Thompson", "billie@example.com", Some("ABC")),
+        Author::new(
+            "Billie Thompson".into(),
+            "billie@example.com".into(),
+            Some("ABC".into()),
+        ),
     );
     let expected = Authors::new(store);
     assert_eq!(

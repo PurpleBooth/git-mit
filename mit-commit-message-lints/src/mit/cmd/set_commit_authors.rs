@@ -20,7 +20,7 @@ use crate::{
 /// reasons will be specific to VCS implementation
 pub fn set_commit_authors(
     config: &mut dyn Vcs,
-    authors: &[&Author],
+    authors: &[&Author<'_>],
     expires_in: Duration,
 ) -> Result<()> {
     let (first_author, others) = match authors.split_first() {
@@ -59,48 +59,48 @@ fn get_defined_vcs_coauthor_keys(config: &mut dyn Vcs) -> Vec<String> {
         .collect()
 }
 
-fn set_vcs_coauthors(config: &mut dyn Vcs, authors: &[&Author]) -> Result<()> {
+fn set_vcs_coauthors(config: &mut dyn Vcs, authors: &[&Author<'_>]) -> Result<()> {
     authors
         .iter()
         .enumerate()
         .try_for_each(|(index, author)| set_vcs_coauthor(config, index, author))
 }
 
-fn set_vcs_coauthor(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<()> {
+fn set_vcs_coauthor(config: &mut dyn Vcs, index: usize, author: &Author<'_>) -> Result<()> {
     set_vcs_coauthor_name(config, index, author)?;
     set_vcs_coauthor_email(config, index, author)?;
 
     Ok(())
 }
 
-fn set_vcs_coauthor_name(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<()> {
+fn set_vcs_coauthor_name(config: &mut dyn Vcs, index: usize, author: &Author<'_>) -> Result<()> {
     config.set_str(
         &format!("mit.author.coauthors.{}.name", index),
-        &author.name(),
+        author.name(),
     )?;
     Ok(())
 }
 
-fn set_vcs_coauthor_email(config: &mut dyn Vcs, index: usize, author: &Author) -> Result<()> {
+fn set_vcs_coauthor_email(config: &mut dyn Vcs, index: usize, author: &Author<'_>) -> Result<()> {
     config.set_str(
         &format!("mit.author.coauthors.{}.email", index),
-        &author.email(),
+        author.email(),
     )?;
     Ok(())
 }
 
-fn set_vcs_user(config: &mut dyn Vcs, author: &Author) -> Result<()> {
-    config.set_str("user.name", &author.name())?;
-    config.set_str("user.email", &author.email())?;
+fn set_vcs_user(config: &mut dyn Vcs, author: &Author<'_>) -> Result<()> {
+    config.set_str("user.name", author.name())?;
+    config.set_str("user.email", author.email())?;
     set_author_signing_key(config, author)?;
 
     Ok(())
 }
 
-fn set_author_signing_key(config: &mut dyn Vcs, author: &Author) -> Result<()> {
+fn set_author_signing_key(config: &mut dyn Vcs, author: &Author<'_>) -> Result<()> {
     match author.signingkey() {
         Some(key) => config
-            .set_str("user.signingkey", &key)
+            .set_str("user.signingkey", key)
             .wrap_err("failed to set git author's signing key "),
         None => config.remove("user.signingkey").or(Ok(())),
     }

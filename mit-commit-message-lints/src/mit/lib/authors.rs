@@ -10,15 +10,15 @@ use crate::mit::lib::{
 
 /// Collection of authors
 #[derive(Debug, Eq, PartialEq, Clone, Default)]
-pub struct Authors {
+pub struct Authors<'a> {
     /// A btree of the authors
-    pub authors: BTreeMap<String, Author>,
+    pub authors: BTreeMap<String, Author<'a>>,
 }
 
-impl Authors {
+impl<'a> Authors<'a> {
     /// From a list of initials get te ones that aren't in our config
     #[must_use]
-    pub fn missing_initials<'a>(&'a self, authors_initials: Vec<&'a str>) -> Vec<&'a str> {
+    pub fn missing_initials(&'a self, authors_initials: Vec<&'a str>) -> Vec<&'a str> {
         let configured: HashSet<_> = self
             .authors
             .keys()
@@ -34,13 +34,13 @@ impl Authors {
 
     /// Create a new author collection
     #[must_use]
-    pub fn new(authors: BTreeMap<String, Author>) -> Self {
+    pub fn new(authors: BTreeMap<String, Author<'a>>) -> Self {
         Self { authors }
     }
 
     /// Get some authors by their initials
     #[must_use]
-    pub fn get(&self, author_initials: &[&str]) -> Vec<&Author> {
+    pub fn get(&self, author_initials: &'a [&'a str]) -> Vec<&'a Author<'_>> {
         author_initials
             .iter()
             .filter_map(|initial| self.authors.get(*initial))
@@ -72,30 +72,34 @@ impl Authors {
         let mut store = BTreeMap::new();
         store.insert(
             "ae".into(),
-            Author::new("Anyone Else", "anyone@example.com", None),
+            Author::new("Anyone Else".into(), "anyone@example.com".into(), None),
         );
         store.insert(
             "se".into(),
-            Author::new("Someone Else", "someone@example.com", None),
+            Author::new("Someone Else".into(), "someone@example.com".into(), None),
         );
         store.insert(
             "bt".into(),
-            Author::new("Billie Thompson", "billie@example.com", Some("0A46826A")),
+            Author::new(
+                "Billie Thompson".into(),
+                "billie@example.com".into(),
+                Some("0A46826A".into()),
+            ),
         );
         Self::new(store)
     }
 }
 
-impl IntoIterator for Authors {
-    type IntoIter = IntoIter<String, Author>;
-    type Item = (String, Author);
+impl<'a> IntoIterator for Authors<'a> {
+    type IntoIter = IntoIter<String, Author<'a>>;
+    type Item = (String, Author<'a>);
 
     fn into_iter(self) -> Self::IntoIter {
         self.authors.into_iter()
     }
 }
 
-impl TryFrom<&str> for Authors {
+impl<'a> TryFrom<&'a str> for Authors<'a> {
     type Error = DeserializeAuthorsError;
 
     fn try_from(input: &str) -> std::result::Result<Self, Self::Error> {
@@ -109,10 +113,24 @@ impl TryFrom<&str> for Authors {
     }
 }
 
-impl TryFrom<Authors> for String {
+impl<'a> TryFrom<String> for Authors<'a> {
+    type Error = DeserializeAuthorsError;
+
+    fn try_from(input: String) -> std::result::Result<Self, Self::Error> {
+        serde_yaml::from_str(&input)
+            .or_else(|yaml_error| {
+                toml::from_str(&input).map_err(|toml_error| {
+                    DeserializeAuthorsError::new(&input, &yaml_error, &toml_error)
+                })
+            })
+            .map(Authors::new)
+    }
+}
+
+impl<'a> TryFrom<Authors<'a>> for String {
     type Error = SerializeAuthorsError;
 
-    fn try_from(value: Authors) -> Result<Self, Self::Error> {
+    fn try_from(value: Authors<'a>) -> Result<Self, Self::Error> {
         toml::to_string(&value.authors).map_err(SerializeAuthorsError)
     }
 }

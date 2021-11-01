@@ -10,8 +10,12 @@ fn can_set_an_author() {
     let mut store: BTreeMap<String, String> = BTreeMap::new();
     let mut vcs = InMemory::new(&mut store);
 
-    set_config_authors(&mut vcs, "zy", &Author::new("Z Y", "zy@example.com", None))
-        .expect("command to have succeeded");
+    set_config_authors(
+        &mut vcs,
+        "zy",
+        &Author::new("Z Y".into(), "zy@example.com".into(), None),
+    )
+    .expect("command to have succeeded");
 
     let mut expected: BTreeMap<String, String> = BTreeMap::new();
     expected.insert("mit.author.config.zy.email".into(), "zy@example.com".into());
@@ -28,7 +32,11 @@ fn can_set_an_author_with_signing_key() {
     set_config_authors(
         &mut vcs,
         "bt",
-        &Author::new("Billie Thompson", "billie@example.com", Some("ABC")),
+        &Author::new(
+            "Billie Thompson".into(),
+            "billie@example.com".into(),
+            Some("ABC".into()),
+        ),
     )
     .expect("Should succeed");
 

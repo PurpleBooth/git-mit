@@ -42,7 +42,7 @@ fn there_is_a_config_if_the_config_has_not_expired() {
     let mut vcs = InMemory::new(&mut strings);
 
     let actual = get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
-    let expected: AuthorState<Vec<Author>> = AuthorState::Some(vec![]);
+    let expected: AuthorState<Vec<Author<'_>>> = AuthorState::Some(vec![]);
 
     assert_eq!(
         expected, actual,
@@ -67,8 +67,8 @@ fn we_get_author_config_back_if_there_is_any() {
 
     let actual = get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
     let expected = AuthorState::Some(vec![Author::new(
-        "Annie Example",
-        "annie@example.com",
+        "Annie Example".into(),
+        "annie@example.com".into(),
         None,
     )]);
 
@@ -113,8 +113,8 @@ fn we_get_multiple_authors_back_if_there_are_multiple() {
 
     let actual = get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
     let expected = AuthorState::Some(vec![
-        Author::new("Annie Example", "annie@example.com", None),
-        Author::new("Joe Bloggs", "joe@example.com", None),
+        Author::new("Annie Example".into(), "annie@example.com".into(), None),
+        Author::new("Joe Bloggs".into(), "joe@example.com".into(), None),
     ]);
 
     assert_eq!(

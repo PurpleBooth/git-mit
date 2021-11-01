@@ -16,7 +16,7 @@ const CONFIG_KEY_EXPIRES: &str = "mit.relate.expires";
 /// reasons will be specific to VCS implementation
 pub fn set_relates_to(
     config: &mut dyn Vcs,
-    relates: &RelateTo,
+    relates: &RelateTo<'_>,
     expires_in: Duration,
 ) -> Result<()> {
     set_vcs_relates_to(config, relates)?;
@@ -25,8 +25,8 @@ pub fn set_relates_to(
     Ok(())
 }
 
-fn set_vcs_relates_to(config: &mut dyn Vcs, relates: &RelateTo) -> Result<()> {
-    config.set_str("mit.relate.to", &relates.to())?;
+fn set_vcs_relates_to(config: &mut dyn Vcs, relates: &RelateTo<'_>) -> Result<()> {
+    config.set_str("mit.relate.to", relates.to())?;
     Ok(())
 }
 

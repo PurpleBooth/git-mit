@@ -39,8 +39,8 @@ mod cli;
 mod errors;
 
 #[derive(Serialize)]
-struct Context {
-    value: String,
+struct Context<'a> {
+    value: &'a str,
 }
 
 fn main() -> Result<()> {
@@ -97,7 +97,7 @@ fn get_relates_to_template(vcs: &mut Git2) -> Result<Option<String>> {
 
 fn append_coauthors_to_commit_message(
     commit_message_path: PathBuf,
-    authors: &[Author],
+    authors: &[Author<'_>],
 ) -> Result<()> {
     let _path = String::from(commit_message_path.to_string_lossy());
     let mut commit_message = CommitMessage::try_from(commit_message_path.clone())?;
@@ -106,8 +106,8 @@ fn append_coauthors_to_commit_message(
         .iter()
         .map(|x| {
             Trailer::new(
-                "Co-authored-by".to_string(),
-                format!("{} <{}>", x.name(), x.email()),
+                "Co-authored-by".into(),
+                format!("{} <{}>", x.name(), x.email()).into(),
             )
         })
         .collect::<Vec<_>>();
@@ -129,7 +129,7 @@ fn append_coauthors_to_commit_message(
 
 fn append_relate_to_trailer_to_commit_message(
     commit_message_path: PathBuf,
-    relates: &RelateTo,
+    relates: &RelateTo<'_>,
     template: Option<String>,
 ) -> Result<()> {
     let _path = String::from(commit_message_path.to_string_lossy());
@@ -147,7 +147,7 @@ fn append_relate_to_trailer_to_commit_message(
             },
         )
         .into_diagnostic()?;
-    let trailer = Trailer::new("Relates-to".to_string(), value);
+    let trailer = Trailer::new("Relates-to".into(), value.into());
     add_trailer_if_not_existing(commit_message_path, &commit_message, &trailer)?;
 
     Ok(())
@@ -173,7 +173,7 @@ fn add_trailer_if_not_existing(
     }
 }
 
-fn get_relates_to_from_exec(command: &str) -> Result<RelateTo> {
+fn get_relates_to_from_exec(command: &str) -> Result<RelateTo<'_>> {
     let commandline = shell_words::split(command).into_diagnostic()?;
     Command::new(commandline.first().unwrap_or(&String::from("")))
         .stderr(Stdio::inherit())
@@ -181,8 +181,8 @@ fn get_relates_to_from_exec(command: &str) -> Result<RelateTo> {
         .output()
         .into_diagnostic()
         .and_then(|x| {
-            Ok(RelateTo::new(
-                &String::from_utf8(x.stdout).into_diagnostic()?,
+            Ok(RelateTo::from(
+                String::from_utf8(x.stdout).into_diagnostic()?,
             ))
         })
 }

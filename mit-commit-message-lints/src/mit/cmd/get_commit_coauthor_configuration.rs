@@ -1,4 +1,4 @@
-use std::option::Option;
+use std::{borrow::Cow, option::Option};
 
 use miette::{IntoDiagnostic, Result};
 use time::OffsetDateTime;
@@ -14,7 +14,9 @@ use crate::{
 ///
 /// Will fail if reading or writing from the VCS config fails, or it contains
 /// data in an incorrect format
-pub fn get_commit_coauthor_configuration(config: &mut dyn Vcs) -> Result<AuthorState<Vec<Author>>> {
+pub fn get_commit_coauthor_configuration(
+    config: &mut dyn Vcs,
+) -> Result<AuthorState<Vec<Author<'_>>>> {
     let config_value = config.get_i64(CONFIG_KEY_EXPIRES)?;
 
     match config_value {
@@ -33,29 +35,28 @@ pub fn get_commit_coauthor_configuration(config: &mut dyn Vcs) -> Result<AuthorS
     }
 }
 
-fn get_vcs_authors(config: &dyn Vcs) -> Result<Vec<Author>> {
+fn get_vcs_authors(config: &'_ dyn Vcs) -> Result<Vec<Author<'_>>> {
     let co_author_names = get_vcs_coauthor_names(config)?;
     let co_author_emails = get_vcs_coauthor_emails(config)?;
 
     Ok(co_author_names
-        .iter()
-        .copied()
+        .into_iter()
         .zip(co_author_emails)
         .filter_map(new_author)
         .collect())
 }
 
-fn new_author(parameters: (Option<&str>, Option<&str>)) -> Option<Author> {
+fn new_author<'a>(parameters: (Option<Cow<'a, str>>, Option<Cow<'a, str>>)) -> Option<Author<'a>> {
     match parameters {
         (Some(name), Some(email)) => Some(Author::new(name, email, None)),
         _ => None,
     }
 }
 
-fn get_vcs_coauthor_names(config: &dyn Vcs) -> Result<Vec<Option<&str>>> {
+fn get_vcs_coauthor_names(config: &'_ dyn Vcs) -> Result<Vec<Option<Cow<'_, str>>>> {
     super::vcs::get_vcs_coauthors_config(config, "name")
 }
 
-fn get_vcs_coauthor_emails(config: &dyn Vcs) -> Result<Vec<Option<&str>>> {
+fn get_vcs_coauthor_emails(config: &'_ dyn Vcs) -> Result<Vec<Option<Cow<'_, str>>>> {
     super::vcs::get_vcs_coauthors_config(config, "email")
 }

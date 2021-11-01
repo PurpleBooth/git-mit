@@ -74,7 +74,7 @@ impl Vcs for InMemory<'_> {
     }
 }
 
-impl TryFrom<&'_ InMemory<'_>> for Authors {
+impl TryFrom<&'_ InMemory<'_>> for Authors<'_> {
     type Error = Report;
 
     fn try_from(vcs: &'_ InMemory<'_>) -> Result<Self, Self::Error> {
@@ -109,17 +109,18 @@ impl TryFrom<&'_ InMemory<'_>> for Authors {
 
                     match (name, email, signingkey) {
                         (Some(name), Some(email), None) => {
-                            Some((key, Author::new(&name, &email, None)))
+                            Some((key, Author::new(name.into(), email.into(), None)))
                         }
-                        (Some(name), Some(email), Some(signingkey)) => {
-                            Some((key, Author::new(&name, &email, Some(&signingkey))))
-                        }
+                        (Some(name), Some(email), Some(signingkey)) => Some((
+                            key,
+                            Author::new(name.into(), email.into(), Some(signingkey.into())),
+                        )),
                         _ => None,
                     }
                 })
                 .fold(
                     BTreeMap::new(),
-                    |mut acc: BTreeMap<String, Author>, (key, value): (&String, Author)| {
+                    |mut acc: BTreeMap<String, Author<'_>>, (key, value): (&String, Author<'_>)| {
                         acc.insert(key.clone(), value);
                         acc
                     },

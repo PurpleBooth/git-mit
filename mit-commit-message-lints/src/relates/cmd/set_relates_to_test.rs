@@ -17,7 +17,7 @@ fn the_first_initial_becomes_the_relates() {
 
     let mut vcs_config = InMemory::new(&mut buffer);
 
-    let relates_to = RelateTo::new("[#12345678]");
+    let relates_to = RelateTo::from("[#12345678]");
     let actual = set_relates_to(&mut vcs_config, &relates_to, Duration::from_secs(60 * 60));
 
     assert!(actual.is_ok());
@@ -32,7 +32,7 @@ fn sets_the_expiry_time() {
     let mut buffer = BTreeMap::new();
     let mut vcs_config = InMemory::new(&mut buffer);
 
-    let relates = RelateTo::new("[#12345678]");
+    let relates = RelateTo::from("[#12345678]");
     let actual = set_relates_to(&mut vcs_config, &relates, Duration::from_secs(60 * 60));
 
     assert!(actual.is_ok());

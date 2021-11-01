@@ -23,13 +23,13 @@ pub trait AuthorArgs {
 /// # Errors
 ///
 /// miette error on failure of command
-pub fn get_authors(args: &dyn AuthorArgs) -> Result<Authors> {
+pub fn get_authors<'a>(args: &'a dyn AuthorArgs) -> Result<Authors<'a>> {
     let toml = match args.author_command() {
         Some(command) => from_exec(command),
         None => from_file(args),
     }?;
 
-    let authors: Authors = Authors::try_from(&*toml)?;
+    let authors: Authors<'a> = Authors::try_from(toml)?;
     Ok(authors)
 }
 

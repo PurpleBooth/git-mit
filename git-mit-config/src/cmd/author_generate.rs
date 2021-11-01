@@ -77,6 +77,6 @@ fn run(matches: &ArgMatches) -> Result<()> {
     Ok(())
 }
 
-fn to_toml(authors: Authors) -> Result<String> {
+fn to_toml(authors: Authors<'_>) -> Result<String> {
     Ok(String::try_from(authors)?.trim().to_string())
 }
