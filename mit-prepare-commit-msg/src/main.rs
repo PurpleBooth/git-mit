@@ -104,7 +104,12 @@ fn append_coauthors_to_commit_message(
 
     let trailers = authors
         .iter()
-        .map(|x| Trailer::new("Co-authored-by", &format!("{} <{}>", x.name(), x.email())))
+        .map(|x| {
+            Trailer::new(
+                "Co-authored-by".to_string(),
+                format!("{} <{}>", x.name(), x.email()),
+            )
+        })
         .collect::<Vec<_>>();
 
     for trailer in trailers {
@@ -142,7 +147,7 @@ fn append_relate_to_trailer_to_commit_message(
             },
         )
         .into_diagnostic()?;
-    let trailer = Trailer::new("Relates-to", &value);
+    let trailer = Trailer::new("Relates-to".to_string(), value);
     add_trailer_if_not_existing(commit_message_path, &commit_message, &trailer)?;
 
     Ok(())
@@ -150,8 +155,8 @@ fn append_relate_to_trailer_to_commit_message(
 
 fn add_trailer_if_not_existing(
     commit_message_path: PathBuf,
-    commit_message: &CommitMessage,
-    trailer: &Trailer,
+    commit_message: &CommitMessage<'_>,
+    trailer: &Trailer<'_>,
 ) -> Result<()> {
     if commit_message
         .get_trailers()

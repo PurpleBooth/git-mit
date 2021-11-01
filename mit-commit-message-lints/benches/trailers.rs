@@ -90,15 +90,18 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
                 let message =
                     CommitMessage::from(String::from(*message)).add_trailer(Trailer::new(
-                        "Relates-to",
-                        &get_relate_to_configuration(&mut vcs).unwrap().unwrap().to(),
+                        "Relates-to".to_string(),
+                        get_relate_to_configuration(&mut vcs).unwrap().unwrap().to(),
                     ));
                 get_commit_coauthor_configuration(&mut vcs)
                     .unwrap()
                     .unwrap()
                     .iter()
                     .map(|x| {
-                        Trailer::new("Co-authored-by", &format!("{} <{}>", x.name(), x.email()))
+                        Trailer::new(
+                            "Co-authored-by".to_string(),
+                            format!("{} <{}>", x.name(), x.email()),
+                        )
                     })
                     .fold(message.clone(), |_acc, author| message.add_trailer(author))
             });

@@ -34,8 +34,8 @@ clap = "3.0.0-beta.5"
 clap_derive = "3.0.0-beta.5"
 clap_generate = "3.0.0-beta.5"
 git2 = "0.13.23"
-openssl = { version = "0.10.37", optional = true }
-mit-commit = "1.33.2"
+openssl = { version = "0.10.38", optional = true }
+mit-commit = "2.0.0"
 
 
 
