@@ -1,11 +1,11 @@
 //! The git mit binary
 
 #![warn(
-    rust_2018_idioms,
-    unused,
-    rust_2021_compatibility,
-    nonstandard_style,
     future_incompatible,
+    nonstandard_style,
+    rust_2018_idioms,
+    rust_2021_compatibility,
+    unused,
     missing_copy_implementations,
     missing_debug_implementations,
     missing_docs
