@@ -9,7 +9,7 @@ mit-commit-msg --help
 ```
 
 ``` shell,verify(stream=stdout)
-mit-commit-msg 5.11.9
+mit-commit-msg 5.12.0
 
 Billie Thompson <billie+mit-commit-msg@billiecodes.com>
 
