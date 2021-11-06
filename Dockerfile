@@ -9,12 +9,20 @@ WORKDIR /root/app
 
 ## Build deps for git-mit
 RUN apt-get update && \
-    apt-get install -y libxkbcommon-dev libxcb-shape0-dev libxcb-xfixes0-dev pandoc && \
+    apt-get install -y libxkbcommon-dev libxcb-shape0-dev libxcb-xfixes0-dev help2man && \
     rm -rf /var/lib/apt/lists/*
 
 COPY . .
 
-RUN make build generate-manpages
+RUN --mount=type=cache,target=/root/.cargo cargo clean
+RUN --mount=type=cache,target=/root/.cargo cargo build --release
+RUN help2man target/release/mit-commit-msg > target/mit-commit-msg.1
+RUN help2man target/release/mit-pre-commit > target/mit-pre-commit.1
+RUN help2man target/release/mit-prepare-commit-msg > target/ mit-prepare-commit-msg.1
+RUN help2man target/release/git-mit > target/git-mit.1
+RUN help2man target/release/git-mit-config > target/git-mit-config.1
+RUN help2man target/release/git-mit-relates-to > target/git-mit-relates-to.1
+RUN help2man target/release/git-mit-install > target/git-mit-install.1
 
 FROM debian:11.1
 ENV DEBIAN_FRONTEND noninteractive
