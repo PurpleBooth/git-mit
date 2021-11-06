@@ -1,11 +1,32 @@
 use std::convert::TryInto;
 
-use clap::ArgMatches;
+use clap::{App, Arg, ArgMatches};
 use miette::Result;
 use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 use mit_lint::Lints;
 
 use crate::{current_dir, errors::GitMitConfigError::LintNameNotGiven, get_vcs};
+
+pub fn app<'help>(lint_names: &'help [&'help str]) -> App<'help> {
+    App::new("status")
+        .arg(
+            Arg::new("scope")
+                .long("scope")
+                .short('s')
+                .possible_values(&["local", "global"])
+                .default_value("local"),
+        )
+        .about("Get status of a lint")
+        .arg(
+            Arg::new("lint")
+                .about("The lint to enable")
+                .required(true)
+                .multiple_values(true)
+                .min_values(1)
+                .possible_values(lint_names)
+                .clone(),
+        )
+}
 
 pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches

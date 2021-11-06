@@ -1,10 +1,42 @@
 use std::env::current_dir;
 
-use clap::ArgMatches;
+use clap::{App, Arg, ArgMatches};
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::mit::{set_config_authors, Author};
 
 use crate::get_vcs;
+
+pub fn app<'help>() -> App<'help> {
+    App::new("set")
+        .arg(
+            Arg::new("scope")
+                .long("scope")
+                .short('s')
+                .possible_values(&["local", "global"])
+                .default_value("local"),
+        )
+        .arg(
+            Arg::new("initial")
+                .about("Initial of the mit to update or add")
+                .required(true),
+        )
+        .arg(
+            Arg::new("name")
+                .about("Name to use for the mit in format \"Forename Surname\"")
+                .required(true),
+        )
+        .arg(
+            Arg::new("email")
+                .about("Email to use for the mit")
+                .required(true),
+        )
+        .arg(
+            Arg::new("signingkey")
+                .about("Signing key to use for this user")
+                .required(false),
+        )
+        .about("Update or add an initial in the mit configuration")
+}
 
 pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches

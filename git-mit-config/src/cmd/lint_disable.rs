@@ -1,11 +1,32 @@
 use std::{convert::TryInto, env::current_dir, option::Option::None};
 
-use clap::ArgMatches;
+use clap::{App, Arg, ArgMatches};
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::external;
 use mit_lint::Lints;
 
 use crate::{errors::GitMitConfigError::LintNameNotGiven, get_vcs};
+
+pub fn app<'help>(lint_names: &'help [&'help str]) -> App<'help> {
+    App::new("disable")
+        .about("Disable a lint")
+        .arg(
+            Arg::new("scope")
+                .long("scope")
+                .short('s')
+                .possible_values(&["local", "global"])
+                .default_value("local"),
+        )
+        .arg(
+            Arg::new("lint")
+                .about("The lint to disable")
+                .required(true)
+                .multiple_values(true)
+                .min_values(1)
+                .possible_values(lint_names)
+                .clone(),
+        )
+}
 
 pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches

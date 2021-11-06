@@ -1,8 +1,35 @@
-use clap::ArgMatches;
+use clap::{App, Arg, ArgMatches};
 use miette::Result;
 use mit_commit_message_lints::external::Vcs;
 
 use crate::{current_dir, get_vcs};
+
+pub fn app<'help>() -> App<'help> {
+    App::new("template").arg(
+        Arg::new("scope")
+            .long("scope")
+            .short('s')
+            .possible_values(&["local", "global"])
+            .default_value("local"),
+    )
+        .arg(
+            Arg::new("template")
+                .about(
+                    "A TinyTemplate template with a single value variable that will be applied to the relates-to trailer",
+                )
+                .env("GIT_MIT_RELATES_TO_TEMPLATE")
+                .default_value("{ value }")
+                .takes_value(true),
+        )
+        .arg(
+            Arg::new("scope")
+                .long("scope")
+                .short('s')
+                .possible_values(&["local", "global"])
+                .default_value("local"),
+        )
+        .about("Use a template for the relates-to trailer")
+}
 
 pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches

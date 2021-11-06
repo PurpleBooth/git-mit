@@ -1,6 +1,6 @@
 use std::convert::TryFrom;
 
-use clap::ArgMatches;
+use clap::{App, Arg, ArgMatches};
 use miette::Result;
 use mit_commit_message_lints::{
     console::style::author_table,
@@ -9,6 +9,63 @@ use mit_commit_message_lints::{
 };
 
 use crate::current_dir;
+
+const APP_FILE: &str = "file";
+const APP_FILE_SHORT: char = 'c';
+const APP_FILE_LONG: &str = "config";
+const APP_FILE_ABOUT: &str = "Path to a file where mit initials, emails and names can be found";
+const APP_FILE_ENV: &str = "GIT_MIT_AUTHORS_CONFIG";
+const APP_FILE_DEFAULT: &str = "$HOME/.config/git-mit/mit.toml";
+
+const APP_COMMAND: &str = "command";
+const APP_COMMAND_SHORT: char = 'e';
+const APP_COMMAND_LONG: &str = "exec";
+const APP_COMMAND_ABOUT: &str = "Execute a command to generate the mit configuration, stdout will be captured and used instead of the file, if both this and the file is present, this takes precedence";
+const APP_COMMAND_ENV: &str = "GIT_MIT_AUTHORS_EXEC";
+
+pub fn app_generate<'help>() -> App<'help> {
+    App::new("generate")
+        .arg(
+            Arg::new(APP_FILE)
+                .short(APP_FILE_SHORT)
+                .long(APP_FILE_LONG)
+                .about(APP_FILE_ABOUT)
+                .env(APP_FILE_ENV)
+                .default_value(APP_FILE_DEFAULT)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::new(APP_COMMAND)
+                .short(APP_COMMAND_SHORT)
+                .long(APP_COMMAND_LONG)
+                .about(APP_COMMAND_ABOUT)
+                .env(APP_COMMAND_ENV)
+                .takes_value(true),
+        )
+        .about("Generate a file version of available authors")
+}
+
+pub fn app_available<'help>() -> App<'help> {
+    App::new("available")
+        .arg(
+            Arg::new(APP_FILE)
+                .short(APP_FILE_SHORT)
+                .long(APP_FILE_LONG)
+                .about(APP_FILE_ABOUT)
+                .env(APP_FILE_ENV)
+                .default_value(APP_FILE_DEFAULT)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::new(APP_COMMAND)
+                .short(APP_COMMAND_SHORT)
+                .long(APP_COMMAND_LONG)
+                .about(APP_COMMAND_ABOUT)
+                .env(APP_COMMAND_ENV)
+                .takes_value(true),
+        )
+        .about("List available authors")
+}
 
 pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches

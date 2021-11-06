@@ -1,15 +1,20 @@
 use clap::{crate_authors, crate_version, App, AppSettings, Arg};
 
 use super::super::cmd::author_example;
+use crate::cmd::{
+    author_generate,
+    author_set,
+    lint_available,
+    lint_disable,
+    lint_enable,
+    lint_enabled,
+    lint_generate,
+    lint_status,
+    relates_to_template,
+};
 
 #[allow(clippy::too_many_lines)]
 pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
-    let lint_argument = Arg::new("lint")
-        .about("The lint to enable")
-        .required(true)
-        .multiple_values(true)
-        .min_values(1)
-        .possible_values(lint_names);
     App::new(env!("CARGO_PKG_NAME"))
         .bin_name(String::from(env!("CARGO_PKG_NAME")))
         .version(crate_version!())
@@ -18,193 +23,34 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
         .subcommand(
             App::new("lint")
                 .about("Manage active lints")
-                .subcommand(
-                    App::new("generate")
-                        .arg(
-                            Arg::new("scope")
-                                .long("scope")
-                                .short('s')
-                                .possible_values(&["local", "global"])
-                                .default_value("local"),
-                        )
-                        .about("Generate the config file for your current settings"),
-                )
-                .subcommand(App::new("available").arg(
-                    Arg::new("scope")
-                        .long("scope")
-                        .short('s')
-                        .possible_values(&["local", "global"])
-                        .default_value("local"),
-                ).about("List the available lints"))
-                .subcommand(App::new("enabled").arg(
-                    Arg::new("scope")
-                        .long("scope")
-                        .short('s')
-                        .possible_values(&["local", "global"])
-                        .default_value("local"),
-                ).about("List the enabled lints"))
-                .subcommand(
-                    App::new("status").arg(
-                        Arg::new("scope")
-                            .long("scope")
-                            .short('s')
-                            .possible_values(&["local", "global"])
-                            .default_value("local"),
-                    )
-                        .about("Get status of a lint")
-                        .arg(lint_argument.clone()),
-                )
-                .subcommand(
-                    App::new("enable")
-                        .about("Enable a lint").arg(
-                        Arg::new("scope")
-                            .long("scope")
-                            .short('s')
-                            .possible_values(&["local", "global"])
-                            .default_value("local"),
-                    )
-                        .arg(lint_argument.clone()),
-                )
-                .subcommand(
-                    App::new("disable")
-                        .about("Disable a lint").arg(
-                        Arg::new("scope")
-                            .long("scope")
-                            .short('s')
-                            .possible_values(&["local", "global"])
-                            .default_value("local"),
-                    )
-                        .arg(lint_argument.clone()),
-                )
+                .subcommand(lint_generate::app())
+                .subcommand(lint_available::app())
+                .subcommand(lint_enabled::app())
+                .subcommand(lint_status::app(lint_names))
+                .subcommand(lint_enable::app(lint_names))
+                .subcommand(lint_disable::app(lint_names))
                 .setting(AppSettings::SubcommandRequiredElseHelp),
         )
         .subcommand(
             App::new("mit")
                 .about("Manage mit configuration")
-                .subcommand(
-                    App::new("set")
-                        .arg(
-                            Arg::new("scope")
-                                .long("scope")
-                                .short('s')
-                                .possible_values(&["local", "global"])
-                                .default_value("local"),
-                        )
-                        .arg(
-                            Arg::new("initial")
-                                .about("Initial of the mit to update or add")
-                                .required(true),
-                        )
-                        .arg(
-                            Arg::new("name")
-                                .about("Name to use for the mit in format \"Forename Surname\"")
-                                .required(true),
-                        )
-                        .arg(
-                            Arg::new("email")
-                                .about("Email to use for the mit")
-                                .required(true),
-                        )
-                        .arg(
-                            Arg::new("signingkey")
-                                .about("Signing key to use for this user")
-                                .required(false),
-                        )
-                        .about("Update or add an initial in the mit configuration"),
-                )
-                .subcommand(
-                    App::new("generate")
-                        .arg(
-                            Arg::new("file")
-                                .short('c')
-                                .long("config")
-                                .about(
-                                    "Path to a file where mit initials, emails and names can be \
-                                     found",
-                                )
-                                .env("GIT_MIT_AUTHORS_CONFIG")
-                                .default_value("$HOME/.config/git-mit/mit.toml")
-                                .takes_value(true),
-                        )
-                        .arg(
-                            Arg::new("command")
-                                .short('e')
-                                .long("exec")
-                                .about(
-                                    "Execute a command to generate the mit configuration, stdout \
-                                     will be captured and used instead of the file, if both this \
-                                     and the file is present, this takes precedence",
-                                )
-                                .env("GIT_MIT_AUTHORS_EXEC")
-                                .takes_value(true),
-                        )
-                        .about("Generate a file version of available authors"),
-                )
-                .subcommand(
-                    App::new("available")
-                        .arg(
-                            Arg::new("file")
-                                .short('c')
-                                .long("config")
-                                .about(
-                                    "Path to a file where mit initials, emails and names can be \
-                                     found",
-                                )
-                                .env("GIT_MIT_AUTHORS_CONFIG")
-                                .default_value("$HOME/.config/git-mit/mit.toml")
-                                .takes_value(true),
-                        )
-                        .arg(
-                            Arg::new("command")
-                                .short('e')
-                                .long("exec")
-                                .about(
-                                    "Execute a command to generate the mit configuration, stdout \
-                                     will be captured and used instead of the file, if both this \
-                                     and the file is present, this takes precedence",
-                                )
-                                .env("GIT_MIT_AUTHORS_EXEC")
-                                .takes_value(true),
-                        )
-                        .about("List available authors"),
-                )
+                .subcommand(author_set::app())
+                .subcommand(author_generate::app_generate())
+                .subcommand(author_generate::app_available())
                 .subcommand(author_example::app())
                 .setting(AppSettings::SubcommandRequiredElseHelp),
         )
         .subcommand(
             App::new("relates-to")
                 .about("Manage relates-to settings")
-                .subcommand(
-                    App::new("template").arg(
-                        Arg::new("scope")
-                            .long("scope")
-                            .short('s')
-                            .possible_values(&["local", "global"])
-                            .default_value("local"),
-                    )
-                        .arg(
-                            Arg::new("template")
-                                .about(
-                                    "A TinyTemplate template with a single value variable that will be applied to the relates-to trailer",
-                                )
-                                .env("GIT_MIT_RELATES_TO_TEMPLATE")
-                                .default_value("{ value }")
-                                .takes_value(true),
-                        )
-                        .arg(
-                            Arg::new("scope")
-                                .long("scope")
-                                .short('s')
-                                .possible_values(&["local", "global"])
-                                .default_value("local"),
-                        )
-                        .about("Use a template for the relates-to trailer"),
-                )
+                .subcommand(relates_to_template::app())
                 .setting(AppSettings::SubcommandRequiredElseHelp),
         )
-        .arg(
-            Arg::new("completion")
-                .long("completion")
-                .possible_values(&["bash", "elvish", "fish", "powershell", "zsh",]),
-        )
+        .arg(Arg::new("completion").long("completion").possible_values(&[
+            "bash",
+            "elvish",
+            "fish",
+            "powershell",
+            "zsh",
+        ]))
 }

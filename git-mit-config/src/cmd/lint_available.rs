@@ -1,11 +1,23 @@
 use std::env::current_dir;
 
-use clap::ArgMatches;
+use clap::{App, Arg, ArgMatches};
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 use mit_lint::Lints;
 
 use crate::get_vcs;
+
+pub fn app<'help>() -> App<'help> {
+    App::new("available")
+        .arg(
+            Arg::new("scope")
+                .long("scope")
+                .short('s')
+                .possible_values(&["local", "global"])
+                .default_value("local"),
+        )
+        .about("List the available lints")
+}
 
 pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches

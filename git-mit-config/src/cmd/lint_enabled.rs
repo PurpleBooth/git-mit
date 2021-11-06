@@ -1,8 +1,20 @@
-use clap::ArgMatches;
+use clap::{App, Arg, ArgMatches};
 use miette::Result;
 use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 
 use crate::{current_dir, get_vcs};
+
+pub fn app<'help>() -> App<'help> {
+    App::new("enabled")
+        .arg(
+            Arg::new("scope")
+                .long("scope")
+                .short('s')
+                .possible_values(&["local", "global"])
+                .default_value("local"),
+        )
+        .about("List the enabled lints")
+}
 
 pub fn run_on_match(matches: &ArgMatches) -> Option<Result<()>> {
     matches
