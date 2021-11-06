@@ -18,7 +18,7 @@ RUN --mount=type=cache,target=/root/.cargo cargo clean
 RUN --mount=type=cache,target=/root/.cargo cargo build --release
 RUN help2man target/release/mit-commit-msg > target/mit-commit-msg.1
 RUN help2man target/release/mit-pre-commit > target/mit-pre-commit.1
-RUN help2man target/release/mit-prepare-commit-msg > target/ mit-prepare-commit-msg.1
+RUN help2man target/release/mit-prepare-commit-msg > target/mit-prepare-commit-msg.1
 RUN help2man target/release/git-mit > target/git-mit.1
 RUN help2man target/release/git-mit-config > target/git-mit-config.1
 RUN help2man target/release/git-mit-relates-to > target/git-mit-relates-to.1
