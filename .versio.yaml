@@ -26,8 +26,6 @@ projects:
             pattern: mit-prepare-commit-msg (\d+\.\d+\.\d+)
           - file: git-mit-config/Cargo.toml
             toml: package.version
-          - file: git-mit-config/Cargo.toml
-            toml: build-dependencies.mit-build-tools.version
 
           - file: git-mit-config/Cargo.toml
             toml: build-dependencies.mit-commit-message-lints.version
@@ -47,23 +45,14 @@ projects:
 
           - file: git-mit-install/Cargo.toml
             toml: package.version
-          - file: git-mit-install/Cargo.toml
-            toml: build-dependencies.mit-build-tools.version
-          - file: git-mit/Cargo.toml
-            toml: build-dependencies.mit-build-tools.version
 
           - file: git-mit-relates-to/Cargo.toml
             toml: package.version
-          - file: git-mit-relates-to/Cargo.toml
-            toml: build-dependencies.mit-build-tools.version
           - file: git-mit-relates-to/Cargo.toml
             toml: dependencies.mit-commit-message-lints.version
           - file: git-mit-relates-to/Cargo.toml
             toml: dev-dependencies.mit-hook-test-helper.version
 
-          - file: mit-build-tools/Cargo.toml
-            toml: package.version
-
           - file: mit-commit-message-lints/Cargo.toml
             toml: package.version
           - file: mit-commit-message-lints/Cargo.toml
@@ -71,8 +60,6 @@ projects:
 
           - file: mit-commit-msg/Cargo.toml
             toml: package.version
-          - file: mit-commit-msg/Cargo.toml
-            toml: build-dependencies.mit-build-tools.version
           - file: mit-commit-msg/Cargo.toml
             toml: dependencies.mit-commit-message-lints.version
           - file: mit-commit-msg/Cargo.toml
@@ -84,16 +71,12 @@ projects:
           - file: mit-pre-commit/Cargo.toml
             toml: package.version
           - file: mit-pre-commit/Cargo.toml
-            toml: build-dependencies.mit-build-tools.version
-          - file: mit-pre-commit/Cargo.toml
             toml: dependencies.mit-commit-message-lints.version
           - file: mit-pre-commit/Cargo.toml
             toml: dev-dependencies.mit-hook-test-helper.version
 
           - file: mit-prepare-commit-msg/Cargo.toml
             toml: package.version
-          - file: mit-prepare-commit-msg/Cargo.toml
-            toml: build-dependencies.mit-build-tools.version
           - file: mit-prepare-commit-msg/Cargo.toml
             toml: dependencies.mit-commit-message-lints.version
           - file: mit-prepare-commit-msg/Cargo.toml

@@ -51,7 +51,6 @@ lint:
 .PHONY: publish-to-crates
 ## Publish to crates
 publish-to-crates:
-	( cd mit-build-tools && cargo publish )
 	( cd mit-hook-test-helper && cargo publish )
 	( cd mit-commit-message-lints && cargo publish )
 	( cd mit-commit-msg && cargo publish )

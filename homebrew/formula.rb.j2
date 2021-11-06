@@ -3,7 +3,7 @@ class GitMit < Formula
   homepage "https://github.com/{{ github_repo }}"
   url "https://github.com/{{ github_repo }}/archive/{{ git_tag }}.tar.gz"
   sha256 "{{ file_sha }}"
-  depends_on "pandoc" => :build
+  depends_on "help2man" => :build
   depends_on "rust" => :build
   depends_on "openssl@1.1"
   on_linux do
@@ -12,66 +12,29 @@ class GitMit < Formula
   end
 
   def install
-    system "cargo", "install", "--root", prefix, "--path", "./mit-commit-msg/"
-    system "cargo", "install", "--root", prefix, "--path", "./mit-pre-commit/"
-    system "cargo", "install", "--root", prefix, "--path", "./mit-prepare-commit-msg/"
-    system "cargo", "install", "--root", prefix, "--path", "./git-mit/"
-    system "cargo", "install", "--root", prefix, "--path", "./git-mit-config/"
-    system "cargo", "install", "--root", prefix, "--path", "./git-mit-relates-to/"
-    system "cargo", "install", "--root", prefix, "--path", "./git-mit-install/"
+    %w[
+      mit-commit-msg
+      mit-pre-commit
+      mit-prepare-commit-msg
+      git-mit
+      git-mit-config
+      git-mit-relates-to
+      git-mit-install
+    ].each do |binary|
+      # Build binary
+      system "cargo", "install", "--root", prefix, "--path", "./#{binary}/"
 
-    # Install bash completion
-    output = Utils.safe_popen_read("#{bin}/mit-commit-msg", "--completion", "bash")
-    (bash_completion/"mit-commit-msg").write output
-    output = Utils.safe_popen_read("#{bin}/mit-pre-commit", "--completion", "bash")
-    (bash_completion/"mit-pre-commit").write output
-    output = Utils.safe_popen_read("#{bin}/mit-prepare-commit-msg", "--completion", "bash")
-    (bash_completion/"mit-prepare-commit-msg").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit", "--completion", "bash")
-    (bash_completion/"git-mit").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit-config", "--completion", "bash")
-    (bash_completion/"git-mit-config").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit-relates-to", "--completion", "bash")
-    (bash_completion/"git-mit-relates-to").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit-install", "--completion", "bash")
-    (bash_completion/"git-mit-install").write output
+      # Completions
+      output = Utils.safe_popen_read("#{bin}/#{binary}", "--completion", "bash")
+      (bash_completion/binary.to_s).write output
+      output = Utils.safe_popen_read("#{bin}/#{binary}", "--completion", "zsh")
+      (zsh_completion/binary.to_s).write output
+      output = Utils.safe_popen_read("#{bin}/#{binary}", "--completion", "fish")
+      (fish_completion/binary.to_s).write output
 
-    # Install zsh completion
-    output = Utils.safe_popen_read("#{bin}/mit-commit-msg", "--completion", "zsh")
-    (zsh_completion/"_mit-commit-msg").write output
-    output = Utils.safe_popen_read("#{bin}/mit-pre-commit", "--completion", "zsh")
-    (zsh_completion/"_mit-pre-commit").write output
-    output = Utils.safe_popen_read("#{bin}/mit-prepare-commit-msg", "--completion", "zsh")
-    (zsh_completion/"_mit-prepare-commit-msg").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit", "--completion", "zsh")
-    (zsh_completion/"_git-mit").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit-config", "--completion", "zsh")
-    (zsh_completion/"_git-mit-config").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit-relates-to", "--completion", "zsh")
-    (zsh_completion/"_git-mit-relates-to").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit-install", "--completion", "zsh")
-    (zsh_completion/"_git-mit-install").write output
-
-    # Install fish completion
-    output = Utils.safe_popen_read("#{bin}/mit-commit-msg", "--completion", "fish")
-    (fish_completion/"mit-commit-msg.fish").write output
-    output = Utils.safe_popen_read("#{bin}/mit-pre-commit", "--completion", "fish")
-    (fish_completion/"mit-pre-commit.fish").write output
-    output = Utils.safe_popen_read("#{bin}/mit-prepare-commit-msg", "--completion", "fish")
-    (fish_completion/"mit-prepare-commit-msg.fish").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit", "--completion", "fish")
-    (fish_completion/"git-mit.fish").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit-config", "--completion", "fish")
-    (fish_completion/"git-mit-config.fish").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit-relates-to", "--completion", "fish")
-    (fish_completion/"git-mit-relates-to.fish").write output
-    output = Utils.safe_popen_read("#{bin}/git-mit-install", "--completion", "fish")
-    (fish_completion/"git-mit-install.fish").write output
-
-    Pathname.glob("**/*.man.md").each do |file|
-      base = file.basename(".man.md")
-      system "pandoc", "--wrap=auto", "-s", "-f", "markdown", "-t", "man", file, "-o", "#{base}.1"
-      man1.install "#{base}.1"
+      # Man pages
+      output = Utils.safe_popen_read("help2man", "#{bin}/#{binary}")
+      (man1/"#{binary}.1").write output
     end
   end
 

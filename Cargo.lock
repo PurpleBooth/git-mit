@@ -612,7 +612,6 @@ dependencies = [
  "git2",
  "indoc",
  "miette",
- "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
@@ -634,17 +633,12 @@ dependencies = [
  "git2",
  "indoc",
  "miette",
- "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "mit-lint",
  "openssl",
- "serde",
- "serde_derive",
- "serde_json",
  "shell-words",
  "thiserror",
- "tinytemplate",
 ]
 
 [[package]]
@@ -657,7 +651,6 @@ dependencies = [
  "git2",
  "indoc",
  "miette",
- "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
@@ -678,7 +671,6 @@ dependencies = [
  "git2",
  "indoc",
  "miette",
- "mit-build-tools",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
@@ -1017,19 +1009,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mit-build-tools"
-version = "5.11.9"
-dependencies = [
- "clap 3.0.0-beta.5",
- "clap_derive",
- "clap_generate",
- "serde",
- "serde_derive",
- "serde_json",
- "tinytemplate",
-]
-
-[[package]]
 name = "mit-commit"
 version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1081,18 +1060,13 @@ dependencies = [
  "git2",
  "indoc",
  "miette",
- "mit-build-tools",
  "mit-commit",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "mit-lint",
  "openssl",
- "serde",
- "serde_derive",
- "serde_json",
  "tempfile",
  "thiserror",
- "tinytemplate",
  "tokio",
 ]
 
@@ -1134,17 +1108,12 @@ dependencies = [
  "git2",
  "indoc",
  "miette",
- "mit-build-tools",
  "mit-commit",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
- "serde",
- "serde_derive",
- "serde_json",
  "thiserror",
  "time",
- "tinytemplate",
 ]
 
 [[package]]
@@ -1157,13 +1126,11 @@ dependencies = [
  "git2",
  "indoc",
  "miette",
- "mit-build-tools",
  "mit-commit",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
  "serde",
- "serde_json",
  "shell-words",
  "tempfile",
  "thiserror",

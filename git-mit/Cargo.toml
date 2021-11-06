@@ -10,16 +10,6 @@ keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
 repository = "https://github.com/PurpleBooth/git-mit"
 
-[build-dependencies]
-indoc = "1.0.3"
-clap = "3.0.0-beta.5"
-clap_derive = "3.0.0-beta.5"
-clap_generate = "3.0.0-beta.5"
-
-  [build-dependencies.mit-build-tools]
-  path = "../mit-build-tools"
-  version = "5.11.9"
-
 [dependencies]
 shell-words = "1.0.0"
 indoc = "1.0.3"

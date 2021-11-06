@@ -59,16 +59,6 @@ jobs:
           toolchain: stable
           profile: default
       - run: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
-      - name: Publish mit-build-tools to Crates
-        uses: nick-invision/retry@v2.5.1
-        with:
-          timeout_minutes: 30
-          max_attempts: 10
-          command: |
-            cargo login "$CARGO_TOKEN"
-            ( cd mit-build-tools && cargo publish )
-        env:
-          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-hook-test-helper to Crates
         uses: nick-invision/retry@v2.5.1
         with:
