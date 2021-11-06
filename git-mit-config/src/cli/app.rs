@@ -1,5 +1,7 @@
 use clap::{crate_authors, crate_version, App, AppSettings, Arg};
 
+use super::super::cmd::author_example;
+
 #[allow(clippy::too_many_lines)]
 pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
     let lint_argument = Arg::new("lint")
@@ -166,7 +168,7 @@ pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
                         )
                         .about("List available authors"),
                 )
-                .subcommand(App::new("example").about("Print example mit yaml file"))
+                .subcommand(author_example::app())
                 .setting(AppSettings::SubcommandRequiredElseHelp),
         )
         .subcommand(

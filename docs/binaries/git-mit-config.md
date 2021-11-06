@@ -70,7 +70,7 @@ OPTIONS:
 
 SUBCOMMANDS:
     available    List available authors
-    example      Print example mit yaml file
+    example      Print example mit toml file
     generate     Generate a file version of available authors
     help         Print this message or the help of the given subcommand(s)
     set          Update or add an initial in the mit configuration
