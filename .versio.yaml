@@ -28,8 +28,6 @@ projects:
             toml: package.version
 
           - file: git-mit-config/Cargo.toml
-            toml: build-dependencies.mit-commit-message-lints.version
-          - file: git-mit-config/Cargo.toml
             toml: dependencies.mit-commit-message-lints.version
           - file: git-mit/Cargo.toml
             toml: dependencies.mit-commit-message-lints.version
