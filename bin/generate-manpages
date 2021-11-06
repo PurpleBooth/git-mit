@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
-while IFS= read -r -d '' FILE; do
-    BASE=$(basename "$FILE" .man.md)
-    pandoc --wrap=auto -s -f markdown -t man "$FILE" -o "./target/$BASE.1"
-done < <(find ./target/ -name "*.man.md" -print0)
