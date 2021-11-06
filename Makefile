@@ -78,8 +78,3 @@ fmt:
 ## Clean the build directory
 clean:
 	cargo clean
-
-.PHONY: generate-manpages
-## Build man pages from templates
-generate-manpages: build
-	./bin/generate-manpages
