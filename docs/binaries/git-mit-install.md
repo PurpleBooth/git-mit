@@ -7,7 +7,7 @@ git-mit-install --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-install 5.12.4
+git-mit-install 5.12.5
 
 Billie Thompson <billie+git-mit-install@billiecodes.com>
 
