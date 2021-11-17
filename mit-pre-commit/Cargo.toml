@@ -1,6 +1,6 @@
 [package]
 name = "mit-pre-commit"
-version = "5.12.6"
+version = "5.12.7"
 authors = [ "Billie Thompson <billie+mit-pre-commit@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -25,7 +25,7 @@ mit-commit = "3.0.0"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "5.12.6"
+  version = "5.12.7"
 
 [features]
 default = []
@@ -38,4 +38,4 @@ indoc = "1.0.3"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "5.12.6"
+  version = "5.12.7"
