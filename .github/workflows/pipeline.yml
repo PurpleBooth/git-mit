@@ -163,7 +163,7 @@ jobs:
         with:
           lfs: true
           ref: v${{ needs.release.outputs.current_version }}
-      - uses: actions/cache@v2.1.6
+      - uses: actions/cache@v2.1.7
         with:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           path: |
