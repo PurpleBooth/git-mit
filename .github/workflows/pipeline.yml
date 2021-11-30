@@ -252,7 +252,7 @@ jobs:
           ref: v${{ needs.release.outputs.current_version }}
       - uses: actions/download-artifact@v2
       - name: Generate a changelog
-        uses: PurpleBooth/changelog-action@v0.3.0
+        uses: PurpleBooth/changelog-action@v0.3.1
         with:
           config: cliff.toml
           args: --verbose --latest
