@@ -20,7 +20,7 @@ clap = "3.0.0-beta.5"
 shell-words = "1.0.0"
 clap_derive = "3.0.0-beta.5"
 clap_generate = "3.0.0-beta.5"
-git2 = "0.13.24"
+git2 = "0.13.25"
 openssl = { version = "0.10.38", optional = true }
 mit-commit = "3.0.0"
 
