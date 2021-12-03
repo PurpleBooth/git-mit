@@ -1,4 +1,4 @@
-FROM rust:1.56.1 as builder
+FROM rust:1.57.0 as builder
 
 ## Update the system generally
 RUN apt-get update && \
