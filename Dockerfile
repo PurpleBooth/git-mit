@@ -24,7 +24,7 @@ RUN help2man target/release/git-mit-config > target/git-mit-config.1
 RUN help2man target/release/git-mit-relates-to > target/git-mit-relates-to.1
 RUN help2man target/release/git-mit-install > target/git-mit-install.1
 
-FROM debian:11.1
+FROM rust:1.57.0
 ENV DEBIAN_FRONTEND noninteractive
 
 ## Update the system generally
