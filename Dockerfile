@@ -1,4 +1,4 @@
-FROM rust:1.56.1 as builder
+FROM rust:1.57.0 as builder
 
 ## Update the system generally
 RUN apt-get update && \
@@ -56,7 +56,7 @@ RUN apt-get update && \
 ### The Tool
 ## Runtime deps for git-mit
 RUN apt-get update && \
-    apt-get install -y libxkbcommon0 libxcb-shape0 libxcb-xfixes0 && \
+    apt-get install -y libxkbcommon0 libxcb-shape0 libxcb-xfixes0 libssl1.1 libgcc1 && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder \
