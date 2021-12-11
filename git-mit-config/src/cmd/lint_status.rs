@@ -19,7 +19,7 @@ pub fn app<'help>(lint_names: &'help [&'help str]) -> App<'help> {
         .about("Get status of a lint")
         .arg(
             Arg::new("lint")
-                .about("The lint to enable")
+                .help("The lint to enable")
                 .required(true)
                 .multiple_values(true)
                 .min_values(1)

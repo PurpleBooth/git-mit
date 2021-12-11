@@ -14,7 +14,7 @@ pub fn app<'help>() -> App<'help> {
     )
         .arg(
             Arg::new("template")
-                .about(
+                .help(
                     "A TinyTemplate template with a single value variable that will be applied to the relates-to trailer",
                 )
                 .env("GIT_MIT_RELATES_TO_TEMPLATE")

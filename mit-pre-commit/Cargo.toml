@@ -14,9 +14,8 @@ repository = "https://github.com/PurpleBooth/git-mit"
 time = "0.3.5"
 thiserror = "1.0.30"
 miette = { version = "3.2.0", features = [ "fancy" ] }
-clap = "3.0.0-beta.5"
-clap_derive = "3.0.0-beta.5"
-clap_generate = "3.0.0-beta.5"
+clap_generate = "3.0.0-rc.4"
+clap = { version = "3.0.0-rc.4", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 git2 = "0.13.25"
 openssl = { version = "0.10.38", optional = true }
 mit-commit = "3.0.0"

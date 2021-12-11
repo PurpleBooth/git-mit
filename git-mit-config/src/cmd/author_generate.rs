@@ -29,7 +29,7 @@ pub fn app_generate<'help>() -> App<'help> {
             Arg::new(APP_FILE)
                 .short(APP_FILE_SHORT)
                 .long(APP_FILE_LONG)
-                .about(APP_FILE_ABOUT)
+                .help(APP_FILE_ABOUT)
                 .env(APP_FILE_ENV)
                 .default_value(APP_FILE_DEFAULT)
                 .takes_value(true),
@@ -38,7 +38,7 @@ pub fn app_generate<'help>() -> App<'help> {
             Arg::new(APP_COMMAND)
                 .short(APP_COMMAND_SHORT)
                 .long(APP_COMMAND_LONG)
-                .about(APP_COMMAND_ABOUT)
+                .help(APP_COMMAND_ABOUT)
                 .env(APP_COMMAND_ENV)
                 .takes_value(true),
         )
@@ -51,7 +51,7 @@ pub fn app_available<'help>() -> App<'help> {
             Arg::new(APP_FILE)
                 .short(APP_FILE_SHORT)
                 .long(APP_FILE_LONG)
-                .about(APP_FILE_ABOUT)
+                .help(APP_FILE_ABOUT)
                 .env(APP_FILE_ENV)
                 .default_value(APP_FILE_DEFAULT)
                 .takes_value(true),
@@ -60,7 +60,7 @@ pub fn app_available<'help>() -> App<'help> {
             Arg::new(APP_COMMAND)
                 .short(APP_COMMAND_SHORT)
                 .long(APP_COMMAND_LONG)
-                .about(APP_COMMAND_ABOUT)
+                .help(APP_COMMAND_ABOUT)
                 .env(APP_COMMAND_ENV)
                 .takes_value(true),
         )

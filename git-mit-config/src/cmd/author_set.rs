@@ -17,22 +17,22 @@ pub fn app<'help>() -> App<'help> {
         )
         .arg(
             Arg::new("initial")
-                .about("Initial of the mit to update or add")
+                .help("Initial of the mit to update or add")
                 .required(true),
         )
         .arg(
             Arg::new("name")
-                .about("Name to use for the mit in format \"Forename Surname\"")
+                .help("Name to use for the mit in format \"Forename Surname\"")
                 .required(true),
         )
         .arg(
             Arg::new("email")
-                .about("Email to use for the mit")
+                .help("Email to use for the mit")
                 .required(true),
         )
         .arg(
             Arg::new("signingkey")
-                .about("Signing key to use for this user")
+                .help("Signing key to use for this user")
                 .required(false),
         )
         .about("Update or add an initial in the mit configuration")

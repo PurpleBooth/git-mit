@@ -42,7 +42,7 @@ pub fn app() -> App<'static> {
         ))
         .arg(
             Arg::new("initials")
-                .about("Initials of the mit to put in the commit")
+                .help("Initials of the mit to put in the commit")
                 .multiple_values(true)
                 .required_unless_present("completion"),
         )
@@ -50,7 +50,7 @@ pub fn app() -> App<'static> {
             Arg::new("file")
                 .short('c')
                 .long("config")
-                .about("Path to a file where mit initials, emails and names can be found")
+                .help("Path to a file where mit initials, emails and names can be found")
                 .env("GIT_MIT_AUTHORS_CONFIG")
                 .takes_value(true)
                 .default_value("$HOME/.config/git-mit/mit.toml"),
@@ -59,7 +59,7 @@ pub fn app() -> App<'static> {
             Arg::new("command")
                 .short('e')
                 .long("exec")
-                .about(
+                .help(
                     "Execute a command to generate the mit configuration, stdout will be captured \
                      and used instead of the file, if both this and the file is present, this \
                      takes precedence",
@@ -71,7 +71,7 @@ pub fn app() -> App<'static> {
             Arg::new("timeout")
                 .short('t')
                 .long("timeout")
-                .about("Number of minutes to expire the configuration in")
+                .help("Number of minutes to expire the configuration in")
                 .env("GIT_MIT_AUTHORS_TIMEOUT")
                 .takes_value(true)
                 .default_value("60"),

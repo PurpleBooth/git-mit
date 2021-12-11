@@ -8,13 +8,13 @@ pub fn app() -> App<'static> {
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::new("commit-message-path")
-                .about("The name of the file that contains the commit log message")
+                .help("The name of the file that contains the commit log message")
                 .index(1)
                 .required_unless_present("completion"),
         )
         .arg(
             Arg::new("commit-message-source")
-                .about(
+                .help(
                     "The commit message, and can be: message (if a -m or -F option was given to \
                      git); template (if a -t option was given or the configuration option \
                      commit.template is set in git); merge (if the commit is a merge or a \
@@ -26,14 +26,14 @@ pub fn app() -> App<'static> {
         )
         .arg(
             Arg::new("commit-sha")
-                .about("Commit SHA-1 (if a -c, -C or --amend option was given to git).")
+                .help("Commit SHA-1 (if a -c, -C or --amend option was given to git).")
                 .index(3)
                 .required(false),
         )
         .arg(
             Arg::new("relates-to-exec")
                 .long("relates-to-exec")
-                .about("A command to execute to get the value for the relates to trailer")
+                .help("A command to execute to get the value for the relates to trailer")
                 .env("GIT_MIT_RELATES_TO_EXEC")
                 .takes_value(true)
                 .required(false),
@@ -41,7 +41,7 @@ pub fn app() -> App<'static> {
         .arg(
             Arg::new("relates-to-template")
                 .long("relates-to-template")
-                .about("A template to apply to the relates to trailer")
+                .help("A template to apply to the relates to trailer")
                 .env("GIT_MIT_RELATES_TO_TEMPLATE")
                 .takes_value(true)
                 .required(false),

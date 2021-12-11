@@ -8,14 +8,14 @@ pub fn app() -> App<'static> {
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::new("issue-number")
-                .about("The issue number or other string to place into the Relates-to trailer")
+                .help("The issue number or other string to place into the Relates-to trailer")
                 .required_unless_present("completion"),
         )
         .arg(
             Arg::new("timeout")
                 .short('t')
                 .long("timeout")
-                .about("Number of minutes to expire the configuration in")
+                .help("Number of minutes to expire the configuration in")
                 .env("GIT_MIT_RELATES_TO_TIMEOUT")
                 .default_value("60")
                 .takes_value(true),

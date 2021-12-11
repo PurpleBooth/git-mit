@@ -16,10 +16,9 @@ repository = "https://github.com/PurpleBooth/git-mit"
 tinytemplate = "1.2.1"
 thiserror = "1.0.30"
 miette = { version = "3.2.0", features = [ "fancy" ] }
-clap = "3.0.0-beta.5"
 shell-words = "1.0.0"
-clap_derive = "3.0.0-beta.5"
-clap_generate = "3.0.0-beta.5"
+clap_generate = "3.0.0-rc.4"
+clap = { version = "3.0.0-rc.4", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 git2 = "0.13.25"
 openssl = { version = "0.10.38", optional = true }
 mit-commit = "3.0.0"
@@ -27,7 +26,7 @@ mit-commit = "3.0.0"
 
 
   [dependencies.serde]
-  version = "1.0.130"
+  version = "1.0.131"
   features = [ "derive" ]
 
   [dependencies.mit-commit-message-lints]
