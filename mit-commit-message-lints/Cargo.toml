@@ -21,7 +21,7 @@ miette = { version = "3.2.0", features = [ "fancy" ] }
 git2 = "0.13.25"
 openssl = { version = "0.10.38", optional = true }
 regex = "1.5.4"
-serde_yaml = "0.8.21"
+serde_yaml = "0.8.23"
 serde_derive = "1.0.131"
 indoc = "1.0.3"
 toml = "0.5.8"
