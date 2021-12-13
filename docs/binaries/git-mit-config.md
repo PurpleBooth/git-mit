@@ -7,7 +7,7 @@ git-mit-config --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-config 5.12.9
+git-mit-config 5.12.10
 
 Billie Thompson <billie+git-mit-config@billiecodes.com>
 

@@ -7,7 +7,7 @@ git-mit-relates-to --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-relates-to 5.12.9
+git-mit-relates-to 5.12.10
 
 Billie Thompson <billie+git-mit-relates-to@billiecodes.com>
 

@@ -7,7 +7,7 @@ git-mit --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit 5.12.9
+git-mit 5.12.10
 
 Billie Thompson <billie+git-mit@billiecodes.com>
 

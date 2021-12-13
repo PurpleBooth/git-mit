@@ -9,7 +9,7 @@ mit-pre-commit --help
 ```
 
 ``` shell,verify(stream=stdout)
-mit-pre-commit 5.12.9
+mit-pre-commit 5.12.10
 
 Billie Thompson <billie+mit-pre-commit@billiecodes.com>
 
