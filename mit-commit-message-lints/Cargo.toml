@@ -22,19 +22,19 @@ git2 = "0.13.25"
 openssl = { version = "0.10.38", optional = true }
 regex = "1.5.4"
 serde_yaml = "0.8.23"
-serde_derive = "1.0.131"
+serde_derive = "1.0.133"
 indoc = "1.0.3"
 toml = "0.5.8"
 mit-commit = "3.0.0"
 mit-lint = "3.0.3"
 comfy-table = "5.0.0"
-clap_generate = "3.0.0-rc.4"
-clap = { version = "3.0.0-rc.4", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
+clap_complete = "3.0.0"
+clap = { version = "3.0.0", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 quickcheck_macros = "1.0.0"
 quickcheck = "1.0.3"
 
   [dependencies.serde]
-  version = "1.0.131"
+  version = "1.0.133"
   features = [ "derive" ]
 
 [dev-dependencies]

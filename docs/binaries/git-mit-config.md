@@ -8,9 +8,7 @@ git-mit-config --help
 
 ``` shell,verify(stream=stdout)
 git-mit-config 5.12.11
-
 Billie Thompson <billie+git-mit-config@billiecodes.com>
-
 A command for enabling and disabling git lints
 
 USAGE:
@@ -34,7 +32,6 @@ git-mit-config lint --help
 
 ``` shell,verify(stream=stdout)
 git-mit-config-lint 
-
 Manage active lints
 
 USAGE:
@@ -59,7 +56,6 @@ git-mit-config mit --help
 
 ``` shell,verify(stream=stdout)
 git-mit-config-mit 
-
 Manage mit configuration
 
 USAGE:
@@ -82,7 +78,6 @@ git-mit-config relates-to --help
 
 ``` shell,verify(stream=stdout)
 git-mit-config-relates-to 
-
 Manage relates-to settings
 
 USAGE:

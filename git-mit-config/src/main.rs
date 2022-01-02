@@ -76,7 +76,7 @@ fn main() -> Result<()> {
 
 fn get_vcs(local: bool, current_dir: &Path) -> Result<Git2> {
     let git_config = if local {
-        Repository::discover(current_dir.to_path_buf())
+        Repository::discover(current_dir)
             .map_err(|source| DiscoverGitRepository { source })
             .and_then(|repo: Repository| {
                 repo.config()

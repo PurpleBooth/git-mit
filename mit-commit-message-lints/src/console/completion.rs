@@ -3,7 +3,7 @@
 use std::{io, str::FromStr};
 
 use clap::App;
-use clap_generate::{generate, generators};
+use clap_complete;
 use miette::{Diagnostic, SourceSpan};
 use quickcheck::{Arbitrary, Gen};
 use thiserror::Error;
@@ -105,19 +105,39 @@ pub struct ShellFromStrError {
 /// Print completion for the given shell
 pub fn print_completions(writer: &mut dyn io::Write, app: &mut App<'_>, shell: Shell) {
     match shell {
-        Shell::Bash => generate::<_, _>(generators::Bash, app, app.get_name().to_string(), writer),
+        Shell::Bash => clap_complete::generate(
+            clap_complete::shells::Bash,
+            app,
+            app.get_name().to_string(),
+            writer,
+        ),
         Shell::Elvish => {
-            generate::<_, _>(generators::Elvish, app, app.get_name().to_string(), writer);
-        }
-        Shell::Fish => generate::<_, _>(generators::Fish, app, app.get_name().to_string(), writer),
-        Shell::PowerShell => {
-            generate::<_, _>(
-                generators::PowerShell,
+            clap_complete::generate(
+                clap_complete::shells::Elvish,
                 app,
                 app.get_name().to_string(),
                 writer,
             );
         }
-        Shell::Zsh => generate::<_, _>(generators::Zsh, app, app.get_name().to_string(), writer),
+        Shell::Fish => clap_complete::generate(
+            clap_complete::shells::Fish,
+            app,
+            app.get_name().to_string(),
+            writer,
+        ),
+        Shell::PowerShell => {
+            clap_complete::generate(
+                clap_complete::shells::PowerShell,
+                app,
+                app.get_name().to_string(),
+                writer,
+            );
+        }
+        Shell::Zsh => clap_complete::generate(
+            clap_complete::shells::Zsh,
+            app,
+            app.get_name().to_string(),
+            writer,
+        ),
     }
 }
