@@ -88,7 +88,7 @@ fn main() -> Result<()> {
             The authors and issue number appear on the commit. These authors are saved into your current repository for ad-hoc pairing. When you're ready make the authors everywhere run
 
             mkdir -p "$HOME/.config/git-mit"
-            git mit-config generate > "$HOME/.config/git-mit/mit.toml"
+            git mit-config mit generate > "$HOME/.config/git-mit/mit.toml"
         "#},
     );
 
