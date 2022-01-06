@@ -7,7 +7,7 @@ git-mit-config --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-config 5.12.16
+git-mit-config 5.12.17
 Billie Thompson <billie+git-mit-config@billiecodes.com>
 A command for enabling and disabling git lints
 
