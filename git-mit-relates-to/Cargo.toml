@@ -33,7 +33,7 @@ vendored-openssl = ["openssl/vendored"]
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
 indoc = "1.0.3"
-tempfile = "3.2.0"
+tempfile = "3.3.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
