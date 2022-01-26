@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-config"
-version = "5.12.26"
+version = "5.12.27"
 authors = [ "Billie Thompson <billie+git-mit-config@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -18,13 +18,13 @@ miette = { version = "3.3.0", features = [ "fancy" ] }
 git2 = "0.13.25"
 openssl = { version = "0.10.38", optional = true }
 clap_complete = "3.0.4"
-clap = { version = "3.0.12", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
+clap = { version = "3.0.13", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 
 comfy-table = "5.0.0"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "5.12.26"
+  version = "5.12.27"
 
 [dev-dependencies]
 indoc = "1.0.3"
@@ -32,7 +32,7 @@ indoc = "1.0.3"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "5.12.26"
+  version = "5.12.27"
 
 [features]
 default = []

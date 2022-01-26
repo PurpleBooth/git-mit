@@ -170,9 +170,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "3.0.12"
+version = "3.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2afefa54b5c7dd40918dc1e09f213a171ab5937aadccab45e804780b238f9f43"
+checksum = "08799f92c961c7a1cf0cc398a9073da99e21ce388b46372c37f3191f2f3eed3e"
 dependencies = [
  "atty",
  "bitflags",
@@ -194,7 +194,7 @@ version = "3.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d044e9db8cd0f68191becdeb5246b7462e4cf0c069b19ae00d1bf3fa9889498d"
 dependencies = [
- "clap 3.0.12",
+ "clap 3.0.13",
 ]
 
 [[package]]
@@ -604,9 +604,9 @@ checksum = "78cc372d058dcf6d5ecd98510e7fbc9e5aec4d21de70f65fea8fecebcd881bd4"
 
 [[package]]
 name = "git-mit"
-version = "5.12.26"
+version = "5.12.27"
 dependencies = [
- "clap 3.0.12",
+ "clap 3.0.13",
  "clap_complete",
  "git2",
  "indoc",
@@ -623,9 +623,9 @@ dependencies = [
 
 [[package]]
 name = "git-mit-config"
-version = "5.12.26"
+version = "5.12.27"
 dependencies = [
- "clap 3.0.12",
+ "clap 3.0.13",
  "clap_complete",
  "comfy-table",
  "git2",
@@ -641,9 +641,9 @@ dependencies = [
 
 [[package]]
 name = "git-mit-install"
-version = "5.12.26"
+version = "5.12.27"
 dependencies = [
- "clap 3.0.12",
+ "clap 3.0.13",
  "clap_complete",
  "git2",
  "indoc",
@@ -660,9 +660,9 @@ dependencies = [
 
 [[package]]
 name = "git-mit-relates-to"
-version = "5.12.26"
+version = "5.12.27"
 dependencies = [
- "clap 3.0.12",
+ "clap 3.0.13",
  "clap_complete",
  "git2",
  "indoc",
@@ -1025,9 +1025,9 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-message-lints"
-version = "5.12.26"
+version = "5.12.27"
 dependencies = [
- "clap 3.0.12",
+ "clap 3.0.13",
  "clap_complete",
  "comfy-table",
  "criterion",
@@ -1053,10 +1053,10 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-msg"
-version = "5.12.26"
+version = "5.12.27"
 dependencies = [
  "arboard",
- "clap 3.0.12",
+ "clap 3.0.13",
  "clap_complete",
  "git2",
  "indoc",
@@ -1073,7 +1073,7 @@ dependencies = [
 
 [[package]]
 name = "mit-hook-test-helper"
-version = "5.12.26"
+version = "5.12.27"
 dependencies = [
  "git2",
  "openssl",
@@ -1101,9 +1101,9 @@ dependencies = [
 
 [[package]]
 name = "mit-pre-commit"
-version = "5.12.26"
+version = "5.12.27"
 dependencies = [
- "clap 3.0.12",
+ "clap 3.0.13",
  "clap_complete",
  "git2",
  "indoc",
@@ -1118,9 +1118,9 @@ dependencies = [
 
 [[package]]
 name = "mit-prepare-commit-msg"
-version = "5.12.26"
+version = "5.12.27"
 dependencies = [
- "clap 3.0.12",
+ "clap 3.0.13",
  "clap_complete",
  "git2",
  "indoc",

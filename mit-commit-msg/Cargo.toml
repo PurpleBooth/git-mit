@@ -1,6 +1,6 @@
 [package]
 name = "mit-commit-msg"
-version = "5.12.26"
+version = "5.12.27"
 authors = [ "Billie Thompson <billie+mit-commit-msg@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -15,7 +15,7 @@ thiserror = "1.0.30"
 tokio = { version = "1.15.0", features = ["full"] }
 mit-lint = "3.0.3"
 clap_complete = "3.0.4"
-clap = { version = "3.0.12", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
+clap = { version = "3.0.13", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 git2 = "0.13.25"
 openssl = { version = "0.10.38", optional = true }
 miette = { version = "3.3.0", features = [ "fancy" ] }
@@ -25,7 +25,7 @@ arboard = "2.0.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "5.12.26"
+  version = "5.12.27"
 
 [dev-dependencies]
 indoc = "1.0.3"
@@ -34,7 +34,7 @@ tempfile = "3.3.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "5.12.26"
+  version = "5.12.27"
 
 [features]
 default = []
