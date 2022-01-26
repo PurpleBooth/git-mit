@@ -3,13 +3,23 @@ queue_rules:
     speculative_checks: 20
     batch_size: 20
     conditions:
-      - status-success~=^docker-build
-      - status-success~=^lint-markdown
-      - status-success~=^specdown
-      - status-success~=^version
-      - status-success~=^rust-check
-      - "#check-pending<=1"
-      - "#check-success>5"
+      - check-success=docker-build / docker-build
+      - check-success=lint-markdown / lint-markdown
+      - check-success=version / version
+      - check-success=rust-check / check
+      - check-success=rust-check / test (macos-latest)
+      - check-success=rust-check / test (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev)
+      - check-success=rust-check / test (windows-latest)
+      - check-success=rust-check / lints (macos-latest)
+      - check-success=rust-check / lints (ubuntu-latest)
+      - check-success=rust-check / lints (windows-latest)
+      - check-success=rust-check / security-audit
+      - check-success=rust-check / bench (macos-latest)
+      - check-success=rust-check / bench (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev)
+      - check-success=rust-check / bench (windows-latest)
+      - check-success=specdown / specdown (macos-latest)
+      - check-success=specdown / specdown (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommo...
+      - check-success=specdown / specdown (windows-latest)
 
 pull_request_rules:
   - name: request review on external contributor
@@ -22,14 +32,24 @@ pull_request_rules:
 
   - name: automatic rebase for dependencies
     conditions:
-      - status-success~=^docker-build
-      - status-success~=^lint-markdown
-      - status-success~=^specdown
-      - status-success~=^version
-      - status-success~=^rust-check
+      - check-success=docker-build / docker-build
+      - check-success=lint-markdown / lint-markdown
+      - check-success=version / version
+      - check-success=rust-check / check
+      - check-success=rust-check / test (macos-latest)
+      - check-success=rust-check / test (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev)
+      - check-success=rust-check / test (windows-latest)
+      - check-success=rust-check / lints (macos-latest)
+      - check-success=rust-check / lints (ubuntu-latest)
+      - check-success=rust-check / lints (windows-latest)
+      - check-success=rust-check / security-audit
+      - check-success=rust-check / bench (macos-latest)
+      - check-success=rust-check / bench (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev)
+      - check-success=rust-check / bench (windows-latest)
+      - check-success=specdown / specdown (macos-latest)
+      - check-success=specdown / specdown (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommo...
+      - check-success=specdown / specdown (windows-latest)
       - base=main
-      - "#check-pending<=1"
-      - "#check-success>5"
       - label=dependencies
       - author~=^dependabot(|-preview)\[bot\]$
     actions:
