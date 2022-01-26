@@ -28,7 +28,7 @@ toml = "0.5.8"
 mit-commit = "3.0.0"
 mit-lint = "3.0.3"
 comfy-table = "5.0.0"
-clap_complete = "3.0.4"
+clap_complete = "3.0.5"
 clap = { version = "3.0.12", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 quickcheck_macros = "1.0.0"
 quickcheck = "1.0.3"
