@@ -7,7 +7,7 @@ git-mit-relates-to --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-relates-to 5.12.27
+git-mit-relates-to 5.12.28
 Billie Thompson <billie+git-mit-relates-to@billiecodes.com>
 Set Relates-to trailer.
 
