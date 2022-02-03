@@ -2,6 +2,7 @@ use_angular: true
 types: [ci]
 scopes:
     [
+        "deps",
         "deploy",
         "Mergify",
         "Actions",
