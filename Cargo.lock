@@ -610,7 +610,7 @@ dependencies = [
  "clap_complete",
  "git2",
  "indoc",
- "miette",
+ "miette 4.0.1",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
@@ -630,7 +630,7 @@ dependencies = [
  "comfy-table",
  "git2",
  "indoc",
- "miette",
+ "miette 4.0.1",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "mit-lint",
@@ -647,7 +647,7 @@ dependencies = [
  "clap_complete",
  "git2",
  "indoc",
- "miette",
+ "miette 4.0.1",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
@@ -666,7 +666,7 @@ dependencies = [
  "clap_complete",
  "git2",
  "indoc",
- "miette",
+ "miette 4.0.1",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
  "openssl",
@@ -953,7 +953,7 @@ checksum = "cd2adcfcced5d625bf90a958a82ae5b93231f57f3df1383fee28c9b5096d35ed"
 dependencies = [
  "atty",
  "backtrace",
- "miette-derive",
+ "miette-derive 3.3.0",
  "once_cell",
  "owo-colors",
  "supports-color",
@@ -965,10 +965,41 @@ dependencies = [
 ]
 
 [[package]]
+name = "miette"
+version = "4.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f5fdfdf2b0939ff2da40668429092a9bb409af6d176673fe70d7b4f0e645ef37"
+dependencies = [
+ "atty",
+ "backtrace",
+ "miette-derive 4.0.1",
+ "once_cell",
+ "owo-colors",
+ "supports-color",
+ "supports-hyperlinks",
+ "supports-unicode",
+ "terminal_size",
+ "textwrap 0.14.2",
+ "thiserror",
+ "unicode-width",
+]
+
+[[package]]
 name = "miette-derive"
 version = "3.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5c01a8b61312d367ce87956bb686731f87e4c6dd5dbc550e8f06e3c24fb1f67f"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "miette-derive"
+version = "4.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "33eb3f9f781611d588da4adf55d1886506e0a17033a74c38b78cda40a2a4c5b0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1037,7 +1068,7 @@ checksum = "03a1941aa9c9263016d707f431913a9ecc5be81740354c0bfe67f5e7e76ed0e7"
 dependencies = [
  "indoc",
  "lazy_static",
- "miette",
+ "miette 3.3.0",
  "regex",
  "thiserror",
 ]
@@ -1053,7 +1084,7 @@ dependencies = [
  "git2",
  "glob",
  "indoc",
- "miette",
+ "miette 4.0.1",
  "mit-commit",
  "mit-hook-test-helper",
  "mit-lint",
@@ -1079,7 +1110,7 @@ dependencies = [
  "clap_complete",
  "git2",
  "indoc",
- "miette",
+ "miette 4.0.1",
  "mit-commit",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -1107,7 +1138,7 @@ checksum = "c61113fbf7c77bd769cfad4e35f858127b5d32ee574cd31ba9c1c04fcca098e1"
 dependencies = [
  "futures",
  "lazy_static",
- "miette",
+ "miette 3.3.0",
  "mit-commit",
  "quickcheck",
  "regex",
@@ -1126,7 +1157,7 @@ dependencies = [
  "clap_complete",
  "git2",
  "indoc",
- "miette",
+ "miette 4.0.1",
  "mit-commit",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -1143,7 +1174,7 @@ dependencies = [
  "clap_complete",
  "git2",
  "indoc",
- "miette",
+ "miette 4.0.1",
  "mit-commit",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
