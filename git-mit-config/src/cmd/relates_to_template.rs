@@ -1,11 +1,11 @@
-use clap::{App, Arg, ArgMatches};
+use clap::{Arg, ArgMatches, Command};
 use miette::Result;
 use mit_commit_message_lints::external::Vcs;
 
 use crate::{current_dir, get_vcs};
 
-pub fn app<'help>() -> App<'help> {
-    App::new("template").arg(
+pub fn cli<'help>() -> Command<'help> {
+    Command::new("template").arg(
         Arg::new("scope")
             .long("scope")
             .short('s')

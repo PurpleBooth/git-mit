@@ -1,8 +1,8 @@
-use clap::{crate_authors, crate_version, App, Arg};
+use clap::{crate_authors, crate_version, Arg, Command};
 use indoc::indoc;
 
-pub fn app() -> App<'static> {
-    App::new(String::from(env!("CARGO_PKG_NAME")))
+pub fn cli() -> Command<'static> {
+    Command::new(String::from(env!("CARGO_PKG_NAME")))
         .bin_name(String::from(env!("CARGO_PKG_NAME")))
         .version(crate_version!())
         .author(crate_authors!())

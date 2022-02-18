@@ -26,13 +26,13 @@ use mit_commit_message_lints::{
 };
 use mit_lint::async_lint;
 
-use crate::{cli::app, errors::AggregateProblem};
+use crate::{cli::cli, errors::AggregateProblem};
 
 #[tokio::main]
 async fn main() -> Result<()> {
     miette_install();
 
-    let mut app = app();
+    let mut app = cli();
     let matches = app.clone().get_matches();
 
     // Simply print and exit if completion option is given.

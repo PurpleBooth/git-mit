@@ -24,13 +24,13 @@ use mit_commit_message_lints::{
 };
 
 use crate::{
-    cli::app,
+    cli::cli,
     errors::{NoAuthorError, StaleAuthorError},
 };
 
 fn main() -> Result<()> {
     miette_install();
-    let mut app = app();
+    let mut app = cli();
     let matches = app.clone().get_matches();
 
     // Simply print and exit if completion option is given.

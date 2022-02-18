@@ -1,14 +1,14 @@
 use std::convert::TryInto;
 
-use clap::{App, Arg, ArgMatches};
+use clap::{Arg, ArgMatches, Command};
 use miette::Result;
 use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 use mit_lint::Lints;
 
 use crate::{current_dir, errors::GitMitConfigError::LintNameNotGiven, get_vcs};
 
-pub fn app<'help>(lint_names: &'help [&'help str]) -> App<'help> {
-    App::new("status")
+pub fn cli<'help>(lint_names: &'help [&'help str]) -> Command<'help> {
+    Command::new("status")
         .arg(
             Arg::new("scope")
                 .long("scope")

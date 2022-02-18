@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use clap::App;
+use clap::Command;
 
 use crate::console::completion::{print_completions, Shell};
 
@@ -9,7 +9,7 @@ fn print_completion_bash(shell: Shell) -> bool {
     let mut stdout = Vec::new();
 
     let mut app =
-        App::new(String::from(env!("CARGO_PKG_NAME"))).about(env!("CARGO_PKG_DESCRIPTION"));
+        Command::new(String::from(env!("CARGO_PKG_NAME"))).about(env!("CARGO_PKG_DESCRIPTION"));
     print_completions(&mut stdout, &mut app, shell);
 
     let actual = String::from_utf8(stdout).expect("not utf-8");

@@ -17,7 +17,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use cli::app::app;
+use cli::app::cli;
 use git2::{Config, Repository};
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
@@ -42,7 +42,7 @@ fn main() -> Result<()> {
     miette_install();
 
     let lint_names: Vec<&str> = Lint::all_lints().map(Lint::name).collect();
-    let mut app = app(&lint_names);
+    let mut app = cli(&lint_names);
     let matches = app.clone().get_matches();
 
     // Simply print and exit if completion option is given.

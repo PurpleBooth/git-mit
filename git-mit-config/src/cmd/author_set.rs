@@ -1,13 +1,13 @@
 use std::env::current_dir;
 
-use clap::{App, Arg, ArgMatches};
+use clap::{Arg, ArgMatches, Command};
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::mit::{set_config_authors, Author};
 
 use crate::get_vcs;
 
-pub fn app<'help>() -> App<'help> {
-    App::new("set")
+pub fn cli<'help>() -> Command<'help> {
+    Command::new("set")
         .arg(
             Arg::new("scope")
                 .long("scope")

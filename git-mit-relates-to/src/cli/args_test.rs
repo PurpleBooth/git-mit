@@ -4,7 +4,7 @@ use super::args::Args;
 
 #[quickcheck]
 fn it_can_give_me_a_shell(shell: Shell) -> bool {
-    let app = super::super::app::app();
+    let app = super::super::app::cli();
     let matches = app.get_matches_from(vec!["binary", "--completion", &String::from(shell)]);
     let actual = Args::from(matches);
 
@@ -13,7 +13,7 @@ fn it_can_give_me_a_shell(shell: Shell) -> bool {
 
 #[test]
 fn it_defaults_to_none() {
-    let app = super::super::app::app();
+    let app = super::super::app::cli();
     let matches = app.get_matches_from(vec!["binary", "something"]);
     let actual = Args::from(matches);
 

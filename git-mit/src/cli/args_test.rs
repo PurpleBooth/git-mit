@@ -3,7 +3,7 @@ use std::{env, ffi::OsString};
 use mit_commit_message_lints::{console::completion::Shell, mit::AuthorArgs};
 use quickcheck::TestResult;
 
-use crate::cli::{app::app, args::Args};
+use crate::cli::{app::cli, args::Args};
 #[test]
 fn can_get_cwd() {
     assert_eq!(Args::cwd().unwrap(), env::current_dir().unwrap());
@@ -12,7 +12,7 @@ fn can_get_cwd() {
 #[quickcheck]
 fn timeout_will_be_ok_with_valid_u64(timeout: u64) -> bool {
     Some(timeout)
-        == Args::from(app().get_matches_from(vec![
+        == Args::from(cli().get_matches_from(vec![
             "git-mit",
             "--timeout",
             &format!("{}", timeout),
@@ -34,19 +34,23 @@ fn timeout_will_fail_without_valid_u64(timeout: String) -> TestResult {
     }
 
     TestResult::from_bool(
-        Args::from(app().get_matches_from(vec!["git-mit", "--timeout", &timeout, "eg"]))
+        Args::from(cli().get_matches_from(vec!["git-mit", "--timeout", &timeout, "eg"]))
             .timeout()
             .is_err(),
     )
 }
 
 #[quickcheck]
-fn command_is_none_if_missing(mut cli: Vec<OsString>) -> TestResult {
-    if cli.iter().filter(|x| !x.is_empty()).count() == 0 {
+fn command_is_none_if_missing(mut arg_vec: Vec<OsString>) -> TestResult {
+    if arg_vec.iter().filter(|x| !x.is_empty()).count() == 0 {
         return TestResult::discard();
     }
 
-    let filtered_vec: Vec<_> = cli.clone().into_iter().filter(|x| !x.is_empty()).collect();
+    let filtered_vec: Vec<_> = arg_vec
+        .clone()
+        .into_iter()
+        .filter(|x| !x.is_empty())
+        .collect();
 
     if filtered_vec
         .iter()
@@ -59,23 +63,27 @@ fn command_is_none_if_missing(mut cli: Vec<OsString>) -> TestResult {
         return TestResult::discard();
     }
 
-    cli.insert(0, OsString::from("eg"));
-    cli.insert(0, "git-mit".into());
+    arg_vec.insert(0, OsString::from("eg"));
+    arg_vec.insert(0, "git-mit".into());
 
     TestResult::from_bool(
-        Args::from(app().get_matches_from(cli))
+        Args::from(cli().get_matches_from(arg_vec))
             .author_command()
             .is_none(),
     )
 }
 
 #[quickcheck]
-fn command_is_some_if_present(mut cli: Vec<OsString>, command: OsString) -> TestResult {
-    if cli.iter().filter(|x| !x.is_empty()).count() == 0 {
+fn command_is_some_if_present(mut arg_vec: Vec<OsString>, command: OsString) -> TestResult {
+    if arg_vec.iter().filter(|x| !x.is_empty()).count() == 0 {
         return TestResult::discard();
     }
 
-    let non_empty_args: Vec<_> = cli.clone().into_iter().filter(|x| !x.is_empty()).collect();
+    let non_empty_args: Vec<_> = arg_vec
+        .clone()
+        .into_iter()
+        .filter(|x| !x.is_empty())
+        .collect();
 
     if non_empty_args
         .iter()
@@ -89,22 +97,22 @@ fn command_is_some_if_present(mut cli: Vec<OsString>, command: OsString) -> Test
         return TestResult::discard();
     }
 
-    cli.insert(0, command.clone());
-    cli.insert(0, OsString::from("--command"));
-    cli.insert(0, OsString::from("eg"));
-    cli.insert(0, "git-mit".into());
+    arg_vec.insert(0, command.clone());
+    arg_vec.insert(0, OsString::from("--command"));
+    arg_vec.insert(0, OsString::from("eg"));
+    arg_vec.insert(0, "git-mit".into());
 
     TestResult::from_bool(
         command.into_string().ok()
-            == Args::from(app().get_matches_from(cli))
+            == Args::from(cli().get_matches_from(arg_vec))
                 .author_command()
                 .map(String::from),
     )
 }
 
 #[quickcheck]
-fn initials_contains_all_initials(mut cli: Vec<OsString>) -> TestResult {
-    let expected: Vec<_> = cli
+fn initials_contains_all_initials(mut args: Vec<OsString>) -> TestResult {
+    let expected: Vec<_> = args
         .iter()
         .filter_map(|x| x.clone().into_string().ok())
         .collect();
@@ -113,9 +121,9 @@ fn initials_contains_all_initials(mut cli: Vec<OsString>) -> TestResult {
         return TestResult::discard();
     }
 
-    cli.insert(0, OsString::from("git-mit"));
+    args.insert(0, OsString::from("git-mit"));
 
-    let args = Args::from(app().get_matches_from(cli.clone()));
+    let args = Args::from(cli().get_matches_from(args.clone()));
     let actual: Vec<String> = args
         .initials()
         .unwrap()
@@ -127,12 +135,12 @@ fn initials_contains_all_initials(mut cli: Vec<OsString>) -> TestResult {
 
 #[allow(clippy::needless_pass_by_value)]
 #[quickcheck]
-fn config_file_missing_defaults(mut cli: Vec<OsString>) -> TestResult {
-    if cli.clone().iter().filter(|x| !x.is_empty()).count() == 0 {
+fn config_file_missing_defaults(mut args: Vec<OsString>) -> TestResult {
+    if args.clone().iter().filter(|x| !x.is_empty()).count() == 0 {
         return TestResult::discard();
     }
 
-    let filtered_vec: Vec<_> = cli.clone().into_iter().filter(|x| !x.is_empty()).collect();
+    let filtered_vec: Vec<_> = args.clone().into_iter().filter(|x| !x.is_empty()).collect();
 
     if filtered_vec
         .iter()
@@ -145,12 +153,12 @@ fn config_file_missing_defaults(mut cli: Vec<OsString>) -> TestResult {
         return TestResult::discard();
     }
 
-    cli.insert(0, "eg".into());
-    cli.insert(0, "git-mit".into());
+    args.insert(0, "eg".into());
+    args.insert(0, "git-mit".into());
 
     TestResult::from_bool(
         Some("$HOME/.config/git-mit/mit.toml")
-            == Args::from(app().get_matches_from(cli)).author_file(),
+            == Args::from(cli().get_matches_from(args)).author_file(),
     )
 }
 #[allow(clippy::needless_pass_by_value)]
@@ -162,7 +170,7 @@ fn config_file_defined_returns(file: OsString) -> TestResult {
 
     let args = vec!["git-mit".into(), "-c".into(), file.clone(), "eg".into()];
 
-    TestResult::from_bool(file.to_str() == Args::from(app().get_matches_from(args)).author_file())
+    TestResult::from_bool(file.to_str() == Args::from(cli().get_matches_from(args)).author_file())
 }
 #[allow(clippy::needless_pass_by_value)]
 #[quickcheck]
@@ -171,7 +179,7 @@ fn completion_with_defined_value_returns(shell: Shell) -> TestResult {
 
     TestResult::from_bool(
         shell
-            == Args::from(app().get_matches_from(args))
+            == Args::from(cli().get_matches_from(args))
                 .completion()
                 .unwrap(),
     )
@@ -181,7 +189,7 @@ fn completion_with_defined_value_returns(shell: Shell) -> TestResult {
 fn completion_is_none_by_default() {
     let args: Vec<String> = vec!["git-mit".into(), "bt".into()];
 
-    assert!(Args::from(app().get_matches_from(args))
+    assert!(Args::from(cli().get_matches_from(args))
         .completion()
         .is_none(),);
 }

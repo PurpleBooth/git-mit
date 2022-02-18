@@ -1,14 +1,14 @@
 use std::env::current_dir;
 
-use clap::{App, Arg, ArgMatches};
+use clap::{Arg, ArgMatches, Command};
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 use mit_lint::Lints;
 
 use crate::get_vcs;
 
-pub fn app<'help>() -> App<'help> {
-    App::new("available")
+pub fn cli<'help>() -> Command<'help> {
+    Command::new("available")
         .arg(
             Arg::new("scope")
                 .long("scope")

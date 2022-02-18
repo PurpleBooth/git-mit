@@ -34,7 +34,7 @@ mod errors;
 fn main() -> Result<()> {
     miette_install();
 
-    let mut app = app::app();
+    let mut app = app::cli();
     let args: Args = app.clone().get_matches().into();
 
     // Simply print and exit if completion option is given.

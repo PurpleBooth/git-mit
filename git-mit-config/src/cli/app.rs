@@ -1,4 +1,4 @@
-use clap::{crate_authors, crate_version, App, AppSettings, Arg};
+use clap::{crate_authors, crate_version, Arg, Command};
 
 use super::super::cmd::author_example;
 use crate::cmd::{
@@ -14,37 +14,40 @@ use crate::cmd::{
 };
 
 #[allow(clippy::too_many_lines)]
-pub fn app<'a>(lint_names: &'a [&str]) -> App<'a> {
-    App::new(env!("CARGO_PKG_NAME"))
+pub fn cli<'a>(lint_names: &'a [&str]) -> Command<'a> {
+    Command::new(env!("CARGO_PKG_NAME"))
         .bin_name(String::from(env!("CARGO_PKG_NAME")))
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .subcommand(
-            App::new("lint")
+            Command::new("lint")
                 .about("Manage active lints")
-                .subcommand(lint_generate::app())
-                .subcommand(lint_available::app())
-                .subcommand(lint_enabled::app())
-                .subcommand(lint_status::app(lint_names))
-                .subcommand(lint_enable::app(lint_names))
-                .subcommand(lint_disable::app(lint_names))
-                .setting(AppSettings::SubcommandRequiredElseHelp),
+                .subcommand(lint_generate::cli())
+                .subcommand(lint_available::cli())
+                .subcommand(lint_enabled::cli())
+                .subcommand(lint_status::cli(lint_names))
+                .subcommand(lint_enable::cli(lint_names))
+                .subcommand(lint_disable::cli(lint_names))
+                .subcommand_required(true)
+                .arg_required_else_help(true),
         )
         .subcommand(
-            App::new("mit")
+            Command::new("mit")
                 .about("Manage mit configuration")
-                .subcommand(author_set::app())
-                .subcommand(author_generate::app_generate())
-                .subcommand(author_generate::app_available())
+                .subcommand(author_set::cli())
+                .subcommand(author_generate::cli_generate())
+                .subcommand(author_generate::cli_available())
                 .subcommand(author_example::app())
-                .setting(AppSettings::SubcommandRequiredElseHelp),
+                .subcommand_required(true)
+                .arg_required_else_help(true),
         )
         .subcommand(
-            App::new("relates-to")
+            Command::new("relates-to")
                 .about("Manage relates-to settings")
-                .subcommand(relates_to_template::app())
-                .setting(AppSettings::SubcommandRequiredElseHelp),
+                .subcommand(relates_to_template::cli())
+                .subcommand_required(true)
+                .arg_required_else_help(true),
         )
         .arg(Arg::new("completion").long("completion").possible_values(&[
             "bash",

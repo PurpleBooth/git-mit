@@ -1,6 +1,6 @@
 use std::convert::TryFrom;
 
-use clap::{App, Arg, ArgMatches};
+use clap::{Arg, ArgMatches, Command};
 use miette::Result;
 use mit_commit_message_lints::{
     console::style::author_table,
@@ -23,8 +23,8 @@ const APP_COMMAND_LONG: &str = "exec";
 const APP_COMMAND_ABOUT: &str = "Execute a command to generate the mit configuration, stdout will be captured and used instead of the file, if both this and the file is present, this takes precedence";
 const APP_COMMAND_ENV: &str = "GIT_MIT_AUTHORS_EXEC";
 
-pub fn app_generate<'help>() -> App<'help> {
-    App::new("generate")
+pub fn cli_generate<'help>() -> Command<'help> {
+    Command::new("generate")
         .arg(
             Arg::new(APP_FILE)
                 .short(APP_FILE_SHORT)
@@ -45,8 +45,8 @@ pub fn app_generate<'help>() -> App<'help> {
         .about("Generate a file version of available authors")
 }
 
-pub fn app_available<'help>() -> App<'help> {
-    App::new("available")
+pub fn cli_available<'help>() -> Command<'help> {
+    Command::new("available")
         .arg(
             Arg::new(APP_FILE)
                 .short(APP_FILE_SHORT)

@@ -1,14 +1,14 @@
 use std::{convert::TryInto, env::current_dir, option::Option::None};
 
-use clap::{App, Arg, ArgMatches};
+use clap::{Arg, ArgMatches, Command};
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::external;
 use mit_lint::Lints;
 
 use crate::{errors::GitMitConfigError::LintNameNotGiven, get_vcs};
 
-pub fn app<'help>(lint_names: &'help [&'help str]) -> App<'help> {
-    App::new("enable")
+pub fn cli<'help>(lint_names: &'help [&'help str]) -> Command<'help> {
+    Command::new("enable")
         .about("Enable a lint")
         .arg(
             Arg::new("scope")
