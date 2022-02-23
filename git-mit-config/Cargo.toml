@@ -11,7 +11,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 description = "A command for enabling and disabling git lints"
 
 [dependencies]
-mit-lint = "3.0.4"
+mit-lint = "3.0.6"
 shell-words = "1.1.0"
 thiserror = "1.0.30"
 miette = { version = "4.2.0", features = [ "fancy" ] }
