@@ -19,8 +19,8 @@ USAGE:
 
 ARGS:
     <commit-message-path>      The name of the file that contains the commit log message
-    <commit-message-source>    The commit message, and can be: message (if a -m or -F option
-                               was given to git); template (if a -t option was given or the
+    <commit-message-source>    The commit message, and can be: message (if a -m or -F option was
+                               given to git); template (if a -t option was given or the
                                configuration option commit.template is set in git); merge (if
                                the commit is a merge or a .git/MERGE_MSG file exists); squash
                                (if a .git/SQUASH_MSG file exists); or commit
