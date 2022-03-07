@@ -9,7 +9,7 @@ mit-pre-commit --help
 ```
 
 ``` shell,verify(stream=stdout)
-mit-pre-commit 5.12.40
+mit-pre-commit 5.12.41
 Billie Thompson <billie+mit-pre-commit@billiecodes.com>
 Run first, before you even type in a commit message. It's used to inspect the snapshot that's about
 to be committed.
