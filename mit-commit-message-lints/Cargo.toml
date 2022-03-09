@@ -20,7 +20,7 @@ thiserror = "1.0.30"
 miette = { version = "4.2.1", features = [ "fancy" ] }
 git2 = "0.14.1"
 openssl = { version = "0.10.38", optional = true }
-regex = "1.5.4"
+regex = "1.5.5"
 serde_yaml = "0.8.23"
 serde_derive = "1.0.136"
 indoc = "1.0.4"
