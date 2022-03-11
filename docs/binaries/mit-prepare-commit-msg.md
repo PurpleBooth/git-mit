@@ -9,7 +9,7 @@ mit-prepare-commit-msg --help
 ```
 
 ``` shell,verify(stream=stdout)
-mit-prepare-commit-msg 5.12.43
+mit-prepare-commit-msg 5.12.44
 Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>
 This hook is invoked by git-commit right after preparing the default log message, and before the
 editor is started.
