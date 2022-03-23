@@ -41,9 +41,6 @@ impl<'a> Author<'a> {
     /// The authors gpg key
     #[must_use]
     pub fn signingkey(&self) -> Option<&str> {
-        match &self.signingkey {
-            None => None,
-            Some(key) => Some(key),
-        }
+        self.signingkey.as_deref()
     }
 }
