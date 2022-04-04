@@ -41,7 +41,7 @@ jobs:
       previous_version: ${{ steps.release.outputs.previous_version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: PurpleBooth/versio-release-action@v0.1.10
+      - uses: PurpleBooth/versio-release-action@v0.1.11
         id: release
 
   cargo-publish:
