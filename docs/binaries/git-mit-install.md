@@ -7,7 +7,7 @@ git-mit-install --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-install 5.12.48
+git-mit-install 5.12.49
 Billie Thompson <billie+git-mit-install@billiecodes.com>
 Install git-mit into a repository
 
