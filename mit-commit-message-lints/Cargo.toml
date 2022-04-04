@@ -17,7 +17,7 @@ shell-words = "1.1.0"
 time = { version = "0.3.9", features = ["local-offset"] }
 glob = "0.3.0"
 thiserror = "1.0.30"
-miette = { version = "4.2.1", features = [ "fancy" ] }
+miette = { version = "4.3.0", features = [ "fancy" ] }
 git2 = "0.14.2"
 openssl = { version = "0.10.38", optional = true }
 regex = "1.5.5"
