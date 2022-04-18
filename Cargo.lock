@@ -169,16 +169,16 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "3.1.8"
+version = "3.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "71c47df61d9e16dc010b55dba1952a57d8c215dbb533fd13cdd13369aac73b1c"
+checksum = "6aad2534fad53df1cc12519c5cda696dd3e20e6118a027e24054aea14a0bdcbe"
 dependencies = [
  "atty",
  "bitflags",
  "clap_derive",
+ "clap_lex",
  "indexmap",
  "lazy_static",
- "os_str_bytes",
  "strsim",
  "termcolor",
  "terminal_size",
@@ -193,7 +193,7 @@ version = "3.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "df6f3613c0a3cddfd78b41b10203eb322cb29b600cbdf808a7d3db95691b8e25"
 dependencies = [
- "clap 3.1.8",
+ "clap 3.1.9",
 ]
 
 [[package]]
@@ -207,6 +207,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "clap_lex"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "189ddd3b5d32a70b35e7686054371742a937b0d99128e76dde6340210e966669"
+dependencies = [
+ "os_str_bytes",
 ]
 
 [[package]]
@@ -605,7 +614,7 @@ checksum = "78cc372d058dcf6d5ecd98510e7fbc9e5aec4d21de70f65fea8fecebcd881bd4"
 name = "git-mit"
 version = "5.12.51"
 dependencies = [
- "clap 3.1.8",
+ "clap 3.1.9",
  "clap_complete",
  "git2",
  "indoc",
@@ -624,7 +633,7 @@ dependencies = [
 name = "git-mit-config"
 version = "5.12.51"
 dependencies = [
- "clap 3.1.8",
+ "clap 3.1.9",
  "clap_complete",
  "comfy-table",
  "git2",
@@ -642,7 +651,7 @@ dependencies = [
 name = "git-mit-install"
 version = "5.12.51"
 dependencies = [
- "clap 3.1.8",
+ "clap 3.1.9",
  "clap_complete",
  "git2",
  "indoc",
@@ -661,7 +670,7 @@ dependencies = [
 name = "git-mit-relates-to"
 version = "5.12.51"
 dependencies = [
- "clap 3.1.8",
+ "clap 3.1.9",
  "clap_complete",
  "git2",
  "indoc",
@@ -1053,7 +1062,7 @@ dependencies = [
 name = "mit-commit-message-lints"
 version = "5.12.51"
 dependencies = [
- "clap 3.1.8",
+ "clap 3.1.9",
  "clap_complete",
  "comfy-table",
  "criterion",
@@ -1082,7 +1091,7 @@ name = "mit-commit-msg"
 version = "5.12.51"
 dependencies = [
  "arboard",
- "clap 3.1.8",
+ "clap 3.1.9",
  "clap_complete",
  "git2",
  "indoc",
@@ -1129,7 +1138,7 @@ dependencies = [
 name = "mit-pre-commit"
 version = "5.12.51"
 dependencies = [
- "clap 3.1.8",
+ "clap 3.1.9",
  "clap_complete",
  "git2",
  "indoc",
@@ -1146,7 +1155,7 @@ dependencies = [
 name = "mit-prepare-commit-msg"
 version = "5.12.51"
 dependencies = [
- "clap 3.1.8",
+ "clap 3.1.9",
  "clap_complete",
  "git2",
  "indoc",
@@ -1353,9 +1362,6 @@ name = "os_str_bytes"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8e22443d1643a904602595ba1cd8f7d896afe56d26712531c5ff73a15b2fbf64"
-dependencies = [
- "memchr",
-]
 
 [[package]]
 name = "owo-colors"
