@@ -18,7 +18,7 @@ thiserror = "1.0.30"
 miette = { version = "4.2.1", features = [ "fancy" ] }
 shell-words = "1.1.0"
 clap_complete = "3.1.3"
-clap = { version = "3.1.12", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
+clap = { version = "3.1.14", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 git2 = "0.14.2"
 openssl = { version = "0.10.38", optional = true }
 mit-commit = "3.1.1"
