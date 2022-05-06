@@ -27,7 +27,7 @@ comfy-table = "5.0.1"
   version = "5.12.58"
 
 [dev-dependencies]
-indoc = "1.0.4"
+indoc = "1.0.5"
 
 
   [dev-dependencies.mit-hook-test-helper]
