@@ -169,9 +169,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "3.1.14"
+version = "3.1.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "535434c063ced786eb04aaf529308092c5ab60889e8fe24275d15de07b01fa97"
+checksum = "47582c09be7c8b32c0ab3a6181825ababb713fde6fff20fc573a3870dd45c6a0"
 dependencies = [
  "atty",
  "bitflags",
@@ -193,7 +193,7 @@ version = "3.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "da92e6facd8d73c22745a5d3cbb59bdf8e46e3235c923e516527d8e81eec14a4"
 dependencies = [
- "clap 3.1.14",
+ "clap 3.1.17",
 ]
 
 [[package]]
@@ -614,7 +614,7 @@ checksum = "78cc372d058dcf6d5ecd98510e7fbc9e5aec4d21de70f65fea8fecebcd881bd4"
 name = "git-mit"
 version = "5.12.58"
 dependencies = [
- "clap 3.1.14",
+ "clap 3.1.17",
  "clap_complete",
  "git2",
  "indoc",
@@ -633,7 +633,7 @@ dependencies = [
 name = "git-mit-config"
 version = "5.12.58"
 dependencies = [
- "clap 3.1.14",
+ "clap 3.1.17",
  "clap_complete",
  "comfy-table",
  "git2",
@@ -651,7 +651,7 @@ dependencies = [
 name = "git-mit-install"
 version = "5.12.58"
 dependencies = [
- "clap 3.1.14",
+ "clap 3.1.17",
  "clap_complete",
  "git2",
  "indoc",
@@ -670,7 +670,7 @@ dependencies = [
 name = "git-mit-relates-to"
 version = "5.12.58"
 dependencies = [
- "clap 3.1.14",
+ "clap 3.1.17",
  "clap_complete",
  "git2",
  "indoc",
@@ -1063,7 +1063,7 @@ dependencies = [
 name = "mit-commit-message-lints"
 version = "5.12.58"
 dependencies = [
- "clap 3.1.14",
+ "clap 3.1.17",
  "clap_complete",
  "comfy-table",
  "criterion",
@@ -1092,7 +1092,7 @@ name = "mit-commit-msg"
 version = "5.12.58"
 dependencies = [
  "arboard",
- "clap 3.1.14",
+ "clap 3.1.17",
  "clap_complete",
  "git2",
  "indoc",
@@ -1139,7 +1139,7 @@ dependencies = [
 name = "mit-pre-commit"
 version = "5.12.58"
 dependencies = [
- "clap 3.1.14",
+ "clap 3.1.17",
  "clap_complete",
  "git2",
  "indoc",
@@ -1156,7 +1156,7 @@ dependencies = [
 name = "mit-prepare-commit-msg"
 version = "5.12.58"
 dependencies = [
- "clap 3.1.14",
+ "clap 3.1.17",
  "clap_complete",
  "git2",
  "indoc",
