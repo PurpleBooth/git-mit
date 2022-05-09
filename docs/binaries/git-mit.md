@@ -19,12 +19,12 @@ ARGS:
 
 OPTIONS:
     -c, --config <file>              Path to a file where mit initials, emails and names can be
-                                     found [env: GIT_MIT_AUTHORS_CONFIG=] [default:
-                                     $HOME/.config/git-mit/mit.toml]
+                                     found [env: GIT_MIT_AUTHORS_CONFIG=] [default: $HOME/.config/
+                                     git-mit/mit.toml]
         --completion <completion>    [possible values: bash, elvish, fish, powershell, zsh]
     -e, --exec <command>             Execute a command to generate the mit configuration, stdout
-                                     will be captured and used instead of the file, if both this and
-                                     the file is present, this takes precedence [env:
+                                     will be captured and used instead of the file, if both
+                                     this and the file is present, this takes precedence [env:
                                      GIT_MIT_AUTHORS_EXEC=]
     -h, --help                       Print help information
     -t, --timeout <timeout>          Number of minutes to expire the configuration in [env:

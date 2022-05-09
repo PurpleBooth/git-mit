@@ -15,19 +15,19 @@ repository = "https://github.com/PurpleBooth/git-mit"
 [dependencies]
 tinytemplate = "1.2.1"
 thiserror = "1.0.31"
-miette = { version = "4.2.1", features = [ "fancy" ] }
+miette = { version = "4.7.0", features = [ "fancy" ] }
 shell-words = "1.1.0"
 clap_complete = "3.1.4"
-clap = { version = "3.1.14", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
-git2 = "0.14.2"
+clap = { version = "3.1.17", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
+git2 = "0.14.3"
 openssl = { version = "0.10.40", optional = true }
 mit-commit = "3.1.1"
 
 
 
   [dependencies.serde]
-  version = "1.0.136"
-  features = [ "derive" ]
+version = "1.0.137"
+features = [ "derive" ]
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
