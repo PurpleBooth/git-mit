@@ -14,7 +14,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 thiserror = "1.0.31"
 tokio = { version = "1.19.1", features = ["full"] }
 mit-lint = "3.0.7"
-clap_complete = "3.1.4"
+clap_complete = "3.2.2"
 clap = { version = "3.1.18", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 git2 = "0.14.4"
 openssl = { version = "0.10.40", optional = true }
