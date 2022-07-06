@@ -16,17 +16,17 @@ pub enum AuthorState<T> {
 impl<T> AuthorState<T> {
     /// There has never been author config
     pub const fn is_none(&self) -> bool {
-        matches!(self, AuthorState::<T>::None)
+        matches!(self, Self::None)
     }
 
     /// The author config has timed out
     pub const fn is_timeout(&self) -> bool {
-        matches!(self, AuthorState::<T>::Timeout(_))
+        matches!(self, Self::Timeout(_))
     }
 
     /// The author config looks good
     pub const fn is_some(&self) -> bool {
-        matches!(self, AuthorState::<T>::Some(_))
+        matches!(self, Self::Some(_))
     }
 
     /// Take the value from the state and return it
@@ -36,9 +36,9 @@ impl<T> AuthorState<T> {
     /// Panics if the state is timeout or none
     pub fn unwrap(self) -> T {
         match self {
-            AuthorState::Some(value) => value,
-            AuthorState::None => panic!("called `AuthorState::unwrap()` on a `None` value"),
-            AuthorState::Timeout(value) => panic!(
+            Self::Some(value) => value,
+            Self::None => panic!("called `AuthorState::unwrap()` on a `None` value"),
+            Self::Timeout(value) => panic!(
                 "called `AuthorState::unwrap()` on a `Timeout({})` value",
                 value
             ),

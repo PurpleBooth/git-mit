@@ -47,7 +47,7 @@ async fn main() -> Result<()> {
         Some(path) => Ok(path),
     }
     .map(PathBuf::from)?;
-    let commit_message = CommitMessage::try_from(commit_file_path)?;
+    let commit_message = CommitMessage::try_from(commit_file_path).into_diagnostic()?;
     let current_dir = env::current_dir().into_diagnostic()?;
 
     let toml = external::read_toml(current_dir.clone())?;

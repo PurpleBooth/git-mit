@@ -31,10 +31,7 @@ impl Vcs for InMemory<'_> {
         if let Some(pattern) = glob {
             let compiled_glob = glob::Pattern::new(pattern).into_diagnostic()?;
 
-            keys = keys
-                .into_iter()
-                .filter(|value| Pattern::matches(&compiled_glob, value))
-                .collect();
+            keys.retain(|value| Pattern::matches(&compiled_glob, value));
         }
 
         Ok(keys)

@@ -3,7 +3,7 @@ use std::{
     convert::TryInto,
 };
 
-use miette::{Result, SourceOffset, SourceSpan};
+use miette::{IntoDiagnostic, Result, SourceOffset, SourceSpan};
 use mit_lint::{Lint, Lints, CONFIG_KEY_PREFIX};
 
 use crate::{external::Vcs, lints::cmd::errors::SerialiseLintError};
@@ -35,7 +35,7 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
         })?;
 
     let lint_prefix = CONFIG_KEY_PREFIX.split('.').collect::<Vec<_>>();
-    let namespace = (*lint_prefix.get(0).unwrap()).to_string();
+    let namespace = (*lint_prefix.first().unwrap()).to_string();
 
     let config = match config.get(&namespace) {
         None => return Ok(vcs_lints),
@@ -53,13 +53,15 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
         .iter()
         .filter_map(|(key, value)| if *value { Some(key as &str) } else { None })
         .collect::<Vec<&str>>()
-        .try_into()?;
+        .try_into()
+        .into_diagnostic()?;
 
     let to_remove: Lints = lint_names
         .iter()
         .filter_map(|(key, value)| if *value { None } else { Some(key as &str) })
         .collect::<Vec<&str>>()
-        .try_into()?;
+        .try_into()
+        .into_diagnostic()?;
 
     Ok(vcs_lints.subtract(&to_remove).merge(&to_add))
 }

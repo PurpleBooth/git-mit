@@ -1,7 +1,7 @@
 use std::convert::TryInto;
 
 use clap::{Arg, ArgMatches, Command};
-use miette::Result;
+use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{external, lints::read_from_toml_or_else_vcs};
 use mit_lint::Lints;
 
@@ -59,5 +59,9 @@ fn get_selected_lints(args: &ArgMatches) -> Result<Lints> {
         return Err(LintNameNotGiven.into());
     }
 
-    Ok(lint_names.unwrap().collect::<Vec<_>>().try_into()?)
+    lint_names
+        .unwrap()
+        .collect::<Vec<_>>()
+        .try_into()
+        .into_diagnostic()
 }

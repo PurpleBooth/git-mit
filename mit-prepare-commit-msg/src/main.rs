@@ -100,7 +100,8 @@ fn append_coauthors_to_commit_message(
     authors: &[Author<'_>],
 ) -> Result<()> {
     let _path = String::from(commit_message_path.to_string_lossy());
-    let mut commit_message = CommitMessage::try_from(commit_message_path.clone())?;
+    let mut commit_message =
+        CommitMessage::try_from(commit_message_path.clone()).into_diagnostic()?;
 
     let trailers = authors
         .iter()
@@ -133,7 +134,7 @@ fn append_relate_to_trailer_to_commit_message(
     template: Option<String>,
 ) -> Result<()> {
     let _path = String::from(commit_message_path.to_string_lossy());
-    let commit_message = CommitMessage::try_from(commit_message_path.clone())?;
+    let commit_message = CommitMessage::try_from(commit_message_path.clone()).into_diagnostic()?;
 
     let mut tt = TinyTemplate::new();
     let defaulted_template = template.unwrap_or_else(|| "{ value }".to_string());
