@@ -18,7 +18,7 @@ miette = { version = "5.1.0", features = [ "fancy" ] }
 clap_complete = "3.2.3"
 clap = { version = "3.2.8", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 git2 = "0.14.4"
-openssl = { version = "0.10.40", optional = true }
+openssl = { version = "0.10.41", optional = true }
 
 
   [dependencies.mit-commit-message-lints]
