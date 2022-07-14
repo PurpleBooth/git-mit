@@ -12,7 +12,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 
 [dependencies]
 thiserror = "1.0.31"
-tokio = { version = "1.19.2", features = ["full"] }
+tokio = { version = "1.20.0", features = ["full"] }
 mit-lint = "3.0.8"
 clap_complete = "3.2.3"
 clap = { version = "3.2.10", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
