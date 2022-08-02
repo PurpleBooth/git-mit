@@ -20,7 +20,7 @@ fn the_first_initial_becomes_the_author() {
     let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
     let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
-    assert!(actual.is_ok());
+    actual.unwrap();
     assert_eq!(
         Some(&"Billie Thompson".to_string()),
         buffer.get("user.name")
@@ -43,7 +43,7 @@ fn the_first_initial_sets_signing_key_if_it_is_there() {
     );
     let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
-    assert!(actual.is_ok());
+    actual.unwrap();
     assert_eq!(
         Some(&"0A46826A".to_string()),
         str_map.get("user.signingkey")
@@ -60,7 +60,7 @@ fn the_first_initial_removes_if_it_is_there_and_not_present() {
     let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
     let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
-    assert!(actual.is_ok());
+    actual.unwrap();
     assert_eq!(None, buffer.get("user.signingkey"));
 }
 
@@ -76,7 +76,7 @@ fn multiple_authors_become_coauthors() {
 
     let actual = set_commit_authors(&mut vcs_config, &inputs, Duration::from_secs(60 * 60));
 
-    assert!(actual.is_ok());
+    actual.unwrap();
     assert_eq!(
         Some(&"Billie Thompson".to_string()),
         buffer.get("user.name")
@@ -132,7 +132,7 @@ fn old_co_authors_are_removed() {
 
     let actual = set_commit_authors(&mut vcs_config, &inputs, Duration::from_secs(60 * 60));
 
-    assert!(actual.is_ok());
+    actual.unwrap();
     assert_eq!(
         Some(&"Billie Thompson".to_string()),
         buffer.get("user.name")
@@ -153,7 +153,7 @@ fn sets_the_expiry_time() {
     let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
     let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_secs(60 * 60));
 
-    assert!(actual.is_ok());
+    actual.unwrap();
 
     let sec59min = SystemTime::now()
         .duration_since(UNIX_EPOCH)

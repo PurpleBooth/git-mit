@@ -20,7 +20,7 @@ fn the_first_initial_becomes_the_relates() {
     let relates_to = RelateTo::from("[#12345678]");
     let actual = set_relates_to(&mut vcs_config, &relates_to, Duration::from_secs(60 * 60));
 
-    assert!(actual.is_ok());
+    actual.unwrap();
     assert_eq!(
         Some(&"[#12345678]".to_string()),
         buffer.get("mit.relate.to")
@@ -35,7 +35,7 @@ fn sets_the_expiry_time() {
     let relates = RelateTo::from("[#12345678]");
     let actual = set_relates_to(&mut vcs_config, &relates, Duration::from_secs(60 * 60));
 
-    assert!(actual.is_ok());
+    actual.unwrap();
 
     let sec59min = SystemTime::now()
         .duration_since(UNIX_EPOCH)

@@ -163,7 +163,7 @@ fn it_can_tell_me_if_initials_are_not_in() {
 #[test]
 fn must_be_valid_yaml() {
     let actual: Result<_, _> = Authors::try_from("Hello I am invalid yaml : : :");
-    assert!(actual.is_err());
+    actual.unwrap_err();
 }
 
 #[test]
