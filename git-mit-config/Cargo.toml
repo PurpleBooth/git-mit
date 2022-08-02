@@ -14,7 +14,7 @@ description = "A command for enabling and disabling git lints"
 mit-lint = "3.1.1"
 shell-words = "1.1.0"
 thiserror = "1.0.31"
-miette = { version = "5.1.1", features = [ "fancy" ] }
+miette = { version = "5.2.0", features = [ "fancy" ] }
 git2 = "0.14.4"
 openssl = { version = "0.10.41", optional = true }
 clap_complete = "3.2.3"
