@@ -13,7 +13,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 [dependencies]
 time = "0.3.11"
 thiserror = "1.0.31"
-miette = { version = "5.1.1", features = [ "fancy" ] }
+miette = { version = "5.2.0", features = [ "fancy" ] }
 clap_complete = "3.2.3"
 clap = { version = "3.2.15", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 git2 = "0.14.4"
