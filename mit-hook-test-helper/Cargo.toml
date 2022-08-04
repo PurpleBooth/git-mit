@@ -14,7 +14,7 @@ description = "Testing help tools for git-mit"
 
 [dependencies]
 tempfile = "3.3.0"
-git2 = "0.14.4"
+git2 = "0.15.0"
 openssl = { version = "0.10.41", optional = true }
 
 

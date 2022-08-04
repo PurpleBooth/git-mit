@@ -28,17 +28,20 @@ impl Git2 {
     }
 
     fn config_defined(&self, lint_name: &str) -> Result<bool> {
-        self.config_snapshot
+        Ok(self
+            .config_snapshot
             .entries(Some(lint_name))
-            .map(|entries| entries.count() > 0)
-            .into_diagnostic()
+            .into_diagnostic()?
+            .next()
+            .is_some())
     }
 }
 
 impl Vcs for Git2 {
     fn entries(&self, glob: Option<&str>) -> Result<Vec<String>> {
         let mut entries = vec![];
-        for entry in &self.config_snapshot.entries(glob).into_diagnostic()? {
+        let mut item = self.config_snapshot.entries(glob).into_diagnostic()?;
+        while let Some(entry) = item.next() {
             if let Some(name) = entry.into_diagnostic()?.name() {
                 entries.push(name.into());
             }
