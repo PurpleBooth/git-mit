@@ -11,7 +11,7 @@ readme = "../README.md"
 repository = "https://github.com/PurpleBooth/git-mit"
 
 [dependencies]
-time = "0.3.13"
+time = "0.3.14"
 thiserror = "1.0.32"
 miette = { version = "5.2.0", features = [ "fancy" ] }
 clap_complete = "3.2.4"
