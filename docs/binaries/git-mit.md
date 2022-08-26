@@ -7,7 +7,7 @@ git-mit --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit 5.12.79
+git-mit 5.12.80
 Billie Thompson <billie+git-mit@billiecodes.com>
 Set author and Co-authored trailer.
 
