@@ -29,6 +29,21 @@ smoke-test: build
 build:
 	cargo build --release
 
+# Build release version x86_64-apple-darwin
+build-x86_64-apple-darwin:
+	rustup target install x86_64-apple-darwin
+	cargo build --release --target x86_64-apple-darwin
+
+# Build release version aarch64-apple-darwin
+build-aarch64-apple-darwin:
+	rustup target install aarch64-apple-darwin
+	cargo build --release --target aarch64-apple-darwin
+
+# Build release version x86_64-pc-windows-msvc
+build-x86_64-pc-windows-msvc:
+	rustup target install x86_64-pc-windows-msvc
+	cargo build --release --target x86_64-pc-windows-msvc
+
 # Lint it
 lint:
 	cargo fmt --all -- --check
