@@ -175,6 +175,7 @@ jobs:
         with:
           profile: default
           toolchain: stable
+          target: ${{ matrix.target }}
       - uses: actions-rs/cargo@v1.0.3
         with:
           args: --release --locked
