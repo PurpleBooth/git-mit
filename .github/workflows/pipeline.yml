@@ -182,43 +182,42 @@ jobs:
           command: build
       - id: get_repository_name
         run:
-          echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk
-          -F / '{print $2}' | sed -e "s/:refs//")
+          echo ::set-output "name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
         shell: bash
       - name: Move binary to upload location
         env:
           TARGET: ${{ matrix.target }}
           EXTENSION: ${{ matrix.suffix }}
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv ./target/release/mit-commit-msg$EXTENSION ./mit-commit-msg-$TARGET$EXTENSION
+        run: mv "./target/release/mit-commit-msg$EXTENSION" "./mit-commit-msg-$TARGET$EXTENSION"
         shell: bash
       - name: Move binary to upload location
         env:
           TARGET: ${{ matrix.target }}
           EXTENSION: ${{ matrix.suffix }}
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv ./target/release/git-mit-config$EXTENSION ./git-mit-config-$TARGET$EXTENSION
+        run: mv "./target/release/git-mit-config$EXTENSION" "./git-mit-config-$TARGET$EXTENSION"
         shell: bash
       - name: Move binary to upload location
         env:
           TARGET: ${{ matrix.target }}
           EXTENSION: ${{ matrix.suffix }}
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv ./target/release/mit-pre-commit$EXTENSION ./mit-pre-commit-$TARGET$EXTENSION
+        run: mv "./target/release/mit-pre-commit$EXTENSION" "./mit-pre-commit-$TARGET$EXTENSION"
         shell: bash
       - name: Move binary to upload location
         env:
           TARGET: ${{ matrix.target }}
           EXTENSION: ${{ matrix.suffix }}
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv ./target/release/mit-prepare-commit-msg$EXTENSION ./mit-prepare-commit-msg-$TARGET$EXTENSION
+        run: mv "./target/release/mit-prepare-commit-msg$EXTENSION" "./mit-prepare-commit-msg-$TARGET$EXTENSION"
         shell: bash
       - name: Move binary to upload location
         env:
           TARGET: ${{ matrix.target }}
           EXTENSION: ${{ matrix.suffix }}
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv ./target/release/git-mit$EXTENSION ./git-mit-$TARGET$EXTENSION
+        run: mv "./target/release/git-mit$EXTENSION" "./git-mit-$TARGET$EXTENSION"
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
