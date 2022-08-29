@@ -20,7 +20,7 @@ openssl = { version = "0.10.41", optional = true }
 clap_complete = "3.2.4"
 clap = { version = "3.2.17", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 
-comfy-table = "6.0.0"
+comfy-table = "6.1.0"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
