@@ -17,7 +17,7 @@ tinytemplate = "1.2.1"
 thiserror = "1.0.33"
 miette = { version = "5.3.0", features = [ "fancy" ] }
 shell-words = "1.1.0"
-clap_complete = "3.2.4"
+clap_complete = "4.0.1"
 clap = { version = "3.2.19", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
 git2 = "0.15.0"
 openssl = { version = "0.10.41", optional = true }
