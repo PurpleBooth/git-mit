@@ -19,7 +19,7 @@ glob = "0.3.0"
 thiserror = "1.0.33"
 miette = { version = "5.3.0", features = [ "fancy" ] }
 git2 = "0.15.0"
-openssl = { version = "0.10.41", optional = true }
+openssl = { version = "0.10.42", optional = true }
 regex = "1.6.0"
 serde_yaml = "0.8.26"
 serde_derive = "1.0.138"
