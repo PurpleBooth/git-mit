@@ -9,7 +9,7 @@ pub fn cli<'help>() -> Command<'help> {
         Arg::new("scope")
             .long("scope")
             .short('s')
-            .possible_values(&["local", "global"])
+            .possible_values(["local", "global"])
             .default_value("local"),
     )
         .arg(
@@ -25,7 +25,7 @@ pub fn cli<'help>() -> Command<'help> {
             Arg::new("scope")
                 .long("scope")
                 .short('s')
-                .possible_values(&["local", "global"])
+                .possible_values(["local", "global"])
                 .default_value("local"),
         )
         .about("Use a template for the relates-to trailer")

@@ -20,7 +20,7 @@ pub fn cli() -> Command<'static> {
                 .default_value("60")
                 .takes_value(true),
         )
-        .arg(Arg::new("completion").long("completion").possible_values(&[
+        .arg(Arg::new("completion").long("completion").possible_values([
             "bash",
             "elvish",
             "fish",

@@ -24,25 +24,21 @@ pub trait AuthorArgs {
 ///
 /// miette error on failure of command
 pub fn get_authors<'a>(args: &'a dyn AuthorArgs) -> Result<Authors<'a>> {
-    let toml = match args.author_command() {
-        Some(command) => from_exec(command),
-        None => from_file(args),
-    }?;
-
+    let toml = args
+        .author_command()
+        .map_or_else(|| from_file(args), from_exec)?;
     let authors: Authors<'a> = Authors::try_from(toml)?;
     Ok(authors)
 }
 
 fn from_file(args: &dyn AuthorArgs) -> Result<String> {
-    match args.author_file() {
-        None => Err(super::errors::Error::AuthorFileNotSet.into()),
-        Some(path) => Ok(path),
-    }
-    .and_then(|path| match path {
-        "$HOME/.config/git-mit/mit.toml" => author_file_path(),
-        _ => Ok(path.into()),
-    })
-    .map(|path| fs::read_to_string(&path).unwrap_or_default())
+    args.author_file()
+        .map_or_else(|| Err(super::errors::Error::AuthorFileNotSet.into()), Ok)
+        .and_then(|path| match path {
+            "$HOME/.config/git-mit/mit.toml" => author_file_path(),
+            _ => Ok(path.into()),
+        })
+        .map(|path| fs::read_to_string(&path).unwrap_or_default())
 }
 
 #[cfg(not(target_os = "windows"))]
@@ -71,7 +67,7 @@ fn author_file_path() -> Result<String> {
 
 fn from_exec(command: &str) -> Result<String> {
     let commandline = shell_words::split(command).into_diagnostic()?;
-    Command::new(commandline.first().unwrap_or(&String::from("")))
+    Command::new(commandline.first().unwrap_or(&String::new()))
         .stderr(Stdio::inherit())
         .args(commandline.iter().skip(1).collect::<Vec<_>>())
         .output()

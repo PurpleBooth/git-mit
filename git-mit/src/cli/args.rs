@@ -22,18 +22,17 @@ impl Args {
     }
 
     pub(crate) fn timeout(&self) -> Result<u64> {
-        match self.matches.value_of("timeout") {
-            None => Err(GitMitError::NoTimeoutSet.into()),
-            Some(value) => Ok(value),
-        }
-        .and_then(|timeout| timeout.parse().into_diagnostic())
+        self.matches
+            .value_of("timeout")
+            .map_or_else(|| Err(GitMitError::NoTimeoutSet.into()), Ok)
+            .and_then(|timeout| timeout.parse().into_diagnostic())
     }
 
     pub fn initials(&self) -> Result<Vec<&str>> {
-        match self.matches.values_of("initials") {
-            None => Err(GitMitError::NoAuthorInitialsProvided.into()),
-            Some(value) => Ok(value.collect()),
-        }
+        self.matches.values_of("initials").map_or_else(
+            || Err(GitMitError::NoAuthorInitialsProvided.into()),
+            |value| Ok(value.collect()),
+        )
     }
 
     pub fn completion(&self) -> Option<Shell> {

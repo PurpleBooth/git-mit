@@ -23,10 +23,7 @@ pub fn set_commit_authors(
     authors: &[&Author<'_>],
     expires_in: Duration,
 ) -> Result<()> {
-    let (first_author, others) = match authors.split_first() {
-        None => Err(NoAuthorsToSet),
-        Some(pair) => Ok(pair),
-    }?;
+    let (first_author, others) = authors.split_first().ok_or(NoAuthorsToSet)?;
 
     remove_coauthors(config)?;
     set_vcs_user(config, first_author)?;

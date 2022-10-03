@@ -49,7 +49,7 @@ pub fn cli<'a>(lint_names: &'a [&str]) -> Command<'a> {
                 .subcommand_required(true)
                 .arg_required_else_help(true),
         )
-        .arg(Arg::new("completion").long("completion").possible_values(&[
+        .arg(Arg::new("completion").long("completion").possible_values([
             "bash",
             "elvish",
             "fish",

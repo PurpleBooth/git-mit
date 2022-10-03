@@ -24,5 +24,5 @@ pub fn read_toml(path: PathBuf) -> Result<String> {
         return fs::read_to_string(dist).into_diagnostic();
     }
 
-    Ok("".to_string())
+    Ok(String::new())
 }

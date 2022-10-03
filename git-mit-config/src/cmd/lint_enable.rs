@@ -14,7 +14,7 @@ pub fn cli<'help>(lint_names: &'help [&'help str]) -> Command<'help> {
             Arg::new("scope")
                 .long("scope")
                 .short('s')
-                .possible_values(&["local", "global"])
+                .possible_values(["local", "global"])
                 .default_value("local"),
         )
         .arg(

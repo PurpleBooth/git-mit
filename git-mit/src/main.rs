@@ -17,7 +17,7 @@ extern crate quickcheck;
 #[macro_use(quickcheck)]
 extern crate quickcheck_macros;
 
-use std::{convert::TryFrom, env, io::stdout, option::Option::None, time::Duration};
+use std::{convert::TryFrom, env, io::stdout, time::Duration};
 
 use git2::Repository;
 use miette::Result;
@@ -82,9 +82,10 @@ fn is_hook_present() -> bool {
         .ok()
         .and_then(|path| Repository::discover(path).ok())
         .map(|repo| repo.path().join("hooks").join("commit-msg"))
-        .filter(|path_buf| match path_buf.canonicalize().ok() {
-            None => false,
-            Some(path) => path.to_string_lossy().contains("mit-commit-msg"),
+        .filter(|path_buf| {
+            path_buf.canonicalize().ok().map_or(false, |path| {
+                path.to_string_lossy().contains("mit-commit-msg")
+            })
         })
         .is_some()
 }

@@ -55,11 +55,10 @@ fn main() -> Result<()> {
         std::process::exit(0);
     }
 
-    let commit_message_path = match matches.value_of("commit-message-path") {
-        None => Err(MissingCommitFilePath),
-        Some(path) => Ok(path),
-    }
-    .map(PathBuf::from)?;
+    let commit_message_path = matches
+        .value_of("commit-message-path")
+        .ok_or(MissingCommitFilePath)
+        .map(PathBuf::from)?;
 
     let current_dir = env::current_dir().into_diagnostic()?;
 
@@ -176,7 +175,7 @@ fn add_trailer_if_not_existing(
 
 fn get_relates_to_from_exec(command: &str) -> Result<RelateTo<'_>> {
     let commandline = shell_words::split(command).into_diagnostic()?;
-    Command::new(commandline.first().unwrap_or(&String::from("")))
+    Command::new(commandline.first().unwrap_or(&String::new()))
         .stderr(Stdio::inherit())
         .args(commandline.iter().skip(1).collect::<Vec<_>>())
         .output()

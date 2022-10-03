@@ -42,11 +42,10 @@ async fn main() -> Result<()> {
         std::process::exit(0);
     }
 
-    let commit_file_path = match matches.value_of("commit-file-path") {
-        None => Err(errors::MitCommitMsgError::CommitPathMissing),
-        Some(path) => Ok(path),
-    }
-    .map(PathBuf::from)?;
+    let commit_file_path = matches
+        .value_of("commit-file-path")
+        .ok_or(errors::MitCommitMsgError::CommitPathMissing)
+        .map(PathBuf::from)?;
     let commit_message = CommitMessage::try_from(commit_file_path).into_diagnostic()?;
     let current_dir = env::current_dir().into_diagnostic()?;
 

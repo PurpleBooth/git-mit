@@ -10,10 +10,10 @@ pub fn cli() -> Command<'static> {
             Arg::new("scope")
                 .long("scope")
                 .short('s')
-                .possible_values(&["local", "global"])
+                .possible_values(["local", "global"])
                 .default_value("local"),
         )
-        .arg(Arg::new("completion").long("completion").possible_values(&[
+        .arg(Arg::new("completion").long("completion").possible_values([
             "bash",
             "elvish",
             "fish",

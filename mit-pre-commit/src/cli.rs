@@ -6,7 +6,7 @@ pub fn cli() -> Command<'static> {
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
-        .arg(Arg::new("completion").long("completion").possible_values(&[
+        .arg(Arg::new("completion").long("completion").possible_values([
             "bash",
             "elvish",
             "fish",

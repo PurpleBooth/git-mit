@@ -40,7 +40,7 @@ pub fn run_hook(working_dir: &Path, package: &str, arguments: Vec<&str>) -> Outp
     cargo_arguments.extend(arguments);
 
     Command::new("cargo")
-        .current_dir(&working_dir)
+        .current_dir(working_dir)
         .args(cargo_arguments)
         .output()
         .expect("failed to execute process")
@@ -59,7 +59,7 @@ impl Display for PathError {
 /// set the co-authors via the git binary
 pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, index: i64) {
     Command::new("git")
-        .current_dir(&working_dir)
+        .current_dir(working_dir)
         .arg("config")
         .arg("--local")
         .arg(format!("mit.author.coauthors.{}.name", index))
@@ -67,7 +67,7 @@ pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, 
         .output()
         .expect("failed to execute process");
     Command::new("git")
-        .current_dir(&working_dir)
+        .current_dir(working_dir)
         .arg("config")
         .arg("--local")
         .arg(format!("mit.author.coauthors.{}.email", index))
@@ -80,7 +80,7 @@ pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, 
 pub fn set_author_expires(expiration_time: Duration, working_dir: &Path) {
     let now = format!("{}", expiration_time.as_secs());
     Command::new("git")
-        .current_dir(&working_dir)
+        .current_dir(working_dir)
         .arg("config")
         .arg("--local")
         .arg("--type")
