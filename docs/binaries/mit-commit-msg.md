@@ -9,7 +9,7 @@ mit-commit-msg --help
 ```
 
 ``` shell,verify(stream=stdout)
-mit-commit-msg 5.12.89
+mit-commit-msg 5.12.90
 Billie Thompson <billie+mit-commit-msg@billiecodes.com>
 Validate the commit message that a user has input
 
