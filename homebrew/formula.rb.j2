@@ -25,12 +25,7 @@ class GitMit < Formula
       system "cargo", "install", "--root", prefix, "--path", "./#{binary}/"
 
       # Completions
-      output = Utils.safe_popen_read("#{bin}/#{binary}", "--completion", "bash")
-      (bash_completion/binary.to_s).write output
-      output = Utils.safe_popen_read("#{bin}/#{binary}", "--completion", "zsh")
-      (zsh_completion/binary.to_s).write output
-      output = Utils.safe_popen_read("#{bin}/#{binary}", "--completion", "fish")
-      (fish_completion/binary.to_s).write output
+      generate_completions_from_executable(bin/"#{binary}", "--completion", shells: [:zsh, :bash, :fish])
 
       # Man pages
       output = Utils.safe_popen_read("help2man", "#{bin}/#{binary}")
