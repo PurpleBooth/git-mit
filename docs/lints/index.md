@@ -5,14 +5,14 @@
 As always we need a working it repository with the hooks installed to
 run these lints
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="mit-install",expected_exit_code=0)
 git init .
 git mit-install
 ```
 
 I'm going to assume you've run a `git mit` recently
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="mit-install",expected_exit_code=0)
 git mit bt
 ```
 
@@ -92,7 +92,7 @@ Signed-off-by: Someone Else <someone@example.com>
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="duplicated-trailers-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -117,13 +117,13 @@ Relates-to: #315
 
 Committing will fail.
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="duplicated-trailers-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="duplicated-trailers-invalid",stream=stderr)
 Error: DuplicatedTrailers (https://git-scm.com/docs/githooks#_commit_msg)
 
   × Your commit message has duplicated trailers
@@ -186,7 +186,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="subject-not-separated-from-body-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -203,13 +203,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="subject-not-separated-from-body-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="subject-not-separated-from-body-invalid",stream=stderr)
 Error: SubjectNotSeparateFromBody (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit message is missing a blank line between the subject and the
@@ -263,7 +263,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="subject-longer-than-72-characters-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -282,13 +282,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="subject-longer-than-72-characters-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="subject-longer-than-72-characters-invalid",stream=stderr)
 Error: SubjectLongerThan72Characters (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your subject is longer than 72 characters
@@ -342,7 +342,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="body-wider-than-72-characters-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -361,13 +361,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="body-wider-than-72-characters-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="body-wider-than-72-characters-invalid",stream=stderr)
 Error: BodyWiderThan72Characters (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit has a body wider than 72 characters
@@ -416,7 +416,7 @@ git mit-config lint status subject-line-not-capitalized
 
 Enable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="subject-line-not-capitalized-enabled",expected_exit_code=0)
 git mit-config lint enable subject-line-not-capitalized
 ```
 
@@ -432,7 +432,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="subject-line-not-capitalized-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -450,13 +450,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="subject-line-not-capitalized-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="subject-line-not-capitalized-invalid",stream=stderr)
 Error: SubjectNotCapitalized (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit message is missing a capital letter
@@ -476,7 +476,7 @@ Error: SubjectNotCapitalized (https://git-scm.com/book/en/v2/Distributed-Git-Con
 
 Disable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="subject-line-not-capitalized-disabled",expected_exit_code=0)
 git mit-config lint disable subject-line-not-capitalized
 ```
 
@@ -504,7 +504,7 @@ git mit-config lint status subject-line-ends-with-period
 
 Enable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="subject-line-ends-with-period-enabled",expected_exit_code=0)
 git mit-config lint enable subject-line-ends-with-period
 ```
 
@@ -520,7 +520,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="subject-line-ends-with-period-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -538,13 +538,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="subject-line-ends-with-period-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="subject-line-ends-with-period-invalid",stream=stderr)
 Error: SubjectEndsWithPeriod (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit message ends with a period
@@ -568,7 +568,7 @@ Error: SubjectEndsWithPeriod (https://git-scm.com/book/en/v2/Distributed-Git-Con
 
 Disable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="subject-line-ends-with-period-disabled",expected_exit_code=0)
 git mit-config lint disable subject-line-ends-with-period
 ```
 
@@ -598,7 +598,7 @@ git mit-config lint status not-conventional-commit
 
 Enable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="not-conventional-commit-enabled",expected_exit_code=0)
 git mit-config lint enable not-conventional-commit
 ```
 
@@ -619,7 +619,7 @@ Refs #133
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="not-conventional-commit-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -637,13 +637,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="not-conventional-commit-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="not-conventional-commit-invalid",stream=stderr)
 Error: NotConventionalCommit (https://www.conventionalcommits.org/)
 
   × Your commit message isn't in conventional style
@@ -673,7 +673,7 @@ Error: NotConventionalCommit (https://www.conventionalcommits.org/)
 
 Disable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="not-conventional-commit-disabled",expected_exit_code=0)
 git mit-config lint disable not-conventional-commit
 ```
 
@@ -705,7 +705,7 @@ git mit-config lint status pivotal-tracker-id-missing
 
 Enable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="pivotal-tracker-id-missing-enabled",expected_exit_code=0)
 git mit-config lint enable pivotal-tracker-id-missing
 ```
 
@@ -724,7 +724,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="pivotal-tracker-id-missing-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -742,13 +742,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="pivotal-tracker-id-missing-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="pivotal-tracker-id-missing-invalid",stream=stderr)
 Error: PivotalTrackerIdMissing (https://www.pivotaltracker.com/help/api?version=v5#Tracker_Updates_in_SCM_Post_Commit_Hooks)
 
   × Your commit message is missing a Pivotal Tracker ID
@@ -781,7 +781,7 @@ Error: PivotalTrackerIdMissing (https://www.pivotaltracker.com/help/api?version=
 
 Disable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="pivotal-tracker-id-missing-disabled",expected_exit_code=0)
 git mit-config lint disable pivotal-tracker-id-missing
 ```
 
@@ -809,7 +809,7 @@ git mit-config lint status jira-issue-key-missing
 
 Enable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="jira-issue-key-missing-enabled",expected_exit_code=0)
 git mit-config lint enable jira-issue-key-missing
 ```
 
@@ -827,7 +827,7 @@ JRA-123
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="jira-issue-key-missing-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -845,13 +845,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="jira-issue-key-missing-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="jira-issue-key-missing-invalid",stream=stderr)
 Error: JiraIssueKeyMissing (https://support.atlassian.com/jira-software-cloud/docs/what-is-an-issue/#Workingwithissues-Projectkeys)
 
   × Your commit message is missing a JIRA Issue Key
@@ -874,7 +874,7 @@ Error: JiraIssueKeyMissing (https://support.atlassian.com/jira-software-cloud/do
 
 Disable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="jira-issue-key-missing-disabled",expected_exit_code=0)
 git mit-config lint disable jira-issue-key-missing
 ```
 
@@ -902,7 +902,7 @@ git mit-config lint status github-id-missing
 
 Enable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="github-id-missing-enabled",expected_exit_code=0)
 git mit-config lint enable github-id-missing
 ```
 
@@ -920,7 +920,7 @@ GH-123
 
 Committing will succeed
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="github-id-missing-valid",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -938,13 +938,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="1",expected_exit_code=1)
+``` shell,script(name="github-id-missing-invalid",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="1",stream=stderr)
+``` text,verify(script_name="github-id-missing-invalid",stream=stderr)
 Error: GitHubIdMissing (https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls#issues-and-pull-requests)
 
   × Your commit message is missing a GitHub ID
@@ -975,6 +975,6 @@ Error: GitHubIdMissing (https://docs.github.com/en/github/writing-on-github/work
 
 Disable it with
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="github-id-missing-disabled",expected_exit_code=0)
 git mit-config lint disable github-id-missing
 ```
