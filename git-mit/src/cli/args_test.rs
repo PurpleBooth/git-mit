@@ -15,7 +15,7 @@ fn timeout_will_be_ok_with_valid_u64(timeout: u64) -> bool {
         == Args::from(cli().get_matches_from(vec![
             "git-mit",
             "--timeout",
-            &format!("{}", timeout),
+            &format!("{timeout}"),
             "eg",
         ]))
         .timeout()

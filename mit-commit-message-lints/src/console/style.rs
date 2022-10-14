@@ -32,7 +32,7 @@ pub fn success(success: &str, tip: &str) {
             },
         )
         .unwrap();
-    println!("{}", out);
+    println!("{out}");
 }
 
 #[derive(Error, Debug)]
@@ -87,12 +87,12 @@ pub fn warning(warning: &str, tip: Option<&str>) {
             },
         )
         .unwrap();
-    eprintln!("{}", out);
+    eprintln!("{out}");
 }
 
 /// Print entirely undecorated to stdout
 pub fn to_be_piped(output: &str) {
-    println!("{}", output);
+    println!("{output}");
 }
 
 /// Print a table of lints
@@ -116,7 +116,7 @@ pub fn lint_table(list: &Lints, enabled: &Lints) {
         table
     });
 
-    println!("{}", rows);
+    println!("{rows}");
 }
 
 /// Print a table of authors
@@ -145,5 +145,5 @@ pub fn author_table(authors: &Authors<'_>) -> String {
             table
         });
 
-    format!("{}", rows)
+    format!("{rows}")
 }

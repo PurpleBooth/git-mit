@@ -6,17 +6,14 @@ use crate::{external::Vcs, mit::Author};
 /// On write failure
 pub fn set_config_authors(store: &mut dyn Vcs, initial: &str, author: &Author<'_>) -> Result<()> {
     store.set_str(
-        &format!("mit.author.config.{}.email", initial),
+        &format!("mit.author.config.{initial}.email"),
         author.email(),
     )?;
-    store.set_str(
-        &format!("mit.author.config.{}.name", initial),
-        author.name(),
-    )?;
+    store.set_str(&format!("mit.author.config.{initial}.name"), author.name())?;
 
     if let Some(signingkey) = author.signingkey() {
         store.set_str(
-            &format!("mit.author.config.{}.signingkey", initial),
+            &format!("mit.author.config.{initial}.signingkey"),
             signingkey,
         )?;
     }

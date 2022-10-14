@@ -58,7 +58,7 @@ impl Diagnostic for UnknownAuthor {
                 .flat_map(|initial| {
                     let mut matches = self
                         .command
-                        .match_indices(&format!(" {} ", initial))
+                        .match_indices(&format!(" {initial} "))
                         .map(|x| (x, initial.clone()))
                         .map(|(x, y)| ("Not found".to_string(), x.0 + 1, y.len()))
                         .map(|(label, pos, offset)| LabeledSpan::new(Some(label), pos, offset))

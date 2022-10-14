@@ -47,8 +47,8 @@ fn get_defined_vcs_coauthor_keys(config: &mut dyn Vcs) -> Vec<String> {
         .take_while(|index| has_vcs_coauthor(config, *index))
         .flat_map(|index| {
             vec![
-                format!("mit.author.coauthors.{}.name", index),
-                format!("mit.author.coauthors.{}.email", index),
+                format!("mit.author.coauthors.{index}.name"),
+                format!("mit.author.coauthors.{index}.email"),
             ]
             .into_iter()
         })
@@ -71,16 +71,13 @@ fn set_vcs_coauthor(config: &mut dyn Vcs, index: usize, author: &Author<'_>) -> 
 }
 
 fn set_vcs_coauthor_name(config: &mut dyn Vcs, index: usize, author: &Author<'_>) -> Result<()> {
-    config.set_str(
-        &format!("mit.author.coauthors.{}.name", index),
-        author.name(),
-    )?;
+    config.set_str(&format!("mit.author.coauthors.{index}.name"), author.name())?;
     Ok(())
 }
 
 fn set_vcs_coauthor_email(config: &mut dyn Vcs, index: usize, author: &Author<'_>) -> Result<()> {
     config.set_str(
-        &format!("mit.author.coauthors.{}.email", index),
+        &format!("mit.author.coauthors.{index}.email"),
         author.email(),
     )?;
     Ok(())
@@ -99,7 +96,7 @@ fn set_author_signing_key(config: &mut dyn Vcs, author: &Author<'_>) -> Result<(
         Some(key) => config
             .set_str("user.signingkey", key)
             .wrap_err("failed to set git author's signing key "),
-        None => config.remove("user.signingkey").or(Ok(())),
+        None => config.remove("user.signingkey").or_else(|_| Ok(())),
     }
 }
 

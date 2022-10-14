@@ -16,10 +16,7 @@ use crate::{
 fn there_is_no_author_config_if_it_has_expired() {
     let now_minus_10 = epoch_with_offset(subtract_100_seconds);
     let mut strings: BTreeMap<String, String> = BTreeMap::new();
-    strings.insert(
-        super::CONFIG_KEY_EXPIRES.into(),
-        format!("{}", now_minus_10),
-    );
+    strings.insert(super::CONFIG_KEY_EXPIRES.into(), format!("{now_minus_10}"));
     let mut vcs = InMemory::new(&mut strings);
 
     let actual = get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");

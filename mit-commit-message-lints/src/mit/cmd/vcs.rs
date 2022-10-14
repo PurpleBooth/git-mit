@@ -33,6 +33,6 @@ pub fn get_vcs_coauthor_config<'a>(
     index: i32,
 ) -> Result<Option<Cow<'a, str>>> {
     config
-        .get_str(&format!("mit.author.coauthors.{}.{}", index, key))
+        .get_str(&format!("mit.author.coauthors.{index}.{key}"))
         .map(|x| x.map(std::convert::Into::into))
 }

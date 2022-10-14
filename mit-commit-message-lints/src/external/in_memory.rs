@@ -61,7 +61,7 @@ impl Vcs for InMemory<'_> {
     }
 
     fn set_i64(&mut self, name: &str, value: i64) -> Result<()> {
-        self.store.insert(name.into(), format!("{}", value));
+        self.store.insert(name.into(), format!("{value}"));
         Ok(())
     }
 

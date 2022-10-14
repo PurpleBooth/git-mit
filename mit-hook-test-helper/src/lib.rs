@@ -62,7 +62,7 @@ pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, 
         .current_dir(working_dir)
         .arg("config")
         .arg("--local")
-        .arg(format!("mit.author.coauthors.{}.name", index))
+        .arg(format!("mit.author.coauthors.{index}.name"))
         .arg(author_name)
         .output()
         .expect("failed to execute process");
@@ -70,7 +70,7 @@ pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, 
         .current_dir(working_dir)
         .arg("config")
         .arg("--local")
-        .arg(format!("mit.author.coauthors.{}.email", index))
+        .arg(format!("mit.author.coauthors.{index}.email"))
         .arg(author_email)
         .output()
         .expect("failed to execute process");

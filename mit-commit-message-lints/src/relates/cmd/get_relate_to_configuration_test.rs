@@ -14,7 +14,7 @@ use crate::{
 fn there_is_no_relate_config_if_it_has_expired() {
     let now_minus_10 = epoch_with_offset(subtract_10_seconds);
     let mut strings: BTreeMap<String, String> = BTreeMap::new();
-    strings.insert("mit.relate.expires".into(), format!("{}", now_minus_10));
+    strings.insert("mit.relate.expires".into(), format!("{now_minus_10}"));
     let mut vcs = InMemory::new(&mut strings);
 
     let actual = get_relate_to_configuration(&mut vcs).expect("Failed to read VCS config");
