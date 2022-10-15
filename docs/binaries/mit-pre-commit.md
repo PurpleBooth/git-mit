@@ -18,7 +18,7 @@ USAGE:
     mit-pre-commit [OPTIONS]
 
 OPTIONS:
-        --completion <completion>    [possible values: bash, elvish, fish, powershell, zsh]
+        --completion <COMPLETION>    [possible values: bash, elvish, fish, powershell, zsh]
     -h, --help                       Print help information
     -V, --version                    Print version information
 ```

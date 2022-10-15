@@ -13,29 +13,30 @@
 
 use std::{convert::TryFrom, env, io::stdout};
 
+use clap::{CommandFactory, Parser};
+use clap_complete::generate;
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
-    console::{
-        completion::{print_completions, Shell},
-        error_handling::miette_install,
-    },
+    console::error_handling::miette_install,
     external::Git2,
     mit::{get_commit_coauthor_configuration, AuthorState},
 };
 
 use crate::{
-    cli::cli,
+    cli::Args,
     errors::{NoAuthorError, StaleAuthorError},
 };
 
 fn main() -> Result<()> {
     miette_install();
-    let mut app = cli();
-    let matches = app.clone().get_matches();
+
+    let cli_args = Args::parse();
 
     // Simply print and exit if completion option is given.
-    if let Ok(completion) = matches.value_of_t::<Shell>("completion") {
-        print_completions(&mut stdout(), &mut app, completion);
+    if let Some(completion) = cli_args.completion {
+        let mut cmd = Args::command();
+        let name = cmd.get_name().to_string();
+        generate(completion, &mut cmd, name, &mut stdout());
 
         std::process::exit(0);
     }
