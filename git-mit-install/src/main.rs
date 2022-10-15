@@ -13,19 +13,16 @@
 
 use std::io::stdout;
 
+use clap::{CommandFactory, Parser};
+use clap_complete::generate;
 use hook::{dir, install};
 use indoc::indoc;
 use miette::Result;
-use mit_commit_message_lints::console::{
-    completion::print_completions,
-    error_handling::miette_install,
-};
+use mit_commit_message_lints::console::error_handling::miette_install;
 
+use crate::app::CliArgs;
 pub(crate) use crate::cli::app;
-use crate::cli::args::Args;
 
-#[cfg(test)]
-extern crate quickcheck;
 #[cfg(test)]
 #[macro_use(quickcheck)]
 extern crate quickcheck_macros;
@@ -36,22 +33,24 @@ mod hook;
 fn main() -> Result<()> {
     miette_install();
 
-    let mut app = app::cli();
-    let args: Args = app.clone().get_matches().into();
+    let cli_args = CliArgs::parse();
 
     // Simply print and exit if completion option is given.
-    if let Some(completion) = args.completion() {
-        print_completions(&mut stdout(), &mut app, completion);
+    if let Some(completion) = cli_args.completion {
+        let mut cmd = CliArgs::command();
+        let name = cmd.get_name().to_string();
+        generate(completion, &mut cmd, name, &mut stdout());
+
         std::process::exit(0);
     }
 
-    let hooks = dir::create(args.scope().is_global())?;
+    let hooks = dir::create(cli_args.scope.is_global())?;
 
     install::link(&hooks, "prepare-commit-msg")?;
     install::link(&hooks, "pre-commit")?;
     install::link(&hooks, "commit-msg")?;
 
-    if args.scope().is_global() {
+    if cli_args.scope.is_global() {
         mit_commit_message_lints::console::style::success(
             "git-mit will be added for newly created or cloned repositories",
             "inside existing repositories run \"git init\" to set them up",

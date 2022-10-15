@@ -1,23 +1,15 @@
-use clap::{crate_authors, crate_version, Arg, Command};
+use clap::Parser;
+use clap_complete::Shell;
 
-pub fn cli() -> Command<'static> {
-    Command::new(String::from(env!("CARGO_PKG_NAME")))
-        .bin_name(String::from(env!("CARGO_PKG_NAME")))
-        .version(crate_version!())
-        .author(crate_authors!())
-        .about(env!("CARGO_PKG_DESCRIPTION"))
-        .arg(
-            Arg::new("scope")
-                .long("scope")
-                .short('s')
-                .possible_values(["local", "global"])
-                .default_value("local"),
-        )
-        .arg(Arg::new("completion").long("completion").possible_values([
-            "bash",
-            "elvish",
-            "fish",
-            "powershell",
-            "zsh",
-        ]))
+use crate::cli::args::Scope;
+
+#[derive(Parser, Clone, Eq, PartialEq)]
+#[clap(author, version, about)]
+#[clap(bin_name = "git-mit-install")]
+pub struct CliArgs {
+    #[clap(short, long, default_value = "local", value_enum)]
+    pub scope: Scope,
+
+    #[clap(long, arg_enum, value_parser)]
+    pub completion: Option<Shell>,
 }

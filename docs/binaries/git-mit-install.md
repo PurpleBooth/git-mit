@@ -15,9 +15,9 @@ USAGE:
     git-mit-install [OPTIONS]
 
 OPTIONS:
-        --completion <completion>    [possible values: bash, elvish, fish, powershell, zsh]
+        --completion <COMPLETION>    [possible values: bash, elvish, fish, powershell, zsh]
     -h, --help                       Print help information
-    -s, --scope <scope>              [default: local] [possible values: local, global]
+    -s, --scope <SCOPE>              [default: local] [possible values: global, local]
     -V, --version                    Print version information
 ```
 
