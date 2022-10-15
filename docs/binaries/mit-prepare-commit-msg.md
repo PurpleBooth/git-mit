@@ -18,26 +18,26 @@ USAGE:
     mit-prepare-commit-msg [OPTIONS] [ARGS]
 
 ARGS:
-    <commit-message-path>      The name of the file that contains the commit log message
-    <commit-message-source>    The commit message, and can be: message (if a -m or -F option
+    <COMMIT_MESSAGE_PATH>      The name of the file that contains the commit log message
+    <COMMIT_MESSAGE_SOURCE>    The commit message, and can be: message (if a -m or -F option
                                was given to git); template (if a -t option was given or the
                                configuration option commit.template is set in git); merge (if
                                the commit is a merge or a .git/MERGE_MSG file exists); squash
                                (if a .git/SQUASH_MSG file exists); or commit
-    <commit-sha>               Commit SHA-1 (if a -c, -C or --amend option was given to git).
+    <COMMIT_SHA>               Commit SHA-1 (if a -c, -C or --amend option was given to git)
 
 OPTIONS:
-        --completion <completion>
+        --completion <COMPLETION>
             [possible values: bash, elvish, fish, powershell, zsh]
 
     -h, --help
             Print help information
 
-        --relates-to-exec <relates-to-exec>
+        --relates-to-exec <RELATES_TO_EXEC>
             A command to execute to get the value for the relates to trailer [env:
             GIT_MIT_RELATES_TO_EXEC=]
 
-        --relates-to-template <relates-to-template>
+        --relates-to-template <RELATES_TO_TEMPLATE>
             A template to apply to the relates to trailer [env: GIT_MIT_RELATES_TO_TEMPLATE=]
 
     -V, --version
@@ -58,10 +58,10 @@ mit-prepare-commit-msg
 
 ``` shell,verify(stream=stderr)
 error: The following required arguments were not provided:
-    <commit-message-path>
+    <COMMIT_MESSAGE_PATH>
 
 USAGE:
-    mit-prepare-commit-msg <commit-message-path>
+    mit-prepare-commit-msg <COMMIT_MESSAGE_PATH>
 
 For more information try --help
 ```

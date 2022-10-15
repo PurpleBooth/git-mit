@@ -23,9 +23,6 @@ use mit_commit_message_lints::console::error_handling::miette_install;
 use crate::app::CliArgs;
 pub(crate) use crate::cli::app;
 
-#[cfg(test)]
-#[macro_use(quickcheck)]
-extern crate quickcheck_macros;
 mod cli;
 mod errors;
 mod hook;

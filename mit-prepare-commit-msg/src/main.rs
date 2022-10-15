@@ -9,7 +9,6 @@
     missing_debug_implementations,
     missing_docs
 )]
-
 use std::{
     convert::TryFrom,
     env,
@@ -19,13 +18,12 @@ use std::{
     process::{Command, Stdio},
 };
 
+use clap::{CommandFactory, Parser};
+use clap_complete::generate;
 use miette::{IntoDiagnostic, Result};
 use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
-    console::{
-        completion::{print_completions, Shell},
-        error_handling::miette_install,
-    },
+    console::error_handling::miette_install,
     external::{Git2, Vcs},
     mit::{get_commit_coauthor_configuration, Author, AuthorState},
     relates::{get_relate_to_configuration, RelateTo},
@@ -33,7 +31,7 @@ use mit_commit_message_lints::{
 use serde::Serialize;
 use tinytemplate::TinyTemplate;
 
-use crate::{cli::cli, errors::MitPrepareCommitMessageError::MissingCommitFilePath};
+use crate::{cli::Args, errors::MitPrepareCommitMessageError::MissingCommitFilePath};
 
 mod cli;
 mod errors;
@@ -45,20 +43,19 @@ struct Context<'a> {
 
 fn main() -> Result<()> {
     miette_install();
-    let mut app = cli();
-    let matches = app.clone().get_matches();
+
+    let cli_args = Args::parse();
 
     // Simply print and exit if completion option is given.
-    if let Ok(completion) = matches.value_of_t::<Shell>("completion") {
-        print_completions(&mut stdout(), &mut app, completion);
+    if let Some(completion) = cli_args.completion {
+        let mut cmd = Args::command();
+        let name = cmd.get_name().to_string();
+        generate(completion, &mut cmd, name, &mut stdout());
 
         std::process::exit(0);
     }
 
-    let commit_message_path = matches
-        .value_of("commit-message-path")
-        .ok_or(MissingCommitFilePath)
-        .map(PathBuf::from)?;
+    let commit_message_path = cli_args.commit_message_path.ok_or(MissingCommitFilePath)?;
 
     let current_dir = env::current_dir().into_diagnostic()?;
 
@@ -68,15 +65,14 @@ fn main() -> Result<()> {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?;
     }
 
-    let relates_to_template = matches
-        .value_of("relates-to-template")
-        .map(String::from)
+    let relates_to_template = cli_args
+        .relates_to_template
         .or(get_relates_to_template(&mut git_config)?);
 
-    if let Some(exec) = matches.value_of("relates-to-exec") {
+    if let Some(exec) = cli_args.relates_to_exec {
         append_relate_to_trailer_to_commit_message(
             commit_message_path,
-            &get_relates_to_from_exec(exec)?,
+            &get_relates_to_from_exec(&exec)?,
             relates_to_template,
         )?;
     } else if let Some(relates_to) = get_relate_to_configuration(&mut git_config)? {
