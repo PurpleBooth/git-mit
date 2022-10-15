@@ -14,14 +14,14 @@ Billie Thompson <billie+mit-commit-msg@billiecodes.com>
 Validate the commit message that a user has input
 
 USAGE:
-    mit-commit-msg [OPTIONS] [commit-file-path]
+    mit-commit-msg [OPTIONS] [COMMIT_FILE_PATH]
 
 ARGS:
-    <commit-file-path>    Path to a temporary file that contains the commit message written by
+    <COMMIT_FILE_PATH>    Path to a temporary file that contains the commit message written by
                           the developer
 
 OPTIONS:
-        --completion <completion>
+        --completion <COMPLETION>
             [possible values: bash, elvish, fish, powershell, zsh]
 
         --copy-message-to-clipboard <copy-message-to-clipboard>
@@ -49,10 +49,10 @@ mit-commit-msg
 
 ``` shell,verify(stream=stderr)
 error: The following required arguments were not provided:
-    <commit-file-path>
+    <COMMIT_FILE_PATH>
 
 USAGE:
-    mit-commit-msg <commit-file-path>
+    mit-commit-msg <COMMIT_FILE_PATH>
 
 For more information try --help
 ```
