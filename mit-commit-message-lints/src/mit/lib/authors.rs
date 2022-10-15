@@ -19,11 +19,7 @@ impl<'a> Authors<'a> {
     /// From a list of initials get te ones that aren't in our config
     #[must_use]
     pub fn missing_initials(&'a self, authors_initials: Vec<&'a str>) -> Vec<&'a str> {
-        let configured: HashSet<_> = self
-            .authors
-            .keys()
-            .map(std::string::String::as_str)
-            .collect();
+        let configured: HashSet<_> = self.authors.keys().map(String::as_str).collect();
         let from_cli: HashSet<_> = authors_initials.into_iter().collect();
         from_cli
             .difference(&configured)

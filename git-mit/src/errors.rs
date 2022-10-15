@@ -3,16 +3,6 @@ use std::fmt::Display;
 use miette::{Diagnostic, LabeledSpan, SourceCode};
 use thiserror::Error;
 
-#[derive(Error, Diagnostic, Debug)]
-pub enum GitMitError {
-    #[error("no mit initials provided")]
-    #[diagnostic(code(git_mit::errors::git_mit_error::no_author_initials_provided))]
-    NoAuthorInitialsProvided,
-    #[error("no timeout set")]
-    #[diagnostic(code(git_mit::errors::git_mit_error::no_timeout_set))]
-    NoTimeoutSet,
-}
-
 #[derive(Error, Debug)]
 #[error("could not find initial")]
 pub struct UnknownAuthor {

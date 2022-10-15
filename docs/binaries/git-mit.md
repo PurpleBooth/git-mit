@@ -12,22 +12,23 @@ Billie Thompson <billie+git-mit@billiecodes.com>
 Set author and Co-authored trailer.
 
 USAGE:
-    git-mit [OPTIONS] [initials]...
+    git-mit [OPTIONS] [INITIALS]...
 
 ARGS:
-    <initials>...    Initials of the mit to put in the commit
+    <INITIALS>...    Initials of the mit to put in the commit
 
 OPTIONS:
-    -c, --config <file>              Path to a file where mit initials, emails and names can be
+    -c, --config <CONFIG>            Path to a file where mit initials, emails and names can be
                                      found [env: GIT_MIT_AUTHORS_CONFIG=] [default: $HOME/.config/
                                      git-mit/mit.toml]
-        --completion <completion>    [possible values: bash, elvish, fish, powershell, zsh]
-    -e, --exec <command>             Execute a command to generate the mit configuration, stdout
+        --completion <COMPLETION>    Shell to generate completions for [possible values: bash,
+                                     elvish, fish, powershell, zsh]
+    -e, --exec <EXEC>                Execute a command to generate the mit configuration, stdout
                                      will be captured and used instead of the file, if both
                                      this and the file is present, this takes precedence [env:
                                      GIT_MIT_AUTHORS_EXEC=]
     -h, --help                       Print help information
-    -t, --timeout <timeout>          Number of minutes to expire the configuration in [env:
+    -t, --timeout <TIMEOUT>          Number of minutes to expire the configuration in [env:
                                      GIT_MIT_AUTHORS_TIMEOUT=] [default: 60]
     -V, --version                    Print version information
 
@@ -75,10 +76,10 @@ git-mit
 ```
 ``` shell,verify(stream=stderr)
 error: The following required arguments were not provided:
-    <initials>...
+    <INITIALS>...
 
 USAGE:
-    git-mit <initials>...
+    git-mit <INITIALS>...
 
 For more information try --help
 ```

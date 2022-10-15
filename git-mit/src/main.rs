@@ -11,49 +11,44 @@
     missing_docs
 )]
 
-#[cfg(test)]
-extern crate quickcheck;
-#[cfg(test)]
-#[macro_use(quickcheck)]
-extern crate quickcheck_macros;
-
 use std::{convert::TryFrom, env, io::stdout, time::Duration};
 
+use clap::{CommandFactory, Parser};
+use clap_complete::generate;
 use git2::Repository;
-use miette::Result;
+use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
-    console::{completion::print_completions, error_handling::miette_install, style},
+    console::{error_handling::miette_install, style},
     external::Git2,
     mit::{get_authors, set_commit_authors, Authors},
 };
 
-use crate::{cli::args::Args, errors::UnknownAuthor};
-
+use crate::{cli::app::CliArgs, errors::UnknownAuthor};
 mod cli;
 mod errors;
 
 fn main() -> Result<()> {
     miette_install();
-
-    let mut app = cli::app::cli();
-    let args: cli::args::Args = app.clone().get_matches().into();
+    let cli_args = CliArgs::parse();
 
     // Simply print and exit if completion option is given.
-    if let Some(completion) = args.completion() {
-        print_completions(&mut stdout(), &mut app, completion);
+    if let Some(completion) = cli_args.completion {
+        let mut cmd = CliArgs::command();
+        let name = cmd.get_name().to_string();
+        generate(completion, &mut cmd, name, &mut stdout());
 
         std::process::exit(0);
     }
 
-    let mut git_config = Git2::try_from(Args::cwd()?)?;
-    let file_authors = get_authors(&args)?;
+    let mut git_config = Git2::try_from(env::current_dir().into_diagnostic()?)?;
+    let file_authors = get_authors(&cli_args)?;
     let authors = file_authors.merge(&Authors::try_from(&git_config)?);
-    let initials = args.initials()?;
 
     if repo_present() && !is_hook_present() {
         not_setup_warning();
     };
 
+    let initials: Vec<&str> = cli_args.initials.iter().map(String::as_str).collect();
     let missing = authors.missing_initials(initials.clone());
 
     if !missing.is_empty() {
@@ -67,7 +62,7 @@ fn main() -> Result<()> {
     set_commit_authors(
         &mut git_config,
         &authors.get(&initials),
-        Duration::from_secs(args.timeout()? * 60),
+        Duration::from_secs(cli_args.timeout * 60),
     )?;
 
     Ok(())
