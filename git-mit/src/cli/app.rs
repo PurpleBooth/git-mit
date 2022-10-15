@@ -5,6 +5,7 @@ use mit_commit_message_lints::mit::AuthorArgs;
 
 #[derive(Parser)]
 #[clap(author, version, about)]
+#[clap(bin_name = "git-mit")]
 #[clap( after_help = indoc!(
     "
     COMMON TASKS:
