@@ -17,61 +17,82 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use cli::app::cli;
+use clap_complete::generate;
 use git2::{Config, Repository};
 use miette::{IntoDiagnostic, Result};
-use mit_commit_message_lints::{
-    console::{
-        completion::{print_completions, Shell},
-        error_handling::miette_install,
-    },
-    external::Git2,
-};
-use mit_lint::Lint;
+use mit_commit_message_lints::{console::error_handling::miette_install, external::Git2};
 
-use crate::errors::{
-    LibGit2::{DiscoverGitRepository, ReadConfigFromGitRepository, ReadUserConfigFromGit},
-    UnrecognisedLintCommand,
+use crate::{
+    cli::{app, app::CliArgs},
+    cmd::{author_generate, author_set},
+    errors::{
+        LibGit2::{DiscoverGitRepository, ReadConfigFromGitRepository, ReadUserConfigFromGit},
+        UnrecognisedLintCommand,
+    },
 };
 
 mod cli;
 mod cmd;
 mod errors;
+use clap::{CommandFactory, Parser};
 
 fn main() -> Result<()> {
     miette_install();
 
-    let lint_names: Vec<&str> = Lint::all_lints().map(Lint::name).collect();
-    let mut app = cli(&lint_names);
-    let matches = app.clone().get_matches();
+    let cli_args = CliArgs::parse();
 
     // Simply print and exit if completion option is given.
-    if let Ok(completion) = matches.value_of_t::<Shell>("completion") {
-        print_completions(&mut stdout(), &mut app, completion);
+    if let Some(completion) = cli_args.completion {
+        let mut cmd = CliArgs::command();
+        let name = cmd.get_name().to_string();
+        generate(completion, &mut cmd, name, &mut stdout());
 
         std::process::exit(0);
     }
 
-    let possible: Option<Result<()>> = [
-        cmd::author_example::run_on_match,
-        cmd::author_set::run_on_match,
-        cmd::author_generate::run_on_match,
-        cmd::lint_enable::run_on_match,
-        cmd::lint_disable::run_on_match,
-        cmd::lint_available::run_on_match,
-        cmd::lint_enabled::run_on_match,
-        cmd::lint_status::run_on_match,
-        cmd::lint_generate::run_on_match,
-        cmd::relates_to_template::run_on_match,
-    ]
-    .iter()
-    .find_map(|cmd| cmd(&matches));
-
-    if let Some(response) = possible {
-        return response;
-    };
-
-    Err(UnrecognisedLintCommand {}.into())
+    match cli_args.action {
+        Some(app::Action::Lint {
+            action: app::Lint::Available { scope },
+        }) => cmd::lint_available::run(scope),
+        Some(app::Action::Lint {
+            action: app::Lint::Enabled { scope },
+        }) => cmd::lint_enabled::run(scope),
+        Some(app::Action::Lint {
+            action: app::Lint::Status { scope, lints },
+        }) => cmd::lint_status::run(scope, lints),
+        Some(app::Action::Lint {
+            action: app::Lint::Enable { scope, lints },
+        }) => cmd::lint_enable::run(scope, lints),
+        Some(app::Action::Lint {
+            action: app::Lint::Disable { scope, lints },
+        }) => cmd::lint_disable::run(scope, lints),
+        Some(app::Action::Lint {
+            action: app::Lint::Generate { scope },
+        }) => cmd::lint_generate::run(scope),
+        Some(app::Action::Mit {
+            action:
+                app::Mit::Set {
+                    scope,
+                    initials,
+                    name,
+                    email,
+                    signingkey,
+                },
+        }) => author_set::run(scope, &initials, name, email, signingkey),
+        Some(app::Action::Mit {
+            action: app::Mit::Generate { config, exec },
+        }) => author_generate::run_generate(&config, &exec),
+        Some(app::Action::Mit {
+            action: app::Mit::Available { config, exec },
+        }) => author_generate::run_available(&config, &exec),
+        Some(app::Action::Mit {
+            action: app::Mit::Example,
+        }) => cmd::author_example::run(),
+        Some(app::Action::RelatesTo {
+            action: app::RelatesTo::Template { scope, template },
+        }) => cmd::relates_to_template::run(scope, &template),
+        None => Err(UnrecognisedLintCommand {}.into()),
+    }
 }
 
 fn get_vcs(local: bool, current_dir: &Path) -> Result<Git2> {

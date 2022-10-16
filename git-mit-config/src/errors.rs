@@ -2,13 +2,6 @@ use miette::Diagnostic;
 use thiserror::Error;
 
 #[derive(Error, Debug, Diagnostic)]
-pub enum GitMitConfigError {
-    #[error("lint name not given")]
-    #[diagnostic(code(git_mit_config::errors::git_mit_config_error::lint_name_not_given))]
-    LintNameNotGiven,
-}
-
-#[derive(Error, Debug, Diagnostic)]
 #[error("unrecognised subcommand")]
 #[diagnostic(
     code(git_mit_config::errors::unrecognised_lint_command),

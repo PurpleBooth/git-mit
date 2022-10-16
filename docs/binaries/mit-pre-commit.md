@@ -9,18 +9,15 @@ mit-pre-commit --help
 ```
 
 ``` shell,verify(stream=stdout)
-mit-pre-commit 5.12.95
-Billie Thompson <billie+mit-pre-commit@billiecodes.com>
 Run first, before you even type in a commit message. It's used to inspect the snapshot that's about
 to be committed.
 
-USAGE:
-    mit-pre-commit [OPTIONS]
+Usage: mit-pre-commit [OPTIONS]
 
-OPTIONS:
-        --completion <COMPLETION>    [possible values: bash, elvish, fish, powershell, zsh]
-    -h, --help                       Print help information
-    -V, --version                    Print version information
+Options:
+      --completion <COMPLETION>  [possible values: bash, elvish, fish, powershell, zsh]
+  -h, --help                     Print help information
+  -V, --version                  Print version information
 ```
 
 You can generate completion with

@@ -12,6 +12,6 @@ pub struct Args {
     #[clap(long, short, env = "GIT_MIT_RELATES_TO_TIMEOUT", default_value = "60")]
     pub timeout: u64,
 
-    #[clap(long, arg_enum, value_parser)]
+    #[clap(long, value_enum, value_parser)]
     pub completion: Option<Shell>,
 }

@@ -6,13 +6,13 @@ This is the `git mit-relates-to` part of the tool.
 
 In order to get started with this tool you'll need a git repository
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="git-init",expected_exit_code=0)
 git init .
 ```
 
 You'll need to install the hooks into this repository
 
-``` shell,script(name="2",expected_exit_code=0)
+``` shell,script(name="git-mit-install",expected_exit_code=0)
 git mit-install
 ```
 
@@ -33,13 +33,13 @@ This is the best readme
 
 If you run
 
-``` shell,script(name="2",expected_exit_code=0)
+``` shell,script(name="git-mit-install",expected_exit_code=0)
 git mit-relates-to "[#12321513]"
 ```
 
 Next time you commit
 
-``` shell,script(name="3",expected_exit_code=0)
+``` shell,script(name="commit",expected_exit_code=0)
 git add README.md
 git mit bt
 git commit -m "Wrote a great README"
@@ -47,13 +47,13 @@ git commit -m "Wrote a great README"
 
 the commit message will contain the ID
 
-``` shell,script(name="4",expected_exit_code=0)
+``` shell,script(name="show-log",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="4",stream=stdout)
+``` text,verify(script_name="show-log",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Wrote a great README
@@ -63,7 +63,7 @@ Relates-to: [#12321513]
 
 We don't duplicate the ID if you manually type in the trailer
 
-``` shell,script(name="3",expected_exit_code=0)
+``` shell,script(name="commit-2",expected_exit_code=0)
 echo "Some change" >> README.md
 git add README.md
 git mit bt
@@ -75,13 +75,13 @@ Relates-to: [#12321513]
 
 the commit message will contain the ID
 
-``` shell,script(name="4",expected_exit_code=0)
+``` shell,script(name="show-log-2",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="4",stream=stdout)
+``` text,verify(script_name="show-log-2",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Wrote a great README
@@ -93,7 +93,7 @@ This times out after 60 minutes, and is configurable with the
 
 `GIT_MIT_RELATES_TO_TIMEOUT` by environment variable.
 
-``` shell,script(name="5",expected_exit_code=0)
+``` shell,script(name="set-trailer",expected_exit_code=0)
 export GIT_MIT_RELATES_TO_TIMEOUT=120
 git mit-relates-to "[#12321513]"
 ```
@@ -103,7 +103,7 @@ Would set the timeout to 2 hours (or 120 minutes).
 You can also populate this value from a script, allowing you to, for
 example, query an API and pull your current ticket from there.
 
-``` shell,script(name="3",expected_exit_code=0)
+``` shell,script(name="set-trailer-with-shell-script",expected_exit_code=0)
 echo "Something else" >> README.md
 git add README.md
 export GIT_MIT_RELATES_TO_EXEC="echo [#88553322]"
@@ -112,13 +112,13 @@ git commit -m "Another great addition"
 
 the commit message will contain the ID
 
-``` shell,script(name="4",expected_exit_code=0)
+``` shell,script(name="show-log-3",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="4",stream=stdout)
+``` text,verify(script_name="show-log-3",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Another great addition

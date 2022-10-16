@@ -17,11 +17,4 @@ pub mod lints;
 pub mod mit;
 
 pub mod relates;
-/// Quickcheck support
-#[cfg(test)]
-extern crate quickcheck;
-
-/// Quickcheck support
-#[cfg(test)]
-#[macro_use(quickcheck)]
-extern crate quickcheck_macros;
+pub mod scope;

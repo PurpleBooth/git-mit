@@ -7,18 +7,26 @@ git-mit-install --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-install 5.12.95
-Billie Thompson <billie+git-mit-install@billiecodes.com>
 Install git-mit into a repository
 
-USAGE:
-    git-mit-install [OPTIONS]
+Usage: git-mit-install [OPTIONS]
 
-OPTIONS:
-        --completion <COMPLETION>    [possible values: bash, elvish, fish, powershell, zsh]
-    -h, --help                       Print help information
-    -s, --scope <SCOPE>              [default: local] [possible values: global, local]
-    -V, --version                    Print version information
+Options:
+  -s, --scope <SCOPE>
+          [default: local]
+
+          Possible values:
+          - global: The home directory
+          - local:  The local folder
+
+      --completion <COMPLETION>
+          [possible values: bash, elvish, fish, powershell, zsh]
+
+  -h, --help
+          Print help information (use `-h` for a summary)
+
+  -V, --version
+          Print version information
 ```
 
 You can generate completion with

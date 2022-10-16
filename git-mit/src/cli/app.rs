@@ -64,7 +64,7 @@ pub struct CliArgs {
     pub timeout: u64,
 
     /// Shell to generate completions for
-    #[clap(long, arg_enum, value_parser)]
+    #[clap(long, value_enum, value_parser)]
     pub completion: Option<Shell>,
 }
 

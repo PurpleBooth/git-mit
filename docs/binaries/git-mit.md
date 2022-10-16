@@ -7,30 +7,25 @@ git-mit --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit 5.12.95
-Billie Thompson <billie+git-mit@billiecodes.com>
 Set author and Co-authored trailer.
 
-USAGE:
-    git-mit [OPTIONS] [INITIALS]...
+Usage: git-mit [OPTIONS] [INITIALS]...
 
-ARGS:
-    <INITIALS>...    Initials of the mit to put in the commit
+Arguments:
+  [INITIALS]...  Initials of the mit to put in the commit
 
-OPTIONS:
-    -c, --config <CONFIG>            Path to a file where mit initials, emails and names can be
-                                     found [env: GIT_MIT_AUTHORS_CONFIG=] [default: $HOME/.config/
-                                     git-mit/mit.toml]
-        --completion <COMPLETION>    Shell to generate completions for [possible values: bash,
-                                     elvish, fish, powershell, zsh]
-    -e, --exec <EXEC>                Execute a command to generate the mit configuration, stdout
-                                     will be captured and used instead of the file, if both
-                                     this and the file is present, this takes precedence [env:
-                                     GIT_MIT_AUTHORS_EXEC=]
-    -h, --help                       Print help information
-    -t, --timeout <TIMEOUT>          Number of minutes to expire the configuration in [env:
-                                     GIT_MIT_AUTHORS_TIMEOUT=] [default: 60]
-    -V, --version                    Print version information
+Options:
+  -c, --config <CONFIG>          Path to a file where mit initials, emails and names can be found [env:
+                                 GIT_MIT_AUTHORS_CONFIG=] [default: $HOME/.config/git-mit/mit.toml]
+  -e, --exec <EXEC>              Execute a command to generate the mit configuration, stdout will be
+                                 captured and used instead of the file, if both this and the file is
+                                 present, this takes precedence [env: GIT_MIT_AUTHORS_EXEC=]
+  -t, --timeout <TIMEOUT>        Number of minutes to expire the configuration in [env:
+                                 GIT_MIT_AUTHORS_TIMEOUT=] [default: 60]
+      --completion <COMPLETION>  Shell to generate completions for [possible values: bash, elvish,
+                                 fish, powershell, zsh]
+  -h, --help                     Print help information
+  -V, --version                  Print version information
 
 COMMON TASKS:
     You can install git-mit into a new repository using
@@ -76,10 +71,9 @@ git-mit
 ```
 ``` shell,verify(stream=stderr)
 error: The following required arguments were not provided:
-    <INITIALS>...
+  <INITIALS>...
 
-USAGE:
-    git-mit <INITIALS>...
+Usage: git-mit <INITIALS>...
 
-For more information try --help
+For more information try '--help'
 ```

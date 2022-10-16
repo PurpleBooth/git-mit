@@ -9,6 +9,25 @@ use miette::{IntoDiagnostic, Result};
 
 use crate::mit::Authors;
 
+/// A generic structure to pass around details needed to get authors
+#[derive(Debug, Clone)]
+pub struct GenericArgs<'a> {
+    /// Command to be executed
+    pub author_command: Option<&'a str>,
+    /// Location of file with author info in
+    pub author_file: Option<&'a str>,
+}
+
+impl<'a> AuthorArgs for GenericArgs<'a> {
+    fn author_command(&self) -> Option<&str> {
+        self.author_command
+    }
+
+    fn author_file(&self) -> Option<&str> {
+        self.author_file
+    }
+}
+
 /// From a cli args, get the author configuration
 pub trait AuthorArgs {
     /// Get the command to run to generate the authors file

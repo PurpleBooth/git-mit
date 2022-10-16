@@ -20,6 +20,6 @@ pub struct Args {
     )]
     pub copy_message_to_clipboard: bool,
 
-    #[clap(long, arg_enum, value_parser)]
+    #[clap(long, value_enum, value_parser)]
     pub completion: Option<Shell>,
 }

@@ -7,23 +7,20 @@ git-mit-config --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-config 5.12.95
-Billie Thompson <billie+git-mit-config@billiecodes.com>
 A command for enabling and disabling git lints
 
-USAGE:
-    git-mit-config [OPTIONS] [SUBCOMMAND]
+Usage: git-mit-config [OPTIONS] [COMMAND]
 
-OPTIONS:
-        --completion <completion>    [possible values: bash, elvish, fish, powershell, zsh]
-    -h, --help                       Print help information
-    -V, --version                    Print version information
+Commands:
+  lint        Manage active lints
+  mit         Manage mit configuration
+  relates-to  Manage relates-to settings
+  help        Print this message or the help of the given subcommand(s)
 
-SUBCOMMANDS:
-    help          Print this message or the help of the given subcommand(s)
-    lint          Manage active lints
-    mit           Manage mit configuration
-    relates-to    Manage relates-to settings
+Options:
+      --completion <COMPLETION>  [possible values: bash, elvish, fish, powershell, zsh]
+  -h, --help                     Print help information
+  -V, --version                  Print version information
 ```
 
 ``` shell,script(expected_exit_code=0)
@@ -31,23 +28,21 @@ git-mit-config lint --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-config-lint 
 Manage active lints
 
-USAGE:
-    git-mit-config lint <SUBCOMMAND>
+Usage: git-mit-config lint <COMMAND>
 
-OPTIONS:
-    -h, --help    Print help information
+Commands:
+  generate   Generate the config file for your current settings
+  available  List the available lints
+  enabled    List the enabled lints
+  status     Get status of a lint
+  enable     Enable a lint
+  disable    Disable a lint
+  help       Print this message or the help of the given subcommand(s)
 
-SUBCOMMANDS:
-    available    List the available lints
-    disable      Disable a lint
-    enable       Enable a lint
-    enabled      List the enabled lints
-    generate     Generate the config file for your current settings
-    help         Print this message or the help of the given subcommand(s)
-    status       Get status of a lint
+Options:
+  -h, --help  Print help information
 ```
 
 ``` shell,script(expected_exit_code=0)
@@ -55,21 +50,19 @@ git-mit-config mit --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-config-mit 
 Manage mit configuration
 
-USAGE:
-    git-mit-config mit <SUBCOMMAND>
+Usage: git-mit-config mit <COMMAND>
 
-OPTIONS:
-    -h, --help    Print help information
+Commands:
+  set        Update or add an initial in the mit configuration
+  generate   Generate a file version of available authors
+  available  List available authors
+  example    Print example mit toml file
+  help       Print this message or the help of the given subcommand(s)
 
-SUBCOMMANDS:
-    available    List available authors
-    example      Print example mit toml file
-    generate     Generate a file version of available authors
-    help         Print this message or the help of the given subcommand(s)
-    set          Update or add an initial in the mit configuration
+Options:
+  -h, --help  Print help information
 ```
 
 ``` shell,script(expected_exit_code=0)
@@ -77,18 +70,16 @@ git-mit-config relates-to --help
 ```
 
 ``` shell,verify(stream=stdout)
-git-mit-config-relates-to 
 Manage relates-to settings
 
-USAGE:
-    git-mit-config relates-to <SUBCOMMAND>
+Usage: git-mit-config relates-to <COMMAND>
 
-OPTIONS:
-    -h, --help    Print help information
+Commands:
+  template  Use a template for the relates-to trailer
+  help      Print this message or the help of the given subcommand(s)
 
-SUBCOMMANDS:
-    help        Print this message or the help of the given subcommand(s)
-    template    Use a template for the relates-to trailer
+Options:
+  -h, --help  Print help information
 ```
 
 You can generate completion with

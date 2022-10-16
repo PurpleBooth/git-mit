@@ -29,6 +29,6 @@ pub struct Args {
     /// A template to apply to the relates to trailer
     #[clap(long, env = "GIT_MIT_RELATES_TO_TEMPLATE")]
     pub relates_to_template: Option<String>,
-    #[clap(long, arg_enum, value_parser)]
+    #[clap(long, value_enum, value_parser)]
     pub completion: Option<Shell>,
 }

@@ -374,8 +374,8 @@ Error: BodyWiderThan72Characters (https://git-scm.com/book/en/v2/Distributed-Git
    ╭─[2:1]
  2 │ 
  3 │ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-   ·                                                                          ┬
-   ·                                                                          ╰── Too long
+   ·                                                                         ┬
+   ·                                                                         ╰── Too long
  4 │ This is a commit message that is invalid
    ╰────
   help: It's important to keep the body of the commit narrower than 72

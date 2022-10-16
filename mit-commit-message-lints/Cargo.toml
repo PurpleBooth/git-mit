@@ -21,20 +21,20 @@ miette = { version = "5.3.0", features = [ "fancy" ] }
 git2 = "0.15.0"
 openssl = { version = "0.10.42", optional = true }
 regex = "1.6.0"
-serde_yaml = "0.8.26"
-serde_derive = "1.0.138"
+serde_yaml = "0.9.13"
+serde_derive = "1.0.145"
 indoc = "1.0.7"
 toml = "0.5.9"
 mit-commit = "3.1.4"
-mit-lint = "3.1.1"
+mit-lint = "3.2.1"
 comfy-table = "6.1.0"
-clap_complete = "3.2.4"
-clap = { version = "3.2.21", features = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode" ] }
+clap_complete = "4.0.2"
+clap = { version = "4.0.15", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 quickcheck_macros = "1.0.0"
 quickcheck = "1.0.3"
 
   [dependencies.serde]
-version = "1.0.138"
+version = "1.0.145"
 features = [ "derive" ]
 
 [dev-dependencies]
