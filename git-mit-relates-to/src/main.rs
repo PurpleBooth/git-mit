@@ -11,22 +11,20 @@
     missing_docs
 )]
 
-#[cfg(test)]
-extern crate quickcheck;
-#[cfg(test)]
-#[macro_use(quickcheck)]
-extern crate quickcheck_macros;
+use std::{convert::TryFrom, env, io::stdout, time::Duration};
 
-use std::{convert::TryFrom, env, io::stdout};
-
-use cli::{app, args::Args};
+use clap::{CommandFactory, Parser};
+use clap_complete::generate;
+use cli::app;
 use git2::Repository;
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
-    console::{completion::print_completions, error_handling::miette_install, style},
+    console::{error_handling::miette_install, style},
     external::Git2,
     relates::{set_relates_to, RelateTo},
 };
+
+use crate::{app::Args, errors::GitRelatesTo};
 
 mod cli;
 mod errors;
@@ -34,17 +32,21 @@ mod errors;
 fn main() -> Result<()> {
     miette_install();
 
-    let mut app = app::cli();
-    let args: Args = app.clone().get_matches().into();
+    let cli_args = Args::parse();
 
     // Simply print and exit if completion option is given.
-    if let Some(completion) = args.completion() {
-        print_completions(&mut stdout(), &mut app, completion);
+    if let Some(completion) = cli_args.completion {
+        let mut cmd = Args::command();
+        let name = cmd.get_name().to_string();
+        generate(completion, &mut cmd, name, &mut stdout());
 
         std::process::exit(0);
     }
 
-    let relates_to = args.issue_number()?;
+    let relates_to = cli_args.issue_number.map(RelateTo::from).map_or_else(
+        || Err::<RelateTo<'_>, GitRelatesTo>(GitRelatesTo::NoRelatesToMessageSet),
+        Ok,
+    )?;
 
     if repo_present() && !is_hook_present() {
         not_setup_warning();
@@ -52,7 +54,11 @@ fn main() -> Result<()> {
 
     let current_dir = env::current_dir().into_diagnostic()?;
     let mut vcs = Git2::try_from(current_dir)?;
-    set_relates_to(&mut vcs, &RelateTo::from(relates_to), args.timeout()?)?;
+    set_relates_to(
+        &mut vcs,
+        &relates_to,
+        Duration::from_secs(cli_args.timeout * 60),
+    )?;
 
     Ok(())
 }

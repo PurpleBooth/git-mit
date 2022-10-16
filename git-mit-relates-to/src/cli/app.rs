@@ -1,30 +1,17 @@
-use clap::{crate_authors, crate_version, Arg, Command};
+use clap::Parser;
+use clap_complete::Shell;
 
-pub fn cli() -> Command<'static> {
-    Command::new(String::from(env!("CARGO_PKG_NAME")))
-        .bin_name(String::from(env!("CARGO_PKG_NAME")))
-        .version(crate_version!())
-        .author(crate_authors!())
-        .about(env!("CARGO_PKG_DESCRIPTION"))
-        .arg(
-            Arg::new("issue-number")
-                .help("The issue number or other string to place into the Relates-to trailer")
-                .required_unless_present("completion"),
-        )
-        .arg(
-            Arg::new("timeout")
-                .short('t')
-                .long("timeout")
-                .help("Number of minutes to expire the configuration in")
-                .env("GIT_MIT_RELATES_TO_TIMEOUT")
-                .default_value("60")
-                .takes_value(true),
-        )
-        .arg(Arg::new("completion").long("completion").possible_values([
-            "bash",
-            "elvish",
-            "fish",
-            "powershell",
-            "zsh",
-        ]))
+#[derive(Parser, Clone, Eq, PartialEq)]
+#[clap(author, version, about)]
+#[clap(bin_name = "git-mit-relates-to")]
+pub struct Args {
+    /// The issue number or other string to place into the Relates-to trailer
+    #[clap(required_unless_present = "completion")]
+    pub issue_number: Option<String>,
+    /// Number of minutes to expire the configuration in
+    #[clap(long, short, env = "GIT_MIT_RELATES_TO_TIMEOUT", default_value = "60")]
+    pub timeout: u64,
+
+    #[clap(long, arg_enum, value_parser)]
+    pub completion: Option<Shell>,
 }

@@ -12,15 +12,15 @@ Billie Thompson <billie+git-mit-relates-to@billiecodes.com>
 Set Relates-to trailer.
 
 USAGE:
-    git-mit-relates-to [OPTIONS] [issue-number]
+    git-mit-relates-to [OPTIONS] [ISSUE_NUMBER]
 
 ARGS:
-    <issue-number>    The issue number or other string to place into the Relates-to trailer
+    <ISSUE_NUMBER>    The issue number or other string to place into the Relates-to trailer
 
 OPTIONS:
-        --completion <completion>    [possible values: bash, elvish, fish, powershell, zsh]
+        --completion <COMPLETION>    [possible values: bash, elvish, fish, powershell, zsh]
     -h, --help                       Print help information
-    -t, --timeout <timeout>          Number of minutes to expire the configuration in [env:
+    -t, --timeout <TIMEOUT>          Number of minutes to expire the configuration in [env:
                                      GIT_MIT_RELATES_TO_TIMEOUT=] [default: 60]
     -V, --version                    Print version information
 ```
@@ -39,10 +39,10 @@ git-mit-relates-to
 
 ``` shell,verify(stream=stderr)
 error: The following required arguments were not provided:
-    <issue-number>
+    <ISSUE_NUMBER>
 
 USAGE:
-    git-mit-relates-to <issue-number>
+    git-mit-relates-to <ISSUE_NUMBER>
 
 For more information try --help
 ```
