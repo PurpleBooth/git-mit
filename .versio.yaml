@@ -10,20 +10,6 @@ projects:
           file: git-mit/Cargo.toml
           toml: package.version
       also:
-          - file: ./docs/binaries/git-mit.md
-            pattern: git-mit (\d+\.\d+\.\d+)
-          - file: ./docs/binaries/git-mit-config.md
-            pattern: git-mit-config (\d+\.\d+\.\d+)
-          - file: ./docs/binaries/git-mit-install.md
-            pattern: git-mit-install (\d+\.\d+\.\d+)
-          - file: ./docs/binaries/git-mit-relates-to.md
-            pattern: git-mit-relates-to (\d+\.\d+\.\d+)
-          - file: ./docs/binaries/mit-commit-msg.md
-            pattern: mit-commit-msg (\d+\.\d+\.\d+)
-          - file: ./docs/binaries/mit-pre-commit.md
-            pattern: mit-pre-commit (\d+\.\d+\.\d+)
-          - file: ./docs/binaries/mit-prepare-commit-msg.md
-            pattern: mit-prepare-commit-msg (\d+\.\d+\.\d+)
           - file: git-mit-config/Cargo.toml
             toml: package.version
 
