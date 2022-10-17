@@ -10,15 +10,14 @@ pub fn link(hook_path: &Path, hook_name: &str) -> Result<()> {
     let suffix = "";
     let binary_path = which::which(format!("mit-{hook_name}{suffix}")).unwrap();
     let install_path = hook_path.join(format!("{hook_name}{suffix}"));
-    let install_path_destination = install_path.read_link();
-    if let Ok(existing_hook_path) = install_path_destination.and_then(|x| x.canonicalize()) {
+    if let Ok(existing_hook_path) = install_path.canonicalize() {
         if existing_hook_path == install_path {
             return Ok(());
         }
     }
 
     if install_path.exists() {
-        if let Ok(dest) = install_path.read_link() {
+        if let Ok(dest) = install_path.canonicalize() {
             return Err(GitMitInstallError::ExistingSymlink(
                 install_path.to_string_lossy().to_string(),
                 dest.to_string_lossy().to_string(),
