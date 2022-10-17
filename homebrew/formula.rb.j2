@@ -25,7 +25,7 @@ class GitMit < Formula
       system "cargo", "install", "--root", prefix, "--path", "./#{binary}/"
 
       # Completions
-      generate_completions_from_executable(bin/binary, "--completion", shells: [
+      generate_completions_from_executable(bin.to_s/binary.to_s, "--completion", shells: [
         :bash,
         :elvish,
         :fish,
