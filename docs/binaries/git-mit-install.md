@@ -3,6 +3,8 @@
 Generic usage
 
 ``` shell,script(expected_exit_code=0)
+export HOME="/example/home/dir"
+export USERPROFILE="/example/home/dir"
 git-mit-install --help
 ```
 
@@ -21,6 +23,9 @@ Options:
 
       --completion <COMPLETION>
           [possible values: bash, elvish, fish, powershell, zsh]
+
+      --home-dir <HOME_DIR>
+          [env: HOME=/example/home/dir]
 
   -h, --help
           Print help information (use `-h` for a summary)

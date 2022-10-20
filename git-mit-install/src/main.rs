@@ -41,7 +41,12 @@ fn main() -> Result<()> {
         std::process::exit(0);
     }
 
-    let hooks = dir::create(cli_args.scope.is_global())?;
+    let hooks = dir::create(
+        cli_args.scope.is_global(),
+        &cli_args
+            .home_dir
+            .expect("Home directory is required if scope is global"),
+    )?;
 
     install::link(&hooks, "prepare-commit-msg")?;
     install::link(&hooks, "pre-commit")?;

@@ -1,10 +1,14 @@
-use std::{env, fs, path::PathBuf};
+use std::{
+    env,
+    fs,
+    path::{Path, PathBuf},
+};
 
 use git2::Config;
 use miette::{IntoDiagnostic, Result};
-pub fn create(global: bool) -> Result<PathBuf> {
+pub fn create(global: bool, home_dir: &Path) -> Result<PathBuf> {
     let hooks = if global {
-        setup_global_hooks_dir()?
+        setup_global_hooks_dir(home_dir)?
     } else {
         get_local_hooks_dir()?
     };
@@ -17,20 +21,20 @@ pub fn create(global: bool) -> Result<PathBuf> {
 
 fn get_local_hooks_dir() -> Result<PathBuf> {
     let current_dir = env::current_dir().into_diagnostic()?;
-    let buf = git2::Repository::discover(current_dir)
-        .into_diagnostic()?
-        .path()
-        .join("hooks");
+    let repository = git2::Repository::discover(current_dir).into_diagnostic()?;
+    let config = repository.config().into_diagnostic()?;
+    let default_path = repository.path().join("hooks");
+    let buf = config.get_path("core.hooksPath").unwrap_or(default_path);
     Ok(buf)
 }
 
-fn setup_global_hooks_dir() -> Result<PathBuf> {
+fn setup_global_hooks_dir(home_dir: &Path) -> Result<PathBuf> {
     let mut config = git2::Config::open_default().into_diagnostic()?;
 
     let template_dir = if let Ok(template_dir) = git_template_dir(&mut config) {
         template_dir
     } else {
-        let template_dir = new_template_folder();
+        let template_dir = new_template_folder(home_dir);
         config
             .set_str("init.templatedir", template_dir.to_string_lossy().as_ref())
             .into_diagnostic()?;
@@ -42,11 +46,8 @@ fn setup_global_hooks_dir() -> Result<PathBuf> {
     Ok(hooks)
 }
 
-fn new_template_folder() -> PathBuf {
-    PathBuf::from(home_dir())
-        .join(".config")
-        .join("git")
-        .join("init-template")
+fn new_template_folder(home_dir: &Path) -> PathBuf {
+    home_dir.join(".config").join("git").join("init-template")
 }
 
 fn git_template_dir(config: &mut Config) -> Result<PathBuf> {
@@ -55,14 +56,4 @@ fn git_template_dir(config: &mut Config) -> Result<PathBuf> {
         .into_diagnostic()?
         .get_path("init.templatedir")
         .into_diagnostic()
-}
-
-#[cfg(not(target_os = "windows"))]
-fn home_dir() -> String {
-    env!("HOME").into()
-}
-
-#[cfg(target_os = "windows")]
-fn home_dir() -> String {
-    env!("USERPROFILE").into()
 }

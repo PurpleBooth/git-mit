@@ -59,17 +59,14 @@ async fn main() -> Result<()> {
     }
 
     if let Ok(mut clipboard) = Clipboard::new() {
-        let body = commit_message.get_body().to_string().trim().to_string();
-        let trimmed_commit = if body.is_empty() {
-            format!("{}", commit_message.get_subject())
-        } else {
-            format!(
-                "{}\n{}",
-                commit_message.get_subject(),
-                commit_message.get_body()
-            )
-        };
-
+        let trimmed_commit = vec![
+            commit_message.get_subject().to_string(),
+            commit_message.get_body().to_string().trim().to_string(),
+        ]
+        .into_iter()
+        .filter(|x| !x.is_empty())
+        .collect::<Vec<_>>()
+        .join("\n");
         clipboard.set_text(trimmed_commit).into_diagnostic()?;
     }
 
