@@ -10,6 +10,7 @@
     missing_debug_implementations,
     missing_docs
 )]
+
 use std::{convert::TryFrom, env, io::stdout, path::PathBuf};
 
 use arboard::Clipboard;
@@ -53,27 +54,26 @@ async fn main() -> Result<()> {
     let lint_config = read_from_toml_or_else_vcs(&toml, &mut git_config)?;
 
     let lint_problems = async_lint(&commit_message, lint_config).await;
-    if !lint_problems.is_empty() {
-        if !cli_args.copy_message_to_clipboard {
-        } else if let Ok(mut clipboard) = Clipboard::new() {
-            let body = commit_message.get_body().to_string().trim().to_string();
-            let trimmed_commit = if body.is_empty() {
-                format!("{}", commit_message.get_subject())
-            } else {
-                format!(
-                    "{}\n{}",
-                    commit_message.get_subject(),
-                    commit_message.get_body()
-                )
-            };
-
-            clipboard.set_text(trimmed_commit).into_diagnostic()?;
-        };
-
-        return AggregateProblem::to(lint_problems);
+    if lint_problems.is_empty() {
+        return Ok(());
     }
 
-    Ok(())
+    if let Ok(mut clipboard) = Clipboard::new() {
+        let body = commit_message.get_body().to_string().trim().to_string();
+        let trimmed_commit = if body.is_empty() {
+            format!("{}", commit_message.get_subject())
+        } else {
+            format!(
+                "{}\n{}",
+                commit_message.get_subject(),
+                commit_message.get_body()
+            )
+        };
+
+        clipboard.set_text(trimmed_commit).into_diagnostic()?;
+    }
+
+    AggregateProblem::to(lint_problems)
 }
 
 mod cli;
