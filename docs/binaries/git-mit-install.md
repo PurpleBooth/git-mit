@@ -4,7 +4,7 @@ Generic usage
 
 ``` shell,script(name="run_help",expected_exit_code=0)
 export HOME="/example/home/dir"
-export USERPROFILE="F:\\\\some\\userprofile"
+export USERPROFILE="F:\\some\\userprofile"
 git-mit-install --help
 ```
 
@@ -53,7 +53,7 @@ Options:
           [possible values: bash, elvish, fish, powershell, zsh]
 
       --home-dir <HOME_DIR>
-          [env: USERPROFILE=F:\\some\userprofile]
+          [env: USERPROFILE=F:\some\userprofile]
 
   -h, --help
           Print help information (use `-h` for a summary)
