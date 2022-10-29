@@ -294,10 +294,9 @@ Error: SubjectLongerThan72Characters (https://git-scm.com/book/en/v2/Distributed
   × Your subject is longer than 72 characters
    ╭─[1:1]
  1 │ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-   ·                                                                          ┬
-   ·                                                                          ╰── Too long
+   ·                                                                         ┬
+   ·                                                                         ╰── Too long
  2 │ 
- 3 │ Demonstration Commit Message
    ╰────
   help: It's important to keep the subject of the commit less than 72
         characters because when you look at the git log, that's where it
@@ -755,7 +754,7 @@ Error: PivotalTrackerIdMissing (https://www.pivotaltracker.com/help/api?version=
    ╭─[2:1]
  2 │ 
  3 │ This is a commit message that is invalid
-   · ────────────────────┬────────────────────
+   · ────────────────────┬───────────────────
    ·                     ╰── No Pivotal Tracker ID
    ╰────
   help: It's important to add the ID because it allows code to be linked
@@ -858,7 +857,7 @@ Error: JiraIssueKeyMissing (https://support.atlassian.com/jira-software-cloud/do
    ╭─[2:1]
  2 │ 
  3 │ This is a commit message that is invalid
-   · ────────────────────┬────────────────────
+   · ────────────────────┬───────────────────
    ·                     ╰── No JIRA Issue Key
    ╰────
   help: It's important to add the issue key because it allows us to link
@@ -951,7 +950,7 @@ Error: GitHubIdMissing (https://docs.github.com/en/github/writing-on-github/work
    ╭─[2:1]
  2 │ 
  3 │ This is a commit message that is invalid
-   · ────────────────────┬────────────────────
+   · ────────────────────┬───────────────────
    ·                     ╰── No GitHub ID
    ╰────
   help: It's important to add the issue ID because it allows us to link code
