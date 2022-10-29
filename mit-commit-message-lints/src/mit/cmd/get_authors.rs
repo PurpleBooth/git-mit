@@ -57,7 +57,7 @@ fn from_file(args: &dyn AuthorArgs) -> Result<String> {
             "$HOME/.config/git-mit/mit.toml" => author_file_path(),
             _ => Ok(path.into()),
         })
-        .map(|path| fs::read_to_string(&path).unwrap_or_default())
+        .map(|path| fs::read_to_string(path).unwrap_or_default())
 }
 
 #[cfg(not(target_os = "windows"))]
