@@ -21,7 +21,7 @@ openssl = { version = "0.10.42", optional = true }
 miette = { version = "5.4.1", features = [ "fancy" ] }
 mit-commit = "3.1.4"
 
-arboard = "3.1.1"
+arboard = "3.2.0"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
