@@ -182,9 +182,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.0.19"
+version = "4.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e67816e006b17427c9b4386915109b494fec2d929c63e3bd3561234cbf1bf1e"
+checksum = "91b9970d7505127a162fdaa9b96428d28a479ba78c9ec7550a63a5d9863db682"
 dependencies = [
  "atty",
  "bitflags",
@@ -204,14 +204,14 @@ version = "4.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dfe581a2035db4174cdbdc91265e1aba50f381577f0510d0ad36c7bc59cc84a3"
 dependencies = [
- "clap 4.0.19",
+ "clap 4.0.22",
 ]
 
 [[package]]
 name = "clap_derive"
-version = "4.0.18"
+version = "4.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "16a1b0f6422af32d5da0c58e2703320f379216ee70198241c84173a8c5ac28f3"
+checksum = "0177313f9f02afc995627906bbd8967e2be069f5261954222dac78290c2b9014"
 dependencies = [
  "heck",
  "proc-macro-error",
@@ -634,7 +634,7 @@ checksum = "78cc372d058dcf6d5ecd98510e7fbc9e5aec4d21de70f65fea8fecebcd881bd4"
 name = "git-mit"
 version = "5.12.108"
 dependencies = [
- "clap 4.0.19",
+ "clap 4.0.22",
  "clap_complete",
  "git2",
  "indoc",
@@ -653,7 +653,7 @@ dependencies = [
 name = "git-mit-config"
 version = "5.12.108"
 dependencies = [
- "clap 4.0.19",
+ "clap 4.0.22",
  "clap_complete",
  "comfy-table",
  "git2",
@@ -671,7 +671,7 @@ dependencies = [
 name = "git-mit-install"
 version = "5.12.108"
 dependencies = [
- "clap 4.0.19",
+ "clap 4.0.22",
  "clap_complete",
  "git2",
  "indoc",
@@ -690,7 +690,7 @@ dependencies = [
 name = "git-mit-relates-to"
 version = "5.12.108"
 dependencies = [
- "clap 4.0.19",
+ "clap 4.0.22",
  "clap_complete",
  "git2",
  "indoc",
@@ -1037,7 +1037,7 @@ dependencies = [
 name = "mit-commit-message-lints"
 version = "5.12.108"
 dependencies = [
- "clap 4.0.19",
+ "clap 4.0.22",
  "clap_complete",
  "comfy-table",
  "criterion",
@@ -1066,7 +1066,7 @@ name = "mit-commit-msg"
 version = "5.12.108"
 dependencies = [
  "arboard",
- "clap 4.0.19",
+ "clap 4.0.22",
  "clap_complete",
  "git2",
  "indoc",
@@ -1113,7 +1113,7 @@ dependencies = [
 name = "mit-pre-commit"
 version = "5.12.108"
 dependencies = [
- "clap 4.0.19",
+ "clap 4.0.22",
  "clap_complete",
  "git2",
  "indoc",
@@ -1130,7 +1130,7 @@ dependencies = [
 name = "mit-prepare-commit-msg"
 version = "5.12.108"
 dependencies = [
- "clap 4.0.19",
+ "clap 4.0.22",
  "clap_complete",
  "git2",
  "indoc",
