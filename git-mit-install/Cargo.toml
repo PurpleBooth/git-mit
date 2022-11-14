@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-install"
-version = "5.12.109"
+version = "5.12.110"
 authors = [ "Billie Thompson <billie+git-mit-install@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -25,7 +25,7 @@ indoc = "1.0.7"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "5.12.109"
+  version = "5.12.110"
 
 [dev-dependencies]
 quickcheck = "1.0.3"
@@ -34,7 +34,7 @@ tempfile = "3.3.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "5.12.109"
+  version = "5.12.110"
 
 [features]
 default = []
