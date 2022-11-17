@@ -182,9 +182,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.0.25"
+version = "4.0.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "389ca505fd2c00136e0d0cd34bcd8b6bd0b59d5779aab396054b716334230c1c"
+checksum = "2148adefda54e14492fb9bddcc600b4344c5d1a3123bd666dcb939c6f0e0e57e"
 dependencies = [
  "atty",
  "bitflags",
@@ -204,7 +204,7 @@ version = "4.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "96b0fba905b035a30d25c1b585bf1171690712fbb0ad3ac47214963aa4acc36c"
 dependencies = [
- "clap 4.0.25",
+ "clap 4.0.26",
 ]
 
 [[package]]
@@ -634,7 +634,7 @@ checksum = "78cc372d058dcf6d5ecd98510e7fbc9e5aec4d21de70f65fea8fecebcd881bd4"
 name = "git-mit"
 version = "5.12.111"
 dependencies = [
- "clap 4.0.25",
+ "clap 4.0.26",
  "clap_complete",
  "git2",
  "indoc",
@@ -653,7 +653,7 @@ dependencies = [
 name = "git-mit-config"
 version = "5.12.111"
 dependencies = [
- "clap 4.0.25",
+ "clap 4.0.26",
  "clap_complete",
  "comfy-table",
  "git2",
@@ -671,7 +671,7 @@ dependencies = [
 name = "git-mit-install"
 version = "5.12.111"
 dependencies = [
- "clap 4.0.25",
+ "clap 4.0.26",
  "clap_complete",
  "git2",
  "indoc",
@@ -690,7 +690,7 @@ dependencies = [
 name = "git-mit-relates-to"
 version = "5.12.111"
 dependencies = [
- "clap 4.0.25",
+ "clap 4.0.26",
  "clap_complete",
  "git2",
  "indoc",
@@ -1037,7 +1037,7 @@ dependencies = [
 name = "mit-commit-message-lints"
 version = "5.12.111"
 dependencies = [
- "clap 4.0.25",
+ "clap 4.0.26",
  "clap_complete",
  "comfy-table",
  "criterion",
@@ -1066,7 +1066,7 @@ name = "mit-commit-msg"
 version = "5.12.111"
 dependencies = [
  "arboard",
- "clap 4.0.25",
+ "clap 4.0.26",
  "clap_complete",
  "git2",
  "indoc",
@@ -1113,7 +1113,7 @@ dependencies = [
 name = "mit-pre-commit"
 version = "5.12.111"
 dependencies = [
- "clap 4.0.25",
+ "clap 4.0.26",
  "clap_complete",
  "git2",
  "indoc",
@@ -1130,7 +1130,7 @@ dependencies = [
 name = "mit-prepare-commit-msg"
 version = "5.12.111"
 dependencies = [
- "clap 4.0.25",
+ "clap 4.0.26",
  "clap_complete",
  "git2",
  "indoc",
