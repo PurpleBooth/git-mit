@@ -23,8 +23,7 @@ fn there_is_no_author_config_if_it_has_expired() {
     let expected = AuthorState::Timeout(OffsetDateTime::from_unix_timestamp(now_minus_10).unwrap());
     assert_eq!(
         expected, actual,
-        "Expected the mit config to be {:?}, instead got {:?}",
-        expected, actual
+        "Expected the mit config to be {expected:?}, instead got {actual:?}"
     );
 }
 
@@ -43,8 +42,7 @@ fn there_is_a_config_if_the_config_has_not_expired() {
 
     assert_eq!(
         expected, actual,
-        "Expected the mit config to be {:?}, instead got {:?}",
-        expected, actual
+        "Expected the mit config to be {expected:?}, instead got {actual:?}"
     );
 }
 
@@ -71,8 +69,7 @@ fn we_get_author_config_back_if_there_is_any() {
 
     assert_eq!(
         expected, actual,
-        "Expected the mit config to be {:?}, instead got {:?}",
-        expected, actual
+        "Expected the mit config to be {expected:?}, instead got {actual:?}"
     );
 }
 
@@ -116,8 +113,7 @@ fn we_get_multiple_authors_back_if_there_are_multiple() {
 
     assert_eq!(
         expected, actual,
-        "Expected the mit config to be {:?}, instead got {:?}",
-        expected, actual
+        "Expected the mit config to be {expected:?}, instead got {actual:?}"
     );
 }
 

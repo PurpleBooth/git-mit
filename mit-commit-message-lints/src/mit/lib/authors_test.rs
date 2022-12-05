@@ -304,8 +304,7 @@ fn it_can_give_me_an_author() {
     let expected = Authors::new(store);
     assert_eq!(
         expected, actual,
-        "Expected the mit config to be {:?}, instead got {:?}",
-        expected, actual
+        "Expected the mit config to be {expected:?}, instead got {actual:?}"
     );
 }
 
@@ -339,8 +338,7 @@ fn it_can_give_me_multiple_authors() {
     let expected = Authors::new(store);
     assert_eq!(
         expected, actual,
-        "Expected the mit config to be {:?}, instead got {:?}",
-        expected, actual
+        "Expected the mit config to be {expected:?}, instead got {actual:?}"
     );
 }
 
@@ -369,7 +367,6 @@ fn broken_authors_are_skipped() {
     let expected = Authors::new(store);
     assert_eq!(
         expected, actual,
-        "Expected the mit config to be {:?}, instead got {:?}",
-        expected, actual
+        "Expected the mit config to be {expected:?}, instead got {actual:?}"
     );
 }

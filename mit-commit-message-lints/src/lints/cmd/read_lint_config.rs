@@ -37,17 +37,11 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
     let lint_prefix = CONFIG_KEY_PREFIX.split('.').collect::<Vec<_>>();
     let namespace = (*lint_prefix.first().unwrap()).to_string();
 
-    let config = match config.get(&namespace) {
-        None => return Ok(vcs_lints),
-        Some(lints) => lints,
-    };
+    let Some(config) = config.get(&namespace) else { return Ok(vcs_lints) };
 
     let group = (*lint_prefix.get(1).unwrap()).to_string();
 
-    let lint_names = match config.get(&group) {
-        None => return Ok(vcs_lints),
-        Some(lints) => lints,
-    };
+    let Some(lint_names) = config.get(&group) else { return Ok(vcs_lints) };
 
     let to_add: Lints = lint_names
         .iter()

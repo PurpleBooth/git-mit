@@ -21,8 +21,7 @@ fn there_is_no_relate_config_if_it_has_expired() {
     let expected = None;
     assert_eq!(
         expected, actual,
-        "Expected the relate config to be {:?}, instead got {:?}",
-        expected, actual
+        "Expected the relate config to be {expected:?}, instead got {actual:?}"
     );
 }
 
@@ -41,8 +40,7 @@ fn we_get_relate_to_config_back_if_there_is_any() {
 
     assert_eq!(
         expected, actual,
-        "Expected the relate config to be {:?}, instead got {:?}",
-        expected, actual
+        "Expected the relate config to be {expected:?}, instead got {actual:?}"
     );
 }
 

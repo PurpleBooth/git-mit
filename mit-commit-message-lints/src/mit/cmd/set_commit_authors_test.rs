@@ -178,14 +178,12 @@ fn sets_the_expiry_time() {
 
     assert!(
         actual_expire_time < sec61min,
-        "Expected less than {}, found {}",
-        sec61min,
-        actual_expire_time
+        "{}",
+        "Expected less than {sec61min}, found {actual_expire_time}"
     );
     assert!(
         actual_expire_time > sec59min,
-        "Expected more than {}, found {}",
-        sec59min,
-        actual_expire_time
+        "{}",
+        "Expected more than {sec59min}, found {actual_expire_time}"
     );
 }
