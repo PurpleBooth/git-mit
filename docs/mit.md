@@ -189,7 +189,7 @@ So next time we commit
 ``` shell,script(name="9",expected_exit_code=0)
 echo "Lorem Ipsum" >> README.md
 
-git commit --all --message="Second Commit" --quiet
+git commit --all --message="chore: Second Commit" --quiet
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
@@ -200,7 +200,7 @@ The author configuration will be updated like this
 ``` text,verify(script_name="9",stream=stdout)
 author: [Someone Else se@example.com] signed-by: [] 
 ---
-Second Commit
+chore: Second Commit
 
 Co-authored-by: Anyone Else <anyone@example.com>
 ```

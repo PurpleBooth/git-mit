@@ -42,7 +42,7 @@ Next time you commit
 ``` shell,script(name="commit",expected_exit_code=0)
 git add README.md
 git mit bt
-git commit -m "Wrote a great README"
+git commit -m "docs: Wrote a great README"
 ```
 
 the commit message will contain the ID
@@ -56,7 +56,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 ``` text,verify(script_name="show-log",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
-Wrote a great README
+docs: Wrote a great README
 
 Relates-to: [#12321513]
 ```

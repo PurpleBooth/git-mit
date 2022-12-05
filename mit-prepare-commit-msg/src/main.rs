@@ -9,6 +9,7 @@
     missing_debug_implementations,
     missing_docs
 )]
+
 use std::{
     convert::TryFrom,
     env,
@@ -119,7 +120,20 @@ fn append_coauthors_to_commit_message(
     }
 
     File::create(commit_message_path)
-        .and_then(|mut file| file.write_all(String::from(commit_message).as_bytes()))
+        .and_then(|mut file| {
+            file.write_all(
+                String::from(
+                    if !commit_message.get_trailers().is_empty()
+                        && commit_message.get_body().iter().next().is_none()
+                    {
+                        commit_message.with_body_contents("\n\n")
+                    } else {
+                        commit_message
+                    },
+                )
+                .as_bytes(),
+            )
+        })
         .into_diagnostic()
 }
 
@@ -163,7 +177,17 @@ fn add_trailer_if_not_existing(
     } else {
         File::create(commit_message_path)
             .and_then(|mut file| {
-                file.write_all(String::from(commit_message.add_trailer(trailer.clone())).as_bytes())
+                file.write_all(
+                    String::from(
+                        if commit_message.get_body().iter().next().is_none() {
+                            commit_message.clone().with_body_contents("\n\n")
+                        } else {
+                            commit_message.clone()
+                        }
+                        .add_trailer(trailer.clone()),
+                    )
+                    .as_bytes(),
+                )
             })
             .into_diagnostic()
     }
