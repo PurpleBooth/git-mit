@@ -28,7 +28,7 @@ arboard = "3.2.0"
   version = "5.12.117"
 
 [dev-dependencies]
-indoc = "1.0.7"
+indoc = "1.0.8"
 tempfile = "3.3.0"
 
 
