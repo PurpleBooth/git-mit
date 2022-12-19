@@ -13,7 +13,7 @@ description = "A command for enabling and disabling git lints"
 [dependencies]
 mit-lint = "3.2.2"
 shell-words = "1.1.0"
-thiserror = "1.0.37"
+thiserror = "1.0.38"
 miette = { version = "5.5.0", features = [ "fancy" ] }
 git2 = "0.15.0"
 openssl = { version = "0.10.44", optional = true }
