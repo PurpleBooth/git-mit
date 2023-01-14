@@ -53,7 +53,7 @@ fn main() -> Result<()> {
 
     if !missing.is_empty() {
         return Err(UnknownAuthor {
-            command: env::args().into_iter().collect::<Vec<_>>().join(" "),
+            command: env::args().collect::<Vec<_>>().join(" "),
             missing_initials: missing.clone().into_iter().map(String::from).collect(),
         }
         .into());

@@ -21,11 +21,7 @@ impl<'a> Authors<'a> {
     pub fn missing_initials(&'a self, authors_initials: Vec<&'a str>) -> Vec<&'a str> {
         let configured: HashSet<_> = self.authors.keys().map(String::as_str).collect();
         let from_cli: HashSet<_> = authors_initials.into_iter().collect();
-        from_cli
-            .difference(&configured)
-            .into_iter()
-            .copied()
-            .collect()
+        from_cli.difference(&configured).copied().collect()
     }
 
     /// Create a new author collection

@@ -17,16 +17,16 @@ tinytemplate = "1.2.1"
 thiserror = "1.0.38"
 miette = { version = "5.5.0", features = [ "fancy" ] }
 shell-words = "1.1.0"
-clap_complete = "4.0.7"
-clap = { version = "4.0.32", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
-git2 = "0.15.0"
+clap_complete = "4.1.0"
+clap = { version = "4.1.1", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+git2 = "0.16.0"
 openssl = { version = "0.10.45", optional = true }
 mit-commit = "3.1.4"
 
 
 
   [dependencies.serde]
-version = "1.0.147"
+version = "1.0.152"
 features = [ "derive" ]
 
   [dependencies.mit-commit-message-lints]
