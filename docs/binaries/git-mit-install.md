@@ -28,10 +28,10 @@ Options:
           [env: HOME=/example/home/dir]
 
   -h, --help
-          Print help information (use `-h` for a summary)
+          Print help (see a summary with '-h')
 
   -V, --version
-          Print version information
+          Print version
 ```
 
 On windows the home directory is different
@@ -56,10 +56,10 @@ Options:
           [env: USERPROFILE=F:\some\userprofile]
 
   -h, --help
-          Print help information (use `-h` for a summary)
+          Print help (see a summary with '-h')
 
   -V, --version
-          Print version information
+          Print version
 ```
 
 You can generate completion with

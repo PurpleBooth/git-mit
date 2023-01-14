@@ -18,8 +18,8 @@ Options:
   -t, --timeout <TIMEOUT>        Number of minutes to expire the configuration in [env:
                                  GIT_MIT_RELATES_TO_TIMEOUT=] [default: 60]
       --completion <COMPLETION>  [possible values: bash, elvish, fish, powershell, zsh]
-  -h, --help                     Print help information
-  -V, --version                  Print version information
+  -h, --help                     Print help
+  -V, --version                  Print version
 ```
 
 You can generate completion with
@@ -35,10 +35,10 @@ git-mit-relates-to
 ```
 
 ``` shell,verify(stream=stderr)
-error: The following required arguments were not provided:
+error: the following required arguments were not provided:
   <ISSUE_NUMBER>
 
 Usage: git-mit-relates-to <ISSUE_NUMBER>
 
-For more information try '--help'
+For more information, try '--help'.
 ```

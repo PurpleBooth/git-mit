@@ -24,8 +24,8 @@ Options:
                                  GIT_MIT_AUTHORS_TIMEOUT=] [default: 60]
       --completion <COMPLETION>  Shell to generate completions for [possible values: bash, elvish,
                                  fish, powershell, zsh]
-  -h, --help                     Print help information
-  -V, --version                  Print version information
+  -h, --help                     Print help
+  -V, --version                  Print version
 
 COMMON TASKS:
     You can install git-mit into a new repository using
@@ -70,10 +70,10 @@ Otherwise you must provide an author initial
 git-mit
 ```
 ``` shell,verify(stream=stderr)
-error: The following required arguments were not provided:
+error: the following required arguments were not provided:
   <INITIALS>...
 
 Usage: git-mit <INITIALS>...
 
-For more information try '--help'
+For more information, try '--help'.
 ```

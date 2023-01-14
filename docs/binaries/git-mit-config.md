@@ -19,8 +19,8 @@ Commands:
 
 Options:
       --completion <COMPLETION>  [possible values: bash, elvish, fish, powershell, zsh]
-  -h, --help                     Print help information
-  -V, --version                  Print version information
+  -h, --help                     Print help
+  -V, --version                  Print version
 ```
 
 ``` shell,script(expected_exit_code=0)
@@ -42,7 +42,7 @@ Commands:
   help       Print this message or the help of the given subcommand(s)
 
 Options:
-  -h, --help  Print help information
+  -h, --help  Print help
 ```
 
 ``` shell,script(expected_exit_code=0)
@@ -62,7 +62,7 @@ Commands:
   help       Print this message or the help of the given subcommand(s)
 
 Options:
-  -h, --help  Print help information
+  -h, --help  Print help
 ```
 
 ``` shell,script(expected_exit_code=0)
@@ -79,7 +79,7 @@ Commands:
   help      Print this message or the help of the given subcommand(s)
 
 Options:
-  -h, --help  Print help information
+  -h, --help  Print help
 ```
 
 You can generate completion with

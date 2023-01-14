@@ -32,9 +32,9 @@ Options:
       --completion <COMPLETION>
           [possible values: bash, elvish, fish, powershell, zsh]
   -h, --help
-          Print help information
+          Print help
   -V, --version
-          Print version information
+          Print version
 ```
 
 You can generate completion with
@@ -50,12 +50,12 @@ mit-prepare-commit-msg
 ```
 
 ``` shell,verify(stream=stderr)
-error: The following required arguments were not provided:
+error: the following required arguments were not provided:
   <COMMIT_MESSAGE_PATH>
 
 Usage: mit-prepare-commit-msg <COMMIT_MESSAGE_PATH> [COMMIT_MESSAGE_SOURCE] [COMMIT_SHA]
 
-For more information try '--help'
+For more information, try '--help'.
 ```
 
 

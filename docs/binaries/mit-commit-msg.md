@@ -21,8 +21,8 @@ Options:
       --copy-message-to-clipboard  On lint failure copy the message to clipboard [env:
                                    GIT_MIT_COPY_MESSAGE_TO_CLIPBOARD=]
       --completion <COMPLETION>    [possible values: bash, elvish, fish, powershell, zsh]
-  -h, --help                       Print help information
-  -V, --version                    Print version information
+  -h, --help                       Print help
+  -V, --version                    Print version
 ```
 
 You can generate completion with
@@ -38,11 +38,11 @@ mit-commit-msg
 ```
 
 ``` shell,verify(stream=stderr)
-error: The following required arguments were not provided:
+error: the following required arguments were not provided:
   <COMMIT_FILE_PATH>
 
 Usage: mit-commit-msg <COMMIT_FILE_PATH>
 
-For more information try '--help'
+For more information, try '--help'.
 ```
 
