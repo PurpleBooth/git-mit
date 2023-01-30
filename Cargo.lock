@@ -645,7 +645,7 @@ dependencies = [
  "clap 4.1.4",
  "clap_complete",
  "git2",
- "indoc 2.0.0",
+ "indoc",
  "miette",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -665,7 +665,7 @@ dependencies = [
  "clap_complete",
  "comfy-table",
  "git2",
- "indoc 2.0.0",
+ "indoc",
  "miette",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -682,7 +682,7 @@ dependencies = [
  "clap 4.1.4",
  "clap_complete",
  "git2",
- "indoc 2.0.0",
+ "indoc",
  "miette",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -701,7 +701,7 @@ dependencies = [
  "clap 4.1.4",
  "clap_complete",
  "git2",
- "indoc 2.0.0",
+ "indoc",
  "miette",
  "mit-commit-message-lints",
  "mit-hook-test-helper",
@@ -806,12 +806,6 @@ dependencies = [
  "autocfg",
  "hashbrown",
 ]
-
-[[package]]
-name = "indoc"
-version = "1.0.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bfa799dd5ed20a7e349f3b4639aa80d74549c81716d9ec4f994c9b5815598306"
 
 [[package]]
 name = "indoc"
@@ -1065,11 +1059,11 @@ dependencies = [
 
 [[package]]
 name = "mit-commit"
-version = "3.1.4"
+version = "3.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f22b1dd8f762fca5c3d2088fc170c405190d59c9ff0365d8a5a84934eb1e3558"
+checksum = "84c4b5f3411cdc41b52356269328b4eb545deaeacf1cc75c366c2bffa8eaf29c"
 dependencies = [
- "indoc 1.0.9",
+ "indoc",
  "lazy_static",
  "miette",
  "nom",
@@ -1087,7 +1081,7 @@ dependencies = [
  "criterion",
  "git2",
  "glob",
- "indoc 2.0.0",
+ "indoc",
  "miette",
  "mit-commit",
  "mit-hook-test-helper",
@@ -1113,7 +1107,7 @@ dependencies = [
  "clap 4.1.4",
  "clap_complete",
  "git2",
- "indoc 2.0.0",
+ "indoc",
  "miette",
  "mit-commit",
  "mit-commit-message-lints",
@@ -1160,7 +1154,7 @@ dependencies = [
  "clap 4.1.4",
  "clap_complete",
  "git2",
- "indoc 2.0.0",
+ "indoc",
  "miette",
  "mit-commit",
  "mit-commit-message-lints",
@@ -1177,7 +1171,7 @@ dependencies = [
  "clap 4.1.4",
  "clap_complete",
  "git2",
- "indoc 2.0.0",
+ "indoc",
  "miette",
  "mit-commit",
  "mit-commit-message-lints",
