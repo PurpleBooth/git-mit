@@ -26,7 +26,7 @@ serde_derive = "1.0.152"
 indoc = "2.0.0"
 toml = "0.5.11"
 mit-commit = "3.1.5"
-mit-lint = "3.2.2"
+mit-lint = "3.2.3"
 comfy-table = "6.1.4"
 clap_complete = "4.1.1"
 clap = { version = "4.1.4", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
