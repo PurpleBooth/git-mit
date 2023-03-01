@@ -40,7 +40,7 @@ vendored-openssl = ["openssl/vendored"]
 [dev-dependencies]
 indoc = "2.0.0"
 
-tempfile = "3.3.0"
+tempfile = "3.4.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
