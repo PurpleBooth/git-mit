@@ -32,7 +32,7 @@ vendored-openssl = ["openssl/vendored"]
 
 
 [dev-dependencies]
-indoc = "2.0.0"
+indoc = "2.0.1"
 
 
   [dev-dependencies.mit-hook-test-helper]
