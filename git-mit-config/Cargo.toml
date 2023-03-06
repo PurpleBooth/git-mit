@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-config"
-version = "5.12.142"
+version = "5.12.143"
 authors = [ "Billie Thompson <billie+git-mit-config@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -24,7 +24,7 @@ comfy-table = "6.1.4"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-  version = "5.12.142"
+  version = "5.12.143"
 
 [dev-dependencies]
 indoc = "2.0.1"
@@ -32,7 +32,7 @@ indoc = "2.0.1"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-  version = "5.12.142"
+  version = "5.12.143"
 
 [features]
 default = []
