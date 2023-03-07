@@ -22,10 +22,10 @@ git2 = "0.16.1"
 openssl = { version = "0.10.45", optional = true }
 regex = "1.7.1"
 serde_yaml = "0.9.19"
-serde_derive = "1.0.152"
+serde_derive = "1.0.153"
 indoc = "2.0.1"
-toml = "0.5.11"
-mit-commit = "3.1.5"
+toml = "0.7.2"
+mit-commit = "3.1.6"
 mit-lint = "3.2.3"
 comfy-table = "6.1.4"
 clap_complete = "4.1.4"
@@ -34,7 +34,7 @@ quickcheck_macros = "1.0.0"
 quickcheck = "1.0.3"
 
   [dependencies.serde]
-version = "1.0.152"
+version = "1.0.153"
 features = [ "derive" ]
 
 [dev-dependencies]
