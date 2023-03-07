@@ -273,8 +273,8 @@ Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
   × could not parse author configuration
    ╭────
  1 │ Hello, I am a broken file
-   · ▲   ▲
-   · │   ╰── invalid in toml: 
+   · ▲    ▲
+   · │    ╰── invalid in toml: 
    · ╰── invalid in yaml: 
    ╰────
   help: `git mit-config mit example` can show you an example of what it
@@ -296,8 +296,8 @@ Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
   × could not parse author configuration
    ╭────
  1 │ Hello, I am a broken file
-   · ▲   ▲
-   · │   ╰── invalid in toml: 
+   · ▲    ▲
+   · │    ╰── invalid in toml: 
    · ╰── invalid in yaml: 
    ╰────
   help: `git mit-config mit example` can show you an example of what it

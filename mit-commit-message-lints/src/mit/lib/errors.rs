@@ -45,19 +45,19 @@ impl DeserializeAuthorsError {
         }
     }
 
-    pub fn span_from_toml_err(err: &TomlDeserializeError, input: &str) -> usize {
-        err.line_col()
-            .map_or(SourceOffset::from(0), |(line, col)| {
-                SourceOffset::from_location(input, line, col)
-            })
-            .offset()
+    pub fn span_from_toml_err(err: &TomlDeserializeError, _input: &str) -> usize {
+        err.span()
+            .map(SourceSpan::from)
+            .map(|span| span.offset())
+            .unwrap_or_default()
     }
 
     pub fn span_from_yaml_err(err: &YamlDeserializeError, input: &str) -> usize {
         err.location()
-            .map_or(SourceOffset::from(0), |location| {
-                SourceOffset::from_location(input, location.line(), location.column())
-            })
+            .map_or_else(
+                || SourceOffset::from(0),
+                |location| SourceOffset::from_location(input, location.line(), location.column()),
+            )
             .offset()
     }
 }

@@ -23,25 +23,19 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
         .map_err(|x| SerialiseLintError {
             src: config.to_string(),
             message: x.to_string(),
-            span: x.line_col().map_or(
-                SourceSpan::new(0.into(), SourceOffset::from(0)),
-                |(line, col)| {
-                    SourceSpan::new(
-                        SourceOffset::from_location(config, line, col),
-                        SourceOffset::from(0),
-                    )
-                },
-            ),
+            span: x
+                .span()
+                .map_or(SourceSpan::new(0.into(), SourceOffset::from(0)), Into::into),
         })?;
 
     let lint_prefix = CONFIG_KEY_PREFIX.split('.').collect::<Vec<_>>();
     let namespace = (*lint_prefix.first().unwrap()).to_string();
 
-    let Some(config) = config.get(&namespace) else { return Ok(vcs_lints) };
+    let Some(config) = config.get(&namespace) else { return Ok(vcs_lints); };
 
     let group = (*lint_prefix.get(1).unwrap()).to_string();
 
-    let Some(lint_names) = config.get(&group) else { return Ok(vcs_lints) };
+    let Some(lint_names) = config.get(&group) else { return Ok(vcs_lints); };
 
     let to_add: Lints = lint_names
         .iter()
