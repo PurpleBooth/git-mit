@@ -53,7 +53,7 @@ class GitMit < Formula
     output = Utils.popen_read("#{bin}/git-mit-config", "mit", "example")
     (testpath/"git-mit.toml").write output
     system "#{bin}/git-mit", "-c", "git-mit.toml", "se"
-    system "git-mit-relates-to", "#12356"
+    system "#{bin}/git-mit-relates-to", "#12356"
     system "git", "add", testpath
     system "git", "commit", "-m", "Example Commit"
     system "#{bin}/git-mit-config", "lint", "available"
