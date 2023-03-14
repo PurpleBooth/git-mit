@@ -640,7 +640,7 @@ checksum = "ad0a93d233ebf96623465aad4046a8d3aa4da22d4f4beba5388838c8a434bbb4"
 
 [[package]]
 name = "git-mit"
-version = "5.12.145"
+version = "5.12.146"
 dependencies = [
  "clap 4.1.8",
  "clap_complete",
@@ -659,7 +659,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-config"
-version = "5.12.145"
+version = "5.12.146"
 dependencies = [
  "clap 4.1.8",
  "clap_complete",
@@ -677,7 +677,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-install"
-version = "5.12.145"
+version = "5.12.146"
 dependencies = [
  "clap 4.1.8",
  "clap_complete",
@@ -696,7 +696,7 @@ dependencies = [
 
 [[package]]
 name = "git-mit-relates-to"
-version = "5.12.145"
+version = "5.12.146"
 dependencies = [
  "clap 4.1.8",
  "clap_complete",
@@ -1079,7 +1079,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-message-lints"
-version = "5.12.145"
+version = "5.12.146"
 dependencies = [
  "clap 4.1.8",
  "clap_complete",
@@ -1107,7 +1107,7 @@ dependencies = [
 
 [[package]]
 name = "mit-commit-msg"
-version = "5.12.145"
+version = "5.12.146"
 dependencies = [
  "arboard",
  "clap 4.1.8",
@@ -1127,7 +1127,7 @@ dependencies = [
 
 [[package]]
 name = "mit-hook-test-helper"
-version = "5.12.145"
+version = "5.12.146"
 dependencies = [
  "git2",
  "openssl",
@@ -1155,7 +1155,7 @@ dependencies = [
 
 [[package]]
 name = "mit-pre-commit"
-version = "5.12.145"
+version = "5.12.146"
 dependencies = [
  "clap 4.1.8",
  "clap_complete",
@@ -1172,7 +1172,7 @@ dependencies = [
 
 [[package]]
 name = "mit-prepare-commit-msg"
-version = "5.12.145"
+version = "5.12.146"
 dependencies = [
  "clap 4.1.8",
  "clap_complete",
