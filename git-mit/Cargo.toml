@@ -28,7 +28,7 @@ openssl = { version = "0.10.45", optional = true }
 [dev-dependencies]
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
-tempfile = "3.4.0"
+tempfile = "3.5.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
