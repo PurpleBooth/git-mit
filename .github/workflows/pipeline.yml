@@ -14,9 +14,6 @@ jobs:
     with:
       skip_formatting: true
 
-  version:
-    uses: PurpleBooth/common-pipelines/.github/workflows/commit-check.yml@v0.6.53
-
   rust-check:
     uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@v0.6.53
     with:
