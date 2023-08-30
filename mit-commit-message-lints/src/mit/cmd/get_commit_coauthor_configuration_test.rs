@@ -35,7 +35,7 @@ fn there_is_a_config_if_the_config_has_not_expired() {
         format!("{}", epoch_with_offset(add_100_seconds)),
     );
 
-    let mut vcs = InMemory::new(&mut strings);
+    let vcs = InMemory::new(&mut strings);
 
     let actual = get_commit_coauthor_configuration(&vcs).expect("Failed to read VCS config");
     let expected: AuthorState<Vec<Author<'_>>> = AuthorState::Some(vec![]);
