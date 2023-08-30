@@ -17,9 +17,9 @@ fn there_is_no_author_config_if_it_has_expired() {
     let now_minus_10 = epoch_with_offset(subtract_100_seconds);
     let mut strings: BTreeMap<String, String> = BTreeMap::new();
     strings.insert(super::CONFIG_KEY_EXPIRES.into(), format!("{now_minus_10}"));
-    let mut vcs = InMemory::new(&mut strings);
+    let vcs = InMemory::new(&mut strings);
 
-    let actual = get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
+    let actual = get_commit_coauthor_configuration(&vcs).expect("Failed to read VCS config");
     let expected = AuthorState::Timeout(OffsetDateTime::from_unix_timestamp(now_minus_10).unwrap());
     assert_eq!(
         expected, actual,
@@ -37,7 +37,7 @@ fn there_is_a_config_if_the_config_has_not_expired() {
 
     let mut vcs = InMemory::new(&mut strings);
 
-    let actual = get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
+    let actual = get_commit_coauthor_configuration(&vcs).expect("Failed to read VCS config");
     let expected: AuthorState<Vec<Author<'_>>> = AuthorState::Some(vec![]);
 
     assert_eq!(
@@ -58,9 +58,9 @@ fn we_get_author_config_back_if_there_is_any() {
         "annie@example.com".into(),
     );
     buffer.insert("mit.author.coauthors.0.name".into(), "Annie Example".into());
-    let mut vcs = InMemory::new(&mut buffer);
+    let vcs = InMemory::new(&mut buffer);
 
-    let actual = get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
+    let actual = get_commit_coauthor_configuration(&vcs).expect("Failed to read VCS config");
     let expected = AuthorState::Some(vec![Author::new(
         "Annie Example".into(),
         "annie@example.com".into(),
@@ -103,9 +103,9 @@ fn we_get_multiple_authors_back_if_there_are_multiple() {
     );
     buffer.insert("mit.author.coauthors.1.name".into(), "Joe Bloggs".into());
 
-    let mut vcs = InMemory::new(&mut buffer);
+    let vcs = InMemory::new(&mut buffer);
 
-    let actual = get_commit_coauthor_configuration(&mut vcs).expect("Failed to read VCS config");
+    let actual = get_commit_coauthor_configuration(&vcs).expect("Failed to read VCS config");
     let expected = AuthorState::Some(vec![
         Author::new("Annie Example".into(), "annie@example.com".into(), None),
         Author::new("Joe Bloggs".into(), "joe@example.com".into(), None),
