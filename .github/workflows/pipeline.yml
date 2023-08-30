@@ -32,13 +32,38 @@ jobs:
       - lint-markdown
       - rust-check
     outputs:
-      version_bump: ${{ steps.release.outputs.version_bump }}
-      current_version: ${{ steps.release.outputs.current_version }}
-      previous_version: ${{ steps.release.outputs.previous_version }}
+      version_bump: ${{ steps.current_version.outputs.current_version != steps.previous_version.outputs.previous_version }}
+      current_version: ${{ steps.current_version.outputs.current_version }}
+      previous_version: ${{ steps.previous_version.outputs.previous_version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: PurpleBooth/versio-release-action@v0.1.17
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+      - name: Get tags
+        run: git fetch --tags origin
+      - shell: bash
+        run: cargo install cargo-edit
+      - shell: bash
+        run: cargo install --locked cocogitto
+      - id: previous_version
+        run: |
+          cog get-version | tee .version
+          echo "previous_version=$( cat .version )"  >> "$GITHUB_OUTPUT"
+          rm .version
+        shell: bash
+      - name: Semver release
         id: release
+        run: |
+          git config --global user.name "cog-bot"
+          git config --global user.email "cog@example.com"
+          cog bump --auto
+      - id: current_version
+        run: |
+          cog get-version | tee .version
+          echo "current_version=$( cat .version )"  >> "$GITHUB_OUTPUT"
+          rm .version
+        shell: bash
 
   cargo-publish:
     if: needs.release.outputs.version_bump
