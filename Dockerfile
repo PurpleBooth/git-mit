@@ -1,4 +1,4 @@
-FROM rust:1.68.0 as builder
+FROM rust:1.72.0 as builder
 
 ## Update the system generally
 RUN apt-get update && \
@@ -24,7 +24,7 @@ RUN help2man target/release/git-mit-config > target/git-mit-config.1
 RUN help2man target/release/git-mit-relates-to > target/git-mit-relates-to.1
 RUN help2man target/release/git-mit-install > target/git-mit-install.1
 
-FROM rust:1.68.0
+FROM rust:1.72.0
 ENV DEBIAN_FRONTEND noninteractive
 
 ## Update the system generally
@@ -32,7 +32,7 @@ RUN apt-get update && \
     apt-get upgrade -y && \
     rm -rf /var/lib/apt/lists/*
 
-### Nice things if for actually using the tool
+### Nice things for actually using the tool
 ## Bash
 RUN apt-get update && \
     apt-get install -y bash bash-completion && \
@@ -56,7 +56,7 @@ RUN apt-get update && \
 ### The Tool
 ## Runtime deps for git-mit
 RUN apt-get update && \
-    apt-get install -y libxkbcommon0 libxcb-shape0 libxcb-xfixes0 libssl1.1 libgcc1 && \
+    apt-get install -y libxkbcommon0 libxcb-shape0 libxcb-xfixes0 libssl3 libgcc1 && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder \
