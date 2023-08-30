@@ -10,13 +10,13 @@ fn unwrap_with_value() {
 }
 
 #[test]
-#[should_panic]
+#[should_panic = "called `AuthorState::unwrap()` on a `None` value"]
 fn unwrap_with_none() {
     assert!(AuthorState::<bool>::None.unwrap());
 }
 
 #[test]
-#[should_panic]
+#[should_panic = "called `AuthorState::unwrap()` on a `Timeout(1970-01-01 0:00:10.0 +00:00:00)` value"]
 fn unwrap_with_timeout() {
     assert!(
         AuthorState::<bool>::Timeout(OffsetDateTime::from_unix_timestamp(10).unwrap()).unwrap()
