@@ -14,9 +14,6 @@ jobs:
     with:
       skip_formatting: true
 
-  version:
-    uses: PurpleBooth/common-pipelines/.github/workflows/commit-check.yml@v0.6.53
-
   rust-check:
     uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@v0.6.53
     with:
@@ -31,7 +28,6 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs:
       - docker-build
-      - version
       - specdown
       - lint-markdown
       - rust-check
