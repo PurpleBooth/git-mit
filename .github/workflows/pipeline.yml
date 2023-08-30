@@ -257,7 +257,7 @@ jobs:
           args: --verbose --latest
           output: CHANGELOG.md
       - id: create_release
-        uses: ncipollo/release-action@v1.12.0
+        uses: ncipollo/release-action@v1.13.0
         with:
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
