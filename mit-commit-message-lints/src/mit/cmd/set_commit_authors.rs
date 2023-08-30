@@ -42,7 +42,7 @@ fn remove_coauthors(config: &mut dyn Vcs) -> Result<()> {
 }
 
 #[allow(clippy::maybe_infinite_iter)]
-fn get_defined_vcs_coauthor_keys(config: &mut dyn Vcs) -> Vec<String> {
+fn get_defined_vcs_coauthor_keys(config: &dyn Vcs) -> Vec<String> {
     (0..)
         .take_while(|index| has_vcs_coauthor(config, *index))
         .flat_map(|index| {

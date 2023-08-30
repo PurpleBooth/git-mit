@@ -50,8 +50,8 @@ async fn main() -> Result<()> {
     let current_dir = env::current_dir().into_diagnostic()?;
 
     let toml = external::read_toml(current_dir.clone())?;
-    let mut git_config = external::Git2::try_from(current_dir)?;
-    let lint_config = read_from_toml_or_else_vcs(&toml, &mut git_config)?;
+    let git_config = external::Git2::try_from(current_dir)?;
+    let lint_config = read_from_toml_or_else_vcs(&toml, &git_config)?;
 
     let lint_problems = async_lint(&commit_message, lint_config).await;
     if lint_problems.is_empty() {

@@ -16,7 +16,7 @@ use crate::{external::Vcs, lints::cmd::errors::SerialiseLintError};
 ///
 /// Will panic if the lint prefix isn't delimited by dots. This should never
 /// happen as it's a constant
-pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lints> {
+pub fn read_from_toml_or_else_vcs(config: &str, vcs: &dyn Vcs) -> Result<Lints> {
     let vcs_lints = try_from_vcs(vcs)?;
     // contains PB  // contains lint // contains config
     let config: BTreeMap<String, BTreeMap<String, BTreeMap<String, bool>>> = toml::from_str(config)
@@ -31,11 +31,15 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
     let lint_prefix = CONFIG_KEY_PREFIX.split('.').collect::<Vec<_>>();
     let namespace = (*lint_prefix.first().unwrap()).to_string();
 
-    let Some(config) = config.get(&namespace) else { return Ok(vcs_lints); };
+    let Some(config) = config.get(&namespace) else {
+        return Ok(vcs_lints);
+    };
 
     let group = (*lint_prefix.get(1).unwrap()).to_string();
 
-    let Some(lint_names) = config.get(&group) else { return Ok(vcs_lints); };
+    let Some(lint_names) = config.get(&group) else {
+        return Ok(vcs_lints);
+    };
 
     let to_add: Lints = lint_names
         .iter()
@@ -58,7 +62,7 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &mut dyn Vcs) -> Result<Lin
 ///
 /// # Errors
 /// If reading from the VCS fails
-fn try_from_vcs(config: &mut dyn Vcs) -> Result<Lints> {
+fn try_from_vcs(config: &dyn Vcs) -> Result<Lints> {
     Ok(Lints::new(
         Lint::all_lints()
             .filter_map(|lint| {

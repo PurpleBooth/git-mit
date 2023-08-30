@@ -26,6 +26,10 @@ use git2::{Config, Repository};
 use tempfile::TempDir;
 
 /// Run a specific hook binary
+///
+/// # Panics
+///
+/// If the cargo command fails to run or for some reason running the hook fails
 #[must_use]
 pub fn run_hook(working_dir: &Path, package: &str, arguments: Vec<&str>) -> Output {
     let toml_path = calculate_cargo_toml_path(package);
@@ -57,6 +61,11 @@ impl Display for PathError {
     }
 }
 /// set the co-authors via the git binary
+///
+/// # Panics
+///
+/// If the git binary fails to run for some reason, or it fails to set the
+/// configuration due to a readonly filesystem or similar.
 pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, index: i64) {
     Command::new("git")
         .current_dir(working_dir)
@@ -77,6 +86,11 @@ pub fn set_co_author(working_dir: &Path, author_name: &str, author_email: &str, 
 }
 
 /// Set the authors expires time via the git binary
+///
+/// # Panics
+///
+/// If the git binary fails to execute, for example if it was not found or was
+/// broken in some way
 pub fn set_author_expires(expiration_time: Duration, working_dir: &Path) {
     let now = format!("{}", expiration_time.as_secs());
     Command::new("git")
@@ -115,6 +129,12 @@ pub fn calculate_cargo_toml_path(package: &str) -> String {
 }
 
 /// Make a config object on a repo in a temporary directory
+///
+/// # Panics
+///
+/// Panics on failure to create a temporary directory, to initialise a git repo
+/// (for example if the filesystem was readonly) or to get the configuration if
+/// the configuration was malformed
 #[must_use]
 pub fn make_config() -> Config {
     let add_repository_to_path = |x: PathBuf| x.join("repository");
@@ -171,6 +191,11 @@ pub fn assert_output(
 /// Get working directory
 ///
 /// This is a new temporary directory with a git repo in it
+///
+/// # Panics
+///
+/// Panics on failed creation of temporary directory, or on initialising git
+/// repo (for example if filesystem is read only)
 #[must_use]
 pub fn setup_working_dir() -> PathBuf {
     let add_repository = |x: PathBuf| x.join("repository");

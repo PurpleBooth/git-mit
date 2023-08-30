@@ -88,7 +88,7 @@ fn from_exec(command: &str) -> Result<String> {
     let commandline = shell_words::split(command).into_diagnostic()?;
     Command::new(commandline.first().unwrap_or(&String::new()))
         .stderr(Stdio::inherit())
-        .args(commandline.iter().skip(1).collect::<Vec<_>>())
+        .args(commandline.iter().skip(1))
         .output()
         .into_diagnostic()
         .and_then(|output| {

@@ -12,10 +12,10 @@ use crate::{current_dir, get_vcs};
 
 pub fn run(scope: Scope) -> Result<()> {
     let current_dir = current_dir()?;
-    let mut vcs = get_vcs(scope == Scope::Local, &current_dir)?;
+    let vcs = get_vcs(scope == Scope::Local, &current_dir)?;
     let input_toml = external::read_toml(current_dir)?;
 
-    let output_toml: String = read_from_toml_or_else_vcs(&input_toml, &mut vcs)?
+    let output_toml: String = read_from_toml_or_else_vcs(&input_toml, &vcs)?
         .try_into()
         .into_diagnostic()?;
 

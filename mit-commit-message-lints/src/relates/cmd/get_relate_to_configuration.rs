@@ -16,7 +16,7 @@ const CONFIG_KEY_EXPIRES: &str = "mit.relate.expires";
 ///
 /// Will fail if reading or writing from the VCS config fails, or it contains
 /// data in an incorrect format
-pub fn get_relate_to_configuration(config: &mut dyn Vcs) -> Result<Option<RelateTo<'_>>> {
+pub fn get_relate_to_configuration(config: &dyn Vcs) -> Result<Option<RelateTo<'_>>> {
     let config_value = config.get_i64(CONFIG_KEY_EXPIRES)?;
 
     match config_value {

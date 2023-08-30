@@ -15,8 +15,9 @@ Arguments:
   [INITIALS]...  Initials of the mit to put in the commit
 
 Options:
-  -c, --config <CONFIG>          Path to a file where mit initials, emails and names can be found [env:
-                                 GIT_MIT_AUTHORS_CONFIG=] [default: $HOME/.config/git-mit/mit.toml]
+  -c, --config <CONFIG>          Path to a file where mit initials, emails and names can be found
+                                 [env: GIT_MIT_AUTHORS_CONFIG=] [default:
+                                 $HOME/.config/git-mit/mit.toml]
   -e, --exec <EXEC>              Execute a command to generate the mit configuration, stdout will be
                                  captured and used instead of the file, if both this and the file is
                                  present, this takes precedence [env: GIT_MIT_AUTHORS_EXEC=]

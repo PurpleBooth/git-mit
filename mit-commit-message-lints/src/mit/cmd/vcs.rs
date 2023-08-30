@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use miette::{Result, WrapErr};
+use miette::Result;
 
 use crate::external::Vcs;
 
@@ -12,12 +12,7 @@ pub fn get_vcs_coauthors_config<'a>(
     (0..)
         .take_while(|index| has_vcs_coauthor(config, *index))
         .map(|index| get_vcs_coauthor_config(config, key, index))
-        .fold(Ok(Vec::<Option<Cow<'a, str>>>::new()), |acc, item| {
-            match (acc, item) {
-                (Err(error), _) | (Ok(_), Err(error)) => Err(error).wrap_err("failed to read "),
-                (Ok(list), Ok(item)) => Ok(vec![list, vec![item]].concat()),
-            }
-        })
+        .collect::<Result<Vec<Option<_>>>>()
 }
 
 pub fn has_vcs_coauthor(config: &dyn Vcs, index: i32) -> bool {

@@ -8,6 +8,8 @@ use miette::GraphicalTheme;
 ///
 /// We also have a secret env `DEBUG_PRETTY_ERRORS` that disables all fancy
 /// output for the specdwon tests
+/// # Panics
+/// If we fail to install the panic hook
 pub fn miette_install() {
     miette::set_panic_hook();
     if env::var("DEBUG_PRETTY_ERRORS").is_ok() {

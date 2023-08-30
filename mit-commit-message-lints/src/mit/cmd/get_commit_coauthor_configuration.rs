@@ -14,9 +14,7 @@ use crate::{
 ///
 /// Will fail if reading or writing from the VCS config fails, or it contains
 /// data in an incorrect format
-pub fn get_commit_coauthor_configuration(
-    config: &mut dyn Vcs,
-) -> Result<AuthorState<Vec<Author<'_>>>> {
+pub fn get_commit_coauthor_configuration(config: &dyn Vcs) -> Result<AuthorState<Vec<Author<'_>>>> {
     let config_value = config.get_i64(CONFIG_KEY_EXPIRES)?;
 
     match config_value {

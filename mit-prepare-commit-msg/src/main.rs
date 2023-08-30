@@ -59,15 +59,15 @@ fn main() -> Result<()> {
 
     let current_dir = env::current_dir().into_diagnostic()?;
 
-    let mut git_config = Git2::try_from(current_dir)?;
+    let git_config = Git2::try_from(current_dir)?;
 
-    if let AuthorState::Some(authors) = get_commit_coauthor_configuration(&mut git_config)? {
+    if let AuthorState::Some(authors) = get_commit_coauthor_configuration(&git_config)? {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?;
     }
 
     let relates_to_template = cli_args
         .relates_to_template
-        .or(get_relates_to_template(&mut git_config)?);
+        .or(get_relates_to_template(&git_config)?);
 
     if let Some(exec) = cli_args.relates_to_exec {
         append_relate_to_trailer_to_commit_message(
@@ -75,7 +75,7 @@ fn main() -> Result<()> {
             &get_relates_to_from_exec(&exec)?,
             relates_to_template,
         )?;
-    } else if let Some(relates_to) = get_relate_to_configuration(&mut git_config)? {
+    } else if let Some(relates_to) = get_relate_to_configuration(&git_config)? {
         append_relate_to_trailer_to_commit_message(
             commit_message_path,
             &relates_to,
@@ -86,7 +86,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_relates_to_template(vcs: &mut Git2) -> Result<Option<String>> {
+fn get_relates_to_template(vcs: &Git2) -> Result<Option<String>> {
     Ok(vcs.get_str("mit.relate.template")?.map(String::from))
 }
 
@@ -173,7 +173,7 @@ fn get_relates_to_from_exec(command: &str) -> Result<RelateTo<'_>> {
     let commandline = shell_words::split(command).into_diagnostic()?;
     Command::new(commandline.first().unwrap_or(&String::new()))
         .stderr(Stdio::inherit())
-        .args(commandline.iter().skip(1).collect::<Vec<_>>())
+        .args(commandline.iter().skip(1))
         .output()
         .into_diagnostic()
         .and_then(|x| {

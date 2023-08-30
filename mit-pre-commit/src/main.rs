@@ -42,8 +42,8 @@ fn main() -> Result<()> {
     }
 
     let current_dir = env::current_dir().into_diagnostic()?;
-    let mut git_config = Git2::try_from(current_dir)?;
-    let co_author_configuration = get_commit_coauthor_configuration(&mut git_config)?;
+    let git_config = Git2::try_from(current_dir)?;
+    let co_author_configuration = get_commit_coauthor_configuration(&git_config)?;
 
     if let AuthorState::Timeout(time) = co_author_configuration {
         return Err(StaleAuthorError::new(time).into());
