@@ -91,13 +91,13 @@ pub fn criterion_benchmark(c: &mut Criterion) {
                 let message =
                     CommitMessage::from(String::from(*message)).add_trailer(Trailer::new(
                         "Relates-to".into(),
-                        get_relate_to_configuration(&mut vcs)
+                        get_relate_to_configuration(&vcs)
                             .unwrap()
                             .unwrap()
                             .to()
                             .into(),
                     ));
-                get_commit_coauthor_configuration(&mut vcs)
+                get_commit_coauthor_configuration(&vcs)
                     .unwrap()
                     .unwrap()
                     .iter()
