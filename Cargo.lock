@@ -245,27 +245,25 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.4.1"
+version = "4.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7c8d502cbaec4595d2e7d5f61e318f05417bd2b66fdc3809498f0d3fdf0bea27"
+checksum = "b1d7b8d5ec32af0fadc644bf1fd509a688c2103b185644bb1e29d164e0703136"
 dependencies = [
  "clap_builder",
  "clap_derive",
- "once_cell",
 ]
 
 [[package]]
 name = "clap_builder"
-version = "4.4.1"
+version = "4.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5891c7bc0edb3e1c2204fc5e94009affabeb1821c9e5fdc3959536c5c0bb984d"
+checksum = "5179bb514e4d7c2051749d8fcefa2ed6d06a9f4e6d69faf3805f5d80b8cf8d56"
 dependencies = [
  "anstream",
  "anstyle",
  "clap_lex 0.5.1",
- "once_cell",
  "strsim",
- "terminal_size 0.2.6",
+ "terminal_size 0.3.0",
  "unicase",
  "unicode-width",
 ]
@@ -276,14 +274,14 @@ version = "4.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "586a385f7ef2f8b4d86bddaa0c094794e7ccbfe5ffef1f434fe928143fc783a5"
 dependencies = [
- "clap 4.4.1",
+ "clap 4.4.4",
 ]
 
 [[package]]
 name = "clap_derive"
-version = "4.4.0"
+version = "4.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9fd1a5729c4548118d7d70ff234a44868d00489a4b6597b0b020918a0e91a1a"
+checksum = "0862016ff20d69b84ef8247369fabf5c008a7417002411897d40ee1f4532b873"
 dependencies = [
  "heck",
  "proc-macro2",
@@ -722,7 +720,7 @@ checksum = "6fb8d784f27acf97159b40fc4db5ecd8aa23b9ad5ef69cdd136d3bc80665f0c0"
 name = "git-mit"
 version = "5.12.147"
 dependencies = [
- "clap 4.4.1",
+ "clap 4.4.4",
  "clap_complete",
  "git2",
  "indoc",
@@ -741,7 +739,7 @@ dependencies = [
 name = "git-mit-config"
 version = "5.12.147"
 dependencies = [
- "clap 4.4.1",
+ "clap 4.4.4",
  "clap_complete",
  "comfy-table",
  "git2",
@@ -759,7 +757,7 @@ dependencies = [
 name = "git-mit-install"
 version = "5.12.147"
 dependencies = [
- "clap 4.4.1",
+ "clap 4.4.4",
  "clap_complete",
  "git2",
  "indoc",
@@ -778,7 +776,7 @@ dependencies = [
 name = "git-mit-relates-to"
 version = "5.12.147"
 dependencies = [
- "clap 4.4.1",
+ "clap 4.4.4",
  "clap_complete",
  "git2",
  "indoc",
@@ -904,24 +902,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2c785eefb63ebd0e33416dfcb8d6da0bf27ce752843a45632a67bf10d4d4b5c4"
 
 [[package]]
-name = "io-lifetimes"
-version = "1.0.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eae7b9aee968036d54dce06cebaefd919e4472e753296daccd6d344e3e2df0c2"
-dependencies = [
- "hermit-abi 0.3.2",
- "libc",
- "windows-sys",
-]
-
-[[package]]
 name = "is-terminal"
 version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cb0889898416213fab133e1d33a0e5858a48177452750691bde3666d0fdbaf8b"
 dependencies = [
  "hermit-abi 0.3.2",
- "rustix 0.38.10",
+ "rustix",
  "windows-sys",
 ]
 
@@ -1021,12 +1008,6 @@ dependencies = [
  "pkg-config",
  "vcpkg",
 ]
-
-[[package]]
-name = "linux-raw-sys"
-version = "0.3.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef53942eb7bf7ff43a617b3e2c1c4a5ecf5944a7c1bc12d7ee39bbb15e5c1519"
 
 [[package]]
 name = "linux-raw-sys"
@@ -1161,7 +1142,7 @@ dependencies = [
 name = "mit-commit-message-lints"
 version = "5.12.147"
 dependencies = [
- "clap 4.4.1",
+ "clap 4.4.4",
  "clap_complete",
  "comfy-table",
  "criterion",
@@ -1190,7 +1171,7 @@ name = "mit-commit-msg"
 version = "5.12.147"
 dependencies = [
  "arboard",
- "clap 4.4.1",
+ "clap 4.4.4",
  "clap_complete",
  "git2",
  "indoc",
@@ -1237,7 +1218,7 @@ dependencies = [
 name = "mit-pre-commit"
 version = "5.12.147"
 dependencies = [
- "clap 4.4.1",
+ "clap 4.4.4",
  "clap_complete",
  "git2",
  "indoc",
@@ -1254,7 +1235,7 @@ dependencies = [
 name = "mit-prepare-commit-msg"
 version = "5.12.147"
 dependencies = [
- "clap 4.4.1",
+ "clap 4.4.4",
  "clap_complete",
  "git2",
  "indoc",
@@ -1671,20 +1652,6 @@ checksum = "d626bb9dae77e28219937af045c257c28bfd3f69333c512553507f5f9798cb76"
 
 [[package]]
 name = "rustix"
-version = "0.37.23"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d69718bf81c6127a49dc64e44a742e8bb9213c0ff8869a22c308f84c1d4ab06"
-dependencies = [
- "bitflags 1.3.2",
- "errno",
- "io-lifetimes",
- "libc",
- "linux-raw-sys 0.3.8",
- "windows-sys",
-]
-
-[[package]]
-name = "rustix"
 version = "0.38.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed6248e1caa625eb708e266e06159f135e8c26f2bb7ceb72dc4b2766d0340964"
@@ -1692,7 +1659,7 @@ dependencies = [
  "bitflags 2.4.0",
  "errno",
  "libc",
- "linux-raw-sys 0.4.5",
+ "linux-raw-sys",
  "windows-sys",
 ]
 
@@ -1942,7 +1909,7 @@ dependencies = [
  "cfg-if",
  "fastrand",
  "redox_syscall",
- "rustix 0.38.10",
+ "rustix",
  "windows-sys",
 ]
 
@@ -1958,11 +1925,11 @@ dependencies = [
 
 [[package]]
 name = "terminal_size"
-version = "0.2.6"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e6bf6f19e9f8ed8d4048dc22981458ebcf406d67e94cd422e5ecd73d63b3237"
+checksum = "21bebf2b7c9e0a515f6e0f8c51dc0f8e4696391e6f1ff30379559f8365fb0df7"
 dependencies = [
- "rustix 0.37.23",
+ "rustix",
  "windows-sys",
 ]
 
