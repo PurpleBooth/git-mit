@@ -38,7 +38,7 @@ version = "1.0.153"
 features = [ "derive" ]
 
 [dev-dependencies]
-criterion = "0.4.0"
+criterion = "0.5.1"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
