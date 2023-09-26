@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.149](https://github.com/PurpleBooth/git-mit/compare/v5.12.148..v5.12.149) - 2023-09-26
+#### Bug Fixes
+- **(deps)** bump comfy-table from 6.2.0 to 7.0.1 - ([4e42234](https://github.com/PurpleBooth/git-mit/commit/4e42234fe07ff93633655c60e67a09595bf9c518)) - dependabot[bot]
+- **(deps)** bump clap from 4.4.1 to 4.4.5 - ([f65af73](https://github.com/PurpleBooth/git-mit/commit/f65af732e5a5f758484f22e1c16d6c81dfb7cfd8)) - dependabot[bot]
+- **(deps)** bump clap_complete from 4.4.1 to 4.4.2 - ([c2eee98](https://github.com/PurpleBooth/git-mit/commit/c2eee98eab990a02598d055255e752fc76868d7f)) - dependabot[bot]
+- **(deps)** bump criterion from 0.4.0 to 0.5.1 - ([8e7bdce](https://github.com/PurpleBooth/git-mit/commit/8e7bdce62fcd3fff1e4617d7455c5341f793a9be)) - dependabot[bot]
+- **(deps)** bump toml from 0.7.6 to 0.8.0 - ([66c94ff](https://github.com/PurpleBooth/git-mit/commit/66c94ff4564873ecbf8d7aa4ae853595521d4db9)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.148](https://github.com/PurpleBooth/git-mit/compare/v5.12.147..v5.12.148) - 2023-09-26
 #### Bug Fixes
 - **(deps)** bump git2 from 0.16.1 to 0.18.1 - ([4152d17](https://github.com/PurpleBooth/git-mit/commit/4152d17165e76aab28edfe0756316783a03332ca)) - dependabot[bot]
