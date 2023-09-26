@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.148](https://github.com/PurpleBooth/git-mit/compare/v5.12.147..v5.12.148) - 2023-09-26
+#### Bug Fixes
+- **(deps)** bump git2 from 0.16.1 to 0.18.1 - ([4152d17](https://github.com/PurpleBooth/git-mit/commit/4152d17165e76aab28edfe0756316783a03332ca)) - dependabot[bot]
+- **(deps)** bump rust from 1.72.0 to 1.72.1 - ([c120932](https://github.com/PurpleBooth/git-mit/commit/c120932aefd9232c810bf67c0e9f1f737baedd07)) - dependabot[bot]
+- **(deps)** bump clap_complete from 4.4.0 to 4.4.1 - ([9a336fb](https://github.com/PurpleBooth/git-mit/commit/9a336fb25dcd1f492dc8fcded535bb7471c9e624)) - dependabot[bot]
+- **(deps)** bump thiserror from 1.0.47 to 1.0.48 - ([2fc9255](https://github.com/PurpleBooth/git-mit/commit/2fc92552980edceeae8f908daf44be1f2b1d1781)) - dependabot[bot]
+- **(deps)** bump regex from 1.9.4 to 1.9.5 - ([b8c8574](https://github.com/PurpleBooth/git-mit/commit/b8c85749e088f330ada648d87b21d9732defd780)) - dependabot[bot]
+#### Continuous Integration
+- **(deps)** bump actions/checkout from 3 to 4 - ([507f10a](https://github.com/PurpleBooth/git-mit/commit/507f10ae8e0da496bfbcd6f963e797102f2ab2bb)) - dependabot[bot]
+- **(deps)** bump ncipollo/release-action from 1.12.0 to 1.13.0 - ([de89a9f](https://github.com/PurpleBooth/git-mit/commit/de89a9f395e6f4a8844ed2dce192fc9b867ce7fe)) - dependabot[bot]
+- Remove deleted action check - ([8010a25](https://github.com/PurpleBooth/git-mit/commit/8010a257d2a549132aa762c06bcd17be28e61e35)) - Billie Thompson
+
+- - -
+
 ## [v5.12.147](https://github.com/PurpleBooth/git-mit/compare/v5.12.146..v5.12.147) - 2023-08-31
 #### Bug Fixes
 - Remove broken version check - ([fa20a63](https://github.com/PurpleBooth/git-mit/commit/fa20a63802dce1e578791775ccbc1a82df178776)) - Billie Thompson

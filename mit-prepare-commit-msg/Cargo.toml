@@ -1,6 +1,6 @@
 [package]
 name = "mit-prepare-commit-msg"
-version = "5.12.147"
+version = "5.12.148"
 authors = [
   "Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>"
 ]
@@ -31,7 +31,7 @@ features = [ "derive" ]
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "5.12.147"
+version = "5.12.148"
 
 [features]
 default = []
@@ -44,4 +44,4 @@ tempfile = "3.4.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-version = "5.12.147"
+version = "5.12.148"
