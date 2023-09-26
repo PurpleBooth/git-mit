@@ -5,7 +5,6 @@ queue_rules:
     conditions:
       - check-success=docker-build / docker-build
       - check-success=lint-markdown / lint-markdown
-      - check-success=rust-check / check
       - check-success=rust-check / test (macos-latest)
       - check-success=rust-check / test (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev)
       - check-success=rust-check / test (windows-latest)
@@ -33,7 +32,6 @@ pull_request_rules:
     conditions:
       - check-success=docker-build / docker-build
       - check-success=lint-markdown / lint-markdown
-      - check-success=rust-check / check
       - check-success=rust-check / test (macos-latest)
       - check-success=rust-check / test (ubuntu-latest, sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev)
       - check-success=rust-check / test (windows-latest)
