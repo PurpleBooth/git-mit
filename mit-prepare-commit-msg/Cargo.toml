@@ -38,7 +38,7 @@ default = []
 vendored-openssl = ["openssl/vendored"]
 
 [dev-dependencies]
-indoc = "2.0.1"
+indoc = "2.0.4"
 
 tempfile = "3.4.0"
 

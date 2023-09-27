@@ -21,7 +21,7 @@ clap = { version = "4.4.5", features = ["derive", "cargo", "wrap_help", "env", "
 git2 = "0.18.1"
 openssl = { version = "0.10.45", optional = true }
 
-indoc = "2.0.1"
+indoc = "2.0.4"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"

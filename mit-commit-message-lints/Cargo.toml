@@ -23,7 +23,7 @@ openssl = { version = "0.10.45", optional = true }
 regex = "1.9.5"
 serde_yaml = "0.9.19"
 serde_derive = "1.0.153"
-indoc = "2.0.1"
+indoc = "2.0.4"
 toml = "0.8.1"
 mit-commit = "3.1.8"
 mit-lint = "3.2.3"
