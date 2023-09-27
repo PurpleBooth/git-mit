@@ -19,7 +19,7 @@ clap = { version = "4.4.5", features = ["derive", "cargo", "wrap_help", "env", "
 git2 = "0.18.1"
 openssl = { version = "0.10.45", optional = true }
 miette = { version = "5.6.0", features = [ "fancy" ] }
-mit-commit = "3.1.6"
+mit-commit = "3.1.8"
 
 arboard = "3.2.0"
 
