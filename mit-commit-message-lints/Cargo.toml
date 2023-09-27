@@ -1,6 +1,6 @@
 [package]
 name = "mit-commit-message-lints"
-version = "5.12.149"
+version = "5.12.150"
 authors = [
   "Billie Thompson <billie+mit-commit-message-lints@billiecodes.com>"
 ]
@@ -42,7 +42,7 @@ criterion = "0.5.1"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-version = "5.12.149"
+version = "5.12.150"
 
 [[bench]]
 name = "trailers"

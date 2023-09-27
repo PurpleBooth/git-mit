@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.150](https://github.com/PurpleBooth/git-mit/compare/v5.12.149..v5.12.150) - 2023-09-27
+#### Bug Fixes
+- **(deps)** bump mit-commit from 3.1.7 to 3.1.8 - ([7f4de85](https://github.com/PurpleBooth/git-mit/commit/7f4de855bf2b014d7c94545c2e25b7e3abaadfed)) - dependabot[bot]
+- **(deps)** bump thiserror from 1.0.48 to 1.0.49 - ([bb37e30](https://github.com/PurpleBooth/git-mit/commit/bb37e30a1773410cb0b94c57bd95087ebca3af03)) - dependabot[bot]
+#### Continuous Integration
+- **(deps)** bump nick-invision/retry from 2.8.2 to 2.9.0 - ([035a4e9](https://github.com/PurpleBooth/git-mit/commit/035a4e9a637f25c552826dc828ae9c72a13a2774)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.149](https://github.com/PurpleBooth/git-mit/compare/v5.12.148..v5.12.149) - 2023-09-26
 #### Bug Fixes
 - **(deps)** bump comfy-table from 6.2.0 to 7.0.1 - ([4e42234](https://github.com/PurpleBooth/git-mit/commit/4e42234fe07ff93633655c60e67a09595bf9c518)) - dependabot[bot]
