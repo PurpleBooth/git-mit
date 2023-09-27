@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.152](https://github.com/PurpleBooth/git-mit/compare/v5.12.151..v5.12.152) - 2023-09-27
+#### Bug Fixes
+- **(deps)** bump mit-lint from 3.2.3 to 3.2.7 - ([11968d2](https://github.com/PurpleBooth/git-mit/commit/11968d29dd73a0fb69bb0ce6479a3405982062e0)) - dependabot[bot]
+- **(deps)** bump indoc from 2.0.3 to 2.0.4 - ([4dabed8](https://github.com/PurpleBooth/git-mit/commit/4dabed88726db568428b127303c405483cd153d5)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.151](https://github.com/PurpleBooth/git-mit/compare/v5.12.150..v5.12.151) - 2023-09-27
 #### Bug Fixes
 - **(deps)** bump toml from 0.8.0 to 0.8.1 - ([b770986](https://github.com/PurpleBooth/git-mit/commit/b77098662d1690bd876d67f2af68ac5ef170621a)) - dependabot[bot]
