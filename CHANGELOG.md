@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.158](https://github.com/PurpleBooth/git-mit/compare/v5.12.157..v5.12.158) - 2023-10-10
+#### Bug Fixes
+- **(deps)** bump regex from 1.9.6 to 1.10.0 - ([7631008](https://github.com/PurpleBooth/git-mit/commit/76310081f11e1bd94a016201399c6cdeb1d4d0b0)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.157](https://github.com/PurpleBooth/git-mit/compare/v5.12.156..v5.12.157) - 2023-10-09
 #### Bug Fixes
 - **(deps)** bump tokio from 1.32.0 to 1.33.0 - ([e7c79cf](https://github.com/PurpleBooth/git-mit/commit/e7c79cf52be77e84ddce3dd97b6f0556536b5453)) - dependabot[bot]
