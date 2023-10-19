@@ -15,6 +15,7 @@ use std::{convert::TryFrom, env, io::stdout, time::Duration};
 
 use clap::{CommandFactory, Parser};
 use clap_complete::generate;
+use errors::NoRepository;
 use git2::Repository;
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
@@ -44,7 +45,11 @@ fn main() -> Result<()> {
     let file_authors = get_authors(&cli_args)?;
     let authors = file_authors.merge(&Authors::try_from(&git_config)?);
 
-    if repo_present() && !is_hook_present() {
+    if !repo_present() {
+        return Err(NoRepository {}.into());
+    }
+
+    if !is_hook_present() {
         not_setup_warning();
     };
 
