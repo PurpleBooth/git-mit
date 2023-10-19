@@ -3,6 +3,11 @@ use std::fmt::Display;
 use miette::{Diagnostic, LabeledSpan, SourceCode};
 use thiserror::Error;
 
+#[derive(Error, Diagnostic, Debug)]
+#[error("no repository")]
+#[diagnostic(help("To add an author run `git mit` from a git repository"))]
+pub struct NoRepository {}
+
 #[derive(Error, Debug)]
 #[error("could not find initial")]
 pub struct UnknownAuthor {
