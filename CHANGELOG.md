@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.162](https://github.com/PurpleBooth/git-mit/compare/v5.12.161..v5.12.162) - 2023-10-19
+#### Bug Fixes
+- Error if  runs outside a git repo (#1298) - ([fe2d1bc](https://github.com/PurpleBooth/git-mit/commit/fe2d1bc1769620b7605028001108779b5b5a5e41)) - Sam Bryant
+
+- - -
+
 ## [v5.12.161](https://github.com/PurpleBooth/git-mit/compare/v5.12.160..v5.12.161) - 2023-10-18
 #### Bug Fixes
 - **(deps)** bump which from 4.4.2 to 5.0.0 - ([0cd9f95](https://github.com/PurpleBooth/git-mit/commit/0cd9f9573a5945958e62611809570f30a242518c)) - dependabot[bot]
