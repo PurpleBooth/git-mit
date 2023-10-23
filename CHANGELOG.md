@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.164](https://github.com/PurpleBooth/git-mit/compare/v5.12.163..v5.12.164) - 2023-10-23
+#### Bug Fixes
+- **(deps)** bump comfy-table from 7.0.1 to 7.1.0 - ([074631b](https://github.com/PurpleBooth/git-mit/commit/074631b19c898887597e09da6a2321f2e8c09067)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.163](https://github.com/PurpleBooth/git-mit/compare/v5.12.162..v5.12.163) - 2023-10-20
 #### Bug Fixes
 - **(deps)** bump thiserror from 1.0.49 to 1.0.50 - ([a5470e2](https://github.com/PurpleBooth/git-mit/commit/a5470e2c4bc274adff90c36c4fa2b9e6dd3840ec)) - dependabot[bot]
