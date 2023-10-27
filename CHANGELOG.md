@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.168](https://github.com/PurpleBooth/git-mit/compare/v5.12.167..v5.12.168) - 2023-10-27
+#### Bug Fixes
+- **(deps)** bump tempfile from 3.8.0 to 3.8.1 - ([b7bf706](https://github.com/PurpleBooth/git-mit/commit/b7bf70617cb74480c6a86d86fa2b34c6a238fe37)) - dependabot[bot]
+- **(deps)** bump toml from 0.8.4 to 0.8.5 - ([b0155cc](https://github.com/PurpleBooth/git-mit/commit/b0155cc9f8dff5a0477e6191f86049de015b9f04)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.167](https://github.com/PurpleBooth/git-mit/compare/v5.12.166..v5.12.167) - 2023-10-26
 #### Bug Fixes
 - **(deps)** bump serde_yaml from 0.9.25 to 0.9.27 - ([bbb6db3](https://github.com/PurpleBooth/git-mit/commit/bbb6db34c79bf9305efd7559f58af773c2895c43)) - dependabot[bot]

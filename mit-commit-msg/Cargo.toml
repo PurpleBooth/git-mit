@@ -1,6 +1,6 @@
 [package]
 name = "mit-commit-msg"
-version = "5.12.167"
+version = "5.12.168"
 authors = [ "Billie Thompson <billie+mit-commit-msg@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -25,7 +25,7 @@ arboard = "3.2.0"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "5.12.167"
+version = "5.12.168"
 
 [dev-dependencies]
 indoc = "2.0.4"
@@ -34,7 +34,7 @@ tempfile = "3.8.1"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-version = "5.12.167"
+version = "5.12.168"
 
 [features]
 default = []
