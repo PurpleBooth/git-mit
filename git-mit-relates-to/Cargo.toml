@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-relates-to"
-version = "5.12.168"
+version = "5.12.169"
 authors = [
   "Billie Thompson <billie+git-mit-relates-to@billiecodes.com>"
 ]
@@ -23,7 +23,7 @@ openssl = { version = "0.10.45", optional = true }
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "5.12.168"
+version = "5.12.169"
 
 [features]
 default = []
@@ -37,4 +37,4 @@ tempfile = "3.8.1"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-version = "5.12.168"
+version = "5.12.169"

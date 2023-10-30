@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.169](https://github.com/PurpleBooth/git-mit/compare/v5.12.168..v5.12.169) - 2023-10-30
+#### Bug Fixes
+- **(deps)** bump toml from 0.8.5 to 0.8.6 - ([cf6370e](https://github.com/PurpleBooth/git-mit/commit/cf6370ed2828f0add8b7c383d1055dfaab877e3d)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.168](https://github.com/PurpleBooth/git-mit/compare/v5.12.167..v5.12.168) - 2023-10-27
 #### Bug Fixes
 - **(deps)** bump tempfile from 3.8.0 to 3.8.1 - ([b7bf706](https://github.com/PurpleBooth/git-mit/commit/b7bf70617cb74480c6a86d86fa2b34c6a238fe37)) - dependabot[bot]
