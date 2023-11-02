@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.170](https://github.com/PurpleBooth/git-mit/compare/v5.12.169..v5.12.170) - 2023-11-02
+#### Bug Fixes
+- **(deps)** bump openssl from 0.10.57 to 0.10.58 - ([ed065cb](https://github.com/PurpleBooth/git-mit/commit/ed065cbaa8230292e4d50b6ba9fe0761b93480a0)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.169](https://github.com/PurpleBooth/git-mit/compare/v5.12.168..v5.12.169) - 2023-10-30
 #### Bug Fixes
 - **(deps)** bump toml from 0.8.5 to 0.8.6 - ([cf6370e](https://github.com/PurpleBooth/git-mit/commit/cf6370ed2828f0add8b7c383d1055dfaab877e3d)) - dependabot[bot]
