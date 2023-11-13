@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="git-mit" src="./logo/logo.png">
+    <img alt="git-mit" width="50%" src="./logo/logo.png">
 </p>
 
 *git-mit* is a suite of git hooks. It's aimed to make pair programming,
