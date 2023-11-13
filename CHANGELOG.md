@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.174](https://github.com/PurpleBooth/git-mit/compare/v5.12.173..v5.12.174) - 2023-11-13
+#### Bug Fixes
+- **(deps)** bump clap from 4.4.7 to 4.4.8 - ([d1b17f4](https://github.com/PurpleBooth/git-mit/commit/d1b17f4aa5941560b4072ee28c8e279e0b2275c4)) - dependabot[bot]
+#### Documentation
+- Make image smaller - ([e81b8a4](https://github.com/PurpleBooth/git-mit/commit/e81b8a4d7fed189aeb26b636e00f1a71991fde66)) - Billie Thompson
+
+- - -
+
 ## [v5.12.173](https://github.com/PurpleBooth/git-mit/compare/v5.12.172..v5.12.173) - 2023-11-10
 #### Bug Fixes
 - **(deps)** bump tokio from 1.33.0 to 1.34.0 - ([c64e3af](https://github.com/PurpleBooth/git-mit/commit/c64e3af600dec6add715b4d86b130716111e1dee)) - dependabot[bot]
