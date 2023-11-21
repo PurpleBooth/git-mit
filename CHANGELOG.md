@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.176](https://github.com/PurpleBooth/git-mit/compare/v5.12.175..v5.12.176) - 2023-11-21
+#### Bug Fixes
+- **(deps)** bump arboard from 3.2.1 to 3.3.0 - ([6e8bb6d](https://github.com/PurpleBooth/git-mit/commit/6e8bb6dd9c79d56afec3970445899125a6338840)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.175](https://github.com/PurpleBooth/git-mit/compare/v5.12.174..v5.12.175) - 2023-11-17
 #### Bug Fixes
 - **(deps)** bump rust from 1.73.0 to 1.74.0 - ([d9339dc](https://github.com/PurpleBooth/git-mit/commit/d9339dced920b4361afe6e47dedb5f77ea63dbe5)) - dependabot[bot]
