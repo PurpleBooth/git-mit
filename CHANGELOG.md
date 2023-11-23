@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.177](https://github.com/PurpleBooth/git-mit/compare/v5.12.176..v5.12.177) - 2023-11-23
+#### Bug Fixes
+- **(deps)** bump openssl from 0.10.59 to 0.10.60 - ([221df88](https://github.com/PurpleBooth/git-mit/commit/221df88e9a2c2ea9d97221f2e2b322af668f4396)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.176](https://github.com/PurpleBooth/git-mit/compare/v5.12.175..v5.12.176) - 2023-11-21
 #### Bug Fixes
 - **(deps)** bump arboard from 3.2.1 to 3.3.0 - ([6e8bb6d](https://github.com/PurpleBooth/git-mit/commit/6e8bb6dd9c79d56afec3970445899125a6338840)) - dependabot[bot]
