@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.178](https://github.com/PurpleBooth/git-mit/compare/v5.12.177..v5.12.178) - 2023-11-29
+#### Bug Fixes
+- **(deps)** bump clap from 4.4.8 to 4.4.10 - ([e1f1323](https://github.com/PurpleBooth/git-mit/commit/e1f1323406154770ab506c454337903ea829caf3)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.177](https://github.com/PurpleBooth/git-mit/compare/v5.12.176..v5.12.177) - 2023-11-23
 #### Bug Fixes
 - **(deps)** bump openssl from 0.10.59 to 0.10.60 - ([221df88](https://github.com/PurpleBooth/git-mit/commit/221df88e9a2c2ea9d97221f2e2b322af668f4396)) - dependabot[bot]
