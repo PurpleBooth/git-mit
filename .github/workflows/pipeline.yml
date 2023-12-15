@@ -274,7 +274,7 @@ jobs:
           lfs: true
           fetch-depth: 0
           ref: v${{ needs.release.outputs.current_version }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - name: Generate a changelog
         uses: PurpleBooth/changelog-action@v0.3.3
         with:
