@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.181](https://github.com/PurpleBooth/git-mit/compare/v5.12.180..v5.12.181) - 2023-12-19
+#### Bug Fixes
+- **(deps)** bump time from 0.3.30 to 0.3.31 - ([702bf0f](https://github.com/PurpleBooth/git-mit/commit/702bf0f1cbf2f239a25c8c9ca606a7deae4a0ad2)) - dependabot[bot]
+- **(deps)** bump thiserror from 1.0.50 to 1.0.51 - ([d3e44ad](https://github.com/PurpleBooth/git-mit/commit/d3e44ad623c1505284d9300972f765d8ce3c0afc)) - dependabot[bot]
+#### Continuous Integration
+- **(deps)** bump actions/download-artifact from 3 to 4 - ([3346e7a](https://github.com/PurpleBooth/git-mit/commit/3346e7a63949f3cdf31b182e1ab5b7d9c67fb390)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.180](https://github.com/PurpleBooth/git-mit/compare/v5.12.179..v5.12.180) - 2023-12-11
 #### Bug Fixes
 - **(deps)** bump tokio from 1.34.0 to 1.35.0 - ([a42c217](https://github.com/PurpleBooth/git-mit/commit/a42c2173d55d0e766c20663a781e6089c6bd0886)) - dependabot[bot]
