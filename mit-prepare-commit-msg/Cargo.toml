@@ -14,7 +14,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 
 [dependencies]
 tinytemplate = "1.2.1"
-thiserror = "1.0.51"
+thiserror = "1.0.52"
 miette = { version = "5.6.0", features = [ "fancy" ] }
 shell-words = "1.1.0"
 clap_complete = "4.4.4"
