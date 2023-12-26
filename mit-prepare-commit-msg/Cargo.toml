@@ -20,7 +20,7 @@ shell-words = "1.1.0"
 clap_complete = "4.4.4"
 clap = { version = "4.4.11", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 git2 = "0.18.1"
-openssl = { version = "0.10.61", optional = true }
+openssl = { version = "0.10.62", optional = true }
 mit-commit = "3.1.8"
 
 
