@@ -17,7 +17,7 @@ thiserror = "1.0.52"
 miette = { version = "5.6.0", features = [ "fancy" ] }
 git2 = "0.18.1"
 openssl = { version = "0.10.62", optional = true }
-clap_complete = "4.4.4"
+clap_complete = "4.4.5"
 clap = { version = "4.4.11", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 
 comfy-table = "7.1.0"
