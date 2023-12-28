@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.182](https://github.com/PurpleBooth/git-mit/compare/v5.12.181..v5.12.182) - 2023-12-28
+#### Bug Fixes
+- **(deps)** bump clap_complete from 4.4.4 to 4.4.5 - ([b57badb](https://github.com/PurpleBooth/git-mit/commit/b57badba7b7494c08ab8f7f48904c080eda4c9cb)) - dependabot[bot]
+- **(deps)** bump tempfile from 3.8.1 to 3.9.0 - ([b842c46](https://github.com/PurpleBooth/git-mit/commit/b842c466c34dbd3e8a04472d485abca0bf6894fa)) - dependabot[bot]
+- **(deps)** bump serde_yaml from 0.9.27 to 0.9.29 - ([8642f1d](https://github.com/PurpleBooth/git-mit/commit/8642f1dd0ac019a8df30562ce6640016a9f9d57b)) - dependabot[bot]
+- **(deps)** bump openssl from 0.10.61 to 0.10.62 - ([735399b](https://github.com/PurpleBooth/git-mit/commit/735399b49d59836acf02e5177442b9cd28a0b15f)) - dependabot[bot]
+- **(deps)** bump thiserror from 1.0.51 to 1.0.52 - ([d8a27b7](https://github.com/PurpleBooth/git-mit/commit/d8a27b733e2abe11a0c402dec52aafa6935c8e3b)) - dependabot[bot]
+- **(deps)** bump unsafe-libyaml from 0.2.9 to 0.2.10 - ([a8031da](https://github.com/PurpleBooth/git-mit/commit/a8031da909ca541e427648d73ace26c46f436523)) - dependabot[bot]
+- **(deps)** bump tokio from 1.35.0 to 1.35.1 - ([5ad202e](https://github.com/PurpleBooth/git-mit/commit/5ad202e9761bf9365ba37b606794d0fbb203e532)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.181](https://github.com/PurpleBooth/git-mit/compare/v5.12.180..v5.12.181) - 2023-12-19
 #### Bug Fixes
 - **(deps)** bump time from 0.3.30 to 0.3.31 - ([702bf0f](https://github.com/PurpleBooth/git-mit/commit/702bf0f1cbf2f239a25c8c9ca606a7deae4a0ad2)) - dependabot[bot]
