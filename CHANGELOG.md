@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.184](https://github.com/PurpleBooth/git-mit/compare/v5.12.183..v5.12.184) - 2024-01-02
+#### Bug Fixes
+- **(deps)** bump clap from 4.4.11 to 4.4.12 - ([fab63f4](https://github.com/PurpleBooth/git-mit/commit/fab63f4b674841ef29b507e13faba4252ecea2bf)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.183](https://github.com/PurpleBooth/git-mit/compare/v5.12.182..v5.12.183) - 2024-01-02
 #### Bug Fixes
 - **(deps)** bump serde_yaml from 0.9.29 to 0.9.30 - ([23a1ffa](https://github.com/PurpleBooth/git-mit/commit/23a1fface3f5ab1a638ea345c71aa7b658876b16)) - dependabot[bot]
