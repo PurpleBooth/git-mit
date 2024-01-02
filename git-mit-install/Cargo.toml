@@ -15,7 +15,7 @@ which = "5.0.0"
 thiserror = "1.0.52"
 miette = { version = "5.6.0", features = [ "fancy" ] }
 clap_complete = "4.4.5"
-clap = { version = "4.4.11", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+clap = { version = "4.4.12", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 
 
 git2 = "0.18.1"
