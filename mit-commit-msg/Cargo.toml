@@ -15,7 +15,7 @@ thiserror = "1.0.52"
 tokio = { version = "1.35.1", features = ["full"] }
 mit-lint = "3.2.7"
 clap_complete = "4.4.5"
-clap = { version = "4.4.12", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+clap = { version = "4.4.13", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 git2 = "0.18.1"
 openssl = { version = "0.10.62", optional = true }
 miette = { version = "5.6.0", features = [ "fancy" ] }
