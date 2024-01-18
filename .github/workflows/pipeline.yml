@@ -184,7 +184,7 @@ jobs:
         with:
           lfs: true
           ref: v${{ needs.release.outputs.current_version }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           path: |
