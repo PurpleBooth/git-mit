@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.185](https://github.com/PurpleBooth/git-mit/compare/v5.12.184..v5.12.185) - 2024-01-22
+#### Bug Fixes
+- **(deps)** bump thiserror from 1.0.52 to 1.0.56 - ([fb32184](https://github.com/PurpleBooth/git-mit/commit/fb32184f1a4210b4856307f3bbfd835c0a39cb0e)) - dependabot[bot]
+- **(deps)** bump clap from 4.4.13 to 4.4.14 - ([e40d31c](https://github.com/PurpleBooth/git-mit/commit/e40d31ceaf9f5b4f9f2f5b80e7e7758cc2117c75)) - dependabot[bot]
+- **(deps)** bump clap_complete from 4.4.5 to 4.4.6 - ([b29463b](https://github.com/PurpleBooth/git-mit/commit/b29463be757d4342cb0f9767936ce950dfba316b)) - dependabot[bot]
+- **(deps)** bump clap from 4.4.12 to 4.4.13 - ([0211a9b](https://github.com/PurpleBooth/git-mit/commit/0211a9b1c01b019a85ca8ec27ed41629759d37a1)) - dependabot[bot]
+- **(src)** Clippy - ([d9fca9d](https://github.com/PurpleBooth/git-mit/commit/d9fca9d34d53651d02db85211ff347a255719570)) - Billie Thompson
+
+- - -
+
 ## [v5.12.184](https://github.com/PurpleBooth/git-mit/compare/v5.12.183..v5.12.184) - 2024-01-02
 #### Bug Fixes
 - **(deps)** bump clap from 4.4.11 to 4.4.12 - ([fab63f4](https://github.com/PurpleBooth/git-mit/commit/fab63f4b674841ef29b507e13faba4252ecea2bf)) - dependabot[bot]
