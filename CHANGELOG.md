@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.186](https://github.com/PurpleBooth/git-mit/compare/v5.12.185..v5.12.186) - 2024-01-23
+#### Bug Fixes
+- **(Homebrew)** Correct url to match what homebrew expects - ([27f43c7](https://github.com/PurpleBooth/git-mit/commit/27f43c7198727fa381971cbe2acebac39eb87c0e)) - Billie Thompson
+- **(deps)** bump openssl from 0.10.62 to 0.10.63 - ([76f8736](https://github.com/PurpleBooth/git-mit/commit/76f8736d3391ca0cfc3413a17d780c174bbb159e)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.185](https://github.com/PurpleBooth/git-mit/compare/v5.12.184..v5.12.185) - 2024-01-22
 #### Bug Fixes
 - **(deps)** bump thiserror from 1.0.52 to 1.0.56 - ([fb32184](https://github.com/PurpleBooth/git-mit/commit/fb32184f1a4210b4856307f3bbfd835c0a39cb0e)) - dependabot[bot]
