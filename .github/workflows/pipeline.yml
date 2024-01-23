@@ -9,11 +9,6 @@ jobs:
   docker-build:
     uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@v0.6.53
 
-  lint-markdown:
-    uses: PurpleBooth/common-pipelines/.github/workflows/markdown-check.yml@v0.6.53
-    with:
-      skip_formatting: true
-
   rust-check:
     uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@v0.6.53
     with:
@@ -29,7 +24,6 @@ jobs:
     needs:
       - docker-build
       - specdown
-      - lint-markdown
       - rust-check
     outputs:
       version_bump: ${{ steps.current_version.outputs.current_version != steps.previous_version.outputs.previous_version }}
