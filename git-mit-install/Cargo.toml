@@ -18,7 +18,7 @@ clap_complete = "4.4.6"
 clap = { version = "4.4.14", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 
 
-git2 = "0.18.1"
+git2 = "0.18.2"
 openssl = { version = "0.10.63", optional = true }
 
 indoc = "2.0.4"
