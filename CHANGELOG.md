@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.188](https://github.com/PurpleBooth/git-mit/compare/v5.12.187..v5.12.188) - 2024-02-15
+#### Bug Fixes
+- **(deps)** bump rust from 1.74.0 to 1.76.0 - ([0ce12e9](https://github.com/PurpleBooth/git-mit/commit/0ce12e9d9ce4229373b6bba46d95eac494e7820f)) - dependabot[bot]
+- **(deps)** bump toml from 0.8.8 to 0.8.10 - ([b7d75a0](https://github.com/PurpleBooth/git-mit/commit/b7d75a03698d6bb22f5ac1abd2d6eade29c280b1)) - dependabot[bot]
+- **(deps)** bump tokio from 1.35.1 to 1.36.0 - ([b8a55bd](https://github.com/PurpleBooth/git-mit/commit/b8a55bd8e1d9567bf1aceffaca75696a18b5d353)) - dependabot[bot]
+- **(deps)** bump time from 0.3.31 to 0.3.34 - ([5fc778d](https://github.com/PurpleBooth/git-mit/commit/5fc778dbdea21bc1cc50c08d105bdd9cfcb533de)) - dependabot[bot]
+- **(deps)** bump regex from 1.10.2 to 1.10.3 - ([e867935](https://github.com/PurpleBooth/git-mit/commit/e8679357d0c75a718237fadf3792880fc39f9134)) - dependabot[bot]
+#### Continuous Integration
+- **(deps)** bump ncipollo/release-action from 1.13.0 to 1.14.0 - ([92d0755](https://github.com/PurpleBooth/git-mit/commit/92d0755f6c415f06a7a3513c0cb7c56640c4d4ae)) - dependabot[bot]
+- **(deps)** bump nick-invision/retry from 2.9.0 to 3.0.0 - ([b18a10b](https://github.com/PurpleBooth/git-mit/commit/b18a10bb033fbe27c48019261ee7b4e4114aa37a)) - dependabot[bot]
+- **(deps)** bump actions/cache from 3 to 4 - ([5f16a8c](https://github.com/PurpleBooth/git-mit/commit/5f16a8c6569169300bfe5b8f790a67e623339823)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.187](https://github.com/PurpleBooth/git-mit/compare/v5.12.186..v5.12.187) - 2024-02-15
 #### Bug Fixes
 - **(deps)** bump libgit2-sys from 0.16.1+1.7.1 to 0.16.2+1.7.2 - ([01ca0e6](https://github.com/PurpleBooth/git-mit/commit/01ca0e6c7d3c272e3ec38d76bd8f6f343eb55672)) - dependabot[bot]
