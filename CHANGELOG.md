@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.191](https://github.com/PurpleBooth/git-mit/compare/v5.12.190..v5.12.191) - 2024-02-15
+#### Bug Fixes
+- **(deps)** bump clap_complete from 4.4.6 to 4.5.0 - ([5a389c8](https://github.com/PurpleBooth/git-mit/commit/5a389c855fb6b0036f3d9033e72df039ac5dbba7)) - dependabot[bot]
+- **(deps)** bump which from 5.0.0 to 6.0.0 - ([f4e0c36](https://github.com/PurpleBooth/git-mit/commit/f4e0c36e375c14a8d7cef4fe7a34f0e7b830a4e0)) - dependabot[bot]
+- **(deps)** bump arboard from 3.3.0 to 3.3.1 - ([bc87b0c](https://github.com/PurpleBooth/git-mit/commit/bc87b0c6834f35479cd3ab02843d8da10da5491f)) - dependabot[bot]
+- **(deps)** bump thiserror from 1.0.56 to 1.0.57 - ([01007c9](https://github.com/PurpleBooth/git-mit/commit/01007c9a0bd8e6e417978fe773faf44bc4dd00e3)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.190](https://github.com/PurpleBooth/git-mit/compare/v5.12.189..v5.12.190) - 2024-02-15
 #### Bug Fixes
 - **(deps)** bump clap from 4.4.14 to 4.5.0 - ([f0de0ee](https://github.com/PurpleBooth/git-mit/commit/f0de0eeb690cbb990c589c7084de55c69bfc3f61)) - dependabot[bot]
