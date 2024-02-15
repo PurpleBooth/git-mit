@@ -28,7 +28,7 @@ version = "5.12.186"
 [dev-dependencies]
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
-tempfile = "3.9.0"
+tempfile = "3.10.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
