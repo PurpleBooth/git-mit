@@ -2,6 +2,102 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.191](https://github.com/PurpleBooth/git-mit/compare/v5.12.190..v5.12.191) - 2024-02-15
+#### Bug Fixes
+- **(deps)** bump clap_complete from 4.4.6 to 4.5.0 - ([5a389c8](https://github.com/PurpleBooth/git-mit/commit/5a389c855fb6b0036f3d9033e72df039ac5dbba7)) - dependabot[bot]
+- **(deps)** bump which from 5.0.0 to 6.0.0 - ([f4e0c36](https://github.com/PurpleBooth/git-mit/commit/f4e0c36e375c14a8d7cef4fe7a34f0e7b830a4e0)) - dependabot[bot]
+- **(deps)** bump arboard from 3.3.0 to 3.3.1 - ([bc87b0c](https://github.com/PurpleBooth/git-mit/commit/bc87b0c6834f35479cd3ab02843d8da10da5491f)) - dependabot[bot]
+- **(deps)** bump thiserror from 1.0.56 to 1.0.57 - ([01007c9](https://github.com/PurpleBooth/git-mit/commit/01007c9a0bd8e6e417978fe773faf44bc4dd00e3)) - dependabot[bot]
+
+- - -
+
+## [v5.12.190](https://github.com/PurpleBooth/git-mit/compare/v5.12.189..v5.12.190) - 2024-02-15
+#### Bug Fixes
+- **(deps)** bump clap from 4.4.14 to 4.5.0 - ([f0de0ee](https://github.com/PurpleBooth/git-mit/commit/f0de0eeb690cbb990c589c7084de55c69bfc3f61)) - dependabot[bot]
+- **(deps)** bump tempfile from 3.9.0 to 3.10.0 - ([26f06c2](https://github.com/PurpleBooth/git-mit/commit/26f06c2af84908ce1c4c4026714f0c238affd8f8)) - dependabot[bot]
+- **(deps)** bump serde_yaml from 0.9.30 to 0.9.31 - ([f820ef0](https://github.com/PurpleBooth/git-mit/commit/f820ef067ce60527b6afdb23be29ac40caa37562)) - dependabot[bot]
+
+- - -
+
+## [v5.12.189](https://github.com/PurpleBooth/git-mit/compare/v5.12.188..v5.12.189) - 2024-02-15
+#### Bug Fixes
+- **(deps)** bump git2 from 0.18.1 to 0.18.2 - ([3a72d38](https://github.com/PurpleBooth/git-mit/commit/3a72d38e2bf87fed6fa43b5d1b615b0ba7e63940)) - dependabot[bot]
+
+- - -
+
+## [v5.12.188](https://github.com/PurpleBooth/git-mit/compare/v5.12.187..v5.12.188) - 2024-02-15
+#### Bug Fixes
+- **(deps)** bump rust from 1.74.0 to 1.76.0 - ([0ce12e9](https://github.com/PurpleBooth/git-mit/commit/0ce12e9d9ce4229373b6bba46d95eac494e7820f)) - dependabot[bot]
+- **(deps)** bump toml from 0.8.8 to 0.8.10 - ([b7d75a0](https://github.com/PurpleBooth/git-mit/commit/b7d75a03698d6bb22f5ac1abd2d6eade29c280b1)) - dependabot[bot]
+- **(deps)** bump tokio from 1.35.1 to 1.36.0 - ([b8a55bd](https://github.com/PurpleBooth/git-mit/commit/b8a55bd8e1d9567bf1aceffaca75696a18b5d353)) - dependabot[bot]
+- **(deps)** bump time from 0.3.31 to 0.3.34 - ([5fc778d](https://github.com/PurpleBooth/git-mit/commit/5fc778dbdea21bc1cc50c08d105bdd9cfcb533de)) - dependabot[bot]
+- **(deps)** bump regex from 1.10.2 to 1.10.3 - ([e867935](https://github.com/PurpleBooth/git-mit/commit/e8679357d0c75a718237fadf3792880fc39f9134)) - dependabot[bot]
+#### Continuous Integration
+- **(deps)** bump ncipollo/release-action from 1.13.0 to 1.14.0 - ([92d0755](https://github.com/PurpleBooth/git-mit/commit/92d0755f6c415f06a7a3513c0cb7c56640c4d4ae)) - dependabot[bot]
+- **(deps)** bump nick-invision/retry from 2.9.0 to 3.0.0 - ([b18a10b](https://github.com/PurpleBooth/git-mit/commit/b18a10bb033fbe27c48019261ee7b4e4114aa37a)) - dependabot[bot]
+- **(deps)** bump actions/cache from 3 to 4 - ([5f16a8c](https://github.com/PurpleBooth/git-mit/commit/5f16a8c6569169300bfe5b8f790a67e623339823)) - dependabot[bot]
+
+- - -
+
+## [v5.12.187](https://github.com/PurpleBooth/git-mit/compare/v5.12.186..v5.12.187) - 2024-02-15
+#### Bug Fixes
+- **(deps)** bump libgit2-sys from 0.16.1+1.7.1 to 0.16.2+1.7.2 - ([01ca0e6](https://github.com/PurpleBooth/git-mit/commit/01ca0e6c7d3c272e3ec38d76bd8f6f343eb55672)) - dependabot[bot]
+#### Continuous Integration
+- **(Mergify)** configuration update (#1369) - ([107470a](https://github.com/PurpleBooth/git-mit/commit/107470a84de92be2e3c376ff09c43579a9732dcb)) - Billie Thompson
+- Remove markdown linting step - ([81135b1](https://github.com/PurpleBooth/git-mit/commit/81135b102e7afd21c5260c38349124c12bc3b20e)) - Billie Thompson
+
+- - -
+
+## [v5.12.186](https://github.com/PurpleBooth/git-mit/compare/v5.12.185..v5.12.186) - 2024-01-23
+#### Bug Fixes
+- **(Homebrew)** Correct url to match what homebrew expects - ([27f43c7](https://github.com/PurpleBooth/git-mit/commit/27f43c7198727fa381971cbe2acebac39eb87c0e)) - Billie Thompson
+- **(deps)** bump openssl from 0.10.62 to 0.10.63 - ([76f8736](https://github.com/PurpleBooth/git-mit/commit/76f8736d3391ca0cfc3413a17d780c174bbb159e)) - dependabot[bot]
+
+- - -
+
+## [v5.12.185](https://github.com/PurpleBooth/git-mit/compare/v5.12.184..v5.12.185) - 2024-01-22
+#### Bug Fixes
+- **(deps)** bump thiserror from 1.0.52 to 1.0.56 - ([fb32184](https://github.com/PurpleBooth/git-mit/commit/fb32184f1a4210b4856307f3bbfd835c0a39cb0e)) - dependabot[bot]
+- **(deps)** bump clap from 4.4.13 to 4.4.14 - ([e40d31c](https://github.com/PurpleBooth/git-mit/commit/e40d31ceaf9f5b4f9f2f5b80e7e7758cc2117c75)) - dependabot[bot]
+- **(deps)** bump clap_complete from 4.4.5 to 4.4.6 - ([b29463b](https://github.com/PurpleBooth/git-mit/commit/b29463be757d4342cb0f9767936ce950dfba316b)) - dependabot[bot]
+- **(deps)** bump clap from 4.4.12 to 4.4.13 - ([0211a9b](https://github.com/PurpleBooth/git-mit/commit/0211a9b1c01b019a85ca8ec27ed41629759d37a1)) - dependabot[bot]
+- **(src)** Clippy - ([d9fca9d](https://github.com/PurpleBooth/git-mit/commit/d9fca9d34d53651d02db85211ff347a255719570)) - Billie Thompson
+
+- - -
+
+## [v5.12.184](https://github.com/PurpleBooth/git-mit/compare/v5.12.183..v5.12.184) - 2024-01-02
+#### Bug Fixes
+- **(deps)** bump clap from 4.4.11 to 4.4.12 - ([fab63f4](https://github.com/PurpleBooth/git-mit/commit/fab63f4b674841ef29b507e13faba4252ecea2bf)) - dependabot[bot]
+
+- - -
+
+## [v5.12.183](https://github.com/PurpleBooth/git-mit/compare/v5.12.182..v5.12.183) - 2024-01-02
+#### Bug Fixes
+- **(deps)** bump serde_yaml from 0.9.29 to 0.9.30 - ([23a1ffa](https://github.com/PurpleBooth/git-mit/commit/23a1fface3f5ab1a638ea345c71aa7b658876b16)) - dependabot[bot]
+
+- - -
+
+## [v5.12.182](https://github.com/PurpleBooth/git-mit/compare/v5.12.181..v5.12.182) - 2023-12-28
+#### Bug Fixes
+- **(deps)** bump clap_complete from 4.4.4 to 4.4.5 - ([b57badb](https://github.com/PurpleBooth/git-mit/commit/b57badba7b7494c08ab8f7f48904c080eda4c9cb)) - dependabot[bot]
+- **(deps)** bump tempfile from 3.8.1 to 3.9.0 - ([b842c46](https://github.com/PurpleBooth/git-mit/commit/b842c466c34dbd3e8a04472d485abca0bf6894fa)) - dependabot[bot]
+- **(deps)** bump serde_yaml from 0.9.27 to 0.9.29 - ([8642f1d](https://github.com/PurpleBooth/git-mit/commit/8642f1dd0ac019a8df30562ce6640016a9f9d57b)) - dependabot[bot]
+- **(deps)** bump openssl from 0.10.61 to 0.10.62 - ([735399b](https://github.com/PurpleBooth/git-mit/commit/735399b49d59836acf02e5177442b9cd28a0b15f)) - dependabot[bot]
+- **(deps)** bump thiserror from 1.0.51 to 1.0.52 - ([d8a27b7](https://github.com/PurpleBooth/git-mit/commit/d8a27b733e2abe11a0c402dec52aafa6935c8e3b)) - dependabot[bot]
+- **(deps)** bump unsafe-libyaml from 0.2.9 to 0.2.10 - ([a8031da](https://github.com/PurpleBooth/git-mit/commit/a8031da909ca541e427648d73ace26c46f436523)) - dependabot[bot]
+- **(deps)** bump tokio from 1.35.0 to 1.35.1 - ([5ad202e](https://github.com/PurpleBooth/git-mit/commit/5ad202e9761bf9365ba37b606794d0fbb203e532)) - dependabot[bot]
+
+- - -
+
+## [v5.12.181](https://github.com/PurpleBooth/git-mit/compare/v5.12.180..v5.12.181) - 2023-12-19
+#### Bug Fixes
+- **(deps)** bump time from 0.3.30 to 0.3.31 - ([702bf0f](https://github.com/PurpleBooth/git-mit/commit/702bf0f1cbf2f239a25c8c9ca606a7deae4a0ad2)) - dependabot[bot]
+- **(deps)** bump thiserror from 1.0.50 to 1.0.51 - ([d3e44ad](https://github.com/PurpleBooth/git-mit/commit/d3e44ad623c1505284d9300972f765d8ce3c0afc)) - dependabot[bot]
+#### Continuous Integration
+- **(deps)** bump actions/download-artifact from 3 to 4 - ([3346e7a](https://github.com/PurpleBooth/git-mit/commit/3346e7a63949f3cdf31b182e1ab5b7d9c67fb390)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.180](https://github.com/PurpleBooth/git-mit/compare/v5.12.179..v5.12.180) - 2023-12-11
 #### Bug Fixes
 - **(deps)** bump tokio from 1.34.0 to 1.35.0 - ([a42c217](https://github.com/PurpleBooth/git-mit/commit/a42c2173d55d0e766c20663a781e6089c6bd0886)) - dependabot[bot]

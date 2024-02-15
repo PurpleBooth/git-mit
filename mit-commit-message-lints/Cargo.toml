@@ -1,6 +1,6 @@
 [package]
 name = "mit-commit-message-lints"
-version = "5.12.180"
+version = "5.12.191"
 authors = [
   "Billie Thompson <billie+mit-commit-message-lints@billiecodes.com>"
 ]
@@ -14,22 +14,22 @@ description = "Check the correctness of a specific commit message. Designed to b
 
 [dependencies]
 shell-words = "1.1.0"
-time = { version = "0.3.30", features = ["local-offset"] }
+time = { version = "0.3.34", features = ["local-offset"] }
 glob = "0.3.1"
-thiserror = "1.0.50"
+thiserror = "1.0.57"
 miette = { version = "5.6.0", features = [ "fancy" ] }
-git2 = "0.18.1"
-openssl = { version = "0.10.61", optional = true }
-regex = "1.10.2"
-serde_yaml = "0.9.27"
+git2 = "0.18.2"
+openssl = { version = "0.10.63", optional = true }
+regex = "1.10.3"
+serde_yaml = "0.9.31"
 serde_derive = "1.0.153"
 indoc = "2.0.4"
-toml = "0.8.8"
+toml = "0.8.10"
 mit-commit = "3.1.8"
 mit-lint = "3.2.7"
 comfy-table = "7.1.0"
-clap_complete = "4.4.4"
-clap = { version = "4.4.11", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+clap_complete = "4.5.0"
+clap = { version = "4.5.0", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 quickcheck_macros = "1.0.0"
 quickcheck = "1.0.3"
 
@@ -42,7 +42,7 @@ criterion = "0.5.1"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-version = "5.12.180"
+version = "5.12.191"
 
 [[bench]]
 name = "trailers"

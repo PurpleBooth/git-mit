@@ -88,7 +88,7 @@ impl TryFrom<&'_ InMemory<'_>> for Authors<'_> {
                     let part = String::from(*fragment_iterator.next().unwrap());
 
                     let mut existing: BTreeMap<String, String> =
-                        acc.get(&initial).map(BTreeMap::clone).unwrap_or_default();
+                        acc.get(&initial).cloned().unwrap_or_default();
                     existing.insert(part, String::from(vcs.get_str(key)?.unwrap()));
 
                     acc.insert(initial, existing);
@@ -100,9 +100,9 @@ impl TryFrom<&'_ InMemory<'_>> for Authors<'_> {
             raw_entries
                 .iter()
                 .filter_map(|(key, cfg)| {
-                    let name = cfg.get("name").map(String::clone);
-                    let email = cfg.get("email").map(String::clone);
-                    let signingkey: Option<String> = cfg.get("signingkey").map(String::clone);
+                    let name = cfg.get("name").cloned();
+                    let email = cfg.get("email").cloned();
+                    let signingkey: Option<String> = cfg.get("signingkey").cloned();
 
                     match (name, email, signingkey) {
                         (Some(name), Some(email), None) => {

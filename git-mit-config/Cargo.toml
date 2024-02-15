@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-config"
-version = "5.12.180"
+version = "5.12.191"
 authors = [ "Billie Thompson <billie+git-mit-config@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -13,18 +13,18 @@ description = "A command for enabling and disabling git lints"
 [dependencies]
 mit-lint = "3.2.7"
 shell-words = "1.1.0"
-thiserror = "1.0.50"
+thiserror = "1.0.57"
 miette = { version = "5.6.0", features = [ "fancy" ] }
-git2 = "0.18.1"
-openssl = { version = "0.10.61", optional = true }
-clap_complete = "4.4.4"
-clap = { version = "4.4.11", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+git2 = "0.18.2"
+openssl = { version = "0.10.63", optional = true }
+clap_complete = "4.5.0"
+clap = { version = "4.5.0", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 
 comfy-table = "7.1.0"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "5.12.180"
+version = "5.12.191"
 
 [dev-dependencies]
 indoc = "2.0.4"
@@ -32,7 +32,7 @@ indoc = "2.0.4"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-version = "5.12.180"
+version = "5.12.191"
 
 [features]
 default = []

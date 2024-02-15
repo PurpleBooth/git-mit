@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-relates-to"
-version = "5.12.180"
+version = "5.12.191"
 authors = [
   "Billie Thompson <billie+git-mit-relates-to@billiecodes.com>"
 ]
@@ -13,17 +13,17 @@ readme = "../README.md"
 repository = "https://github.com/PurpleBooth/git-mit"
 
 [dependencies]
-thiserror = "1.0.50"
+thiserror = "1.0.57"
 miette = { version = "5.6.0", features = [ "fancy" ] }
-clap_complete = "4.4.4"
-clap = { version = "4.4.11", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
-git2 = "0.18.1"
-openssl = { version = "0.10.61", optional = true }
+clap_complete = "4.5.0"
+clap = { version = "4.5.0", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+git2 = "0.18.2"
+openssl = { version = "0.10.63", optional = true }
 
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "5.12.180"
+version = "5.12.191"
 
 [features]
 default = []
@@ -33,8 +33,8 @@ vendored-openssl = ["openssl/vendored"]
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
 indoc = "2.0.4"
-tempfile = "3.8.1"
+tempfile = "3.10.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"
-version = "5.12.180"
+version = "5.12.191"

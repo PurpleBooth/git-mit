@@ -1,6 +1,6 @@
 [package]
 name = "mit-hook-test-helper"
-version = "5.12.180"
+version = "5.12.191"
 authors = [
   "Billie Thompson <billie+mit-hook-test-helper@billiecodes.com>"
 ]
@@ -13,9 +13,9 @@ repository = "https://github.com/PurpleBooth/git-mit"
 description = "Testing help tools for git-mit"
 
 [dependencies]
-tempfile = "3.8.1"
-git2 = "0.18.1"
-openssl = { version = "0.10.61", optional = true }
+tempfile = "3.10.0"
+git2 = "0.18.2"
+openssl = { version = "0.10.63", optional = true }
 
 
 
