@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.187](https://github.com/PurpleBooth/git-mit/compare/v5.12.186..v5.12.187) - 2024-02-15
+#### Bug Fixes
+- **(deps)** bump libgit2-sys from 0.16.1+1.7.1 to 0.16.2+1.7.2 - ([01ca0e6](https://github.com/PurpleBooth/git-mit/commit/01ca0e6c7d3c272e3ec38d76bd8f6f343eb55672)) - dependabot[bot]
+#### Continuous Integration
+- **(Mergify)** configuration update (#1369) - ([107470a](https://github.com/PurpleBooth/git-mit/commit/107470a84de92be2e3c376ff09c43579a9732dcb)) - Billie Thompson
+- Remove markdown linting step - ([81135b1](https://github.com/PurpleBooth/git-mit/commit/81135b102e7afd21c5260c38349124c12bc3b20e)) - Billie Thompson
+
+- - -
+
 ## [v5.12.186](https://github.com/PurpleBooth/git-mit/compare/v5.12.185..v5.12.186) - 2024-01-23
 #### Bug Fixes
 - **(Homebrew)** Correct url to match what homebrew expects - ([27f43c7](https://github.com/PurpleBooth/git-mit/commit/27f43c7198727fa381971cbe2acebac39eb87c0e)) - Billie Thompson
