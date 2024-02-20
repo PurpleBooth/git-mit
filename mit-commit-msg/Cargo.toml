@@ -17,7 +17,7 @@ mit-lint = "3.2.7"
 clap_complete = "4.5.0"
 clap = { version = "4.5.0", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 git2 = "0.18.2"
-openssl = { version = "0.10.63", optional = true }
+openssl = { version = "0.10.64", optional = true }
 miette = { version = "5.6.0", features = [ "fancy" ] }
 mit-commit = "3.1.8"
 
