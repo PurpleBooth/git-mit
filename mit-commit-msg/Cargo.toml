@@ -29,7 +29,7 @@ version = "5.12.191"
 
 [dev-dependencies]
 indoc = "2.0.4"
-tempfile = "3.10.0"
+tempfile = "3.10.1"
 
 
   [dev-dependencies.mit-hook-test-helper]
