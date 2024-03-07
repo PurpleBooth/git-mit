@@ -16,7 +16,7 @@ indoc = "2.0.4"
 thiserror = "1.0.57"
 miette = { version = "5.6.0", features = [ "fancy" ] }
 clap_complete = "4.5.0"
-clap = { version = "4.5.0", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+clap = { version = "4.5.2", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 git2 = "0.18.2"
 openssl = { version = "0.10.63", optional = true }
 
