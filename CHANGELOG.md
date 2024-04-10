@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.192](https://github.com/PurpleBooth/git-mit/compare/ab9956981471c5c732b9fcfef1ba6dc6598688fc..v5.12.192) - 2024-04-10
+#### Bug Fixes
+- Correct the location of backtics in the mit-prepare-commit-msg binary - ([8856ab1](https://github.com/PurpleBooth/git-mit/commit/8856ab1a67f81c6f59aa053840305a0bcbaaed14)) - Billie Thompson
+- Bump versions and fix lints - ([f1c7926](https://github.com/PurpleBooth/git-mit/commit/f1c792655ea3b895bd1a2ef0c8cf7fb57cf56e9c)) - Billie Thompson
+#### Continuous Integration
+- **(deps)** bump PurpleBooth/generate-formula-action from 0.1.10 to 0.1.11 - ([f4ff0c4](https://github.com/PurpleBooth/git-mit/commit/f4ff0c4f5c43644da31b045f3a51e493f119722c)) - dependabot[bot]
+- **(deps)** bump actions/upload-artifact from 3 to 4 - ([ab99569](https://github.com/PurpleBooth/git-mit/commit/ab9956981471c5c732b9fcfef1ba6dc6598688fc)) - dependabot[bot]
+- Use main for rust checks - ([fbe03c8](https://github.com/PurpleBooth/git-mit/commit/fbe03c81eb70d8a1763584e2a21a28a54c5a0acc)) - Billie Thompson
+- Ensure we are formatting on nightly - ([cf68285](https://github.com/PurpleBooth/git-mit/commit/cf682853ac7c3dba1dfec61205b337e15e021626)) - Billie Thompson
+#### Refactoring
+- Reformat code - ([2cda71d](https://github.com/PurpleBooth/git-mit/commit/2cda71df603397023347d6cd96902479d0a78041)) - Billie Thompson
+
+- - -
+
 ## [v5.12.191](https://github.com/PurpleBooth/git-mit/compare/v5.12.190..v5.12.191) - 2024-02-15
 #### Bug Fixes
 - **(deps)** bump clap_complete from 4.4.6 to 4.5.0 - ([5a389c8](https://github.com/PurpleBooth/git-mit/commit/5a389c855fb6b0036f3d9033e72df039ac5dbba7)) - dependabot[bot]
