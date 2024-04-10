@@ -1,4 +1,4 @@
-use std::{borrow::Cow, option::Option};
+use std::borrow::Cow;
 
 use miette::{IntoDiagnostic, Result};
 use time::OffsetDateTime;

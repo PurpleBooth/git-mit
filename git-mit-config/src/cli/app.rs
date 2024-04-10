@@ -134,7 +134,7 @@ pub enum RelatesTo {
     Template {
         #[clap(long, short, value_enum, value_parser, default_value = "local")]
         scope: Scope,
-        /// A TinyTemplate template with a single value variable that will be
+        /// A `TinyTemplate` template with a single value variable that will be
         /// applied to the relates-to trailer
         #[clap(
             index = 1,

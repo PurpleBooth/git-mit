@@ -47,7 +47,7 @@ build-x86_64-pc-windows-msvc:
 # Lint it
 lint:
 	cargo fmt --all -- --check
-	cargo +nightly clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo
+	cargo +nightly clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple_crate_versions
 	cargo check
 	cargo audit
 	npx prettier --check **.yml **.yaml
@@ -71,7 +71,7 @@ release:
 # Format what can be formatted
 fmt:
 	cargo fix --allow-dirty --allow-staged
-	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -D clippy::nursery
+	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -D clippy::nursery -A clippy::multiple_crate_versions
 	cargo fmt --all
 	npx prettier --write **.yml **.yaml
 

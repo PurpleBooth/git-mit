@@ -1,6 +1,5 @@
 use std::{
     convert::TryInto,
-    option::Option,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 

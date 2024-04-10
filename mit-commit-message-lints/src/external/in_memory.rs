@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, convert::TryFrom, string::String};
+use std::{collections::BTreeMap, convert::TryFrom};
 
 use glob::Pattern;
 use miette::{IntoDiagnostic, Report, Result};

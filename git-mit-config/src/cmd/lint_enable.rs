@@ -1,4 +1,4 @@
-use std::{env::current_dir, option::Option::None};
+use std::env::current_dir;
 
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{external, scope::Scope};
