@@ -19,8 +19,8 @@ Arguments:
   [COMMIT_MESSAGE_SOURCE]  The commit message, and can be: message (if a -m or -F option was given
                            to git); template (if a -t option was given or the configuration option
                            commit.template is set in git); merge (if the commit is a merge or a
-                           .git/MERGE_MSG file exists); squash (if a .git/SQUASH_MSG file exists);
-                           or commit
+                           `.git/MERGE_MSG` file exists); squash (if a `.git/SQUASH_MSG` file
+                           exists); or commit
   [COMMIT_SHA]             Commit SHA-1 (if a -c, -C or --amend option was given to git)
 
 Options:
