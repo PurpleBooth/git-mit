@@ -3,7 +3,12 @@
 use std::fmt::Display;
 
 use comfy_table::{
-    modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL, Attribute, Cell, ContentArrangement, Table,
+    modifiers::UTF8_ROUND_CORNERS,
+    presets::UTF8_FULL,
+    Attribute,
+    Cell,
+    ContentArrangement,
+    Table,
 };
 use miette::{Diagnostic, GraphicalReportHandler, Severity};
 use mit_lint::Lints;

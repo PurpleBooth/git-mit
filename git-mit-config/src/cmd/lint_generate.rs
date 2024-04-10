@@ -2,7 +2,10 @@ use std::convert::TryInto;
 
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
-    console::style::to_be_piped, external, lints::read_from_toml_or_else_vcs, scope::Scope,
+    console::style::to_be_piped,
+    external,
+    lints::read_from_toml_or_else_vcs,
+    scope::Scope,
 };
 
 use crate::{current_dir, get_vcs};
