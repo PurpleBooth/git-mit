@@ -10,12 +10,12 @@ jobs:
     uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@v0.6.53
 
   rust-check:
-    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@v0.6.53
+    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
   specdown:
-    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@main
+    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@v0.6.53
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
