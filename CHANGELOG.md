@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.193](https://github.com/PurpleBooth/git-mit/compare/bec768dda0b1bedf8643f23e13f7ff7934bf5826..v5.12.193) - 2024-04-11
+#### Bug Fixes
+- **(deps)** bump rust from 1.76.0 to 1.77.1 - ([bec768d](https://github.com/PurpleBooth/git-mit/commit/bec768dda0b1bedf8643f23e13f7ff7934bf5826)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.192](https://github.com/PurpleBooth/git-mit/compare/ab9956981471c5c732b9fcfef1ba6dc6598688fc..v5.12.192) - 2024-04-10
 #### Bug Fixes
 - Correct the location of backtics in the mit-prepare-commit-msg binary - ([8856ab1](https://github.com/PurpleBooth/git-mit/commit/8856ab1a67f81c6f59aa053840305a0bcbaaed14)) - Billie Thompson
