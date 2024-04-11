@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.194](https://github.com/PurpleBooth/git-mit/compare/1a9492e9975f34bef534e714fb9921e64388d0f2..v5.12.194) - 2024-04-11
+#### Bug Fixes
+- **(deps)** bump time from 0.3.35 to 0.3.36 - ([b45b93f](https://github.com/PurpleBooth/git-mit/commit/b45b93fd9f874243dc86eb9c18c60e645f7935e5)) - dependabot[bot]
+#### Continuous Integration
+- Make artifact names unique - ([1a9492e](https://github.com/PurpleBooth/git-mit/commit/1a9492e9975f34bef534e714fb9921e64388d0f2)) - Billie Thompson
+
+- - -
+
 ## [v5.12.193](https://github.com/PurpleBooth/git-mit/compare/bec768dda0b1bedf8643f23e13f7ff7934bf5826..v5.12.193) - 2024-04-11
 #### Bug Fixes
 - **(deps)** bump rust from 1.76.0 to 1.77.1 - ([bec768d](https://github.com/PurpleBooth/git-mit/commit/bec768dda0b1bedf8643f23e13f7ff7934bf5826)) - dependabot[bot]
