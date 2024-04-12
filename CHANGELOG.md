@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.195](https://github.com/PurpleBooth/git-mit/compare/5e54a6adabb94bff38f2226c5a9a6af16ed2117c..v5.12.195) - 2024-04-12
+#### Bug Fixes
+- **(deps)** bump rust from 1.77.0 to 1.77.2 - ([5e54a6a](https://github.com/PurpleBooth/git-mit/commit/5e54a6adabb94bff38f2226c5a9a6af16ed2117c)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.194](https://github.com/PurpleBooth/git-mit/compare/1a9492e9975f34bef534e714fb9921e64388d0f2..v5.12.194) - 2024-04-11
 #### Bug Fixes
 - **(deps)** bump time from 0.3.35 to 0.3.36 - ([b45b93f](https://github.com/PurpleBooth/git-mit/commit/b45b93fd9f874243dc86eb9c18c60e645f7935e5)) - dependabot[bot]
