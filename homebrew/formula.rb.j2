@@ -4,7 +4,7 @@ class GitMit < Formula
   url "https://github.com/{{ github_repo }}/archive/refs/tags/{{ git_tag }}.tar.gz"
   sha256 "{{ file_sha }}"
   depends_on "help2man" => :build
-  depends_on "rust" => :build
+  depends_on "homebrew/core/rust" => :build
   depends_on "openssl@1.1"
   on_linux do
     depends_on "libxcb"
