@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.196](https://github.com/PurpleBooth/git-mit/compare/c68ded83e351dde32e4446e0808eda10d2332571..v5.12.196) - 2024-04-13
+#### Bug Fixes
+- Update rust to new name in homebrew - ([c68ded8](https://github.com/PurpleBooth/git-mit/commit/c68ded83e351dde32e4446e0808eda10d2332571)) - Billie Thompson
+
+- - -
+
 ## [v5.12.195](https://github.com/PurpleBooth/git-mit/compare/5e54a6adabb94bff38f2226c5a9a6af16ed2117c..v5.12.195) - 2024-04-12
 #### Bug Fixes
 - **(deps)** bump rust from 1.77.0 to 1.77.2 - ([5e54a6a](https://github.com/PurpleBooth/git-mit/commit/5e54a6adabb94bff38f2226c5a9a6af16ed2117c)) - dependabot[bot]
