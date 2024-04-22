@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.197](https://github.com/PurpleBooth/git-mit/compare/73632c5b30058663db97e5529517a2bc0d340bb9..v5.12.197) - 2024-04-22
+#### Bug Fixes
+- **(deps)** bump thiserror from 1.0.58 to 1.0.59 - ([73632c5](https://github.com/PurpleBooth/git-mit/commit/73632c5b30058663db97e5529517a2bc0d340bb9)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.196](https://github.com/PurpleBooth/git-mit/compare/c68ded83e351dde32e4446e0808eda10d2332571..v5.12.196) - 2024-04-13
 #### Bug Fixes
 - Update rust to new name in homebrew - ([c68ded8](https://github.com/PurpleBooth/git-mit/commit/c68ded83e351dde32e4446e0808eda10d2332571)) - Billie Thompson
