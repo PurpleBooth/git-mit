@@ -11,7 +11,7 @@ readme = "../README.md"
 repository = "https://github.com/PurpleBooth/git-mit"
 
 [dependencies]
-thiserror = "1.0.60"
+thiserror = "1.0.61"
 tokio = { version = "1.36.0", features = ["full"] }
 mit-lint = "3.2.7"
 clap_complete = "4.5.0"
