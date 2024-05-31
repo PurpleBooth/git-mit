@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.203](https://github.com/PurpleBooth/git-mit/compare/ff5601ae06078afa075528ab89d5e9096e56d452..v5.12.203) - 2024-05-31
+#### Bug Fixes
+- **(deps)** bump tokio from 1.37.0 to 1.38.0 - ([ff5601a](https://github.com/PurpleBooth/git-mit/commit/ff5601ae06078afa075528ab89d5e9096e56d452)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.202](https://github.com/PurpleBooth/git-mit/compare/39902d3ab843568d94be79ec3a84d9d85ef93ba2..v5.12.202) - 2024-05-20
 #### Bug Fixes
 - **(deps)** bump thiserror from 1.0.60 to 1.0.61 - ([39902d3](https://github.com/PurpleBooth/git-mit/commit/39902d3ab843568d94be79ec3a84d9d85ef93ba2)) - dependabot[bot]
