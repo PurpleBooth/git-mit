@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.206](https://github.com/PurpleBooth/git-mit/compare/33c93adfa5468a6fa48d5028efbae1283053d41f..v5.12.206) - 2024-06-10
+#### Bug Fixes
+- **(deps)** bump regex from 1.10.4 to 1.10.5 - ([3bd8a9b](https://github.com/PurpleBooth/git-mit/commit/3bd8a9bd9a1649fc6123a66aa7eca44671039946)) - dependabot[bot]
+- **(deps)** bump clap_complete from 4.5.4 to 4.5.5 - ([33c93ad](https://github.com/PurpleBooth/git-mit/commit/33c93adfa5468a6fa48d5028efbae1283053d41f)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.205](https://github.com/PurpleBooth/git-mit/compare/5cc968be214e7777111f0c91ab74bdbaed101031..v5.12.205) - 2024-06-07
 #### Bug Fixes
 - **(deps)** bump clap_complete from 4.5.2 to 4.5.4 - ([5cc968b](https://github.com/PurpleBooth/git-mit/commit/5cc968be214e7777111f0c91ab74bdbaed101031)) - dependabot[bot]
