@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.209](https://github.com/PurpleBooth/git-mit/compare/96a62933966e3dc06faf4da98ca129d160b573c8..v5.12.209) - 2024-06-14
+#### Bug Fixes
+- **(deps)** bump rust from 1.78.0 to 1.79.0 - ([96a6293](https://github.com/PurpleBooth/git-mit/commit/96a62933966e3dc06faf4da98ca129d160b573c8)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.208](https://github.com/PurpleBooth/git-mit/compare/9c358f8765af3d47565a255c6b05d38592164524..v5.12.208) - 2024-06-14
 #### Bug Fixes
 - **(deps)** bump git2 from 0.18.3 to 0.19.0 - ([9c358f8](https://github.com/PurpleBooth/git-mit/commit/9c358f8765af3d47565a255c6b05d38592164524)) - dependabot[bot]
