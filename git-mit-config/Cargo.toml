@@ -18,7 +18,7 @@ miette = { version = "5.6.0", features = [ "fancy" ] }
 git2 = "0.19.0"
 openssl = { version = "0.10.63", optional = true }
 clap_complete = "4.5.7"
-clap = { version = "4.5.8", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+clap = { version = "4.5.9", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 
 comfy-table = "7.1.0"
 
