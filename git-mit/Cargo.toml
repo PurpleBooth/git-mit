@@ -15,7 +15,7 @@ shell-words = "1.1.0"
 indoc = "2.0.4"
 thiserror = "1.0.63"
 miette = { version = "5.6.0", features = [ "fancy" ] }
-clap_complete = "4.5.8"
+clap_complete = "4.5.9"
 clap = { version = "4.5.10", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 git2 = "0.19.0"
 openssl = { version = "0.10.66", optional = true }
