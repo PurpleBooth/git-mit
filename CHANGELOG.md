@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.12.218](https://github.com/PurpleBooth/git-mit/compare/06b6eb3133e6be0addc0db8b8e8ff159882fdae5..v5.12.218) - 2024-07-24
+#### Bug Fixes
+- **(deps)** bump tokio from 1.38.1 to 1.39.1 - ([9cff646](https://github.com/PurpleBooth/git-mit/commit/9cff64618f81fff457a96ffc71c49626f864aa7c)) - dependabot[bot]
+- **(deps)** bump clap from 4.5.9 to 4.5.10 - ([06b6eb3](https://github.com/PurpleBooth/git-mit/commit/06b6eb3133e6be0addc0db8b8e8ff159882fdae5)) - dependabot[bot]
+
+- - -
+
 ## [v5.12.217](https://github.com/PurpleBooth/git-mit/compare/66a3d4f3df1f21ba5f962057e9f9c46b4fa86624..v5.12.217) - 2024-07-22
 #### Bug Fixes
 - **(deps)** bump openssl from 0.10.64 to 0.10.66 - ([66a3d4f](https://github.com/PurpleBooth/git-mit/commit/66a3d4f3df1f21ba5f962057e9f9c46b4fa86624)) - dependabot[bot]
