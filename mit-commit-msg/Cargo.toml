@@ -13,13 +13,13 @@ repository = "https://github.com/PurpleBooth/git-mit"
 [dependencies]
 thiserror = "1.0.63"
 tokio = { version = "1.39.1", features = ["full"] }
-mit-lint = "3.2.7"
+mit-lint = "3.2.8"
 clap_complete = "4.5.11"
 clap = { version = "4.5.11", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 git2 = "0.19.0"
 openssl = { version = "0.10.66", optional = true }
-miette = { version = "5.6.0", features = [ "fancy" ] }
-mit-commit = "3.1.8"
+miette = { version = "7.2.0", features = [ "fancy" ] }
+mit-commit = "3.2.0"
 
 arboard = "3.4.0"
 
@@ -28,8 +28,8 @@ arboard = "3.4.0"
 version = "5.13.0"
 
 [dev-dependencies]
-indoc = "2.0.4"
-tempfile = "3.10.0"
+indoc = "2.0.5"
+tempfile = "3.10.1"
 
 
   [dev-dependencies.mit-hook-test-helper]

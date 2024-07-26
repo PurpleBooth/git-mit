@@ -127,7 +127,7 @@ git commit --message="$(cat message)"
 Error: DuplicatedTrailers (https://git-scm.com/docs/githooks#_commit_msg)
 
   × Your commit message has duplicated trailers
-    ╭─[5:1]
+    ╭─[6:1]
   5 │ Co-authored-by: Billie Thompson <billie@example.com>
   6 │ Co-authored-by: Billie Thompson <billie@example.com>
     · ──────────────────────────┬─────────────────────────
@@ -214,7 +214,7 @@ Error: SubjectNotSeparateFromBody (https://git-scm.com/book/en/v2/Distributed-Gi
 
   × Your commit message is missing a blank line between the subject and the
   │ body
-   ╭─[1:1]
+   ╭─[2:1]
  1 │ Demonstration Commit Message
  2 │ This is a commit message that is invalid
    · ────────────────────┬───────────────────
@@ -292,7 +292,7 @@ git commit --message="$(cat message)"
 Error: SubjectLongerThan72Characters (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your subject is longer than 72 characters
-   ╭─[1:1]
+   ╭─[1:73]
  1 │ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
    ·                                                                         ┬
    ·                                                                         ╰── Too long
@@ -370,7 +370,7 @@ git commit --message="$(cat message)"
 Error: BodyWiderThan72Characters (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit has a body wider than 72 characters
-   ╭─[2:1]
+   ╭─[3:73]
  2 │ 
  3 │ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
    ·                                                                         ┬
@@ -547,7 +547,7 @@ git commit --message="$(cat message)"
 Error: SubjectEndsWithPeriod (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit message ends with a period
-   ╭─[1:1]
+   ╭─[1:29]
  1 │ Demonstration Commit Message.
    ·                             ┬
    ·                             ╰── Unneeded period
@@ -751,7 +751,7 @@ git commit --message="$(cat message)"
 Error: PivotalTrackerIdMissing (https://www.pivotaltracker.com/help/api?version=v5#Tracker_Updates_in_SCM_Post_Commit_Hooks)
 
   × Your commit message is missing a Pivotal Tracker ID
-   ╭─[2:1]
+   ╭─[3:1]
  2 │ 
  3 │ This is a commit message that is invalid
    · ────────────────────┬───────────────────
@@ -854,7 +854,7 @@ git commit --message="$(cat message)"
 Error: JiraIssueKeyMissing (https://support.atlassian.com/jira-software-cloud/docs/what-is-an-issue/#Workingwithissues-Projectkeys)
 
   × Your commit message is missing a JIRA Issue Key
-   ╭─[2:1]
+   ╭─[3:1]
  2 │ 
  3 │ This is a commit message that is invalid
    · ────────────────────┬───────────────────
@@ -947,7 +947,7 @@ git commit --message="$(cat message)"
 Error: GitHubIdMissing (https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls#issues-and-pull-requests)
 
   × Your commit message is missing a GitHub ID
-   ╭─[2:1]
+   ╭─[3:1]
  2 │ 
  3 │ This is a commit message that is invalid
    · ────────────────────┬───────────────────

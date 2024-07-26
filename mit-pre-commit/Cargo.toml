@@ -13,12 +13,12 @@ repository = "https://github.com/PurpleBooth/git-mit"
 [dependencies]
 time = "0.3.36"
 thiserror = "1.0.63"
-miette = { version = "5.6.0", features = [ "fancy" ] }
+miette = { version = "7.2.0", features = [ "fancy" ] }
 clap_complete = "4.5.11"
 clap = { version = "4.5.11", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 git2 = "0.19.0"
 openssl = { version = "0.10.66", optional = true }
-mit-commit = "3.1.8"
+mit-commit = "3.2.0"
 
 
 
@@ -32,7 +32,7 @@ vendored-openssl = ["openssl/vendored"]
 
 
 [dev-dependencies]
-indoc = "2.0.4"
+indoc = "2.0.5"
 
 
   [dev-dependencies.mit-hook-test-helper]

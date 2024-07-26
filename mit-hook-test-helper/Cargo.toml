@@ -13,7 +13,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 description = "Testing help tools for git-mit"
 
 [dependencies]
-tempfile = "3.10.0"
+tempfile = "3.10.1"
 git2 = "0.19.0"
 openssl = { version = "0.10.66", optional = true }
 

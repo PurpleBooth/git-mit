@@ -3,7 +3,7 @@ use std::{
     convert::TryInto,
 };
 
-use miette::{IntoDiagnostic, Result, SourceOffset, SourceSpan};
+use miette::{IntoDiagnostic, Result, SourceSpan};
 use mit_lint::{Lint, Lints, CONFIG_KEY_PREFIX};
 
 use crate::{external::Vcs, lints::cmd::errors::SerialiseLintError};
@@ -23,10 +23,9 @@ pub fn read_from_toml_or_else_vcs(config: &str, vcs: &dyn Vcs) -> Result<Lints> 
         .map_err(|x| SerialiseLintError {
             src: config.to_string(),
             message: x.to_string(),
-            span: x.span().map_or_else(
-                || SourceSpan::new(0.into(), SourceOffset::from(0)),
-                Into::into,
-            ),
+            span: x
+                .span()
+                .map_or_else(|| SourceSpan::new(0.into(), 0), Into::into),
         })?;
 
     let lint_prefix = CONFIG_KEY_PREFIX.split('.').collect::<Vec<_>>();

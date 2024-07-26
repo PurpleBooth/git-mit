@@ -26,7 +26,7 @@ impl<'a> Authors<'a> {
 
     /// Create a new author collection
     #[must_use]
-    pub fn new(authors: BTreeMap<String, Author<'a>>) -> Self {
+    pub const fn new(authors: BTreeMap<String, Author<'a>>) -> Self {
         Self { authors }
     }
 
