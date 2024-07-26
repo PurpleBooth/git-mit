@@ -229,6 +229,107 @@ Second Commit
 Co-authored-by: Anyone Else <anyone@example.com>
 ```
 
+## Rebases
+
+It might be preferable not to do this on rebase, you can disable this happening on rebase by running
+
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour-0",expected_exit_code=0)
+git mit-config mit set-non-clean-behaviour no-change
+git mit-config mit non-clean-behaviour
+```
+
+To get the current behaviour run
+
+``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-0",stream=stdout)
+no-change
+```
+
+lets say we have two diverging branches
+
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour-1",expected_exit_code=0)
+echo "Lorem Ipsum" >> new-so-no-conflicts.md
+git switch -c rebase-demo-branch
+git switch -
+git commit --all --message="Diverging commit" --quiet
+git switch -
+```
+
+Now you can rebase changes without adding any additional trailers
+
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour-2",expected_exit_code=0)
+git mit bt se
+echo "Lorem Ipsum" >> README.md
+
+git commit --all --message="Rebase behaviour
+" --quiet
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-2",stream=stdout)
+author: [Billie Thompson billie@example.com] signed-by: [] 
+---
+Rebase behaviour
+
+Co-authored-by: Someone Else <se@example.com>
+```
+
+Then if you rebase the commit stays the same
+
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour-3",expected_exit_code=0)
+git mit bt ae
+git rebase --reset-author-date "-"
+```
+
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour-4",expected_exit_code=0)
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-4",stream=stdout)
+author: [Billie Thompson billie@example.com] signed-by: [] 
+---
+Rebase behaviour
+
+Co-authored-by: Someone Else <se@example.com>
+```
+
+The default setting is to modify the co-authored by.
+
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour-5",expected_exit_code=0)
+git mit-config mit set-non-clean-behaviour add-to
+git mit-config mit non-clean-behaviour
+```
+``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-5",stream=stdout)
+add-to
+```
+
+Now you can rebase changes without adding any additional trailers
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour-6",expected_exit_code=0)
+git mit bt ae
+git rebase --reset-author-date "-"
+```
+
+
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour-7",expected_exit_code=0)
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-7",stream=stdout)
+author: [Billie Thompson billie@example.com] signed-by: [] 
+---
+Rebase behaviour
+
+Co-authored-by: Someone Else <se@example.com>
+Co-authored-by: Anyone Else <anyone@example.com>
+```
+
+## Signed Commits
+
 The command also works with signed commits
 
 The `bt` user has a valid gpg key.

@@ -2,6 +2,7 @@ use std::path::PathBuf;
 
 use clap::Parser;
 use clap_complete::Shell;
+use mit_commit_message_lints::mit::lib::non_clean_behaviour::BehaviourOption;
 
 #[derive(Parser, Clone, Eq, PartialEq)]
 #[clap(author, version, about)]
@@ -29,6 +30,9 @@ pub struct Args {
     /// A template to apply to the relates to trailer
     #[clap(long, env = "GIT_MIT_RELATES_TO_TEMPLATE")]
     pub relates_to_template: Option<String>,
+    /// A template to apply to the relates to trailer
+    #[clap(long, env = "GIT_MIT_SET_NON_CLEAN_BEHAVIOUR")]
+    pub non_clean_behaviour_option: Option<BehaviourOption>,
     #[clap(long, value_enum, value_parser)]
     pub completion: Option<Shell>,
 }

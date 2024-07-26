@@ -36,6 +36,8 @@ mod cmd;
 mod errors;
 use clap::{CommandFactory, Parser};
 
+use crate::cli::app::Action;
+
 fn main() -> Result<()> {
     miette_install();
 
@@ -88,6 +90,12 @@ fn main() -> Result<()> {
         Some(app::Action::Mit {
             action: app::Mit::Example,
         }) => cmd::author_example::run(),
+        Some(Action::Mit {
+            action: app::Mit::NonCleanBehaviour { scope },
+        }) => cmd::non_clean_behaviour::run(scope),
+        Some(Action::Mit {
+            action: app::Mit::SetNonCleanBehaviour { scope, behaviour },
+        }) => cmd::non_clean_behaviour_set::run(scope, behaviour),
         Some(app::Action::RelatesTo {
             action: app::RelatesTo::Template { scope, template },
         }) => cmd::relates_to_template::run(scope, &template),
@@ -96,18 +104,21 @@ fn main() -> Result<()> {
 }
 
 fn get_vcs(local: bool, current_dir: &Path) -> Result<Git2> {
-    let git_config = if local {
+    let (git_config, git_state) = if local {
         Repository::discover(current_dir)
             .map_err(|source| DiscoverGitRepository { source })
             .and_then(|repo: Repository| {
                 repo.config()
                     .map_err(|source| ReadConfigFromGitRepository { source })
+                    .map(|config| (config, Some(repo.state())))
             })?
     } else {
-        Config::open_default().map_err(|source| ReadUserConfigFromGit { source })?
+        Config::open_default()
+            .map_err(|source| ReadUserConfigFromGit { source })
+            .map(|config| (config, None))?
     };
 
-    Ok(Git2::new(git_config))
+    Ok(Git2::new(git_config, git_state))
 }
 
 fn current_dir() -> Result<PathBuf> {

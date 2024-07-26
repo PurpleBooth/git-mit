@@ -30,6 +30,17 @@ pub struct DeserializeAuthorsError {
     pub(crate) toml_message: String,
 }
 
+#[derive(Error, Debug, Diagnostic)]
+#[error("could not parse rebase behaviour configuration")]
+#[diagnostic(
+    code(mit_commit_message_lints::mit::lib::authors::DeserializeRebaseBehaviourError),
+    help("please report this error on our issue tracker, this is a bug")
+)]
+pub struct DeserializeRebaseBehaviourError {
+    #[source_code]
+    pub(crate) src: String,
+}
+
 impl DeserializeAuthorsError {
     pub(crate) fn new(
         input: &str,

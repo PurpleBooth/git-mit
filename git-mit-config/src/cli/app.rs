@@ -1,6 +1,6 @@
 use clap::Parser;
 use clap_complete::Shell;
-use mit_commit_message_lints::scope::Scope;
+use mit_commit_message_lints::{mit::lib::non_clean_behaviour::BehaviourOption, scope::Scope};
 
 #[derive(Parser, Clone, Eq, PartialEq)]
 #[clap(author, version, about)]
@@ -91,6 +91,28 @@ pub enum Mit {
         /// Signing key to use for this user
         #[clap()]
         signingkey: Option<String>,
+    },
+    /// Get the current behaviour when the repository is mid-rebase or merge.
+    NonCleanBehaviour {
+        #[clap(long, value_enum, value_parser, default_value = "local")]
+        scope: Scope,
+    },
+    /// Set the current behaviour when the repository is mid-rebase or merge.
+    SetNonCleanBehaviour {
+        #[clap(long, value_enum, value_parser, default_value = "local")]
+        scope: Scope,
+        /// What to do for rebase, merge commits and similar
+        ///
+        ///
+        /// 'add-to' will add the current author to the commit messages on
+        /// rebase 'no-change' will leave the commit messages as it. This also
+        /// applies to merges and cherry-picks
+        #[clap(
+            index = 1,
+            env = "GIT_MIT_SET_NON_CLEAN_BEHAVIOUR",
+            default_value = "add-to"
+        )]
+        behaviour: BehaviourOption,
     },
     /// Generate a file version of available authors
     Generate {

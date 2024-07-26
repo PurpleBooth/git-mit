@@ -72,7 +72,7 @@ release:
 fmt:
 	cargo +nightly fix --allow-dirty --allow-staged
 	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -D clippy::nursery -A clippy::multiple_crate_versions
-	cargo fmt --all
+	cargo +nightly fmt --all
 	npx prettier --write **.yml **.yaml
 
 # Clean the build directory

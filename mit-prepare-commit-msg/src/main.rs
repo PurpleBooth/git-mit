@@ -24,8 +24,14 @@ use miette::{IntoDiagnostic, Result};
 use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
     console::error_handling::miette_install,
-    external::{Git2, Vcs},
-    mit::{get_commit_coauthor_configuration, Author, AuthorState},
+    external::{Git2, RepoState, Vcs},
+    mit::{
+        cmd::get_config_non_clean_behaviour::get_config_non_clean_behaviour,
+        get_commit_coauthor_configuration,
+        lib::non_clean_behaviour::BehaviourOption,
+        Author,
+        AuthorState,
+    },
     relates::{get_relate_to_configuration, RelateTo},
 };
 use serde::Serialize;
@@ -52,7 +58,7 @@ fn main() -> Result<()> {
         let name = cmd.get_name().to_string();
         generate(completion, &mut cmd, name, &mut stdout());
 
-        std::process::exit(0);
+        return Ok(());
     }
 
     let commit_message_path = cli_args.commit_message_path.ok_or(MissingCommitFilePath)?;
@@ -60,6 +66,33 @@ fn main() -> Result<()> {
     let current_dir = env::current_dir().into_diagnostic()?;
 
     let git_config = Git2::try_from(current_dir)?;
+
+    if matches!(
+        (
+            cli_args
+                .non_clean_behaviour_option
+                .unwrap_or(get_config_non_clean_behaviour(&git_config)?),
+            git_config.state()
+        ),
+        (
+            BehaviourOption::NoChange,
+            Some(
+                RepoState::Merge
+                    | RepoState::Revert
+                    | RepoState::RevertSequence
+                    | RepoState::CherryPick
+                    | RepoState::CherryPickSequence
+                    | RepoState::Bisect
+                    | RepoState::Rebase
+                    | RepoState::RebaseInteractive
+                    | RepoState::RebaseMerge
+                    | RepoState::ApplyMailbox
+                    | RepoState::ApplyMailboxOrRebase
+            )
+        )
+    ) {
+        return Ok(());
+    }
 
     if let AuthorState::Some(authors) = get_commit_coauthor_configuration(&git_config)? {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?;

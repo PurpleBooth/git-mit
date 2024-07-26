@@ -55,11 +55,13 @@ Manage mit configuration
 Usage: git-mit-config mit <COMMAND>
 
 Commands:
-  set        Update or add an initial in the mit configuration
-  generate   Generate a file version of available authors
-  available  List available authors
-  example    Print example mit toml file
-  help       Print this message or the help of the given subcommand(s)
+  set                      Update or add an initial in the mit configuration
+  non-clean-behaviour      Get the current behaviour when the repository is mid-rebase or merge
+  set-non-clean-behaviour  Set the current behaviour when the repository is mid-rebase or merge
+  generate                 Generate a file version of available authors
+  available                List available authors
+  example                  Print example mit toml file
+  help                     Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help  Print help

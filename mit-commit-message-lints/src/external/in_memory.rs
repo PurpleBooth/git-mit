@@ -4,7 +4,7 @@ use glob::Pattern;
 use miette::{IntoDiagnostic, Report, Result};
 
 use crate::{
-    external::Vcs,
+    external::{vcs::RepoState, Vcs},
     mit::{Author, Authors},
 };
 
@@ -68,6 +68,10 @@ impl Vcs for InMemory<'_> {
     fn remove(&mut self, name: &str) -> Result<()> {
         self.store.remove(name);
         Ok(())
+    }
+
+    fn state(&self) -> Option<RepoState> {
+        None
     }
 }
 

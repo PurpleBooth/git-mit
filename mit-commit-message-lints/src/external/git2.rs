@@ -1,10 +1,10 @@
 use std::{collections::BTreeMap, convert::TryFrom, path::PathBuf};
 
-use git2::{Config, Repository};
+use git2::{Config, Repository, RepositoryState};
 use miette::{IntoDiagnostic, Report, Result};
 
 use crate::{
-    external::Vcs,
+    external::{vcs::RepoState, Vcs},
     mit::{Author, Authors},
 };
 
@@ -13,6 +13,7 @@ use crate::{
 pub struct Git2 {
     config_snapshot: git2::Config,
     config_live: git2::Config,
+    state: Option<git2::RepositoryState>,
 }
 
 impl Git2 {
@@ -20,10 +21,11 @@ impl Git2 {
     ///
     /// Will panic if it can't open the git config in snapshot mode
     #[must_use]
-    pub fn new(mut config: git2::Config) -> Self {
+    pub fn new(mut config: git2::Config, state: Option<git2::RepositoryState>) -> Self {
         Self {
             config_snapshot: config.snapshot().unwrap(),
             config_live: config,
+            state,
         }
     }
 
@@ -111,6 +113,24 @@ impl Vcs for Git2 {
 
         Ok(())
     }
+
+    fn state(&self) -> Option<RepoState> {
+        match self.state {
+            None => None,
+            Some(RepositoryState::ApplyMailbox) => Some(RepoState::ApplyMailbox),
+            Some(RepositoryState::Clean) => Some(RepoState::Clean),
+            Some(RepositoryState::Merge) => Some(RepoState::Merge),
+            Some(RepositoryState::Revert) => Some(RepoState::Revert),
+            Some(RepositoryState::RevertSequence) => Some(RepoState::RevertSequence),
+            Some(RepositoryState::CherryPick) => Some(RepoState::CherryPick),
+            Some(RepositoryState::CherryPickSequence) => Some(RepoState::CherryPickSequence),
+            Some(RepositoryState::Bisect) => Some(RepoState::Bisect),
+            Some(RepositoryState::Rebase) => Some(RepoState::Rebase),
+            Some(RepositoryState::RebaseInteractive) => Some(RepoState::RebaseInteractive),
+            Some(RepositoryState::RebaseMerge) => Some(RepoState::RebaseMerge),
+            Some(RepositoryState::ApplyMailboxOrRebase) => Some(RepoState::ApplyMailboxOrRebase),
+        }
+    }
 }
 
 impl TryFrom<PathBuf> for Git2 {
@@ -118,9 +138,12 @@ impl TryFrom<PathBuf> for Git2 {
 
     fn try_from(current_dir: PathBuf) -> Result<Self, Self::Error> {
         Repository::discover(current_dir)
-            .and_then(|x| x.config())
-            .or_else(|_| Config::open_default())
-            .map(Self::new)
+            .and_then(|repo| {
+                let state = repo.state();
+                repo.config().map(|config| (config, Some(state)))
+            })
+            .or_else(|_| (Config::open_default().map(|config| (config, None))))
+            .map(|(config, state)| Self::new(config, state))
             .into_diagnostic()
     }
 }

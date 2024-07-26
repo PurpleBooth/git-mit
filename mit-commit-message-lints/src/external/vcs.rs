@@ -33,6 +33,40 @@ pub trait Vcs {
     ///
     /// If the config fails to write
     fn remove(&mut self, name: &str) -> Result<()>;
+
+    /// The state of the repository currently
+    ///
+    /// None if there is no repository, and we only have config
+    fn state(&self) -> Option<crate::external::vcs::RepoState>;
+}
+
+/// State of the repository
+#[derive(Debug, Copy, Clone)]
+pub enum RepoState {
+    /// No other state is in progress
+    Clean,
+    /// Merging
+    Merge,
+    /// Reverting commit
+    Revert,
+    /// Reverting sequence of commits
+    RevertSequence,
+    /// Cherry-picking commit
+    CherryPick,
+    /// Cherry-picking sequence of commits
+    CherryPickSequence,
+    /// git-bisect is in progress
+    Bisect,
+    /// Repository is in rebase
+    Rebase,
+    /// Repository is in interactive rebase
+    RebaseInteractive,
+    /// Repository is applying rebase merge
+    RebaseMerge,
+    /// Repository is applying mailbox
+    ApplyMailbox,
+    /// Repository is applying mailbox patch or rebasing
+    ApplyMailboxOrRebase,
 }
 
 /// Errors relating to different VCS implementations
