@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.1](https://github.com/PurpleBooth/git-mit/compare/11939547b2d4e7224ffb90a277e0b6a7a651dff9..v5.13.1) - 2024-07-26
+#### Bug Fixes
+- Update deps - ([1193954](https://github.com/PurpleBooth/git-mit/commit/11939547b2d4e7224ffb90a277e0b6a7a651dff9)) - Billie Thompson
+
+- - -
+
 ## [v5.13.0](https://github.com/PurpleBooth/git-mit/compare/9cb9326dd200beda33ee1938034df2bf5ba58964..v5.13.0) - 2024-07-26
 #### Features
 - Allow users to select what the behaviour should be on rebase - ([9cb9326](https://github.com/PurpleBooth/git-mit/commit/9cb9326dd200beda33ee1938034df2bf5ba58964)) - Billie Thompson
