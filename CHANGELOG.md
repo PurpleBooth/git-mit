@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.2](https://github.com/PurpleBooth/git-mit/compare/db557535795a63719a4fc65a810efea8bcb820a8..v5.13.2) - 2024-07-29
+#### Bug Fixes
+- **(deps)** bump tokio from 1.39.1 to 1.39.2 - ([db55753](https://github.com/PurpleBooth/git-mit/commit/db557535795a63719a4fc65a810efea8bcb820a8)) - dependabot[bot]
+
+- - -
+
 ## [v5.13.1](https://github.com/PurpleBooth/git-mit/compare/11939547b2d4e7224ffb90a277e0b6a7a651dff9..v5.13.1) - 2024-07-26
 #### Bug Fixes
 - Update deps - ([1193954](https://github.com/PurpleBooth/git-mit/commit/11939547b2d4e7224ffb90a277e0b6a7a651dff9)) - Billie Thompson
