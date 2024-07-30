@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.3](https://github.com/PurpleBooth/git-mit/compare/86074737699b6170455724eb463ca1e97b6addc1..v5.13.3) - 2024-07-30
+#### Bug Fixes
+- **(deps)** bump which from 6.0.1 to 6.0.2 - ([8607473](https://github.com/PurpleBooth/git-mit/commit/86074737699b6170455724eb463ca1e97b6addc1)) - dependabot[bot]
+
+- - -
+
 ## [v5.13.2](https://github.com/PurpleBooth/git-mit/compare/db557535795a63719a4fc65a810efea8bcb820a8..v5.13.2) - 2024-07-29
 #### Bug Fixes
 - **(deps)** bump tokio from 1.39.1 to 1.39.2 - ([db55753](https://github.com/PurpleBooth/git-mit/commit/db557535795a63719a4fc65a810efea8bcb820a8)) - dependabot[bot]
