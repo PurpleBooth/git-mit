@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.5](https://github.com/PurpleBooth/git-mit/compare/0fe4cf57589b3451efbd4b0a47c0415412854fd3..v5.13.5) - 2024-08-01
+#### Bug Fixes
+- **(deps)** bump toml from 0.8.17 to 0.8.19 - ([83f0253](https://github.com/PurpleBooth/git-mit/commit/83f02531d3f137ac4846edd373c2f62f163d6bf4)) - dependabot[bot]
+- **(deps)** bump clap_complete from 4.5.11 to 4.5.12 - ([35a6dac](https://github.com/PurpleBooth/git-mit/commit/35a6dacdcb85d7ab1aad5e5818dfcea1fd48f30a)) - dependabot[bot]
+#### Continuous Integration
+- **(deps)** bump PurpleBooth/common-pipelines from 0.8.9 to 0.8.15 - ([8db87c1](https://github.com/PurpleBooth/git-mit/commit/8db87c1d9ff9740656885d06c90ae76a82ca01ac)) - dependabot[bot]
+- **(deps)** bump PurpleBooth/common-pipelines from 0.6.53 to 0.8.9 - ([0fe4cf5](https://github.com/PurpleBooth/git-mit/commit/0fe4cf57589b3451efbd4b0a47c0415412854fd3)) - dependabot[bot]
+
+- - -
+
 ## [v5.13.4](https://github.com/PurpleBooth/git-mit/compare/a8443ffcb170f36f13de7e015b763c1175c13f7d..v5.13.4) - 2024-07-31
 #### Bug Fixes
 - **(deps)** bump toml from 0.8.16 to 0.8.17 - ([a8443ff](https://github.com/PurpleBooth/git-mit/commit/a8443ffcb170f36f13de7e015b763c1175c13f7d)) - dependabot[bot]
