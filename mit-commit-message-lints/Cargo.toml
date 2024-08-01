@@ -29,7 +29,7 @@ mit-commit = "3.2.0"
 mit-lint = "3.2.8"
 comfy-table = "7.1.1"
 clap_complete = "4.5.12"
-clap = { version = "4.5.11", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+clap = { version = "4.5.13", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 quickcheck_macros = "1.0.0"
 quickcheck = "1.0.3"
 
