@@ -43,9 +43,7 @@ jobs:
         run: cargo binstall --no-confirm --locked cocogitto
       - id: previous_version
         run: |
-          cog get-version | tee .version
-          echo "previous_version=$( cat .version )"  >> "$GITHUB_OUTPUT"
-          rm .version
+          echo "previous_version=$( cog get-version 2>  /dev/null )"  >> "$GITHUB_OUTPUT"
         shell: bash
       - name: Semver release
         id: release
@@ -55,9 +53,7 @@ jobs:
           cog bump --auto
       - id: current_version
         run: |
-          cog get-version | tee .version
-          echo "current_version=$( cat .version )"  >> "$GITHUB_OUTPUT"
-          rm .version
+          echo "current_version=$( cog get-version 2>  /dev/null )"  >> "$GITHUB_OUTPUT"
         shell: bash
 
   cargo-publish:
