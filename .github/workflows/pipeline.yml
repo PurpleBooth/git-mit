@@ -7,7 +7,7 @@ on:
 
 jobs:
   docker-build:
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@v0.8.15
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@e1b9a421d53898520d3ad1cc601f75e2461289dd # v0.8.15
 
   rust-check:
     uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
@@ -15,7 +15,7 @@ jobs:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
   specdown:
-    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@v0.8.15
+    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@e1b9a421d53898520d3ad1cc601f75e2461289dd # v0.8.15
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
@@ -65,17 +65,17 @@ jobs:
       - release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         name: Checkout the repository
         with:
           ref: v${{ needs.release.outputs.current_version }}
-      - uses: actions-rs/toolchain@v1.0.7
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1.0.7
         with:
           toolchain: stable
           profile: default
       - run: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
       - name: Publish mit-hook-test-helper to Crates
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 30
           max_attempts: 10
@@ -85,7 +85,7 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-commit-message-lints to Crates
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 30
           max_attempts: 10
@@ -95,7 +95,7 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-commit-msg to Crates
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 30
           max_attempts: 10
@@ -105,7 +105,7 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-pre-commit to Crates
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 30
           max_attempts: 10
@@ -115,7 +115,7 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish mit-prepare-commit-msg to Crates
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 30
           max_attempts: 10
@@ -125,7 +125,7 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish git-mit to Crates
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 30
           max_attempts: 10
@@ -135,7 +135,7 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish git-mit-config to Crates
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 30
           max_attempts: 10
@@ -145,7 +145,7 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish git-mit-install to Crates
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 30
           max_attempts: 10
@@ -155,7 +155,7 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       - name: Publish git-mit-relates-to to Crates
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 30
           max_attempts: 10
@@ -174,11 +174,11 @@ jobs:
       - run: ${{ matrix.install }}
         env:
           DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           lfs: true
           ref: v${{ needs.release.outputs.current_version }}
-      - uses: actions/cache@v4
+      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
         with:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           path: |
@@ -186,12 +186,12 @@ jobs:
             ~/.cargo/git
             ~/.cargo/bin
             target
-      - uses: actions-rs/toolchain@v1.0.7
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1.0.7
         with:
           profile: default
           toolchain: stable
           target: ${{ matrix.target }}
-      - uses: actions-rs/cargo@v1.0.3
+      - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # v1.0.3
         with:
           args: --release --locked
           command: build
@@ -233,7 +233,7 @@ jobs:
           REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
         run: mv "./target/release/git-mit$EXTENSION" "./git-mit-$TARGET$EXTENSION"
         shell: bash
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4
         with:
           name: bins-${{ matrix.target }}${{ matrix.suffix }}
           path: ./*${{ matrix.target }}${{ matrix.suffix }}
@@ -267,14 +267,14 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           lfs: true
           fetch-depth: 0
           ref: v${{ needs.release.outputs.current_version }}
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
       - name: Attest binaries
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@210c1913531870065f03ce1f9440dd87bc0938cd # v1
         with:
           subject-path: bins/**/*
       - name: Sign binaries
@@ -287,13 +287,13 @@ jobs:
           fi
           done
       - name: Generate a changelog
-        uses: PurpleBooth/changelog-action@v0.3.3
+        uses: PurpleBooth/changelog-action@ceaac4a8990352de3b83099444e2909738371425 # v0.3.3
         with:
           config: cliff.toml
           args: --verbose --latest
           output: CHANGELOG.md
       - id: create_release
-        uses: ncipollo/release-action@v1.14.0
+        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -306,7 +306,7 @@ jobs:
     if: needs.release.outputs.version_bump
     needs:
       - release
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@v0.8.15
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@e1b9a421d53898520d3ad1cc601f75e2461289dd # v0.8.15
     with:
       current_version: ${{ needs.release.outputs.current_version }}
 
@@ -317,7 +317,7 @@ jobs:
     name: Generate Homebrew Formula
     runs-on: ubuntu-latest
     steps:
-      - uses: PurpleBooth/generate-formula-action@v0.1.11
+      - uses: PurpleBooth/generate-formula-action@280418ee926650a681d647e5b56652d0681ee511 # v0.1.11
         with:
           current_version: ${{ needs.release.outputs.current_version }}
           previous_version: ${{ needs.release.outputs.previous_version }}
