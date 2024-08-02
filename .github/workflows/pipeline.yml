@@ -271,6 +271,10 @@ jobs:
           fetch-depth: 0
           ref: v${{ needs.release.outputs.current_version }}
       - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: bins
+          pattern: bins-*
       - name: Attest binaries
         uses: actions/attest-build-provenance@v1
         with:
@@ -298,7 +302,7 @@ jobs:
           bodyFile: "CHANGELOG.md"
           name: Release v${{ needs.release.outputs.current_version }}
           tag: v${{ needs.release.outputs.current_version }}
-          artifacts: ./bins-*/*
+          artifacts: ./bins/**/*
 
   docker-push:
     if: needs.release.outputs.version_bump
