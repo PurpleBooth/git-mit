@@ -257,6 +257,10 @@ jobs:
             target: x86_64-pc-windows-msvc
             install: echo nothing to install
   generate-github-release:
+    permissions:
+      id-token: write
+      attestations: write
+      contents: write
     if: needs.release.outputs.version_bump
     needs:
       - release
