@@ -34,12 +34,13 @@ jobs:
       - uses: actions/checkout@main
         with:
           fetch-depth: 0
+      - uses: taiki-e/install-action@cargo-binstall
       - name: Get tags
         run: git fetch --tags origin
       - shell: bash
-        run: cargo install cargo-edit
+        run: cargo binstall --no-confirm cargo-edit
       - shell: bash
-        run: cargo install --locked cocogitto
+        run: cargo binstall --no-confirm --locked cocogitto
       - id: previous_version
         run: |
           cog get-version | tee .version
@@ -186,15 +187,12 @@ jobs:
             ~/.cargo/git
             ~/.cargo/bin
             target
-      - uses: actions-rs/toolchain@v1.0.7
+      - uses: taiki-e/install-action@cargo-binstall
+      - uses: dtolnay/rust-toolchain@master
         with:
-          profile: default
           toolchain: stable
           target: ${{ matrix.target }}
-      - uses: actions-rs/cargo@v1.0.3
-        with:
-          args: --release --locked
-          command: build
+      - run: cargo build --release --locked
       - id: get_repository_name
         run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")" >> "$GITHUB_OUTPUT"
         shell: bash
