@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.7](https://github.com/PurpleBooth/git-mit/compare/4130dc11a0477220fa723ddc51a0a145208941ac..v5.13.7) - 2024-08-02
+#### Bug Fixes
+- Publish attestations - ([921cae3](https://github.com/PurpleBooth/git-mit/commit/921cae3a8a41bdd053b53186c2b71449757eb7b8)) - Billie Thompson
+#### Continuous Integration
+- Switch to faster actions - ([ffe7c88](https://github.com/PurpleBooth/git-mit/commit/ffe7c88732c68135855068b78b65f8645bd739bb)) - Billie Thompson
+- Remove old style set-output - ([0a60675](https://github.com/PurpleBooth/git-mit/commit/0a606753545adf0e4bb138f2c3931615694e996b)) - Billie Thompson
+- Add permissions for signing - ([9c807bb](https://github.com/PurpleBooth/git-mit/commit/9c807bb3b9211d6a3eaa33a461f6c7899ff16082)) - Billie Thompson
+- Create renovate.json - ([4130dc1](https://github.com/PurpleBooth/git-mit/commit/4130dc11a0477220fa723ddc51a0a145208941ac)) - Billie Thompson
+
+- - -
+
 ## [v5.13.6](https://github.com/PurpleBooth/git-mit/compare/43e88224933cf0fa5baecbb59428cb654c92921e..v5.13.6) - 2024-08-01
 #### Bug Fixes
 - **(deps)** bump clap from 4.5.11 to 4.5.13 - ([43e8822](https://github.com/PurpleBooth/git-mit/commit/43e88224933cf0fa5baecbb59428cb654c92921e)) - dependabot[bot]
