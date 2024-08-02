@@ -269,6 +269,19 @@ jobs:
           fetch-depth: 0
           ref: v${{ needs.release.outputs.current_version }}
       - uses: actions/download-artifact@v4
+      - name: Attest binaries
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: bins/**/*
+      - name: Sign binaries
+        run: |
+          cd bins
+          for file in *; do
+          if [[ -f "$file" ]]; then
+           sha256sum "$file" > "$file.sha256"
+           md5sum "$file" > "$file.md5"
+          fi
+          done
       - name: Generate a changelog
         uses: PurpleBooth/changelog-action@v0.3.3
         with:
