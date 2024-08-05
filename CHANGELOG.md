@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.9](https://github.com/PurpleBooth/git-mit/compare/1a8307406e7120f730d06a3e52a303ad9dd09111..v5.13.9) - 2024-08-05
+#### Bug Fixes
+- **(deps)** bump regex from 1.10.5 to 1.10.6 - ([be15042](https://github.com/PurpleBooth/git-mit/commit/be15042d915d5073f972ea07222c8665917a211c)) - dependabot[bot]
+- **(deps)** bump tempfile from 3.10.1 to 3.11.0 - ([1a83074](https://github.com/PurpleBooth/git-mit/commit/1a8307406e7120f730d06a3e52a303ad9dd09111)) - dependabot[bot]
+
+- - -
+
 ## [v5.13.8](https://github.com/PurpleBooth/git-mit/compare/7afee160b0bb5897d206e64d70740b2adf4166ab..v5.13.8) - 2024-08-05
 #### Bug Fixes
 - **(deps)** update rust crate regex to v1.10.6 - ([a919210](https://github.com/PurpleBooth/git-mit/commit/a91921054b6c281ef8f72bac1c95728f0b00af4c)) - renovate[bot]
