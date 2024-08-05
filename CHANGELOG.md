@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.8](https://github.com/PurpleBooth/git-mit/compare/7afee160b0bb5897d206e64d70740b2adf4166ab..v5.13.8) - 2024-08-05
+#### Bug Fixes
+- **(deps)** update rust crate regex to v1.10.6 - ([a919210](https://github.com/PurpleBooth/git-mit/commit/a91921054b6c281ef8f72bac1c95728f0b00af4c)) - renovate[bot]
+#### Continuous Integration
+- **(Mergify)** configuration update - ([080cb80](https://github.com/PurpleBooth/git-mit/commit/080cb80b8fe6262342641bda87fe5430840be65e)) - Billie Thompson
+- **(deps)** bump PurpleBooth/generate-formula-action from 0.1.11 to 0.1.13 - ([29abb7d](https://github.com/PurpleBooth/git-mit/commit/29abb7d801394f8c35193106a1cb877a2c816b7f)) - dependabot[bot]
+- **(deps)** bump PurpleBooth/common-pipelines from 0.8.15 to 0.8.23 - ([96b37ab](https://github.com/PurpleBooth/git-mit/commit/96b37ab5a193c56c2a70e9d898e91ea3077ff6cc)) - dependabot[bot]
+- don't use interstitial .version - ([54dbca2](https://github.com/PurpleBooth/git-mit/commit/54dbca220f80f7feed7f6164dc071b1f3fea5dff)) - Billie Thompson
+- Merge releases - ([7afee16](https://github.com/PurpleBooth/git-mit/commit/7afee160b0bb5897d206e64d70740b2adf4166ab)) - Billie Thompson
+#### Miscellaneous Chores
+- **(deps)** update purplebooth/common-pipelines action to v0.8.25 - ([36ffbfe](https://github.com/PurpleBooth/git-mit/commit/36ffbfe482d0c47abe14946bf654bbb026535514)) - renovate[bot]
+
+- - -
+
 ## [v5.13.7](https://github.com/PurpleBooth/git-mit/compare/4130dc11a0477220fa723ddc51a0a145208941ac..v5.13.7) - 2024-08-02
 #### Bug Fixes
 - Publish attestations - ([921cae3](https://github.com/PurpleBooth/git-mit/commit/921cae3a8a41bdd053b53186c2b71449757eb7b8)) - Billie Thompson
