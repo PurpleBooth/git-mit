@@ -14,7 +14,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 which = "6.0.2"
 thiserror = "1.0.63"
 miette = { version = "7.2.0", features = [ "fancy" ] }
-clap_complete = "4.5.12"
+clap_complete = "4.5.13"
 clap = { version = "4.5.14", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 
 
