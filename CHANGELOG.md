@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.10](https://github.com/PurpleBooth/git-mit/compare/54d34489c59fb46c1bc248d8ffeb9f10f0e1e56d..v5.13.10) - 2024-08-09
+#### Bug Fixes
+- **(deps)** bump clap from 4.5.13 to 4.5.14 - ([01e3d80](https://github.com/PurpleBooth/git-mit/commit/01e3d804213e65132c683751bcf41790f78d1d8b)) - dependabot[bot]
+#### Continuous Integration
+- **(deps)** bump PurpleBooth/common-pipelines from 0.8.26 to 0.8.27 - ([57b2307](https://github.com/PurpleBooth/git-mit/commit/57b230746e09263c77a586307e94d966da2891f1)) - dependabot[bot]
+- **(deps)** bump PurpleBooth/common-pipelines from 0.8.25 to 0.8.26 - ([4bacc07](https://github.com/PurpleBooth/git-mit/commit/4bacc07c5da8ce2c5f8d55040d47e10a2c08156f)) - dependabot[bot]
+#### Miscellaneous Chores
+- **(deps)** update rust crate tempfile to v3.12.0 - ([54d3448](https://github.com/PurpleBooth/git-mit/commit/54d34489c59fb46c1bc248d8ffeb9f10f0e1e56d)) - renovate[bot]
+
+- - -
+
 ## [v5.13.9](https://github.com/PurpleBooth/git-mit/compare/1a8307406e7120f730d06a3e52a303ad9dd09111..v5.13.9) - 2024-08-05
 #### Bug Fixes
 - **(deps)** bump regex from 1.10.5 to 1.10.6 - ([be15042](https://github.com/PurpleBooth/git-mit/commit/be15042d915d5073f972ea07222c8665917a211c)) - dependabot[bot]
