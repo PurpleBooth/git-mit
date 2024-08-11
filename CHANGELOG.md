@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.12](https://github.com/PurpleBooth/git-mit/compare/34dbf11dfb00600fd249466c4107222b70bb0b4b..v5.13.12) - 2024-08-11
+#### Bug Fixes
+- **(deps)** update serde monorepo to v1.0.205 - ([943216a](https://github.com/PurpleBooth/git-mit/commit/943216a3b42d5646d100e01a07d7203dee1c067a)) - renovate[bot]
+#### Build system
+- Bump dependency to openssl3 to prevent linkage problems - ([0eb4dd5](https://github.com/PurpleBooth/git-mit/commit/0eb4dd55b4685923ff7551b66e4d82e16a59527a)) - Billie Thompson
+- Correct casing and update environment variable formatting - ([0b5b6e2](https://github.com/PurpleBooth/git-mit/commit/0b5b6e2b369416d0f5cbde442f3e09428a1a5888)) - Billie Thompson
+- Homebrew formatting - ([34dbf11](https://github.com/PurpleBooth/git-mit/commit/34dbf11dfb00600fd249466c4107222b70bb0b4b)) - Billie Thompson
+
+- - -
+
 ## [v5.13.11](https://github.com/PurpleBooth/git-mit/compare/9a88f9f7e4bea33e2cb45653ec69286e3dac2ac0..v5.13.11) - 2024-08-09
 #### Bug Fixes
 - **(deps)** bump rust from 1.80.0 to 1.80.1 - ([2bbd67e](https://github.com/PurpleBooth/git-mit/commit/2bbd67e498c2ab112cc93251b3f9159a8537900b)) - dependabot[bot]
