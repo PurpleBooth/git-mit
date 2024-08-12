@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.13](https://github.com/PurpleBooth/git-mit/compare/5c7bc96f3173da361c06202d39da806166082588..v5.13.13) - 2024-08-12
+#### Bug Fixes
+- **(deps)** update rust crate clap_complete to v4.5.14 - ([8f3a936](https://github.com/PurpleBooth/git-mit/commit/8f3a9366a57fe40f7f44d80f9c9e409725e07afc)) - renovate[bot]
+- **(deps)** update rust crate clap to v4.5.15 - ([5c7bc96](https://github.com/PurpleBooth/git-mit/commit/5c7bc96f3173da361c06202d39da806166082588)) - renovate[bot]
+
+- - -
+
 ## [v5.13.12](https://github.com/PurpleBooth/git-mit/compare/34dbf11dfb00600fd249466c4107222b70bb0b4b..v5.13.12) - 2024-08-11
 #### Bug Fixes
 - **(deps)** update serde monorepo to v1.0.205 - ([943216a](https://github.com/PurpleBooth/git-mit/commit/943216a3b42d5646d100e01a07d7203dee1c067a)) - renovate[bot]
