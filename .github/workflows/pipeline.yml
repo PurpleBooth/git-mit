@@ -56,7 +56,7 @@ jobs:
         shell: bash
 
   cargo-publish:
-    if: steps.current_version.outputs.current_version != steps.previous_version.outputs.previous_version
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
     needs:
       - release
     runs-on: ubuntu-latest
@@ -162,7 +162,7 @@ jobs:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
 
   build:
-    if: steps.current_version.outputs.current_version != steps.previous_version.outputs.previous_version
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
     needs:
       - release
     runs-on: ${{ matrix.os }}
@@ -254,7 +254,7 @@ jobs:
       id-token: write
       attestations: write
       contents: write
-    if: steps.current_version.outputs.current_version != steps.previous_version.outputs.previous_version
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
     needs:
       - release
       - build
@@ -300,7 +300,7 @@ jobs:
           artifacts: ./bins/**/*
 
   docker-push:
-    if: steps.current_version.outputs.current_version != steps.previous_version.outputs.previous_version
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
     needs:
       - release
     uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@3fad4688f0aaaba2d4dacc836556edd9a8ae4cd4 # v0.8.28
@@ -308,7 +308,7 @@ jobs:
       current_version: ${{ needs.release.outputs.current_version }}
 
   generate-formula:
-    if: steps.current_version.outputs.current_version != steps.previous_version.outputs.previous_version
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
     needs:
       - release
     name: Generate Homebrew Formula
