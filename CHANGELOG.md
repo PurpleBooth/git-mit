@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.16](https://github.com/PurpleBooth/git-mit/compare/cd82e195ab3a0f29084c8648a3de66ad2fad9856..v5.13.16) - 2024-08-16
+#### Bug Fixes
+- **(deps)** bump clap from 4.5.15 to 4.5.16 - ([20ac82e](https://github.com/PurpleBooth/git-mit/commit/20ac82e8b5c70f37c9f6975c8179677119d5ba49)) - dependabot[bot]
+#### Continuous Integration
+- **(deps)** bump PurpleBooth/common-pipelines from 0.8.27 to 0.8.28 - ([cd82e19](https://github.com/PurpleBooth/git-mit/commit/cd82e195ab3a0f29084c8648a3de66ad2fad9856)) - dependabot[bot]
+- Do not use steps in a release context - ([947ba58](https://github.com/PurpleBooth/git-mit/commit/947ba5808744e0d7c4ade11709c10e60e06cba11)) - Billie Thompson
+- remove version bump - ([6962f26](https://github.com/PurpleBooth/git-mit/commit/6962f2647d15721abc283e999a7fedb4a00c2589)) - Billie Thompson
+
+- - -
+
 ## [v5.13.15](https://github.com/PurpleBooth/git-mit/compare/803a2889b8f709e0838b455f5b33ab63c82ad7b7..v5.13.15) - 2024-08-13
 #### Bug Fixes
 - **(deps)** update serde monorepo to v1.0.207 - ([803a288](https://github.com/PurpleBooth/git-mit/commit/803a2889b8f709e0838b455f5b33ab63c82ad7b7)) - renovate[bot]
