@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.17](https://github.com/PurpleBooth/git-mit/compare/4366e67ddac9bb549d1c5794965ed717bdbd0be1..v5.13.17) - 2024-08-17
+#### Bug Fixes
+- **(deps)** update serde monorepo to v1.0.208 - ([4366e67](https://github.com/PurpleBooth/git-mit/commit/4366e67ddac9bb549d1c5794965ed717bdbd0be1)) - renovate[bot]
+
+- - -
+
 ## [v5.13.16](https://github.com/PurpleBooth/git-mit/compare/cd82e195ab3a0f29084c8648a3de66ad2fad9856..v5.13.16) - 2024-08-16
 #### Bug Fixes
 - **(deps)** bump clap from 4.5.15 to 4.5.16 - ([20ac82e](https://github.com/PurpleBooth/git-mit/commit/20ac82e8b5c70f37c9f6975c8179677119d5ba49)) - dependabot[bot]
