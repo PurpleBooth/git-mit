@@ -290,7 +290,7 @@ jobs:
       - run: cog changelog --at "$TAG_V" > CHANGELOG.md
         shell: bash
         env:
-          TAG_V: ${{ needs.release.outputs.current_version }}
+          TAG_V: v${{ needs.release.outputs.current_version }}
       - id: create_release
         uses: ncipollo/release-action@v1.14.0
         with:
