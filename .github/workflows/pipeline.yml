@@ -283,12 +283,14 @@ jobs:
            md5sum "$file" > "$file.md5"
           fi
           done
-      - name: Generate a changelog
-        uses: PurpleBooth/changelog-action@v0.3.3
-        with:
-          config: cliff.toml
-          args: --verbose --latest
-          output: CHANGELOG.md
+      - uses: cargo-bins/cargo-binstall@main
+        name: Install cargo binstall
+      - shell: bash
+        run: cargo binstall --no-confirm --locked cocogitto
+      - run: cog changelog --at "$TAG_V" > CHANGELOG.md
+        shell: bash
+        env:
+          TAG_V: ${{ needs.release.outputs.current_version }}
       - id: create_release
         uses: ncipollo/release-action@v1.14.0
         with:
