@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.22](https://github.com/PurpleBooth/git-mit/compare/82e9a345e3303c9d79f756b1f69ac56e40835bd5..v5.13.22) - 2024-08-21
+#### Bug Fixes
+- **(deps)** update rust crate clap_complete to v4.5.20 - ([cb6c645](https://github.com/PurpleBooth/git-mit/commit/cb6c645eddcc3d7e43ceaee7e8f4253707b630dd)) - renovate[bot]
+#### Continuous Integration
+- Remove old dependabot file - ([5d1ff47](https://github.com/PurpleBooth/git-mit/commit/5d1ff47b80906bec5b24be9471493dc3665cb3f7)) - Billie Thompson
+- Allow merge groups - ([b52ea62](https://github.com/PurpleBooth/git-mit/commit/b52ea62e9827e7392d4f32c3a75106e5ee7ae62e)) - Billie Thompson
+- Add missing v to changelog generation - ([559394e](https://github.com/PurpleBooth/git-mit/commit/559394e9c22134c2ea2afe2fc2a9ff95d3da68d8)) - Billie Thompson
+#### Miscellaneous Chores
+- **(deps)** update purplebooth/common-pipelines action to v0.9.0 - ([76670ff](https://github.com/PurpleBooth/git-mit/commit/76670ff3070560175c6e23c89b4bd9a1fba1b8b6)) - renovate[bot]
+- **(deps)** update purplebooth/generate-formula-action action to v0.1.14 - ([82e9a34](https://github.com/PurpleBooth/git-mit/commit/82e9a345e3303c9d79f756b1f69ac56e40835bd5)) - renovate[bot]
+
+- - -
+
 ## [v5.13.21](https://github.com/PurpleBooth/git-mit/compare/384d2d6de73603ea79cb2b820e8cea1efb8c9ec8..v5.13.21) - 2024-08-20
 #### Bug Fixes
 - **(deps)** update rust crate clap_complete to v4.5.19 - ([774ffe7](https://github.com/PurpleBooth/git-mit/commit/774ffe7e8dcfb8e4e88b43a60841265b70424193)) - renovate[bot]
