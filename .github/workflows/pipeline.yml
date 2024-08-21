@@ -8,7 +8,7 @@ on:
 
 jobs:
   docker-build:
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@3fad4688f0aaaba2d4dacc836556edd9a8ae4cd4 # v0.8.28
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@e31ebfdf71c25921dfc2e07266f8da25dbaf204d # v0.9.0
 
   rust-check:
     uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
@@ -16,7 +16,7 @@ jobs:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
   specdown:
-    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@3fad4688f0aaaba2d4dacc836556edd9a8ae4cd4 # v0.8.28
+    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@e31ebfdf71c25921dfc2e07266f8da25dbaf204d # v0.9.0
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
@@ -306,7 +306,7 @@ jobs:
     if: needs.release.outputs.current_version != needs.release.outputs.previous_version
     needs:
       - release
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@3fad4688f0aaaba2d4dacc836556edd9a8ae4cd4 # v0.8.28
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@e31ebfdf71c25921dfc2e07266f8da25dbaf204d # v0.9.0
     with:
       current_version: ${{ needs.release.outputs.current_version }}
 
