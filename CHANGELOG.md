@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.23](https://github.com/PurpleBooth/git-mit/compare/377445bede83e1f0438ac8cf17a6dad800e52b35..v5.13.23) - 2024-08-24
+#### Bug Fixes
+- **(deps)** update rust crate clap_complete to 4.5.20 - ([0f15149](https://github.com/PurpleBooth/git-mit/commit/0f15149d01eca696c51ddb6dbf938852564be6f4)) - renovate[bot]
+#### Continuous Integration
+- Add sbom step - ([377445b](https://github.com/PurpleBooth/git-mit/commit/377445bede83e1f0438ac8cf17a6dad800e52b35)) - Billie Thompson
+#### Miscellaneous Chores
+- **(deps)** update purplebooth/common-pipelines action to v0.9.4 - ([d3c20a4](https://github.com/PurpleBooth/git-mit/commit/d3c20a49db6675269463024a135709f9b62283e4)) - renovate[bot]
+- **(deps)** update rust crate tempfile to 3.12.0 - ([0d84882](https://github.com/PurpleBooth/git-mit/commit/0d8488230aeaf79a925653ccc029288bfb7a30d6)) - renovate[bot]
+- **(deps)** update actions/cache action to v4.0.2 - ([b451331](https://github.com/PurpleBooth/git-mit/commit/b451331f4dc41858e48f6269db3cbc0eb423ede1)) - renovate[bot]
+- **(deps)** update purplebooth/common-pipelines action to v0.9.2 - ([4a33d40](https://github.com/PurpleBooth/git-mit/commit/4a33d40e8aebbba8692108fa279e31c6c2904cd1)) - renovate[bot]
+
+- - -
+
 ## [v5.13.22](https://github.com/PurpleBooth/git-mit/compare/82e9a345e3303c9d79f756b1f69ac56e40835bd5..v5.13.22) - 2024-08-21
 #### Bug Fixes
 - **(deps)** update rust crate clap_complete to v4.5.20 - ([cb6c645](https://github.com/PurpleBooth/git-mit/commit/cb6c645eddcc3d7e43ceaee7e8f4253707b630dd)) - renovate[bot]
