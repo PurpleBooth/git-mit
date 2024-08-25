@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.24](https://github.com/PurpleBooth/git-mit/compare/caf993045777cc4a77a0569b67301da9f4af068b..v5.13.24) - 2024-08-25
+#### Bug Fixes
+- **(deps)** update rust crate tokio to 1.39.3 - ([caf9930](https://github.com/PurpleBooth/git-mit/commit/caf993045777cc4a77a0569b67301da9f4af068b)) - renovate[bot]
+
+- - -
+
 ## [v5.13.23](https://github.com/PurpleBooth/git-mit/compare/377445bede83e1f0438ac8cf17a6dad800e52b35..v5.13.23) - 2024-08-24
 #### Bug Fixes
 - **(deps)** update rust crate clap_complete to 4.5.20 - ([0f15149](https://github.com/PurpleBooth/git-mit/commit/0f15149d01eca696c51ddb6dbf938852564be6f4)) - renovate[bot]
