@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.27](https://github.com/PurpleBooth/git-mit/compare/3f4bd844701469ae80d32b56cc8e627e99239d72..v5.13.27) - 2024-08-26
+#### Bug Fixes
+- **(deps)** update serde monorepo to 1.0.208 - ([9c0d438](https://github.com/PurpleBooth/git-mit/commit/9c0d43815a5b19f0ec2ecc86f43ffeda4ce9c76d)) - renovate[bot]
+#### Continuous Integration
+- Update to latest version of common pipelines - ([3f4bd84](https://github.com/PurpleBooth/git-mit/commit/3f4bd844701469ae80d32b56cc8e627e99239d72)) - Billie Thompson
+
+- - -
+
 ## [v5.13.26](https://github.com/PurpleBooth/git-mit/compare/b231f8bc7e214cffba9bec5d57793eb0198b15c3..v5.13.26) - 2024-08-26
 #### Bug Fixes
 - **(deps)** update rust crate clap_complete to 4.5.23 - ([b231f8b](https://github.com/PurpleBooth/git-mit/commit/b231f8bc7e214cffba9bec5d57793eb0198b15c3)) - renovate[bot]
