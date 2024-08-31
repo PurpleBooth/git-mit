@@ -1,7 +1,7 @@
 FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
 ARG TARGETPLATFORM
 
-FROM --platform=$BUILDPLATFORM rust:alpine AS builder
+FROM --platform=$BUILDPLATFORM rust:1.80 AS builder
 RUN apt-get update && apt-get install -y clang lld
 ARG TARGETPLATFORM
 # copy xx scripts to your build stage
