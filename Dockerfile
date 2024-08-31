@@ -10,9 +10,9 @@ WORKDIR /root/app
 
 ## Build deps for git-mit
 RUN apt-get update && \
-    apt-get install -y help2man
+    apt-get install -y help2man libssl-dev
 RUN xx-apt-get update && \
-    xx-apt-get install -y libxkbcommon-dev libxcb-shape0-dev libxcb-xfixes0-dev
+    xx-apt-get install -y libxkbcommon-dev libxcb-shape0-dev libxcb-xfixes0-dev libssl-dev
 
 COPY . .
 
