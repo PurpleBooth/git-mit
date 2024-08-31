@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.29](https://github.com/PurpleBooth/git-mit/compare/be7457756cc44d213cdb17fda01a57d864f948e0..v5.13.29) - 2024-08-31
+#### Bug Fixes
+- **(deps)** update rust crate tokio to 1.40.0 - ([be74577](https://github.com/PurpleBooth/git-mit/commit/be7457756cc44d213cdb17fda01a57d864f948e0)) - renovate[bot]
+
+- - -
+
 ## [v5.13.28](https://github.com/PurpleBooth/git-mit/compare/12e3849b8b6b3e5b86d319ff5ddff16a1261698c..v5.13.28) - 2024-08-27
 #### Bug Fixes
 - **(deps)** update serde monorepo to 1.0.209 - ([12e3849](https://github.com/PurpleBooth/git-mit/commit/12e3849b8b6b3e5b86d319ff5ddff16a1261698c)) - renovate[bot]
