@@ -1,28 +1,31 @@
-FROM rust:1.80.1 AS builder
+FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
+ARG TARGETPLATFORM
 
-## Update the system generally
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    rm -rf /var/lib/apt/lists/*
-
+FROM --platform=$BUILDPLATFORM rust:alpine AS builder
+RUN apt-get update && apt-get install -y clang lld
+ARG TARGETPLATFORM
+# copy xx scripts to your build stage
+COPY --from=xx / /
 WORKDIR /root/app
 
 ## Build deps for git-mit
 RUN apt-get update && \
-    apt-get install -y libxkbcommon-dev libxcb-shape0-dev libxcb-xfixes0-dev help2man && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y help2man
+RUN xx-apt-get update && \
+    xx-apt-get install -y libxkbcommon-dev libxcb-shape0-dev libxcb-xfixes0-dev
 
 COPY . .
 
-RUN --mount=type=cache,target=/root/.cargo cargo clean
-RUN --mount=type=cache,target=/root/.cargo cargo build --release
-RUN help2man target/release/mit-commit-msg > target/mit-commit-msg.1
-RUN help2man target/release/mit-pre-commit > target/mit-pre-commit.1
-RUN help2man target/release/mit-prepare-commit-msg > target/mit-prepare-commit-msg.1
-RUN help2man target/release/git-mit > target/git-mit.1
-RUN help2man target/release/git-mit-config > target/git-mit-config.1
-RUN help2man target/release/git-mit-relates-to > target/git-mit-relates-to.1
-RUN help2man target/release/git-mit-install > target/git-mit-install.1
+RUN xx-cargo clean
+RUN xx-cargo build --release
+
+RUN help2man target/$(xx-cargo --print-target-triple)/release/mit-commit-msg > target/mit-commit-msg.1
+RUN help2man target/$(xx-cargo --print-target-triple)/release/mit-pre-commit > target/mit-pre-commit.1
+RUN help2man target/$(xx-cargo --print-target-triple)/release/mit-prepare-commit-msg > target/mit-prepare-commit-msg.1
+RUN help2man target/$(xx-cargo --print-target-triple)/release/git-mit > target/git-mit.1
+RUN help2man target/$(xx-cargo --print-target-triple)/release/git-mit-config > target/git-mit-config.1
+RUN help2man target/$(xx-cargo --print-target-triple)/release/git-mit-relates-to > target/git-mit-relates-to.1
+RUN help2man target/$(xx-cargo --print-target-triple)/release/git-mit-install > target/git-mit-install.1
 
 FROM rust:1.80.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -58,27 +61,26 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y libxkbcommon0 libxcb-shape0 libxcb-xfixes0 libssl3 libgcc1 && \
     rm -rf /var/lib/apt/lists/*
-
 COPY --from=builder \
-    /root/app/target/release/mit-commit-msg \
+    /root/app/target/*/release/mit-commit-msg \
     /usr/local/bin/mit-commit-msg
 COPY --from=builder \
-    /root/app/target/release/mit-pre-commit \
+    /root/app/target/*/release/mit-pre-commit \
     /usr/local/bin/mit-pre-commit
 COPY --from=builder \
-    /root/app/target/release/mit-prepare-commit-msg \
+    /root/app/target/*/release/mit-prepare-commit-msg \
     /usr/local/bin/mit-prepare-commit-msg
 COPY --from=builder \
-    /root/app/target/release/git-mit \
+    /root/app/target/*/release/git-mit \
     /usr/local/bin/git-mit
 COPY --from=builder \
-    /root/app/target/release/git-mit-config \
+    /root/app/target/*/release/git-mit-config \
     /usr/local/bin/git-mit-config
 COPY --from=builder \
-    /root/app/target/release/git-mit-relates-to \
+    /root/app/target/*/release/git-mit-relates-to \
     /usr/local/bin/git-mit-relates-to
 COPY --from=builder \
-    /root/app/target/release/git-mit-install \
+    /root/app/target/*/release/git-mit-install \
     /usr/local/bin/git-mit-install
 COPY --from=builder \
     /root/app/target/*.1 \
