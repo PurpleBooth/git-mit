@@ -1,4 +1,4 @@
-FROM rust:1.80.1 AS builder
+FROM rust:1.81.0@sha256:fcd390e0a3a6bfcf26969861efbe7b864df052aa71a361cf3cd7c5c585b1b413 AS builder
 
 ## Update the system generally
 RUN apt-get update && \
@@ -24,7 +24,7 @@ RUN help2man target/release/git-mit-config > target/git-mit-config.1
 RUN help2man target/release/git-mit-relates-to > target/git-mit-relates-to.1
 RUN help2man target/release/git-mit-install > target/git-mit-install.1
 
-FROM rust:1.80.1
+FROM rust:1.81.0@sha256:fcd390e0a3a6bfcf26969861efbe7b864df052aa71a361cf3cd7c5c585b1b413
 ENV DEBIAN_FRONTEND=noninteractive
 
 ## Update the system generally
