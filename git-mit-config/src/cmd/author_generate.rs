@@ -9,7 +9,7 @@ use mit_commit_message_lints::{
 
 use crate::current_dir;
 
-pub fn run_available(config: &str, exec: &Option<String>) -> Result<()> {
+pub fn run_available(config: &str, exec: Option<&str>) -> Result<()> {
     let args = GenericArgs {
         author_command: exec.as_ref().map(|x| x as _),
         author_file: Some(config),
@@ -24,7 +24,7 @@ pub fn run_available(config: &str, exec: &Option<String>) -> Result<()> {
     Ok(())
 }
 
-pub fn run_generate(config: &str, exec: &Option<String>) -> Result<()> {
+pub fn run_generate(config: &str, exec: Option<&str>) -> Result<()> {
     let args = GenericArgs {
         author_command: exec.as_ref().map(|x| x as _),
         author_file: Some(config),

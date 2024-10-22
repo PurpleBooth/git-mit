@@ -19,7 +19,7 @@ pub struct AggregateProblem(Vec<Problem>);
 impl AggregateProblem {
     pub(crate) fn to(problems: Vec<Problem>) -> Result<()> {
         if problems.len() == 1 {
-            return Err(problems.first().cloned().unwrap().into());
+            Err(problems.first().cloned().unwrap().into())
         } else if problems.is_empty() {
             Ok(())
         } else {

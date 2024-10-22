@@ -29,7 +29,7 @@ impl<'a> From<&'a str> for RelateTo<'a> {
         }
     }
 }
-impl<'a> From<String> for RelateTo<'a> {
+impl From<String> for RelateTo<'_> {
     fn from(input: String) -> Self {
         RelateTo {
             relates: Cow::Owned(input),

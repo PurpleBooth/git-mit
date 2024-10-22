@@ -83,10 +83,10 @@ fn main() -> Result<()> {
         }) => author_set::run(scope, &initials, name, email, signingkey),
         Some(app::Action::Mit {
             action: app::Mit::Generate { config, exec },
-        }) => author_generate::run_generate(&config, &exec),
+        }) => author_generate::run_generate(&config, exec.as_deref()),
         Some(app::Action::Mit {
             action: app::Mit::Available { config, exec },
-        }) => author_generate::run_available(&config, &exec),
+        }) => author_generate::run_available(&config, exec.as_deref()),
         Some(app::Action::Mit {
             action: app::Mit::Example,
         }) => cmd::author_example::run(),

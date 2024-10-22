@@ -105,7 +105,7 @@ impl<'a> TryFrom<&'a str> for Authors<'a> {
     }
 }
 
-impl<'a> TryFrom<String> for Authors<'a> {
+impl TryFrom<String> for Authors<'_> {
     type Error = DeserializeAuthorsError;
 
     fn try_from(input: String) -> std::result::Result<Self, Self::Error> {

@@ -18,7 +18,7 @@ pub struct GenericArgs<'a> {
     pub author_file: Option<&'a str>,
 }
 
-impl<'a> AuthorArgs for GenericArgs<'a> {
+impl AuthorArgs for GenericArgs<'_> {
     fn author_command(&self) -> Option<&str> {
         self.author_command
     }
@@ -63,12 +63,12 @@ fn from_file(args: &dyn AuthorArgs) -> Result<String> {
 #[cfg(not(target_os = "windows"))]
 fn author_file_path() -> Result<String> {
     let home: PathBuf = std::env::var("HOME").into_diagnostic()?.into();
-    return Ok(home
+    Ok(home
         .join(".config")
         .join("git-mit")
         .join("mit.toml")
         .to_string_lossy()
-        .to_string());
+        .to_string())
 }
 
 #[cfg(target_os = "windows")]
