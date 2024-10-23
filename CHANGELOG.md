@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.30](https://github.com/PurpleBooth/git-mit/compare/ba99377931bbf484440f457c218e5d62ff8ba639..v5.13.30) - 2024-10-23
+#### Bug Fixes
+- **(deps)** update rust crate regex to 1.11.0 - ([198a62c](https://github.com/PurpleBooth/git-mit/commit/198a62c8933d586e386970d707225245ecbfab61)) - renovate[bot]
+#### Documentation
+- Improve the template for bugs - ([ba99377](https://github.com/PurpleBooth/git-mit/commit/ba99377931bbf484440f457c218e5d62ff8ba639)) - Billie Thompson
+#### Miscellaneous Chores
+- **(deps)** update rust docker tag to v1.82.0 - ([f150921](https://github.com/PurpleBooth/git-mit/commit/f150921ef505bbdee93edd5695d480901dd90573)) - renovate[bot]
+- **(deps)** update actions/cache action to v4.1.2 - ([e8ae1c8](https://github.com/PurpleBooth/git-mit/commit/e8ae1c8788a8d9cc21362d1519d1108a4ca5e8f6)) - renovate[bot]
+- **(deps)** update rust:1.81.0 docker digest to 7b7f7ae - ([8bb529a](https://github.com/PurpleBooth/git-mit/commit/8bb529a5bebc19d8594a21484fe8f721f3c8ab3f)) - renovate[bot]
+- **(deps)** update rust docker tag to v1.81.0 - ([21d3f27](https://github.com/PurpleBooth/git-mit/commit/21d3f276b0e4b7315cf299194952be60cf4df378)) - renovate[bot]
+- **(src)** Formatting - ([1ef8ab5](https://github.com/PurpleBooth/git-mit/commit/1ef8ab53755b6dd19d6155b1b91dad08bbc925e9)) - Billie Thompson
+
+- - -
+
 ## [v5.13.29](https://github.com/PurpleBooth/git-mit/compare/be7457756cc44d213cdb17fda01a57d864f948e0..v5.13.29) - 2024-08-31
 #### Bug Fixes
 - **(deps)** update rust crate tokio to 1.40.0 - ([be74577](https://github.com/PurpleBooth/git-mit/commit/be7457756cc44d213cdb17fda01a57d864f948e0)) - renovate[bot]
