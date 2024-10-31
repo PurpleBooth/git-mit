@@ -197,10 +197,10 @@ jobs:
           TARGET: ${{ matrix.target }}
           EXTENSION: ${{ matrix.suffix }}
         run: |
-          mv -v "./target/release/git-mit$EXTENSION" "./git-mit$TARGET$EXTENSION"
-          mv -v "./target/release/git-mit-config$EXTENSION" "./git-mit-config$TARGET$EXTENSION"
-          mv -v "./target/release/git-mit-install$EXTENSION" "./git-mit-install$TARGET$EXTENSION"
-          mv -v "./target/release/git-mit-relates-to$EXTENSION" "./git-mit-relates-to$TARGET$EXTENSION"
+          mv -v "./target/release/git-mit$EXTENSION" "./git-mit-$TARGET$EXTENSION"
+          mv -v "./target/release/git-mit-config$EXTENSION" "./git-mit-config-$TARGET$EXTENSION"
+          mv -v "./target/release/git-mit-install$EXTENSION" "./git-mit-install-$TARGET$EXTENSION"
+          mv -v "./target/release/git-mit-relates-to$EXTENSION" "./git-mit-relates-to-$TARGET$EXTENSION"
           mv -v "./target/release/mit-commit-msg$EXTENSION" "./mit-commit-msg-$TARGET$EXTENSION"
           mv -v "./target/release/mit-pre-commit$EXTENSION" "./mit-pre-commit-$TARGET$EXTENSION"
           mv -v "./target/release/mit-prepare-commit-msg$EXTENSION" "./mit-prepare-commit-msg-$TARGET$EXTENSION"
