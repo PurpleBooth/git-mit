@@ -196,36 +196,14 @@ jobs:
         env:
           TARGET: ${{ matrix.target }}
           EXTENSION: ${{ matrix.suffix }}
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv "./target/release/mit-commit-msg$EXTENSION" "./mit-commit-msg-$TARGET$EXTENSION"
-        shell: bash
-      - name: Move binary to upload location
-        env:
-          TARGET: ${{ matrix.target }}
-          EXTENSION: ${{ matrix.suffix }}
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv "./target/release/git-mit-config$EXTENSION" "./git-mit-config-$TARGET$EXTENSION"
-        shell: bash
-      - name: Move binary to upload location
-        env:
-          TARGET: ${{ matrix.target }}
-          EXTENSION: ${{ matrix.suffix }}
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv "./target/release/mit-pre-commit$EXTENSION" "./mit-pre-commit-$TARGET$EXTENSION"
-        shell: bash
-      - name: Move binary to upload location
-        env:
-          TARGET: ${{ matrix.target }}
-          EXTENSION: ${{ matrix.suffix }}
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv "./target/release/mit-prepare-commit-msg$EXTENSION" "./mit-prepare-commit-msg-$TARGET$EXTENSION"
-        shell: bash
-      - name: Move binary to upload location
-        env:
-          TARGET: ${{ matrix.target }}
-          EXTENSION: ${{ matrix.suffix }}
-          REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-        run: mv "./target/release/git-mit$EXTENSION" "./git-mit-$TARGET$EXTENSION"
+        run: |
+          mv -v "./target/release/git-mit$EXTENSION" "./git-mit$TARGET$EXTENSION"
+          mv -v "./target/release/git-mit-config$EXTENSION" "./git-mit-config$TARGET$EXTENSION"
+          mv -v "./target/release/git-mit-install$EXTENSION" "./git-mit-install$TARGET$EXTENSION"
+          mv -v "./target/release/git-mit-relates-to$EXTENSION" "./git-mit-relates-to$TARGET$EXTENSION"
+          mv -v "./target/release/mit-commit-msg$EXTENSION" "./mit-commit-msg-$TARGET$EXTENSION"
+          mv -v "./target/release/mit-pre-commit$EXTENSION" "./mit-pre-commit-$TARGET$EXTENSION"
+          mv -v "./target/release/mit-prepare-commit-msg$EXTENSION" "./mit-prepare-commit-msg-$TARGET$EXTENSION"
         shell: bash
       - uses: actions/upload-artifact@v4
         with:
