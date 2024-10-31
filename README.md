@@ -250,6 +250,7 @@ You can use Cargo too, though this won't install the completions
 ``` shell,skip()
 cargo install git-mit-config
 cargo install git-mit
+cargo install git-mit-relates-to
 cargo install git-mit-install
 cargo install mit-commit-msg
 cargo install mit-pre-commit
