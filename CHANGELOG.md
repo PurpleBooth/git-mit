@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.14.0](https://github.com/PurpleBooth/git-mit/compare/b4af9ba56565e66832378981f2cf798c538f9864..v5.14.0) - 2024-10-31
+#### Bug Fixes
+- Correct path - ([b035475](https://github.com/PurpleBooth/git-mit/commit/b035475145aa68bc40218108dcf0147625089d6e)) - Billie Thompson
+- Correct the windows installer path - ([57f23e7](https://github.com/PurpleBooth/git-mit/commit/57f23e7a1dc5afaebc2e5a8dd23fccab4d175374)) - Billie Thompson
+#### Continuous Integration
+- Correct filenames - ([4de6a3e](https://github.com/PurpleBooth/git-mit/commit/4de6a3e0d4b169b13d02f643cfbfd966bdaa860f)) - Billie Thompson
+#### Features
+- Add an installer for windows - ([538e173](https://github.com/PurpleBooth/git-mit/commit/538e173d8134f60695be1a0addfd4289502b64f9)) - Billie Thompson
+- Add a bash/linux installer - ([b4af9ba](https://github.com/PurpleBooth/git-mit/commit/b4af9ba56565e66832378981f2cf798c538f9864)) - Billie Thompson
+
+- - -
+
 ## [v5.13.31](https://github.com/PurpleBooth/git-mit/compare/03249782c298c3bb6d9288f79888e97e13bb2363..v5.13.31) - 2024-10-31
 #### Bug Fixes
 - Bump version to ensure release contains install - ([ee1f7d5](https://github.com/PurpleBooth/git-mit/commit/ee1f7d5f47ab3c50b4a7753d6809d35f99a92e2d)) - Billie Thompson
