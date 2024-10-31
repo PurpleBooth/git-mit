@@ -261,6 +261,11 @@ You can also download the [latest
 release](https://github.com/PurpleBooth/git-mit/releases/latest) and run
 it.
 
+There is a script to download the latest release:
+
+* [Windows](./installer.ps1)
+* [Linux/Mac OS](./installer.sh)
+
 ### Completions
 
 We generate completions for `fish`,`zsh`, and `bash`. They're installed
