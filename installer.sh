@@ -39,7 +39,7 @@ for binary in "${BINARIES[@]}"; do
 done
 
 # Cleanup
-cd - > /dev/null || exit 1
+cd - >/dev/null || exit 1
 rm -rf "$TMP_DIR"
 
 echo "🎉 Installation complete! Run 'git mit-install' to set up your repository."
