@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.13.31](https://github.com/PurpleBooth/git-mit/compare/03249782c298c3bb6d9288f79888e97e13bb2363..v5.13.31) - 2024-10-31
+#### Bug Fixes
+- Bump version to ensure release contains install - ([ee1f7d5](https://github.com/PurpleBooth/git-mit/commit/ee1f7d5f47ab3c50b4a7753d6809d35f99a92e2d)) - Billie Thompson
+#### Continuous Integration
+- Add missing install binary to release - ([0324978](https://github.com/PurpleBooth/git-mit/commit/03249782c298c3bb6d9288f79888e97e13bb2363)) - Billie Thompson
+
+- - -
+
 ## [v5.13.30](https://github.com/PurpleBooth/git-mit/compare/ba99377931bbf484440f457c218e5d62ff8ba639..v5.13.30) - 2024-10-23
 #### Bug Fixes
 - **(deps)** update rust crate regex to 1.11.0 - ([198a62c](https://github.com/PurpleBooth/git-mit/commit/198a62c8933d586e386970d707225245ecbfab61)) - renovate[bot]
