@@ -272,7 +272,7 @@ We generate completions for `fish`,`zsh`, and `bash`. They're installed
 with the homebrew package. You don't need to do anything to activate
 them.
 
-You can also manually download them from the releases page.
+Each binary also has a command to generate completion.
 
 ## Docs
 
