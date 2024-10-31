@@ -24,8 +24,8 @@ BINARIES=("git-mit" "git-mit-config" "git-mit-install" "git-mit-relates-to" "mit
 # Download and verify each binary
 for binary in "${BINARIES[@]}"; do
     echo "📥 Downloading $binary..."
-    curl -sL "https://github.com/PurpleBooth/git-mit/releases/latest/download/${binary}${ARCH}" -o "$binary"
-    curl -sL "https://github.com/PurpleBooth/git-mit/releases/latest/download/${binary}${ARCH}.sha256" -o "${binary}.sha256"
+    curl -sL "https://github.com/PurpleBooth/git-mit/releases/latest/download/${binary}-${ARCH}" -o "$binary"
+    curl -sL "https://github.com/PurpleBooth/git-mit/releases/latest/download/${binary}-${ARCH}.sha256" -o "${binary}.sha256"
 
     # Verify SHA256
     if sha256sum -c "${binary}.sha256"; then
