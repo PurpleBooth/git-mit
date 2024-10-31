@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.14.1](https://github.com/PurpleBooth/git-mit/compare/f8ae5ae01494fd521c376b4b7c47b245af731f83..v5.14.1) - 2024-10-31
+#### Bug Fixes
+- correct windows install - ([4b6deda](https://github.com/PurpleBooth/git-mit/commit/4b6deda40acdf2d21d0d89310d4ca81a75198cea)) - Billie Thompson
+#### Documentation
+- fix the order of the cargo install list - ([de8e6a3](https://github.com/PurpleBooth/git-mit/commit/de8e6a33a907fec1557c6787e63f2a744de0e588)) - Billie Thompson
+- Update note about completion - ([b91d212](https://github.com/PurpleBooth/git-mit/commit/b91d2121132d81309edc8ef528eb2e4094cf7853)) - Billie Thompson
+- Add link to installer scripts - ([1d2f27c](https://github.com/PurpleBooth/git-mit/commit/1d2f27c437cf39a894cd890ad0261a0bb57db78c)) - Billie Thompson
+- Add missing relates to - ([f8ae5ae](https://github.com/PurpleBooth/git-mit/commit/f8ae5ae01494fd521c376b4b7c47b245af731f83)) - Billie Thompson
+#### Miscellaneous Chores
+- formatting - ([27ca1d5](https://github.com/PurpleBooth/git-mit/commit/27ca1d51f5f00591f1e3a654df8af24a447cc9b6)) - Billie Thompson
+
+- - -
+
 ## [v5.14.0](https://github.com/PurpleBooth/git-mit/compare/b4af9ba56565e66832378981f2cf798c538f9864..v5.14.0) - 2024-10-31
 #### Bug Fixes
 - Correct path - ([b035475](https://github.com/PurpleBooth/git-mit/commit/b035475145aa68bc40218108dcf0147625089d6e)) - Billie Thompson
