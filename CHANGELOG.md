@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.14.2](https://github.com/PurpleBooth/git-mit/compare/9aaf0752ca9683d657fbe0eec03d13da41a06f70..v5.14.2) - 2024-11-02
+#### Bug Fixes
+- **(deps)** update rust crate which to v7 - ([9aaf075](https://github.com/PurpleBooth/git-mit/commit/9aaf0752ca9683d657fbe0eec03d13da41a06f70)) - renovate[bot]
+
+- - -
+
 ## [v5.14.1](https://github.com/PurpleBooth/git-mit/compare/f8ae5ae01494fd521c376b4b7c47b245af731f83..v5.14.1) - 2024-10-31
 #### Bug Fixes
 - correct windows install - ([4b6deda](https://github.com/PurpleBooth/git-mit/commit/4b6deda40acdf2d21d0d89310d4ca81a75198cea)) - Billie Thompson
