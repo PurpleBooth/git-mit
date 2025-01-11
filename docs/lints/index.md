@@ -141,9 +141,8 @@ Error: DuplicatedTrailers (https://git-scm.com/docs/githooks#_commit_msg)
     · ────────┬───────
     ·         ╰── Duplicated `Relates-to`
     ╰────
-  help: These are normally added accidentally when you're rebasing or
-        amending to a commit, sometimes in the text editor, but often by
-        git hooks.
+  help: These are normally added accidentally when you're rebasing or amending
+        to a commit, sometimes in the text editor, but often by git hooks.
         
         You can fix this by deleting the duplicated "Co-authored-by",
         "Relates-to", "Signed-off-by" fields
@@ -554,10 +553,9 @@ Error: SubjectEndsWithPeriod (https://git-scm.com/book/en/v2/Distributed-Git-Con
  2 │ 
    ╰────
   help: It's important to keep your commits short, because we only have a
-        limited number of characters to use (72) before the subject line
-        is truncated. Full stops aren't normally in subject lines, and take
-        up an extra character, so we shouldn't use them in commit message
-        subjects.
+        limited number of characters to use (72) before the subject line is
+        truncated. Full stops aren't normally in subject lines, and take up an
+        extra character, so we shouldn't use them in commit message subjects.
         
         You can fix this by removing the period
 
@@ -654,8 +652,8 @@ Error: NotConventionalCommit (https://www.conventionalcommits.org/)
    ╰────
   help: It's important to follow the conventional commit style when creating
         your commit message. By using this style we can automatically
-        calculate the version of software using deployment pipelines, and
-        also generate changelogs and other useful information without human
+        calculate the version of software using deployment pipelines, and also
+        generate changelogs and other useful information without human
         interaction.
         
         You can fix it by following style
@@ -757,12 +755,12 @@ Error: PivotalTrackerIdMissing (https://www.pivotaltracker.com/help/api?version=
    · ────────────────────┬───────────────────
    ·                     ╰── No Pivotal Tracker ID
    ╰────
-  help: It's important to add the ID because it allows code to be linked
-        back to the stories it was done for, it can provide a chain
-        of custody for code for audit purposes, and it can give future
-        explorers of the codebase insight into the wider organisational need
-        behind the change. We may also use it for automation purposes, like
-        generating changelogs or notification emails.
+  help: It's important to add the ID because it allows code to be linked back
+        to the stories it was done for, it can provide a chain of custody for
+        code for audit purposes, and it can give future explorers of the
+        codebase insight into the wider organisational need behind the change.
+        We may also use it for automation purposes, like generating changelogs
+        or notification emails.
         
         You can fix this by adding the Id in one of the styles below to the
         commit message
@@ -860,12 +858,11 @@ Error: JiraIssueKeyMissing (https://support.atlassian.com/jira-software-cloud/do
    · ────────────────────┬───────────────────
    ·                     ╰── No JIRA Issue Key
    ╰────
-  help: It's important to add the issue key because it allows us to link
-        code back to the motivations for doing it, and in some cases provide
-        an audit trail for compliance purposes.
+  help: It's important to add the issue key because it allows us to link code
+        back to the motivations for doing it, and in some cases provide an
+        audit trail for compliance purposes.
         
-        You can fix this by adding a key like `JRA-123` to the commit
-        message
+        You can fix this by adding a key like `JRA-123` to the commit message
 
 ```
 
