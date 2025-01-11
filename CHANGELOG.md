@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.14.3](https://github.com/PurpleBooth/git-mit/compare/47214f861b6a22d5e83c9180ef1792b88b41c596..v5.14.3) - 2025-01-11
+#### Bug Fixes
+- bump versions and follow clippy advice - ([9d07720](https://github.com/PurpleBooth/git-mit/commit/9d0772009e3d2846529ec6551ec38a7de3adc8c8)) - Billie Thompson
+#### Miscellaneous Chores
+- **(deps)** update rust:1.82.0 docker digest to d9c3c6f (#1532) - ([47214f8](https://github.com/PurpleBooth/git-mit/commit/47214f861b6a22d5e83c9180ef1792b88b41c596)) - renovate[bot]
+#### Tests
+- update wrappings from miette - ([ef09873](https://github.com/PurpleBooth/git-mit/commit/ef0987369ef949191e17b145ed17e5a3ca558112)) - Billie Thompson
+- fix broken formatting - ([eacafb5](https://github.com/PurpleBooth/git-mit/commit/eacafb5b30107ea18ffab8e94389fb7c589996bf)) - Billie Thompson
+- match new miette formatting of help - ([43216f9](https://github.com/PurpleBooth/git-mit/commit/43216f91e504ed771a1a1afe0a49d1abc0e8c58c)) - Billie Thompson
+
+- - -
+
 ## [v5.14.2](https://github.com/PurpleBooth/git-mit/compare/9aaf0752ca9683d657fbe0eec03d13da41a06f70..v5.14.2) - 2024-11-02
 #### Bug Fixes
 - **(deps)** update rust crate which to v7 - ([9aaf075](https://github.com/PurpleBooth/git-mit/commit/9aaf0752ca9683d657fbe0eec03d13da41a06f70)) - renovate[bot]
