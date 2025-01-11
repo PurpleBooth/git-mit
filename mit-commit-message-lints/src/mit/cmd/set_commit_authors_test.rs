@@ -178,9 +178,9 @@ fn sets_the_expiry_time() {
 
     assert!(
         actual_expire_time < sec61min,
-        "Expected less than {        sec
-", {} found,POCH E UNIX since onds},
-        actual_expire
+        "Expected less than {}, found {}",
+        sec61min,
+        actual_expire_time
     );
     assert!(
         actual_expire_time > sec59min,
