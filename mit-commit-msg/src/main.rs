@@ -11,7 +11,7 @@
     missing_docs
 )]
 
-use std::{convert::TryFrom, env, io::stdout, path::PathBuf};
+use std::{convert::TryFrom, env, io::stdout};
 
 use arboard::Clipboard;
 use clap::{CommandFactory, Parser};
@@ -44,8 +44,7 @@ async fn main() -> Result<()> {
 
     let commit_file_path = cli_args
         .commit_file_path
-        .ok_or(errors::MitCommitMsgError::CommitPathMissing)
-        .map(PathBuf::from)?;
+        .ok_or(errors::MitCommitMsgError::CommitPathMissing)?;
     let commit_message = CommitMessage::try_from(commit_file_path).into_diagnostic()?;
     let current_dir = env::current_dir().into_diagnostic()?;
 

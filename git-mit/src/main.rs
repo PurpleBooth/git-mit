@@ -83,9 +83,10 @@ fn is_hook_present() -> bool {
         .and_then(|path| Repository::discover(path).ok())
         .map(|repo| repo.path().join("hooks").join("commit-msg"))
         .filter(|path_buf| {
-            path_buf.canonicalize().ok().map_or(false, |path| {
-                path.to_string_lossy().contains("mit-commit-msg")
-            })
+            path_buf
+                .canonicalize()
+                .ok()
+                .is_some_and(|path| path.to_string_lossy().contains("mit-commit-msg"))
         })
         .is_some()
 }

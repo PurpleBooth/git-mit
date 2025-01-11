@@ -13,12 +13,12 @@ readme = "../README.md"
 repository = "https://github.com/PurpleBooth/git-mit"
 
 [dependencies]
-thiserror = "1.0.63"
-miette = { version = "7.2.0", features = [ "fancy" ] }
-clap_complete = "4.5.23"
-clap = { version = "4.5.16", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+thiserror = "1.0.69"
+miette = { version = "7.4.0", features = [ "fancy" ] }
+clap_complete = "4.5.42"
+clap = { version = "4.5.26", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 git2 = "0.19.0"
-openssl = { version = "0.10.66", optional = true }
+openssl = { version = "0.10.68", optional = true }
 
 
   [dependencies.mit-commit-message-lints]
@@ -33,7 +33,7 @@ vendored-openssl = ["openssl/vendored"]
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
 indoc = "2.0.5"
-tempfile = "3.12.0"
+tempfile = "3.15.0"
 
   [dev-dependencies.mit-hook-test-helper]
   path = "../mit-hook-test-helper"

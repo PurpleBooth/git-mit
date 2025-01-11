@@ -52,7 +52,6 @@ fn get_defined_vcs_coauthor_keys(config: &dyn Vcs) -> Vec<String> {
             ]
             .into_iter()
         })
-        .map(String::from)
         .collect()
 }
 
