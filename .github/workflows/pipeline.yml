@@ -272,7 +272,7 @@ jobs:
         env:
           TAG_V: v${{ needs.release.outputs.current_version }}
       - id: create_release
-        uses: ncipollo/release-action@v1.14.0
+        uses: ncipollo/release-action@cdcc88a9acf3ca41c16c37bb7d21b9ad48560d87 # v1.15.0
         with:
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
