@@ -19,7 +19,7 @@ clap = { version = "4.5.26", features = ["derive", "cargo", "wrap_help", "env", 
 
 
 git2 = "0.19.0"
-openssl = { version = "0.10.68", optional = true }
+openssl = { version = "0.10.72", optional = true }
 
 indoc = "2.0.5"
 
