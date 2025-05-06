@@ -45,12 +45,12 @@ build-x86_64-pc-windows-msvc:
 	cargo build --release --target x86_64-pc-windows-msvc
 
 # Lint it
-lint:
+lint *ARGS:
 	cargo +nightly fmt --all -- --check
 	cargo +nightly clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple_crate_versions
 	cargo check
 	cargo audit
-	npx prettier --check **.yml **.yaml
+	npx prettier --check {{ARGS}}
 
 # Publish to crates
 publish-to-crates:
@@ -69,11 +69,11 @@ release:
 	versio release
 
 # Format what can be formatted
-fmt:
+fmt *ARGS:
 	cargo +nightly fix --allow-dirty --allow-staged
 	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -D clippy::nursery -A clippy::multiple_crate_versions
 	cargo +nightly fmt --all
-	npx prettier --write **.yml **.yaml
+	npx prettier --write {{ARGS}}
 
 # Clean the build directory
 clean:
