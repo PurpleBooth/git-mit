@@ -29,13 +29,13 @@ fn set_vcs_relates_to(config: &mut dyn Vcs, relates: &RelateTo<'_>) -> Result<()
 
 fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<()> {
     let now = OffsetDateTime::now_utc().unix_timestamp();
-    let expires_in_secs = expires_in
+    let expires_in_secs: i64 = expires_in
         .as_secs()
         .try_into()
-        .into_diagnostic()
-        .wrap_err("Expiration time exceeds maximum supported value")?;
+        .map_err(|_| std::io::Error::new(std::io::ErrorKind::InvalidInput, "Expiration time exceeds maximum supported value"))?;
     
-    let expiry_time = now + expires_in_secs;
+    let expiry_time = now.checked_add(expires_in_secs)
+        .ok_or_else(|| std::io::Error::new(std::io::ErrorKind::InvalidInput, "Expiration time overflow"))?;
     
     config
         .set_i64(CONFIG_KEY_EXPIRES, expiry_time)
