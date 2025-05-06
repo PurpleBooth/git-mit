@@ -1,10 +1,7 @@
-use std::{
-    convert::TryInto,
-    ops::Add,
-    time::{Duration, SystemTime, UNIX_EPOCH},
-};
+use std::{convert::TryInto, time::Duration};
 
 use miette::{IntoDiagnostic, Result, WrapErr};
+use time::OffsetDateTime;
 
 use crate::{external::Vcs, relates::RelateTo};
 
@@ -31,10 +28,15 @@ fn set_vcs_relates_to(config: &mut dyn Vcs, relates: &RelateTo<'_>) -> Result<()
 }
 
 fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<()> {
-    let now = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .into_diagnostic()?;
-    let expiry_time = now.add(expires_in).as_secs().try_into().into_diagnostic()?;
+    let now = OffsetDateTime::now_utc().unix_timestamp();
+    let expires_in_secs = expires_in
+        .as_secs()
+        .try_into()
+        .into_diagnostic()
+        .wrap_err("Expiration time exceeds maximum supported value")?;
+    
+    let expiry_time = now + expires_in_secs;
+    
     config
         .set_i64(CONFIG_KEY_EXPIRES, expiry_time)
         .wrap_err("failed to update the expiry time mit-relates-to")
