@@ -50,7 +50,7 @@ fn main() -> Result<()> {
 
     if repo_present() && !is_hook_present() {
         not_setup_warning();
-    };
+    }
 
     let current_dir = env::current_dir().into_diagnostic()?;
     let mut vcs = Git2::try_from(current_dir)?;

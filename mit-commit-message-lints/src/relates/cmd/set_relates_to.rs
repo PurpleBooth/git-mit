@@ -1,10 +1,9 @@
 use std::{convert::TryInto, time::Duration};
 
-use miette::{IntoDiagnostic, Result, WrapErr};
+use miette::{miette, Result, WrapErr};
 use time::OffsetDateTime;
 
 use crate::{external::Vcs, relates::RelateTo};
-
 const CONFIG_KEY_EXPIRES: &str = "mit.relate.expires";
 
 /// # Errors
@@ -32,11 +31,12 @@ fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<()
     let expires_in_secs: i64 = expires_in
         .as_secs()
         .try_into()
-        .map_err(|_| std::io::Error::new(std::io::ErrorKind::InvalidInput, "Expiration time exceeds maximum supported value"))?;
-    
-    let expiry_time = now.checked_add(expires_in_secs)
-        .ok_or_else(|| std::io::Error::new(std::io::ErrorKind::InvalidInput, "Expiration time overflow"))?;
-    
+        .map_err(|_| miette!("Expiration time exceeds maximum supported value"))?;
+
+    let expiry_time = now
+        .checked_add(expires_in_secs)
+        .ok_or_else(|| miette!("Expiration time overflow"))?;
+
     config
         .set_i64(CONFIG_KEY_EXPIRES, expiry_time)
         .wrap_err("failed to update the expiry time mit-relates-to")

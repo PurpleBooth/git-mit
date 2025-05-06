@@ -51,7 +51,7 @@ fn main() -> Result<()> {
 
     if !is_hook_present() {
         not_setup_warning();
-    };
+    }
 
     let initials: Vec<&str> = cli_args.initials.iter().map(String::as_str).collect();
     let missing = authors.missing_initials(initials.clone());

@@ -13,6 +13,6 @@ pub fn get_config_non_clean_behaviour(store: &dyn Vcs) -> Result<BehaviourOption
         let behaviour: BehaviourOption = behaviour_str.parse()?;
 
         return Ok(behaviour);
-    };
+    }
     Ok(BehaviourOption::AddTo)
 }
