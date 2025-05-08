@@ -7,6 +7,10 @@ show-help:
 test:
 	unset GIT_MIT_AUTHORS_EXEC && RUST_BACKTRACE=1 cargo test
 
+# Mutation testing
+mutate:
+	cargo mutants --shuffle
+
 # Test the markdown in the docs directory
 specdown: build
 	./bin/specdown ./docs/**.md ./docs/**/*.md ./README.md
