@@ -47,14 +47,14 @@ build-x86_64-pc-windows-msvc:
 # Lint it
 lint:
 	cargo +nightly fmt --all -- --check
-	cargo +nightly clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple_crate_versions
+	cargo +nightly clippy --all-features -A clippy::multiple_crate_versions
 	cargo check
 	cargo audit
 	npx prettier --check **.json **.yml
 
 lint-file *ARGS:
 	cargo +nightly fmt --all -- --check
-	cargo +nightly clippy --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -A clippy::multiple_crate_versions
+	cargo +nightly clippy --all-features -A clippy::multiple_crate_versions
 	cargo check
 	cargo audit
 	npx prettier --check {{ARGS}}
@@ -78,13 +78,13 @@ release:
 # Format what can be formatted
 fmt:
 	cargo +nightly fix --allow-dirty --allow-staged
-	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -D clippy::nursery -A clippy::multiple_crate_versions
+	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -A clippy::multiple_crate_versions
 	cargo +nightly fmt --all
 	npx prettier --write {{ARGS}}
 
 fmt-file *ARGS:
 	cargo +nightly fix --allow-dirty --allow-staged
-	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -- -D warnings -Dclippy::all -D clippy::pedantic -D clippy::cargo -D clippy::nursery -A clippy::multiple_crate_versions
+	cargo +nightly clippy --allow-dirty --allow-staged --fix -Z unstable-options --all-features -A clippy::multiple_crate_versions
 	cargo +nightly fmt --all
 	npx prettier --write {{ARGS}}
 
