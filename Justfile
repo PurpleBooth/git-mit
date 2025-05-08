@@ -80,7 +80,7 @@ fmt:
 	cargo +nightly fix --allow-dirty --allow-staged
 	cargo +nightly clippy --allow-dirty --allow-staged --fix --all-features
 	cargo +nightly fmt --all
-	npx prettier --write {{ARGS}} # AI! Make this prettier like the check one but write
+	npx prettier --write **.json **.yml
 
 fmt-file *ARGS:
 	cargo +nightly fix --allow-dirty --allow-staged
