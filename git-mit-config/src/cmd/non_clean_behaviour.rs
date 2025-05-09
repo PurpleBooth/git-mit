@@ -2,8 +2,7 @@ use std::env::current_dir;
 
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
-    mit::cmd::get_config_non_clean_behaviour::get_config_non_clean_behaviour,
-    scope::Scope,
+    mit::cmd::get_config_non_clean_behaviour::get_config_non_clean_behaviour, scope::Scope,
 };
 
 use crate::get_vcs;

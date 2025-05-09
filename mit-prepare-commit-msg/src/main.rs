@@ -35,9 +35,7 @@ use mit_commit_message_lints::{
     external::{Git2, RepoState, Vcs},
     mit::{
         cmd::get_config_non_clean_behaviour::get_config_non_clean_behaviour,
-        get_commit_coauthor_configuration,
-        lib::non_clean_behaviour::BehaviourOption,
-        Author,
+        get_commit_coauthor_configuration, lib::non_clean_behaviour::BehaviourOption, Author,
         AuthorState,
     },
     relates::{get_relate_to_configuration, RelateTo},

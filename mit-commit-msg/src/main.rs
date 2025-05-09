@@ -27,9 +27,7 @@ use clap_complete::generate;
 use miette::{IntoDiagnostic, Result};
 use mit_commit::CommitMessage;
 use mit_commit_message_lints::{
-    console::error_handling::miette_install,
-    external,
-    lints::read_from_toml_or_else_vcs,
+    console::error_handling::miette_install, external, lints::read_from_toml_or_else_vcs,
 };
 use mit_lint::async_lint;
 
