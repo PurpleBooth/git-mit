@@ -19,7 +19,7 @@ pub struct InMemory<'a> {
 impl InMemory<'_> {
     /// Create a new in memory vcs
     #[must_use]
-    pub fn new(store: &mut BTreeMap<String, String>) -> InMemory<'_> {
+    pub const fn new(store: &mut BTreeMap<String, String>) -> InMemory<'_> {
         InMemory { store }
     }
 }
