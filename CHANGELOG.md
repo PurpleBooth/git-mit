@@ -2,6 +2,39 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.14.4](https://github.com/PurpleBooth/git-mit/compare/c03760e28e8ec31733ecc853b2d905ac4ffaab55..v5.14.4) - 2025-05-10
+#### Bug Fixes
+- **(deps)** update rust crate tokio to v1.43.1 [security] - ([e0b020c](https://github.com/PurpleBooth/git-mit/commit/e0b020ca4f187c0f9dccb0ec8ee3bf5323ec9aaf)) - renovate[bot]
+- **(deps)** update rust crate openssl to v0.10.72 [security] - ([6c4dfdc](https://github.com/PurpleBooth/git-mit/commit/6c4dfdc0182ca35bc54e43a4608d1bf0f687c649)) - renovate[bot]
+- **(deps)** update rust crate clap_complete to v4.5.44 (#1548) - ([70e9773](https://github.com/PurpleBooth/git-mit/commit/70e97733ab33faa74dc73e21a7891f7575251b44)) - renovate[bot]
+- **(deps)** update rust crate clap to v4.5.27 (#1546) - ([5d28785](https://github.com/PurpleBooth/git-mit/commit/5d28785366d0f94ed005cf7c535fa702c561e772)) - renovate[bot]
+- remove invalid `const` qualifier from `new` function in `in_memory.rs` - ([cb272e0](https://github.com/PurpleBooth/git-mit/commit/cb272e0cce0c06ba914c57d26b395df1a1b13b79)) - Billie Thompson (aider)
+- replace std::io::Error with miette! macro for error handling - ([7ff0cd2](https://github.com/PurpleBooth/git-mit/commit/7ff0cd27b98601344aa6fb2c896674a1cc7a3fa4)) - Billie Thompson (aider)
+- resolve type conversion errors in set_relates_to expiration handling - ([ffd1171](https://github.com/PurpleBooth/git-mit/commit/ffd1171c526ca5a52bdbe1de822c105d866120c7)) - Billie Thompson (aider)
+#### Build system
+- specify json and yaml files for prettier - ([a396917](https://github.com/PurpleBooth/git-mit/commit/a3969175cdc80583c4a216ce84c1a7cc33a18c39)) - Billie Thompson (aider)
+#### Miscellaneous Chores
+- **(deps)** update rust docker tag to v1.86.0 - ([95227c7](https://github.com/PurpleBooth/git-mit/commit/95227c71331511140512d758652bcd337670bc96)) - renovate[bot]
+- **(deps)** update actions/cache action to v4.2.0 (#1542) - ([c03760e](https://github.com/PurpleBooth/git-mit/commit/c03760e28e8ec31733ecc853b2d905ac4ffaab55)) - renovate[bot]
+- add mutate target to run cargo mutants with shuffle - ([6aa0c8c](https://github.com/PurpleBooth/git-mit/commit/6aa0c8ce03c703064fb4389eb2b229d3cc15671b)) - Billie Thompson (aider)
+- update prettier command comment in Justfile - ([0898fed](https://github.com/PurpleBooth/git-mit/commit/0898fede90b149ef401fd15fade66a6d5251bd71)) - Billie Thompson
+- remove rustfmt.toml configuration file - ([fe3c939](https://github.com/PurpleBooth/git-mit/commit/fe3c9395a4a732325a1107f0f774d7cc19570fda)) - Billie Thompson
+- remove unstable clippy flag from fmt recipes - ([bb4c659](https://github.com/PurpleBooth/git-mit/commit/bb4c6593ee0bcc35eae01e555be4163405c204ee)) - Billie Thompson (aider)
+- remove clippy multiple crate versions allowance from justfile - ([f875246](https://github.com/PurpleBooth/git-mit/commit/f8752467d9daf4cd282043e05916a1cf53de35c8)) - Billie Thompson (aider)
+- remove explicit clippy lint settings from justfile - ([71348c4](https://github.com/PurpleBooth/git-mit/commit/71348c49c16069282806fca25ac9e7e28e035e31)) - Billie Thompson (aider)
+- standardize lint attributes across all crates - ([03ab374](https://github.com/PurpleBooth/git-mit/commit/03ab374705e8aef510fa7b80df267cf4484979e5)) - Billie Thompson (aider)
+- add mutants.out* to .gitignore - ([ed05977](https://github.com/PurpleBooth/git-mit/commit/ed0597739be51344405a903d635323207b28aa63)) - Billie Thompson
+- add a per file linter - ([5be75c3](https://github.com/PurpleBooth/git-mit/commit/5be75c32e88fceaf8e513ef8f6e8e5d60ef1c9b7)) - Billie Thompson
+- add .aider* to .gitignore - ([372ace6](https://github.com/PurpleBooth/git-mit/commit/372ace6f66ea728f1ccd70d604aee544ba37c115)) - Billie Thompson
+#### Refactoring
+- make `InMemory::new` a const function - ([8e4253b](https://github.com/PurpleBooth/git-mit/commit/8e4253b41b20fa4e0dc66b779cb7807ed80a98ee)) - Billie Thompson
+- add ARGS parameter to fmt and lint recipes in Justfile - ([74def91](https://github.com/PurpleBooth/git-mit/commit/74def91434bcfd0c38aa39854afecc734b8f7ea6)) - Billie Thompson (aider)
+- update time handling to use OffsetDateTime in set_relates_to.rs - ([3b330b4](https://github.com/PurpleBooth/git-mit/commit/3b330b46769fa5ece7d27284036009f8a216bbde)) - Billie Thompson (aider)
+#### Style
+- Format code and imports for consistency - ([a25e5ea](https://github.com/PurpleBooth/git-mit/commit/a25e5eab081114f960fb6448ec1c414e45bb382a)) - Billie Thompson
+
+- - -
+
 ## [v5.14.3](https://github.com/PurpleBooth/git-mit/compare/47214f861b6a22d5e83c9180ef1792b88b41c596..v5.14.3) - 2025-01-11
 #### Bug Fixes
 - bump versions and follow clippy advice - ([9d07720](https://github.com/PurpleBooth/git-mit/commit/9d0772009e3d2846529ec6551ec38a7de3adc8c8)) - Billie Thompson
