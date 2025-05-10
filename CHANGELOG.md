@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.14.5](https://github.com/PurpleBooth/git-mit/compare/53bd43cde1f309e1bd3b07684a46503254a7acc0..v5.14.5) - 2025-05-10
+#### Bug Fixes
+- **(deps)** update rust crate git2 to 0.20.0 - ([c58011e](https://github.com/PurpleBooth/git-mit/commit/c58011eeb70fbdc06b0b64793b4c4eba4819a4c0)) - renovate[bot]
+- **(deps)** update rust crate miette to v7.6.0 - ([2f938a5](https://github.com/PurpleBooth/git-mit/commit/2f938a5e4d364d85a2bad259087410e30a80829b)) - renovate[bot]
+- **(deps)** update rust crate clap to v4.5.37 - ([0b0f461](https://github.com/PurpleBooth/git-mit/commit/0b0f4619d92ecd7a1c63cb3bfc6e4ca8b27e2c1b)) - renovate[bot]
+- **(deps)** update rust crate quickcheck_macros to v1.1.0 - ([5fed1fc](https://github.com/PurpleBooth/git-mit/commit/5fed1fc04ab55d25bc21c505fd5cdd51b6e21a58)) - renovate[bot]
+#### Miscellaneous Chores
+- **(deps)** update purplebooth/generate-formula-action action to v0.1.15 - ([b41e0c6](https://github.com/PurpleBooth/git-mit/commit/b41e0c6a9fbdc9a95555142cd633abbac01cc5dc)) - renovate[bot]
+- **(deps)** update ncipollo/release-action action to v1.16.0 - ([05bbf54](https://github.com/PurpleBooth/git-mit/commit/05bbf542c05a063ab96d585875c1b3c6b142ad75)) - renovate[bot]
+- **(deps)** update actions/attest-build-provenance action to v2 - ([e37b5b4](https://github.com/PurpleBooth/git-mit/commit/e37b5b484bb2fcfb443aeec03344ce5763c70b44)) - renovate[bot]
+- **(deps)** update actions/cache action to v4.2.3 - ([53bd43c](https://github.com/PurpleBooth/git-mit/commit/53bd43cde1f309e1bd3b07684a46503254a7acc0)) - renovate[bot]
+
+- - -
+
 ## [v5.14.4](https://github.com/PurpleBooth/git-mit/compare/c03760e28e8ec31733ecc853b2d905ac4ffaab55..v5.14.4) - 2025-05-10
 #### Bug Fixes
 - **(deps)** update rust crate tokio to v1.43.1 [security] - ([e0b020c](https://github.com/PurpleBooth/git-mit/commit/e0b020ca4f187c0f9dccb0ec8ee3bf5323ec9aaf)) - renovate[bot]
