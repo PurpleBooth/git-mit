@@ -176,7 +176,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 %B' -q
 ```
 
-``` text,verify(script_name="set-relates-to-template",stream=stdout)
+``` text,verify(script_name="show-log-with-templated-relates-to",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 More awesome additions
@@ -186,7 +186,7 @@ Relates-to: [#12321513]
 
 Alternatively you can set the template via an environment variable
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="set-relates-to-env-template-commit",expected_exit_code=0)
 git mit-relates-to "12321513"
 echo "Something else" >> README.md
 git add README.md
@@ -194,13 +194,13 @@ git mit bt
 GIT_MIT_RELATES_TO_TEMPLATE="JIR-{value}" git commit -m "More awesome additions"
 ```
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-log-with-env-template",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="set-relates-to-env-template",stream=stdout)
+``` text,verify(script_name="show-log-with-env-template",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 More awesome additions

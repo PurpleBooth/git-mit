@@ -197,7 +197,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 
 The author configuration will be updated like this
 
-``` text,verify(script_name="set-multiple-coauthors",stream=stdout)
+``` text,verify(script_name="create-second-commit",stream=stdout)
 author: [Someone Else se@example.com] signed-by: [] 
 ---
 Second Commit
