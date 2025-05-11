@@ -296,7 +296,7 @@ jobs:
     name: Generate Homebrew Formula
     runs-on: ubuntu-latest
     steps:
-      - uses: PurpleBooth/generate-formula-action@6823664d54d03461ca49b97647aa838d6e5f53f5 # v0.1.15
+      - uses: PurpleBooth/generate-formula-action@ace3a0eca60d4a2d904891919c2100201bdb65a3 # v0.1.16
         with:
           current_version: ${{ needs.release.outputs.current_version }}
           previous_version: ${{ needs.release.outputs.previous_version }}
