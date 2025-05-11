@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.14.6](https://github.com/PurpleBooth/git-mit/compare/e52fc5bcd45d2dada64990797764accdf251e4bb..v5.14.6) - 2025-05-11
+#### Bug Fixes
+- **(deps)** update rust crate indoc to v2.0.6 - ([b7c23f9](https://github.com/PurpleBooth/git-mit/commit/b7c23f97d792242528e2f6f885bfe867959c7dfc)) - renovate[bot]
+- **(deps)** update rust crate which to v7.0.3 - ([2c4d726](https://github.com/PurpleBooth/git-mit/commit/2c4d726e29ce679e5353dfd376d3ab6b3ed8134a)) - renovate[bot]
+- **(deps)** update rust crate time to v0.3.41 - ([bb2269f](https://github.com/PurpleBooth/git-mit/commit/bb2269fb099c97ca586bddf5ef5fb9b148a9709e)) - renovate[bot]
+- **(deps)** update serde monorepo to v1.0.219 - ([a0ac04b](https://github.com/PurpleBooth/git-mit/commit/a0ac04bd771b72797621d1ace8a65f87e2efdba2)) - renovate[bot]
+- **(deps)** update rust crate mit-lint to v3.3.1 - ([43b5787](https://github.com/PurpleBooth/git-mit/commit/43b5787c2d4167adfbecf03dfc5234b3b6ecfe4f)) - renovate[bot]
+- **(deps)** update rust crate tokio to v1.45.0 - ([0e9924a](https://github.com/PurpleBooth/git-mit/commit/0e9924a0cd8354234313f904084595544ad3842d)) - renovate[bot]
+- **(deps)** update rust crate tempfile to v3.19.1 - ([e52fc5b](https://github.com/PurpleBooth/git-mit/commit/e52fc5bcd45d2dada64990797764accdf251e4bb)) - renovate[bot]
+
+- - -
+
 ## [v5.14.5](https://github.com/PurpleBooth/git-mit/compare/53bd43cde1f309e1bd3b07684a46503254a7acc0..v5.14.5) - 2025-05-10
 #### Bug Fixes
 - **(deps)** update rust crate git2 to 0.20.0 - ([c58011e](https://github.com/PurpleBooth/git-mit/commit/c58011eeb70fbdc06b0b64793b4c4eba4819a4c0)) - renovate[bot]
