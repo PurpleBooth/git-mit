@@ -282,13 +282,13 @@ git mit bt ae
 git rebase --reset-author-date "-"
 ```
 
-``` shell,script(name="git-mit-config-mit-non-clean-behaviour-4",expected_exit_code=0)
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-4",stream=stdout)
+``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Rebase behaviour
@@ -312,14 +312,13 @@ git mit bt ae
 git rebase --reset-author-date "-"
 ```
 
-
-``` shell,script(name="git-mit-config-mit-non-clean-behaviour-7",expected_exit_code=0)
+``` shell,script(name="git-mit-config-mit-non-clean-behaviour-check",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="rebase-with-add-to-behavior",stream=stdout)
+``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-check",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Rebase behaviour
@@ -334,7 +333,7 @@ The command also works with signed commits
 
 The `bt` user has a valid gpg key.
 
-``` shell,script(name="show_commit_with_multiple_coauthors",expected_exit_code=0)
+``` shell,script(name="show-commit-with-multiple-coauthors",expected_exit_code=0)
 git mit bt
 ```
 

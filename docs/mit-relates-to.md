@@ -33,13 +33,13 @@ This is the best readme
 
 If you run
 
-``` shell,script(name="set_relates_to_configuration",expected_exit_code=0)
+``` shell,script(name="set-relates-to-configuration",expected_exit_code=0)
 git mit-relates-to "[#12321513]"
 ```
 
 Next time you commit
 
-``` shell,script(name="commit_with_relates_to",expected_exit_code=0)
+``` shell,script(name="commit-with-relates-to",expected_exit_code=0)
 git add README.md
 git mit bt
 git commit -m "Wrote a great README"
@@ -47,13 +47,13 @@ git commit -m "Wrote a great README"
 
 the commit message will contain the ID
 
-``` shell,script(name="show_log_with_relates_to_trailer",expected_exit_code=0)
+``` shell,script(name="show-log-with-relates-to-trailer",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="show_log_with_relates_to_trailer",stream=stdout)
+``` text,verify(script_name="show-log-with-relates-to-trailer",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Wrote a great README
@@ -63,7 +63,7 @@ Relates-to: [#12321513]
 
 We don't duplicate the ID if you manually type in the trailer
 
-``` shell,script(name="commit_without_relates_to",expected_exit_code=0)
+``` shell,script(name="commit-without-relates-to",expected_exit_code=0)
 echo "Some change" >> README.md
 git add README.md
 git mit bt
@@ -75,13 +75,13 @@ Relates-to: [#12321513]
 
 the commit message will contain the ID
 
-``` shell,script(name="show_log_without_relates_to",expected_exit_code=0)
+``` shell,script(name="show-log-without-relates-to",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="show_log_without_relates_to",stream=stdout)
+``` text,verify(script_name="show-log-without-relates-to",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Wrote a great README
@@ -112,13 +112,13 @@ git commit -m "Another great addition"
 
 the commit message will contain the ID
 
-``` shell,script(name="show_log_with_shell_set_trailer",expected_exit_code=0)
+``` shell,script(name="show-log-with-shell-set-trailer",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="show_log_with_shell_set_trailer",stream=stdout)
+``` text,verify(script_name="show-log-with-shell-set-trailer",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Another great addition
@@ -160,7 +160,7 @@ command
 
 Next time you commit after running relates to
 
-``` shell,script(name="set_relates_to_template",expected_exit_code=0)
+``` shell,script(name="set-relates-to-template",expected_exit_code=0)
 git mit-relates-to "12321513"
 echo "Something else" >> README.md
 git add README.md
@@ -170,13 +170,13 @@ git commit -m "More awesome additions"
 
 the commit message will contain the ID
 
-``` shell,script(name="show_log_with_templated_relates_to",expected_exit_code=0)
+``` shell,script(name="show-log-with-templated-relates-to",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="set_relates_to_template",stream=stdout)
+``` text,verify(script_name="set-relates-to-template",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 More awesome additions
