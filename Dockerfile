@@ -1,97 +1,52 @@
-FROM rust:1.86.0@sha256:300ec56abce8cc9448ddea2172747d048ed902a3090e6b57babb2bf19f754081 AS builder
+# syntax=docker/dockerfile:1.4
+ARG RUST_VERSION=1.86.0
 
-## Update the system generally
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    rm -rf /var/lib/apt/lists/*
-
-WORKDIR /root/app
-
-## Build deps for git-mit
-RUN apt-get update && \
-    apt-get install -y libxkbcommon-dev libxcb-shape0-dev libxcb-xfixes0-dev help2man && \
-    rm -rf /var/lib/apt/lists/*
-
+FROM rust:${RUST_VERSION} AS planner
+WORKDIR /app
+RUN cargo install cargo-chef
 COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
 
-RUN --mount=type=cache,target=/root/.cargo cargo clean
-RUN --mount=type=cache,target=/root/.cargo cargo build --release
-RUN help2man target/release/mit-commit-msg > target/mit-commit-msg.1
-RUN help2man target/release/mit-pre-commit > target/mit-pre-commit.1
-RUN help2man target/release/mit-prepare-commit-msg > target/mit-prepare-commit-msg.1
-RUN help2man target/release/git-mit > target/git-mit.1
-RUN help2man target/release/git-mit-config > target/git-mit-config.1
-RUN help2man target/release/git-mit-relates-to > target/git-mit-relates-to.1
-RUN help2man target/release/git-mit-install > target/git-mit-install.1
+FROM rust:${RUST_VERSION} AS cacher
+WORKDIR /app
+RUN cargo install cargo-chef
+COPY --from=planner /app/recipe.json recipe.json
+RUN cargo chef cook --release --recipe-path recipe.json
 
-FROM rust:1.86.0@sha256:300ec56abce8cc9448ddea2172747d048ed902a3090e6b57babb2bf19f754081
+FROM rust:${RUST_VERSION} AS builder
+WORKDIR /app
+COPY . .
+COPY --from=cacher /app/target target
+COPY --from=cacher /usr/local/cargo /usr/local/cargo
+RUN apt-get update && \
+    apt-get install -y help2man && \
+    rm -rf /var/lib/apt/lists/*
+RUN --mount=type=cache,target=/app/target \
+    --mount=type=cache,target=/usr/local/cargo/registry \
+    cargo build --release && \
+    for bin in mit-commit-msg mit-pre-commit mit-prepare-commit-msg git-mit git-mit-config git-mit-relates-to git-mit-install; do \
+        help2man target/release/$bin > target/$bin.1; \
+    done
+
+FROM debian:bookworm-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
-## Update the system generally
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends \
+    libssl3 \
+    ca-certificates \
+    git \
+    bash \
+    bash-completion \
+    man \
+    && rm -rf /var/lib/apt/lists/*
 
-### Nice things for actually using the tool
-## Bash
-RUN apt-get update && \
-    apt-get install -y bash bash-completion && \
-    rm -rf /var/lib/apt/lists/*
+COPY --from=builder /app/target/release/* /usr/local/bin/
+COPY --from=builder /app/target/*.1 /usr/local/share/man/man1/
 
-## Git
-RUN apt-get update && \
-    apt-get install -y git && \
-    rm -rf /var/lib/apt/lists/*
-
-## Vim
-RUN apt-get update && \
-    apt-get install -y vim && \
-    rm -rf /var/lib/apt/lists/*
-
-## Man
-RUN apt-get update && \
-    apt-get install -y man && \
-    rm -rf /var/lib/apt/lists/*
-
-### The Tool
-## Runtime deps for git-mit
-RUN apt-get update && \
-    apt-get install -y libxkbcommon0 libxcb-shape0 libxcb-xfixes0 libssl3 libgcc1 && \
-    rm -rf /var/lib/apt/lists/*
-
-COPY --from=builder \
-    /root/app/target/release/mit-commit-msg \
-    /usr/local/bin/mit-commit-msg
-COPY --from=builder \
-    /root/app/target/release/mit-pre-commit \
-    /usr/local/bin/mit-pre-commit
-COPY --from=builder \
-    /root/app/target/release/mit-prepare-commit-msg \
-    /usr/local/bin/mit-prepare-commit-msg
-COPY --from=builder \
-    /root/app/target/release/git-mit \
-    /usr/local/bin/git-mit
-COPY --from=builder \
-    /root/app/target/release/git-mit-config \
-    /usr/local/bin/git-mit-config
-COPY --from=builder \
-    /root/app/target/release/git-mit-relates-to \
-    /usr/local/bin/git-mit-relates-to
-COPY --from=builder \
-    /root/app/target/release/git-mit-install \
-    /usr/local/bin/git-mit-install
-COPY --from=builder \
-    /root/app/target/*.1 \
-    /usr/local/share/man/man1/
-
-RUN mkdir -p $HOME/.local/share/bash-completion/completions
-RUN mit-commit-msg --completion bash > $HOME/.local/share/bash-completion/completions/mit-commit-msg
-RUN mit-pre-commit --completion bash > $HOME/.local/share/bash-completion/completions/mit-pre-commit
-RUN mit-prepare-commit-msg --completion bash > $HOME/.local/share/bash-completion/completions/mit-prepare-commit-msg
-RUN git-mit --completion bash > $HOME/.local/share/bash-completion/completions/git-mit
-RUN git-mit-config --completion bash > $HOME/.local/share/bash-completion/completions/git-mit-config
-RUN git-mit-relates-to --completion bash > $HOME/.local/share/bash-completion/completions/git-mit-relates-to
-RUN git-mit-install --completion bash > $HOME/.local/share/bash-completion/completions/git-mit-install
-
-RUN git-mit-install --scope=global
+RUN mkdir -p /usr/share/bash-completion/completions && \
+    for bin in mit-commit-msg mit-pre-commit mit-prepare-commit-msg git-mit git-mit-config git-mit-relates-to git-mit-install; do \
+        $bin --completion bash > /usr/share/bash-completion/completions/$bin; \
+    done && \
+    git-mit-install --scope=global
 
