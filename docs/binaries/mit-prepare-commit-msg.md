@@ -58,8 +58,7 @@ Options:
 ```
 
 You can generate completion with
-// AI! Rename this to be hyphenated
-``` shell,script(name="generate_mit_prepare_commit_msg_completion",expected_exit_code=0)
+``` shell,script(name="generate-mit-prepare-commit-msg-completion",expected_exit_code=0)
 mit-prepare-commit-msg --completion bash
 ```
 
