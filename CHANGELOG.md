@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.14.7](https://github.com/PurpleBooth/git-mit/compare/b5cb0480b68c74de9110d1413c94b8ff46a83a6c..v5.14.7) - 2025-05-11
+#### Bug Fixes
+- **(deps)** update rust crate thiserror to v2 - ([d410e17](https://github.com/PurpleBooth/git-mit/commit/d410e1733f0099c66f82ef5f1bdad7a1147b3476)) - renovate[bot]
+- **(deps)** update rust crate clap_complete to v4.5.50 - ([cd702de](https://github.com/PurpleBooth/git-mit/commit/cd702de3ab939b41e7070d834911c86568c3b6ee)) - renovate[bot]
+- **(deps)** update rust crate comfy-table to v7.1.4 - ([3c6a740](https://github.com/PurpleBooth/git-mit/commit/3c6a740e04e3c0315b71ca4b9a60544cef1aa64d)) - renovate[bot]
+- **(deps)** update rust crate arboard to v3.5.0 - ([b7e84b4](https://github.com/PurpleBooth/git-mit/commit/b7e84b433ec5bce371d6c901f55db91d010944ed)) - renovate[bot]
+- **(deps)** update rust crate clap to v4.5.38 - ([b5cb048](https://github.com/PurpleBooth/git-mit/commit/b5cb0480b68c74de9110d1413c94b8ff46a83a6c)) - renovate[bot]
+#### Miscellaneous Chores
+- **(deps)** update nick-invision/retry action to v3.0.2 - ([7b27449](https://github.com/PurpleBooth/git-mit/commit/7b2744936fdc0b1200e2050acd51f81a9fda2d58)) - renovate[bot]
+- **(deps)** update purplebooth/generate-formula-action action to v0.1.16 - ([9fcf34a](https://github.com/PurpleBooth/git-mit/commit/9fcf34abf586ccb3c82c1efe0ab215c224accd1d)) - renovate[bot]
+
+- - -
+
 ## [v5.14.6](https://github.com/PurpleBooth/git-mit/compare/e52fc5bcd45d2dada64990797764accdf251e4bb..v5.14.6) - 2025-05-11
 #### Bug Fixes
 - **(deps)** update rust crate indoc to v2.0.6 - ([b7c23f9](https://github.com/PurpleBooth/git-mit/commit/b7c23f97d792242528e2f6f885bfe867959c7dfc)) - renovate[bot]
