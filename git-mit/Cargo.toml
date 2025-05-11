@@ -13,7 +13,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 [dependencies]
 shell-words = "1.1.0"
 indoc = "2.0.5"
-thiserror = "1.0.69"
+thiserror = "2.0.0"
 miette = { version = "7.4.0", features = [ "fancy" ] }
 clap_complete = "4.5.42"
 clap = { version = "4.5.26", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
