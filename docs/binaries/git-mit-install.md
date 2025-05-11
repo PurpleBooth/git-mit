@@ -2,13 +2,13 @@
 
 Generic usage
 
-``` shell,script(name="run_help",expected_exit_code=0)
+``` shell,script(name="run-help",expected_exit_code=0)
 export HOME="/example/home/dir"
 export USERPROFILE="F:\\some\\userprofile"
 git-mit-install --help
 ```
 
-```text,verify(script_name="run_help",target_os="!windows")
+```text,verify(script_name="run-help",target_os="!windows")
 Install git-mit into a repository
 
 Usage: git-mit-install [OPTIONS]
@@ -36,7 +36,7 @@ Options:
 
 On windows the home directory is different
 
-```text,verify(script_name="run_help",target_os="windows")
+```text,verify(script_name="run-help",target_os="windows")
 Install git-mit into a repository
 
 Usage: git-mit-install [OPTIONS]
@@ -64,6 +64,6 @@ Options:
 
 You can generate completion with
 
-```shell,script(name="completion",expected_exit_code=0)
+```shell,script(name="generate-bash-completion",expected_exit_code=0)
 git-mit-install --completion bash
 ```

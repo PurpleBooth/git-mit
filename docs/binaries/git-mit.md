@@ -2,11 +2,11 @@
 
 Generic usage
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-help",expected_exit_code=0)
 git-mit --help
 ```
 
-``` shell,verify(stream=stdout)
+``` shell,verify(script_name="show-help",stream=stdout)
 Set author and Co-authored trailer.
 
 Usage: git-mit [OPTIONS] [INITIALS]...
@@ -61,16 +61,16 @@ COMMON TASKS:
 
 You can generate completion with
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="generate-bash-completion",expected_exit_code=0)
 git-mit --completion bash
 ```
 
 Otherwise you must provide an author initial
 
-``` shell,script(expected_exit_code=2)
+``` shell,script(name="missing-initials-error",expected_exit_code=2)
 git-mit
 ```
-``` shell,verify(stream=stderr)
+``` shell,verify(script_name="missing-initials-error",stream=stderr)
 error: the following required arguments were not provided:
   <INITIALS>...
 

@@ -4,11 +4,11 @@
 
 Generic usage
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-help",expected_exit_code=0)
 mit-prepare-commit-msg --help
 ```
 
-``` shell,verify(stream=stdout)
+``` shell,verify(script_name="show-help",stream=stdout)
 This hook is invoked by git-commit right after preparing the default log message, and before the
 editor is started.
 
@@ -59,17 +59,17 @@ Options:
 
 You can generate completion with
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="generate_mit_prepare_commit_msg_completion",expected_exit_code=0)
 mit-prepare-commit-msg --completion bash
 ```
 
 Otherwise you need an commit message path
 
-``` shell,script(expected_exit_code=2)
+``` shell,script(name="missing-commit-path-error",expected_exit_code=2)
 mit-prepare-commit-msg
 ```
 
-``` shell,verify(stream=stderr)
+``` shell,verify(script_name="missing-commit-path-error",stream=stderr)
 error: the following required arguments were not provided:
   <COMMIT_MESSAGE_PATH>
 

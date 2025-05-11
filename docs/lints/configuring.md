@@ -7,7 +7,7 @@ probably don't want the `github-id-missing` lint if you're using Jira.
 
 As always we need a working it repository, with the hooks installed.
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="init-repo",expected_exit_code=0)
 git init .
 git mit-install
 ```
@@ -18,13 +18,13 @@ Some lints are enabled by default
 
 If we run
 
-``` shell,script(name="2",expected_exit_code=0)
+``` shell,script(name="list-enabled-lints",expected_exit_code=0)
 git mit-config lint enabled
 ```
 
 You can see what's enabled by default.
 
-``` text,verify(script_name="2",stream=stdout)
+``` text,verify(script_name="list-enabled-lints",stream=stdout)
 ╭───────────────────────────────────┬─────────╮
 │ Lint                              ┆ Status  │
 ╞═══════════════════════════════════╪═════════╡
@@ -42,19 +42,19 @@ You can see what's enabled by default.
 
 To disable a lint we run
 
-``` shell,script(name="4",expected_exit_code=0)
+``` shell,script(name="disable-subject-length-lint",expected_exit_code=0)
 git mit-config lint disable subject-longer-than-72-characters
 ```
 
 and then run
 
-``` shell,script(name="5",expected_exit_code=0)
+``` shell,script(name="check-subject-length-lint-status",expected_exit_code=0)
 git mit-config lint status subject-longer-than-72-characters
 ```
 
 We will see that it's now disabled
 
-``` text,verify(script_name="5",stream=stdout)
+``` text,verify(script_name="check-subject-length-lint-status",stream=stdout)
 ╭───────────────────────────────────┬──────────╮
 │ Lint                              ┆ Status   │
 ╞═══════════════════════════════════╪══════════╡
@@ -64,17 +64,17 @@ We will see that it's now disabled
 
 If we run
 
-``` shell,script(name="6",expected_exit_code=0)
+``` shell,script(name="enable-subject-length-lint",expected_exit_code=0)
 git mit-config lint enable subject-longer-than-72-characters
 ```
 
 We can see that it's back
 
-``` shell,script(name="6",expected_exit_code=0)
+``` shell,script(name="verify-subject-length-lint-enabled",expected_exit_code=0)
 git mit-config lint status subject-longer-than-72-characters
 ```
 
-``` text,verify(script_name="6",stream=stdout)
+``` text,verify(script_name="verify-subject-length-lint-enabled",stream=stdout)
 ╭───────────────────────────────────┬─────────╮
 │ Lint                              ┆ Status  │
 ╞═══════════════════════════════════╪═════════╡
@@ -98,11 +98,11 @@ We can do this with a `.git-mit.toml.dist`
 
 With this you can enable lints
 
-``` shell,script(name="7",expected_exit_code=0)
+``` shell,script(name="check-pivotal-lint-status",expected_exit_code=0)
 git mit-config lint status pivotal-tracker-id-missing
 ```
 
-``` text,verify(script_name="7",stream=stdout)
+``` text,verify(script_name="check-pivotal-lint-status",stream=stdout)
 ╭────────────────────────────┬─────────╮
 │ Lint                       ┆ Status  │
 ╞════════════════════════════╪═════════╡
@@ -112,11 +112,11 @@ git mit-config lint status pivotal-tracker-id-missing
 
 You can generate this file for your current settings by running
 
-``` shell,script(name="7",expected_exit_code=0)
+``` shell,script(name="generate-lint-config",expected_exit_code=0)
 git mit-config lint generate
 ```
 
-``` toml,verify(script_name="7",stream=stdout)
+``` toml,verify(script_name="generate-lint-config",stream=stdout)
 [mit.lint]
 body-wider-than-72-characters = true
 duplicated-trailers = true
@@ -142,11 +142,11 @@ the `.gitignore`.
 
 This file will override the `.git-mit.toml.dist`
 
-``` shell,script(name="8",expected_exit_code=0)
+``` shell,script(name="check-pivotal-lint-override",expected_exit_code=0)
 git mit-config lint status pivotal-tracker-id-missing
 ```
 
-``` text,verify(script_name="8",stream=stdout)
+``` text,verify(script_name="check-pivotal-lint-override",stream=stdout)
 ╭────────────────────────────┬──────────╮
 │ Lint                       ┆ Status   │
 ╞════════════════════════════╪══════════╡

@@ -4,11 +4,11 @@
 
 Generic usage
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-help",expected_exit_code=0)
 mit-pre-commit --help
 ```
 
-``` shell,verify(stream=stdout)
+``` shell,verify(script_name="show-help",stream=stdout)
 Run first, before you even type in a commit message. It's used to inspect the snapshot that's about
 to be committed.
 
@@ -22,17 +22,17 @@ Options:
 
 You can generate completion with
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="generate-bash-completion",expected_exit_code=0)
 mit-pre-commit --completion bash
 ```
 
 Otherwise you need to have configured some authors
 
-``` shell,script(expected_exit_code=1)
+``` shell,script(name="no-authors-configured-error",expected_exit_code=1)
 mit-pre-commit
 ```
 
-``` shell,verify(stream=stderr)
+``` shell,verify(script_name="no-authors-configured-error",stream=stderr)
 Error: mit_pre_commit::errors::stale_author_error
 
   × No authors set

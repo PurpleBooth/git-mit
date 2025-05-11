@@ -5,7 +5,7 @@
 As always we need a working it repository with the hooks installed to
 run these lints
 
-``` shell,script(name="mit-install",expected_exit_code=0)
+``` shell,script(name="init-repo",expected_exit_code=0)
 git init .
 git mit-install
 ```
@@ -20,11 +20,11 @@ git mit bt
 
 You can see the full available lint list at any time by running
 
-``` shell,script(name="lint-list",expected_exit_code=0)
+``` shell,script(name="list-available-lints",expected_exit_code=0)
 git mit-config lint available
 ```
 
-``` text,verify(script_name="lint-list",stream=stdout)
+``` text,verify(script_name="list-available-lints",stream=stdout)
 ╭───────────────────────────────────┬──────────╮
 │ Lint                              ┆ Status   │
 ╞═══════════════════════════════════╪══════════╡
@@ -65,11 +65,11 @@ Trailers.
 
 On an empty repository
 
-``` shell,script(name="duplicated-trailers-default",expected_exit_code=0)
+``` shell,script(name="enable-example-lint",expected_exit_code=0)
 git mit-config lint status duplicated-trailers
 ```
 
-``` text,verify(script_name="duplicated-trailers-default",stream=stdout)
+``` text,verify(script_name="enable-example-lint",stream=stdout)
 ╭─────────────────────┬─────────╮
 │ Lint                ┆ Status  │
 ╞═════════════════════╪═════════╡
@@ -398,11 +398,11 @@ Detect a subject line that is not capitalised
 
 On an empty repository
 
-``` shell,script(name="subject-line-not-capitalized-default",expected_exit_code=0)
+``` shell,script(name="check-subject-capitalization-default",expected_exit_code=0)
 git mit-config lint status subject-line-not-capitalized
 ```
 
-``` text,verify(script_name="subject-line-not-capitalized-default",stream=stdout)
+``` text,verify(script_name="check-subject-capitalization-default",stream=stdout)
 ╭──────────────────────────────┬──────────╮
 │ Lint                         ┆ Status   │
 ╞══════════════════════════════╪══════════╡
@@ -414,7 +414,7 @@ git mit-config lint status subject-line-not-capitalized
 
 Enable it with
 
-``` shell,script(name="subject-line-not-capitalized-enabled",expected_exit_code=0)
+``` shell,script(name="enable-subject-capitalization",expected_exit_code=0)
 git mit-config lint enable subject-line-not-capitalized
 ```
 
@@ -430,7 +430,7 @@ This is a commit message that is valid
 
 Committing will succeed
 
-``` shell,script(name="subject-line-not-capitalized-valid",expected_exit_code=0)
+``` shell,script(name="valid-capitalized-subject",expected_exit_code=0)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
@@ -448,13 +448,13 @@ This is a commit message that is invalid
 
 Committing will fail
 
-``` shell,script(name="subject-line-not-capitalized-invalid",expected_exit_code=1)
+``` shell,script(name="invalid-uncapitalized-subject",expected_exit_code=1)
 echo $RANDOM > changes
 git add changes
 git commit --message="$(cat message)"
 ```
 
-``` text,verify(script_name="subject-line-not-capitalized-invalid",stream=stderr)
+``` text,verify(script_name="invalid-uncapitalized-subject",stream=stderr)
 Error: SubjectNotCapitalized (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
   × Your commit message is missing a capital letter

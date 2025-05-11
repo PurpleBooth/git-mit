@@ -3,7 +3,7 @@
 use super::author::*;
 
 #[test]
-fn has_an_author() {
+fn test_new_author_creation() {
     let author = Author::new("The Name".into(), "email@example.com".into(), None);
 
     assert_eq!(author.name(), "The Name");
@@ -12,7 +12,7 @@ fn has_an_author() {
 }
 
 #[test]
-fn has_an_signing_key() {
+fn test_author_with_signing_key() {
     let author = Author::new(
         "The Name".into(),
         "email@example.com".into(),

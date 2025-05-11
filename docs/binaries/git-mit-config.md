@@ -2,11 +2,11 @@
 
 Generic usage
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-main-help",expected_exit_code=0)
 git-mit-config --help
 ```
 
-``` shell,verify(stream=stdout)
+``` shell,verify(script_name="show-main-help",stream=stdout)
 A command for enabling and disabling git lints
 
 Usage: git-mit-config [OPTIONS] [COMMAND]
@@ -23,11 +23,11 @@ Options:
   -V, --version                  Print version
 ```
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-lint-help",expected_exit_code=0)
 git-mit-config lint --help
 ```
 
-``` shell,verify(stream=stdout)
+``` shell,verify(script_name="show-lint-help",stream=stdout)
 Manage active lints
 
 Usage: git-mit-config lint <COMMAND>
@@ -45,11 +45,11 @@ Options:
   -h, --help  Print help
 ```
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-mit-help",expected_exit_code=0)
 git-mit-config mit --help
 ```
 
-``` shell,verify(stream=stdout)
+``` shell,verify(script_name="show-mit-help",stream=stdout)
 Manage mit configuration
 
 Usage: git-mit-config mit <COMMAND>
@@ -67,11 +67,11 @@ Options:
   -h, --help  Print help
 ```
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-relates-to-help",expected_exit_code=0)
 git-mit-config relates-to --help
 ```
 
-``` shell,verify(stream=stdout)
+``` shell,verify(script_name="show-relates-to-help",stream=stdout)
 Manage relates-to settings
 
 Usage: git-mit-config relates-to <COMMAND>
@@ -86,16 +86,16 @@ Options:
 
 You can generate completion with
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="generate-bash-completion",expected_exit_code=0)
 git-mit-config --completion bash
 ```
 
 Otherwise an error will be generated
 
-``` shell,script(expected_exit_code=1)
+``` shell,script(name="missing-subcommand-error",expected_exit_code=1)
 git-mit-config
 ```
-``` shell,verify(stream=stderr)
+``` shell,verify(script_name="missing-subcommand-error",stream=stderr)
 Error: git_mit_config::errors::unrecognised_lint_command
 
   × unrecognised subcommand

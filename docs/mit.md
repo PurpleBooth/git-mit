@@ -6,13 +6,13 @@ This is the `git mit` part of the tool.
 
 In order to get started with this tool you'll need a git repository
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="init-repo",expected_exit_code=0)
 git init .
 ```
 
 You'll need to install the hooks into this repository
 
-``` shell,script(name="2",expected_exit_code=0)
+``` shell,script(name="install-hooks",expected_exit_code=0)
 git mit-install
 ```
 
@@ -23,11 +23,11 @@ generate from the example command.
 
 You can see this configuration yourself by running
 
-``` shell,script(name="3")
+``` shell,script(name="generate-example-config",expected_exit_code=0)
 git-mit-config mit example
 ```
 
-``` toml,verify(script_name="3",stream=stdout)
+``` toml,verify(script_name="generate-example-config",stream=stdout)
 [ae]
 name = "Anyone Else"
 email = "anyone@example.com"
@@ -64,27 +64,27 @@ output into a more permanent configuration file.
 
 You can quickly add a new author by running
 
-``` shell,script(name="3",expected_exit_code=0)
+``` shell,script(name="set-signed-author",expected_exit_code=0)
 git mit-config mit set jd "Jane Doe" "jd@example.com"
 ```
 
-Over override an existing user temporarily
+To override an existing user temporarily
 
-``` shell,script(name="3",expected_exit_code=0)
+``` shell,script(name="override-user-se",expected_exit_code=0)
 git mit-config mit set se "Someone Else" "se@example.com"
 ```
 
 You can use these straight away, you don't have to update your authors
 file.
 
-``` shell,script(name="6",expected_exit_code=0)
+``` shell,script(name="commit-with-jd-author",expected_exit_code=0)
 git mit jd
 ```
 
 However, if you want to make it more permanent, you can output the
 configuration with these added authors by running the generate command
 
-``` shell,script(name="3",expected_exit_code=0)
+``` shell,script(name="generate-config",expected_exit_code=0)
 git mit-config mit generate
 ```
 
@@ -109,7 +109,7 @@ email = "se@example.com"
 
 To get a summary of the authors that are configured run
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="list-configured-authors",expected_exit_code=0)
 git mit-config mit available
 ```
 
@@ -131,33 +131,33 @@ git mit-config mit available
 
 We can then use this by passing `-c` to the `git-mit` command.
 
-``` shell,script(name="4",expected_exit_code=0)
+``` shell,script(name="commit-with-external-config",expected_exit_code=0)
 git mit -c "../git-mit.toml" ae bt se
 ```
 
 It's exactly the same for a YAML configuration
 
-``` shell,script(name="4",expected_exit_code=0)
+``` shell,script(name="commit-with-yaml-config",expected_exit_code=0)
 git mit -c "git-mit.yml" ae bt se
 ```
 
 Or you can use the environment variables
 
-``` shell,script(name="5",expected_exit_code=0)
+``` shell,script(name="commit-with-env-var",expected_exit_code=0)
 export GIT_MIT_AUTHORS_CONFIG="../git-mit.toml"
 git mit -c "$HOME/git-mit.toml" ae bt se
 ```
 
 Or just put it at the default location
 
-``` shell,script(name="6",expected_exit_code=0)
+``` shell,script(name="commit-default-config",expected_exit_code=0)
 git mit ae bt se
 ```
 
 Then next when you make a commit the `Co-authored-by` trailers will be
 set of the author initials you selected.
 
-``` shell,script(name="7",expected_exit_code=0)
+``` shell,script(name="create-initial-commit",expected_exit_code=0)
 echo "# Hello, world!" > README.md
 
 git add .
@@ -167,7 +167,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 %B' -q
 ```
 
-``` text,verify(script_name="7",stream=stdout)
+``` text,verify(script_name="create-initial-commit",stream=stdout)
 author: [Anyone Else anyone@example.com] signed-by: [] 
 ---
 Initial Commit
@@ -179,14 +179,14 @@ Co-authored-by: Someone Else <se@example.com>
 You don't need to constantly pass the config everywhere though, you can
 set an environment variable.
 
-``` shell,script(name="8",expected_exit_code=0)
+``` shell,script(name="set-env-variable",expected_exit_code=0)
 export GIT_MIT_AUTHORS_CONFIG="$HOME/git-mit.toml"
 git mit se ae
 ```
 
 So next time we commit
 
-``` shell,script(name="9",expected_exit_code=0)
+``` shell,script(name="create-second-commit",expected_exit_code=0)
 echo "Lorem Ipsum" >> README.md
 
 git commit --all --message="Second Commit" --quiet
@@ -197,7 +197,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 
 The author configuration will be updated like this
 
-``` text,verify(script_name="9",stream=stdout)
+``` text,verify(script_name="set-multiple-coauthors",stream=stdout)
 author: [Someone Else se@example.com] signed-by: [] 
 ---
 Second Commit
@@ -207,7 +207,7 @@ Co-authored-by: Anyone Else <anyone@example.com>
 
 If for some reason you've already added the author we won't duplicate it
 
-``` shell,script(name="9",expected_exit_code=0)
+``` shell,script(name="create-duplicate-coauthor-commit",expected_exit_code=0)
 echo "Lorem Ipsum" >> README.md
 
 git commit --all --message="Second Commit
@@ -221,7 +221,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 
 The author configuration will be updated like this
 
-``` text,verify(script_name="9",stream=stdout)
+``` text,verify(script_name="create-duplicate-coauthor-commit",stream=stdout)
 author: [Someone Else se@example.com] signed-by: [] 
 ---
 Second Commit
@@ -233,20 +233,20 @@ Co-authored-by: Anyone Else <anyone@example.com>
 
 It might be preferable not to do this on rebase, you can disable this happening on rebase by running
 
-``` shell,script(name="git-mit-config-mit-non-clean-behaviour-0",expected_exit_code=0)
+``` shell,script(name="set-non-clean-behavior-no-change",expected_exit_code=0)
 git mit-config mit set-non-clean-behaviour no-change
 git mit-config mit non-clean-behaviour
 ```
 
 To get the current behaviour run
 
-``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-0",stream=stdout)
+``` text,verify(script_name="set-non-clean-behavior-no-change",stream=stdout)
 no-change
 ```
 
 lets say we have two diverging branches
 
-``` shell,script(name="git-mit-config-mit-non-clean-behaviour-1",expected_exit_code=0)
+``` shell,script(name="create-rebase-branches",expected_exit_code=0)
 echo "Lorem Ipsum" >> new-so-no-conflicts.md
 git switch -c rebase-demo-branch
 git switch -
@@ -256,7 +256,7 @@ git switch -
 
 Now you can rebase changes without adding any additional trailers
 
-``` shell,script(name="git-mit-config-mit-non-clean-behaviour-2",expected_exit_code=0)
+``` shell,script(name="verify-rebase-no-change",expected_exit_code=0)
 git mit bt se
 echo "Lorem Ipsum" >> README.md
 
@@ -267,7 +267,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 %B' -q
 ```
 
-``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-2",stream=stdout)
+``` text,verify(script_name="verify-rebase-no-change",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Rebase behaviour
@@ -277,7 +277,7 @@ Co-authored-by: Someone Else <se@example.com>
 
 Then if you rebase the commit stays the same
 
-``` shell,script(name="git-mit-config-mit-non-clean-behaviour-3",expected_exit_code=0)
+``` shell,script(name="rebase-with-add-to-behavior",expected_exit_code=0)
 git mit bt ae
 git rebase --reset-author-date "-"
 ```
@@ -298,16 +298,16 @@ Co-authored-by: Someone Else <se@example.com>
 
 The default setting is to modify the co-authored by.
 
-``` shell,script(name="git-mit-config-mit-non-clean-behaviour-5",expected_exit_code=0)
+``` shell,script(name="set-non-clean-behavior-add-to",expected_exit_code=0)
 git mit-config mit set-non-clean-behaviour add-to
 git mit-config mit non-clean-behaviour
 ```
-``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-5",stream=stdout)
+``` text,verify(script_name="set-non-clean-behavior-add-to",stream=stdout)
 add-to
 ```
 
 Now you can rebase changes without adding any additional trailers
-``` shell,script(name="git-mit-config-mit-non-clean-behaviour-6",expected_exit_code=0)
+``` shell,script(name="verify-rebase-add-to",expected_exit_code=0)
 git mit bt ae
 git rebase --reset-author-date "-"
 ```
@@ -319,7 +319,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 %B' -q
 ```
 
-``` text,verify(script_name="git-mit-config-mit-non-clean-behaviour-7",stream=stdout)
+``` text,verify(script_name="rebase-with-add-to-behavior",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Rebase behaviour
@@ -334,11 +334,11 @@ The command also works with signed commits
 
 The `bt` user has a valid gpg key.
 
-``` shell,script(name="10",expected_exit_code=0)
+``` shell,script(name="show_commit_with_multiple_coauthors",expected_exit_code=0)
 git mit bt
 ```
 
-``` shell,script(name="10",expected_exit_code=0)
+``` shell,script(name="show-signed-commit-with-gpg",expected_exit_code=0)
 echo "Delores Et" >> README.md
 
 git commit --all --gpg-sign --message="Third Commit" --quiet
@@ -347,7 +347,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 %B' -q
 ```
 
-``` text,verify(script_name="10",stream=stdout)
+``` text,verify(script_name="show-signed-commit-with-gpg",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [Billie Thompson <billie@example.com>] 
 ---
 Third Commit
@@ -364,11 +364,11 @@ Hello, I am a broken file
 
 You'll get an error when you run the command
 
-``` shell,script(name="error-mit",expected_exit_code=1)
+``` shell,script(name="error-invalid-config-file",expected_exit_code=1)
 git mit -c "broken.toml" ae bt se
 ```
 
-``` text,verify(script_name="error-mit",stream=stderr)
+``` text,verify(script_name="error-invalid-config-file",stream=stderr)
 Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
 
   × could not parse author configuration
@@ -386,11 +386,11 @@ Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
 
 Same applies for `git mit-config mit generate`
 
-``` shell,script(name="error-mit-config-set",expected_exit_code=1)
+``` shell,script(name="error-generate-invalid-config",expected_exit_code=1)
 git mit-config mit generate -c "broken.toml"
 ```
 
-``` text,verify(script_name="error-mit-config-set",stream=stderr)
+``` text,verify(script_name="error-generate-invalid-config",stream=stderr)
 Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
 
   × could not parse author configuration

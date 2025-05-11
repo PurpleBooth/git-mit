@@ -13,7 +13,7 @@ practices something that happens without thinking about it.
 This works via git hooks, so you need these hooks to be present in the
 git repository you're using to use them.
 
-``` shell,script(name="1",expected_exit_code=0)
+``` shell,script(name="initialize-repository",expected_exit_code=0)
 git init .
 git mit-install
 ```
@@ -36,13 +36,13 @@ recursively from the home directory using this command.
 find "$HOME" -type d -name .git -exec sh -c 'git init "$1"/..' -- {} \;
 ```
 
-### Lint list
+### Listing Lints
 
-``` shell,script(name="lint-list",expected_exit_code=0)
+``` shell,script(name="list-available-lints",expected_exit_code=0)
 git mit-config lint available
 ```
 
-``` text,verify(script_name="lint-list",stream=stdout)
+``` text,verify(script_name="list-available-lints",stream=stdout)
 ╭───────────────────────────────────┬──────────╮
 │ Lint                              ┆ Status   │
 ╞═══════════════════════════════════╪══════════╡
@@ -72,11 +72,11 @@ git mit-config lint available
 
 With only lints that ensure git will work properly enabled by default
 
-``` shell,script(name="lint-list",expected_exit_code=0)
+``` shell,script(name="list-enabled-lints",expected_exit_code=0)
 git mit-config lint enabled
 ```
 
-``` text,verify(script_name="lint-list",stream=stdout)
+``` text,verify(script_name="list-enabled-lints",stream=stdout)
 ╭───────────────────────────────────┬─────────╮
 │ Lint                              ┆ Status  │
 ╞═══════════════════════════════════╪═════════╡
@@ -111,11 +111,11 @@ For example
 
 With this you can enable lints
 
-``` shell,script(name="7",expected_exit_code=0)
+``` shell,script(name="check-pivotal-lint-status",expected_exit_code=0)
 git mit-config lint status pivotal-tracker-id-missing
 ```
 
-``` text,verify(script_name="7",stream=stdout)
+``` text,verify(script_name="check-pivotal-lint-status",stream=stdout)
 ╭────────────────────────────┬─────────╮
 │ Lint                       ┆ Status  │
 ╞════════════════════════════╪═════════╡
@@ -144,13 +144,13 @@ This is the best readme
 
 If you run
 
-``` shell,script(name="2",expected_exit_code=0)
+``` shell,script(name="set-relates-to-trailer",expected_exit_code=0)
 git mit-relates-to "[#12321513]"
 ```
 
 Next time you commit
 
-``` shell,script(name="3",expected_exit_code=0)
+``` shell,script(name="stage-and-set-authors",expected_exit_code=0)
 git add README.md
 git mit bt
 git commit -m "Wrote a great README"
@@ -158,13 +158,13 @@ git commit -m "Wrote a great README"
 
 the commit message will contain the ID
 
-``` shell,script(name="4",expected_exit_code=0)
+``` shell,script(name="show-commit-with-relates-to",expected_exit_code=0)
 git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
 ---
 %B' -q
 ```
 
-``` text,verify(script_name="4",stream=stdout)
+``` text,verify(script_name="show-commit-with-relates-to",stream=stdout)
 author: [Billie Thompson billie@example.com] signed-by: [] 
 ---
 Wrote a great README
@@ -174,7 +174,7 @@ Relates-to: [#12321513]
 
 Read more about this at the [relates to page](docs/mit-relates-to.md)
 
-### Setting Authors and Co-Authors
+### Setting Authors and Co-authors
 
 Pairing is a great way to program, and it's even better when you give
 credit, you can give credit with the mit command
@@ -182,11 +182,11 @@ credit, you can give credit with the mit command
 Configure your authors like the example by creating a config at
 `$HOME/.config/git-mit/mit.toml`
 
-``` shell,script(name="3")
+``` shell,script(name="generate-example-config",expected_exit_code=0)
 git-mit-config mit example
 ```
 
-``` toml,verify(script_name="3",stream=stdout)
+``` toml,verify(script_name="generate-example-config",stream=stdout)
 [ae]
 name = "Anyone Else"
 email = "anyone@example.com"
@@ -203,14 +203,14 @@ email = "someone@example.com"
 
 And you can run
 
-``` shell,script(name="6",expected_exit_code=0)
+``` shell,script(name="set-multiple-coauthors",expected_exit_code=0)
 git mit ae bt se
 ```
 
 Then next when you make a commit the `Co-authored-by` trailers will be
 set of the author initials you selected.
 
-``` shell,script(name="7",expected_exit_code=0)
+``` shell,script(name="show-coauthored-commit",expected_exit_code=0)
 echo "# Hello, world!" > README.md
 
 git add .
@@ -220,7 +220,7 @@ git show --pretty='format:author: [%an %ae] signed-by: [%GS]
 %B' -q
 ```
 
-``` text,verify(script_name="7",stream=stdout)
+``` text,verify(script_name="show-coauthored-commit",stream=stdout)
 author: [Anyone Else anyone@example.com] signed-by: [] 
 ---
 Initial Commit

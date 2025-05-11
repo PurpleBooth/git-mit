@@ -2,11 +2,11 @@
 
 Generic usage
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-help",expected_exit_code=0)
 git-mit-relates-to --help
 ```
 
-``` shell,verify(stream=stdout)
+``` shell,verify(script_name="show-help",stream=stdout)
 Set Relates-to trailer.
 
 Usage: git-mit-relates-to [OPTIONS] [ISSUE_NUMBER]
@@ -24,17 +24,17 @@ Options:
 
 You can generate completion with
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="generate-bash-completion",expected_exit_code=0)
 git-mit-relates-to --completion bash
 ```
 
 Otherwise you need an issue number
 
-``` shell,script(expected_exit_code=2)
+``` shell,script(name="missing-issue-number-error",expected_exit_code=2)
 git-mit-relates-to
 ```
 
-``` shell,verify(stream=stderr)
+``` shell,verify(script_name="missing-issue-number-error",stream=stderr)
 error: the following required arguments were not provided:
   <ISSUE_NUMBER>
 

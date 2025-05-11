@@ -4,11 +4,11 @@
 
 Generic usage
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="show-help",expected_exit_code=0)
 mit-commit-msg --help
 ```
 
-``` shell,verify(stream=stdout)
+``` shell,verify(script_name="show-help",stream=stdout)
 Validate the commit message that a user has input
 
 Usage: mit-commit-msg [OPTIONS] [COMMIT_FILE_PATH]
@@ -27,17 +27,17 @@ Options:
 
 You can generate completion with
 
-``` shell,script(expected_exit_code=0)
+``` shell,script(name="generate-bash-completion",expected_exit_code=0)
 mit-commit-msg --completion bash
 ```
 
 Otherwise you need an the commit file path
 
-``` shell,script(expected_exit_code=2)
+``` shell,script(name="missing-commit-path-error",expected_exit_code=2)
 mit-commit-msg
 ```
 
-``` shell,verify(stream=stderr)
+``` shell,verify(script_name="missing-commit-path-error",stream=stderr)
 error: the following required arguments were not provided:
   <COMMIT_FILE_PATH>
 
