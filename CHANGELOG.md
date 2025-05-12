@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v5.14.8](https://github.com/PurpleBooth/git-mit/compare/c95f4acfbd65011303be15df5585e2628d2346c2..v5.14.8) - 2025-05-12
+#### Bug Fixes
+- **(deps)** update rust crate tempfile to v3.20.0 - ([043b498](https://github.com/PurpleBooth/git-mit/commit/043b498eb81b83d7e27a00f105ecf925f3939c98)) - renovate[bot]
+#### Build system
+- optimize Dockerfile with cargo-chef and debian slim base - ([647cd7c](https://github.com/PurpleBooth/git-mit/commit/647cd7cf3136c14cc133cc437f02237cd7eabbcf)) - Billie Thompson (aider)
+#### Documentation
+- update script names in documentation examples - ([e7c7cc9](https://github.com/PurpleBooth/git-mit/commit/e7c7cc92657f85210ddafab42d86b4977e6d9c72)) - Billie Thompson
+- Standardize script names with hyphens in docs - ([983ac31](https://github.com/PurpleBooth/git-mit/commit/983ac31dec8310f45f2d68df0a194d4052bef1a2)) - Billie Thompson
+- fix script name formatting in mit-prepare-commit-msg.md - ([10bf5a1](https://github.com/PurpleBooth/git-mit/commit/10bf5a14da9ba60616234d60eae0b774a1fb35d4)) - Billie Thompson (aider)
+- Rename completion script to be hyphenated - ([d19aa4b](https://github.com/PurpleBooth/git-mit/commit/d19aa4b756a956b1c5bdca9536f6c435b01a4a2c)) - Billie Thompson
+#### Miscellaneous Chores
+- **(deps)** update docker/dockerfile docker tag to v1.15 - ([87c1e2c](https://github.com/PurpleBooth/git-mit/commit/87c1e2cb6aef3d68db0a2c5101ed8e974f0bf796)) - renovate[bot]
+- Add sequential numbering to test scripts in markdown files - ([c95f4ac](https://github.com/PurpleBooth/git-mit/commit/c95f4acfbd65011303be15df5585e2628d2346c2)) - Billie Thompson (aider)
+
+- - -
+
 ## [v5.14.7](https://github.com/PurpleBooth/git-mit/compare/b5cb0480b68c74de9110d1413c94b8ff46a83a6c..v5.14.7) - 2025-05-11
 #### Bug Fixes
 - **(deps)** update rust crate thiserror to v2 - ([d410e17](https://github.com/PurpleBooth/git-mit/commit/d410e1733f0099c66f82ef5f1bdad7a1147b3476)) - renovate[bot]
