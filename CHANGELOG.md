@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.0.0](https://github.com/PurpleBooth/git-mit/compare/ab4c1cd5a083bf3a97dad0793e1f3e1a1451cef9..v6.0.0) - 2025-05-24
+#### Continuous Integration
+- Update generate-formula-action to use main branch - ([ab4c1cd](https://github.com/PurpleBooth/git-mit/commit/ab4c1cd5a083bf3a97dad0793e1f3e1a1451cef9)) - Billie Thompson
+#### Documentation
+- improve this doc a bit - ([b62b0d9](https://github.com/PurpleBooth/git-mit/commit/b62b0d9c0f04d0656f31082391ccd238cd858c1b)) - Billie Thompson
+- add comprehensive troubleshooting guide for git-mit - ([49dd786](https://github.com/PurpleBooth/git-mit/commit/49dd786e29086e50945173ca80a3460258fc3273)) - Billie Thompson
+#### Miscellaneous Chores
+- Flip default over to no-change - ([a4fe30f](https://github.com/PurpleBooth/git-mit/commit/a4fe30fa41c5312695b15e6eb80680a3e74d3332)) - Billie Thompson
+- grammar changes - ([93c68ad](https://github.com/PurpleBooth/git-mit/commit/93c68ad445bda1d5b2b35ba755b9288042f88921)) - Billie Thompson
+- remove some unused deps - ([7fae72f](https://github.com/PurpleBooth/git-mit/commit/7fae72fe8140c16c1db9c58aa503bcac032538fb)) - Billie Thompson
+#### Style
+- standardize bullet point formatting in markdown files - ([0cd2868](https://github.com/PurpleBooth/git-mit/commit/0cd2868de46a742b600d8ef2ca347214a965d7d1)) - Billie Thompson
+
+- - -
+
 ## [v5.14.8](https://github.com/PurpleBooth/git-mit/compare/c95f4acfbd65011303be15df5585e2628d2346c2..v5.14.8) - 2025-05-12
 #### Bug Fixes
 - **(deps)** update rust crate tempfile to v3.20.0 - ([043b498](https://github.com/PurpleBooth/git-mit/commit/043b498eb81b83d7e27a00f105ecf925f3939c98)) - renovate[bot]
