@@ -16,7 +16,6 @@ tokio = { version = "1.43.0", features = ["full"] }
 mit-lint = "3.2.9"
 clap_complete = "4.5.42"
 clap = { version = "4.5.26", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
-git2 = "0.20.0"
 openssl = { version = "0.10.68", optional = true }
 miette = { version = "7.4.0", features = [ "fancy" ] }
 mit-commit = "3.2.1"
@@ -28,13 +27,6 @@ arboard = "3.4.1"
 version = "5.14.8"
 
 [dev-dependencies]
-indoc = "2.0.5"
-tempfile = "3.15.0"
-
-
-  [dev-dependencies.mit-hook-test-helper]
-  path = "../mit-hook-test-helper"
-version = "5.14.8"
 
 [features]
 default = []

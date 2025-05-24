@@ -97,7 +97,7 @@ dependencies = [
  "objc2-foundation",
  "parking_lot",
  "percent-encoding",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
  "x11rb",
 ]
 
@@ -306,25 +306,22 @@ dependencies = [
 
 [[package]]
 name = "criterion"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f2b12d017a929603d80db1831cd3a24082f8137ce19c69e6447f54f5fc8d692f"
+checksum = "3bf7af66b0989381bd0be551bd7cc91912a655a58c6918420c9527b1fd8b4679"
 dependencies = [
  "anes",
  "cast",
  "ciborium",
  "clap",
  "criterion-plot",
- "is-terminal",
- "itertools",
+ "itertools 0.13.0",
  "num-traits",
- "once_cell",
  "oorandom",
  "plotters",
  "rayon",
  "regex",
  "serde",
- "serde_derive",
  "serde_json",
  "tinytemplate",
  "walkdir",
@@ -337,7 +334,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6b50826342786a51a89e2da3a28f1c32b06e387201bc2d19791f622c673706b1"
 dependencies = [
  "cast",
- "itertools",
+ "itertools 0.10.5",
 ]
 
 [[package]]
@@ -468,7 +465,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "33d852cb9b869c2a9b3df2f71a3074817f01e1844f839a144f5fcef059a4eb5d"
 dependencies = [
  "libc",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -664,12 +661,7 @@ dependencies = [
  "indoc",
  "miette",
  "mit-commit-message-lints",
- "mit-hook-test-helper",
  "openssl",
- "quickcheck",
- "quickcheck_macros",
- "shell-words",
- "tempfile",
  "thiserror",
 ]
 
@@ -679,15 +671,11 @@ version = "5.14.8"
 dependencies = [
  "clap",
  "clap_complete",
- "comfy-table",
  "git2",
- "indoc",
  "miette",
  "mit-commit-message-lints",
- "mit-hook-test-helper",
  "mit-lint",
  "openssl",
- "shell-words",
  "thiserror",
 ]
 
@@ -701,11 +689,7 @@ dependencies = [
  "indoc",
  "miette",
  "mit-commit-message-lints",
- "mit-hook-test-helper",
  "openssl",
- "quickcheck",
- "quickcheck_macros",
- "tempfile",
  "thiserror",
  "which",
 ]
@@ -717,14 +701,9 @@ dependencies = [
  "clap",
  "clap_complete",
  "git2",
- "indoc",
  "miette",
  "mit-commit-message-lints",
- "mit-hook-test-helper",
  "openssl",
- "quickcheck",
- "quickcheck_macros",
- "tempfile",
  "thiserror",
 ]
 
@@ -770,12 +749,6 @@ name = "heck"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
-
-[[package]]
-name = "hermit-abi"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fbf6a919d6cf397374f7dfeeea91d974c7c0a7221d0d0f4f20d859d329e53fcc"
 
 [[package]]
 name = "icu_collections"
@@ -946,17 +919,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f4c7245a08504955605670dbf141fceab975f15ca21570696aebe9d2e71576bd"
 
 [[package]]
-name = "is-terminal"
-version = "0.4.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "261f68e344040fbd0edea105bef17c66edf46f984ddb1115b775ce31be948f4b"
-dependencies = [
- "hermit-abi",
- "libc",
- "windows-sys 0.52.0",
-]
-
-[[package]]
 name = "is_ci"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -973,6 +935,15 @@ name = "itertools"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473"
+dependencies = [
+ "either",
+]
+
+[[package]]
+name = "itertools"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
 dependencies = [
  "either",
 ]
@@ -1165,7 +1136,6 @@ name = "mit-commit-message-lints"
 version = "5.14.8"
 dependencies = [
  "clap",
- "clap_complete",
  "comfy-table",
  "criterion",
  "git2",
@@ -1173,14 +1143,9 @@ dependencies = [
  "indoc",
  "miette",
  "mit-commit",
- "mit-hook-test-helper",
  "mit-lint",
  "openssl",
- "quickcheck",
- "quickcheck_macros",
- "regex",
  "serde",
- "serde_derive",
  "serde_yaml",
  "shell-words",
  "thiserror",
@@ -1195,15 +1160,11 @@ dependencies = [
  "arboard",
  "clap",
  "clap_complete",
- "git2",
- "indoc",
  "miette",
  "mit-commit",
  "mit-commit-message-lints",
- "mit-hook-test-helper",
  "mit-lint",
  "openssl",
- "tempfile",
  "thiserror",
  "tokio",
 ]
@@ -1240,12 +1201,8 @@ version = "5.14.8"
 dependencies = [
  "clap",
  "clap_complete",
- "git2",
- "indoc",
  "miette",
- "mit-commit",
  "mit-commit-message-lints",
- "mit-hook-test-helper",
  "openssl",
  "thiserror",
  "time",
@@ -1257,16 +1214,12 @@ version = "5.14.8"
 dependencies = [
  "clap",
  "clap_complete",
- "git2",
- "indoc",
  "miette",
  "mit-commit",
  "mit-commit-message-lints",
- "mit-hook-test-helper",
  "openssl",
  "serde",
  "shell-words",
- "tempfile",
  "thiserror",
  "tinytemplate",
 ]
@@ -1564,17 +1517,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "quickcheck_macros"
-version = "1.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f71ee38b42f8459a88d3362be6f9b841ad2d5421844f61eb1c59c11bff3ac14a"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "quote"
 version = "1.0.38"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1681,7 +1623,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.4.15",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -1694,7 +1636,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.9.4",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -2004,7 +1946,7 @@ dependencies = [
  "getrandom 0.3.3",
  "once_cell",
  "rustix 1.0.7",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -2417,7 +2359,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
