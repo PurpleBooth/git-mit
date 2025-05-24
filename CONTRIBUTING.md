@@ -4,10 +4,10 @@
 
 Issues are very valuable to this project.
 
--   Ideas are a valuable source of contributions others can make
--   Problems show where this project is lacking
--   With a question you show where contributors can improve the user
-    experience
+- Ideas are a valuable source of contributions others can make
+- Problems show where this project is lacking
+- With a question you show where contributors can improve the user
+  experience
 
 Thank you for creating them.
 
@@ -38,21 +38,21 @@ the action you have taken to solve it.
 
 ### Is it of good quality
 
--   Are there unit tests
--   Are there end-to-end tests
--   Has the documentation in [docs](./README.md#docs) been updated
--   Are the lints all passing
--   Is the pull request reasonably small, or split over multiple
+- Are there unit tests
+- Are there end-to-end tests
+- Has the documentation in [docs](./README.md#docs) been updated
+- Are the lints all passing
+- Is the pull request reasonably small, or split over multiple
 
 ### Does it move this repository closer to my vision for the repository
 
 The aim of this repository is:
 
--   We aim to be easy to use
--   We aim to include lints that developers in large organisations need,
-    but not have hundreds of them
--   We aim to encourage and advocate for pair programming
--   To provide an alternative to git duet
+- We aim to be easy to use
+- We aim to include lints that developers in large organisations need,
+  but not have hundreds of them
+- We aim to encourage and advocate for pair programming
+- To provide an alternative to git duet
 
 Git duet is fantastic, but hard to use, and hard to add additional lints
 to.

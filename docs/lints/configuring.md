@@ -5,7 +5,7 @@ probably don't want the `github-id-missing` lint if you're using Jira.
 
 ## Setup
 
-As always we need a working it repository, with the hooks installed.
+As always, we need a working it repository, with the hooks installed.
 
 ``` shell,script(name="init-repo",expected_exit_code=0)
 git init .
@@ -155,4 +155,4 @@ git mit-config lint status pivotal-tracker-id-missing
 ```
 
 You configure the authors [separately](../mit.md). This is so you don't
-end up committing peoples emails into a public repository.
+end up committing people's emails into a public repository.

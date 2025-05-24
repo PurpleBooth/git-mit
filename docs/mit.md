@@ -42,7 +42,7 @@ name = "Someone Else"
 email = "someone@example.com"
 ```
 
-You can use yaml too
+You can use YAML too
 
 ``` yaml,file(path="git-mit.yml")
 ---
@@ -58,9 +58,8 @@ se:
   email: someone@example.com
 ```
 
-To make keeping this file up-to-date easier there's some commands to
-adding and removing users to your git repository, that can then be
-output into a more permanent configuration file.
+To make keeping this file updated straightforward, there are some
+commands for adding and removing authors to the git repository.
 
 You can quickly add a new author by running
 
@@ -231,20 +230,18 @@ Co-authored-by: Anyone Else <anyone@example.com>
 
 ## Rebases
 
-It might be preferable not to do this on rebase, you can disable this happening on rebase by running
+By default, we won't change the commit on rebase.
 
 ``` shell,script(name="set-non-clean-behavior-no-change",expected_exit_code=0)
 git mit-config mit set-non-clean-behaviour no-change
 git mit-config mit non-clean-behaviour
 ```
 
-To get the current behavior run
-
 ``` text,verify(script_name="set-non-clean-behavior-no-change",stream=stdout)
 no-change
 ```
 
-lets say we have two diverging branches
+If we have two diverging branches
 
 ``` shell,script(name="create-rebase-branches",expected_exit_code=0)
 echo "Lorem Ipsum" >> new-so-no-conflicts.md
@@ -275,7 +272,7 @@ Rebase behaviour
 Co-authored-by: Someone Else <se@example.com>
 ```
 
-Then if you rebase the commit stays the same
+If you rebase, the commit stays the same, and the author does not change
 
 ``` shell,script(name="rebase-with-add-to-behavior",expected_exit_code=0)
 git mit bt ae
@@ -296,17 +293,19 @@ Rebase behaviour
 Co-authored-by: Someone Else <se@example.com>
 ```
 
-The default setting is to modify the co-authored by.
+The alternative setting is to modify the co-authored by trailers.
 
 ``` shell,script(name="set-non-clean-behavior-add-to",expected_exit_code=0)
 git mit-config mit set-non-clean-behaviour add-to
 git mit-config mit non-clean-behaviour
 ```
+
 ``` text,verify(script_name="set-non-clean-behavior-add-to",stream=stdout)
 add-to
 ```
 
 Now you can rebase changes without adding any additional trailers
+
 ``` shell,script(name="verify-rebase-add-to",expected_exit_code=0)
 git mit bt ae
 git rebase --reset-author-date "-"

@@ -2,7 +2,7 @@
 
 ## Setup
 
-As always we need a working it repository with the hooks installed to
+As always, we need a working it repository with the hooks installed to
 run these lints
 
 ``` shell,script(name="init-repo",expected_exit_code=0)
@@ -79,7 +79,7 @@ git mit-config lint status duplicated-trailers
 
 ###### Valid
 
-Using message
+Using the message
 
 ``` shell,file(path="message")
 Demonstration Commit Message
@@ -100,7 +100,7 @@ git commit --message="$(cat message)"
 
 ###### Invalid
 
-Using message
+Using the message
 
 ``` shell,file(path="message")
 Demonstration Commit Message
@@ -151,7 +151,7 @@ Error: DuplicatedTrailers (https://git-scm.com/docs/githooks#_commit_msg)
 
 #### Git Manual Style
 
-The style from the git book, that directly affects the operation of git:
+The style from the git book that directly affects the operation of git:
 
 ##### subject-not-separated-from-body
 
@@ -573,7 +573,9 @@ git mit-config lint disable subject-line-ends-with-period
 
 ##### not-conventional-commit
 
-The conventional changelog is a scheme of commit messages used to allow for automation of changelog generation and releases. It's particularly useful for monorepos.
+The conventional changelog is a scheme of commit messages used to allow
+for automation of changelog generation and releases. It's particularly
+useful for monorepos.
 
 ###### Default status
 

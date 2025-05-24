@@ -65,11 +65,12 @@ You can generate completion with
 git-mit --completion bash
 ```
 
-Otherwise you must provide an author initial
+Otherwise, you must provide an author initial
 
 ``` shell,script(name="missing-initials-error",expected_exit_code=2)
 git-mit
 ```
+
 ``` shell,verify(script_name="missing-initials-error",stream=stderr)
 error: the following required arguments were not provided:
   <INITIALS>...

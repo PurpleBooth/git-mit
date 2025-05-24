@@ -28,7 +28,7 @@ You can generate completion with
 git-mit-relates-to --completion bash
 ```
 
-Otherwise you need an issue number
+Otherwise, you need an issue number
 
 ``` shell,script(name="missing-issue-number-error",expected_exit_code=2)
 git-mit-relates-to

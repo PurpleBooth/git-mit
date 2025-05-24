@@ -1,6 +1,7 @@
 # mit-commit-msg
 
-> Note: This is a hook binary, you will probably never interact with it directly
+> Note: This is a hook binary, you will probably never interact with it
+> directly
 
 Generic usage
 
@@ -31,7 +32,7 @@ You can generate completion with
 mit-commit-msg --completion bash
 ```
 
-Otherwise you need an the commit file path
+Otherwise, you need the commit file path
 
 ``` shell,script(name="missing-commit-path-error",expected_exit_code=2)
 mit-commit-msg
@@ -45,4 +46,3 @@ Usage: mit-commit-msg <COMMIT_FILE_PATH>
 
 For more information, try '--help'.
 ```
-

@@ -89,9 +89,8 @@ Wrote a great README
 Relates-to: [#12321513]
 ```
 
-This times out after 60 minutes, and is configurable with the
-
-`GIT_MIT_RELATES_TO_TIMEOUT` by environment variable.
+This times out after 60 minutes and is configurable with the
+`GIT_MIT_RELATES_TO_TIMEOUT` environment variable.
 
 ``` shell,script(name="set-relates-to-trailer",expected_exit_code=0)
 export GIT_MIT_RELATES_TO_TIMEOUT=120
@@ -147,7 +146,7 @@ export GIT_MIT_RELATES_TO_EXEC="bash -c 'echo \"[#\$(curl --silent -X GET -H \"X
 ## Templating
 
 It is possible to do some light templating of this command. This makes
-it possible to avoid typing so much, or skip awkward characters.
+it possible to avoid typing so much or skip awkward characters.
 
 ``` shell,script(expected_exit_code=0)
 git mit-config relates-to template "[#{value}]"
@@ -184,7 +183,7 @@ More awesome additions
 Relates-to: [#12321513]
 ```
 
-Alternatively you can set the template via an environment variable
+Alternatively, you can set the template via an environment variable
 
 ``` shell,script(name="set-relates-to-env-template-commit",expected_exit_code=0)
 git mit-relates-to "12321513"

@@ -1,6 +1,7 @@
 # mit-prepare-commit-msg
 
-> Note: This is a hook binary, you will probably never interact with it directly
+> Note: This is a hook binary, you will probably never interact with it
+> directly
 
 Generic usage
 
@@ -58,11 +59,12 @@ Options:
 ```
 
 You can generate completion with
+
 ``` shell,script(name="generate-mit-prepare-commit-msg-completion",expected_exit_code=0)
 mit-prepare-commit-msg --completion bash
 ```
 
-Otherwise you need an commit message path
+Otherwise, you need a commit message path
 
 ``` shell,script(name="missing-commit-path-error",expected_exit_code=2)
 mit-prepare-commit-msg
@@ -76,5 +78,3 @@ Usage: mit-prepare-commit-msg <COMMIT_MESSAGE_PATH> [COMMIT_MESSAGE_SOURCE] [COM
 
 For more information, try '--help'.
 ```
-
-

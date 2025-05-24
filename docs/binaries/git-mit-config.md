@@ -90,11 +90,12 @@ You can generate completion with
 git-mit-config --completion bash
 ```
 
-Otherwise an error will be generated
+Otherwise, an error will be generated
 
 ``` shell,script(name="missing-subcommand-error",expected_exit_code=1)
 git-mit-config
 ```
+
 ``` shell,verify(script_name="missing-subcommand-error",stream=stderr)
 Error: git_mit_config::errors::unrecognised_lint_command
 

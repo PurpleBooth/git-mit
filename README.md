@@ -263,8 +263,8 @@ it.
 
 There is a script to download the latest release:
 
-* [Windows](./installer.ps1)
-* [Linux/Mac OS](./installer.sh)
+- [Windows](./installer.ps1)
+- [Linux/Mac OS](./installer.sh)
 
 ### Completions
 
@@ -278,11 +278,12 @@ Each binary also has a command to generate completion.
 
 ### Common Tasks
 
--   [Using the pair programming part of the tool](./docs/mit.md)
--   [Using the issue number inserting part of the tool](./docs/mit-relates-to.md)
--   [Configuring lints](./docs/lints/configuring.md)
--   [Lint list](./docs/lints/index.md)
--   [Troubleshooting](./docs/troubleshooting.md)
+- [Using the pair programming part of the tool](./docs/mit.md)
+- [Using the issue number inserting part of the
+  tool](./docs/mit-relates-to.md)
+- [Configuring lints](./docs/lints/configuring.md)
+- [Lint list](./docs/lints/index.md)
+- [Troubleshooting](./docs/troubleshooting.md)
 
 ### Usage
 
@@ -292,4 +293,5 @@ Each binary also has a command to generate completion.
 - [git-mit-relates-to](./docs/binaries/git-mit-relates-to.md)
 - [Hook: mit-commit-msg](./docs/binaries/mit-commit-msg.md)
 - [Hook: mit-pre-commit](./docs/binaries/mit-pre-commit.md)
-- [Hook: mit-prepare-commit-msg](./docs/binaries/mit-prepare-commit-msg.md)
+- [Hook:
+  mit-prepare-commit-msg](./docs/binaries/mit-prepare-commit-msg.md)

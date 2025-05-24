@@ -1,6 +1,7 @@
 # mit-pre-commit
 
-> Note: This is a hook binary, you will probably never interact with it directly
+> Note: This is a hook binary, you will probably never interact with it
+> directly
 
 Generic usage
 
@@ -26,7 +27,7 @@ You can generate completion with
 mit-pre-commit --completion bash
 ```
 
-Otherwise you need to have configured some authors
+Otherwise, you need to have configured some authors
 
 ``` shell,script(name="no-authors-configured-error",expected_exit_code=1)
 mit-pre-commit
@@ -41,4 +42,3 @@ Error: mit_pre_commit::errors::stale_author_error
         of whoever is coding for example: `git mit bt` or `git mit bt se`
 
 ```
-
