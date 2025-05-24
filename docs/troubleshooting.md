@@ -2,11 +2,52 @@
 
 This guide will help you diagnose and fix common issues with git-mit.
 
+## Common Error Messages
+
+Here are solutions for frequently encountered error messages:
+
+### "failed to interact with git repository"
+
+This usually means git-mit can't find or read the Git repository. Check:
+- You're in a Git repository (`git status` should work)
+- The `.git` directory has proper permissions
+- Your Git installation is working correctly
+
+### "could not parse author configuration"
+
+Your authors file has invalid TOML or YAML syntax. The error will show which format failed:
+- Check for missing quotes around strings
+- Ensure proper indentation (YAML is indent-sensitive)
+- Validate your file with a TOML/YAML validator
+- The error message will indicate whether it failed parsing as TOML or YAML
+
+### "failed to install hook"
+
+The hook installation failed because:
+- **ExistingHook**: A non-symlink hook already exists at that location
+- **ExistingSymlink**: A symlink exists but points to a different location
+- You don't have write permissions to the hooks directory
+
+Remove the existing hook or check where the existing symlink points.
+
+### "No authors set" (from pre-commit hook)
+
+This error appears when:
+- You haven't run `git mit <initials>` to set the current authors
+- The author configuration has expired (check `git config mit.author.expires`)
+- The author configuration was never set in this repository
+
+### "The details of the author of this commit are stale"
+
+This error shows:
+- The exact time when the author configuration expired
+- You need to run `git mit <initials>` again to refresh the configuration
+
 ## Authors and the `git mit` command
 
-Something is up with authors, author discovery or similar 
+If you're having issues with author configuration:
 
-### Steps
+### Troubleshooting Steps
 
 1. **View all configured authors**:
    ```bash,skip()
@@ -39,44 +80,9 @@ Something is up with authors, author discovery or similar
    mit.author.expires=1747556921
    ```
 
-### Technical Details
-
-git-mit loads authors from multiple sources and merges them together:
-
-1. **From exec command** (highest priority):
-   - Set via `--exec` flag or `GIT_MIT_AUTHORS_EXEC` environment variable
-   - The command output must be valid TOML or YAML format
-   - The command is executed using `shell_words::split()` for proper argument parsing
-
-2. **From authors file**:
-   - Default location: `$HOME/.config/git-mit/mit.toml`
-   - Custom location via `--config` flag or `GIT_MIT_AUTHORS_CONFIG` environment variable
-   - Special handling for `$HOME/.config/git-mit/mit.toml` path - it's expanded to the actual home directory
-   - If the file doesn't exist, an empty string is used (no error)
-
-3. **From Git config**:
-   - Authors stored in `mit.author.config.<initial>.*` entries
-   - These are set when you run `git mit-config mit set <initial> <name> <email>`
-   - Stored at repository level (local) or user level (global) based on `--scope`
-
-The authors from these sources are **merged together**, with later sources overriding earlier ones if there are conflicts.
-
-For more information on configuring authors, see the [authors documentation](mit.md).
-
 ### Extending Author Configuration Timeout
 
-By default, author configuration expires after 60 minutes, requiring you to run `git mit <initials>` again. If you find this timeout too short, you can extend it.
-
-#### How the Timeout Works
-
-- The timeout is stored as a Unix timestamp in `mit.author.expires`
-- When you run `git mit <initials>`, it sets the expiration to current time + timeout duration (in minutes)
-- The `pre-commit` hook checks if the current time is past this expiration
-- If expired, you'll see an error with the expiration time and need to run `git mit` again
-
-Note: Setting very long timeouts reduces the benefit of the expiration feature, which ensures commit attribution stays current when developers change throughout the day.
-
-#### Setting a Longer Timeout
+By default, author configuration expires after 60 minutes. If you find this timeout too short, you can extend it:
 
 1. **Using command-line flag**:
    ```bash,skip()
@@ -127,15 +133,6 @@ If co-authors aren't being added to commits or commit message validation isn't w
    ```
    Look for `x` in the permissions (e.g., `-rwxr-xr-x`)
 
-### Hook Installation Details
-
-The installation process creates symbolic links to the git-mit binaries:
-
-- **Windows**: Creates file symbolic links with `.exe` extension
-- **Unix/Linux/macOS**: Creates standard symbolic links
-- **Existing hooks**: Installation will fail if hooks already exist (unless they're already symlinks to git-mit)
-- **Symlink validation**: If a symlink exists but points to the correct binary, installation succeeds silently
-
 ### Reinstall Hooks
 
 If hooks are missing or not working:
@@ -177,27 +174,6 @@ See the [installation documentation](binaries/git-mit-install.md) for more detai
 
 If lints aren't being applied as expected:
 
-### Understanding Lint Configuration Precedence
-
-Lints are loaded from multiple sources with TOML files taking precedence:
-
-1. **TOML configuration files** (highest priority):
-   - `.git-mit.toml` (takes precedence if exists)
-   - `.git-mit.toml.dist` (used if `.git-mit.toml` doesn't exist)
-   - Located by discovering the Git repository and checking the parent of `.git` directory
-   - For bare repositories, checks the repository directory itself
-
-2. **VCS configuration** (Git config - used if no TOML config exists):
-   - Read from `mit.lint.<lint-name>` entries
-   - Can be set with `git mit-config lint enable/disable <lint-name>`
-   - Uses the lint's default enabled state if not explicitly configured
-
-The TOML configuration uses this format:
-```toml,skip()
-[mit.lint]
-"lint-name" = true  # or false
-```
-
 ### Debugging Lint Configuration
 
 1. **Check current lint status**:
@@ -232,7 +208,9 @@ The TOML configuration uses this format:
 
 Understanding where git-mit stores its data can help with troubleshooting:
 
-### Author Configurations
+### Configuration Storage Locations
+
+#### Author Configurations
 
 1. **Authors file** (permanent storage):
     - Default location: `$HOME/.config/git-mit/mit.toml` (Linux/macOS) or `%APPDATA%\git-mit\mit.toml` (Windows)
@@ -251,7 +229,7 @@ Understanding where git-mit stores its data can help with troubleshooting:
     - Expires: Controlled by `mit.author.expires` timestamp
     - Set by: Running `git mit <initials>`
 
-### Lint Configuration
+#### Lint Configuration
 
 1. **Repository level**:
     - File: `.git/config`
@@ -263,7 +241,7 @@ Understanding where git-mit stores its data can help with troubleshooting:
     - Example: Setting `not-conventional-commit = true` in `[mit.lint]` section
     - See [lint configuration documentation](lints/configuring.md)
 
-### Relates-to Configuration
+#### Relates-to Configuration
 
 - Stored in: `.git/config`
 - Keys: `mit.relate.to` and `mit.relate.expires`
@@ -271,7 +249,7 @@ Understanding where git-mit stores its data can help with troubleshooting:
 - Set by: `git mit-relates-to`
 - See [relates-to documentation](mit-relates-to.md)
 
-### Hook Installation Locations
+#### Hook Installation Locations
 
 1. **Local installation** (`git mit-install` or `git mit-install --scope=local`):
     - Location: `.git/hooks/` in current repository
@@ -282,7 +260,9 @@ Understanding where git-mit stores its data can help with troubleshooting:
     - Location: Template directory (e.g., `~/.config/git/init-template/hooks/`)
     - Applied to: New repositories when running `git init` or `git clone`
 
-### git's Precedence of config files
+### Configuration Loading Precedence
+
+#### git's Precedence of config files
 
 git-mit uses libgit2 for Git interactions, which follows standard Git configuration precedence:
 
@@ -290,54 +270,57 @@ git-mit uses libgit2 for Git interactions, which follows standard Git configurat
 2. User config (`~/.gitconfig`)
 3. System config (`/etc/gitconfig`) - lowest priority
 
-### How git-mit Discovers git Configuration
+#### Lint Configuration Precedence
 
-The configuration discovery process:
+Lints are loaded from multiple sources with TOML files taking precedence:
 
-1. **Repository discovery**: Uses `Repository::discover()` to find the Git repository
-2. **Config loading**: Opens the repository's config or falls back to [default config](https://libgit2.org/docs/reference/v0.22.1/config/git_config_open_default.html)
-3. **Author loading**: Reads from `mit.author.config.*` entries in Git config
-4. **Lint settings**: Reads from `mit.lint.*` entries and `.git-mit.toml` files
-5. **TOML file discovery**: Looks for `.git-mit.toml` first, then `.git-mit.toml.dist` in repository root
+1. **TOML configuration files** (highest priority):
+   - `.git-mit.toml` (takes precedence if exists)
+   - `.git-mit.toml.dist` (used if `.git-mit.toml` doesn't exist)
+   - Located by discovering the Git repository and checking the parent of `.git` directory
+   - For bare repositories, checks the repository directory itself
 
-## Common Error Messages
+2. **VCS configuration** (Git config - used if no TOML config exists):
+   - Read from `mit.lint.<lint-name>` entries
+   - Can be set with `git mit-config lint enable/disable <lint-name>`
+   - Uses the lint's default enabled state if not explicitly configured
 
-### "failed to interact with git repository"
+The TOML configuration uses this format:
+```toml,skip()
+[mit.lint]
+"lint-name" = true  # or false
+```
 
-This usually means git-mit can't find or read the Git repository. Check:
-- You're in a Git repository (`git status` should work)
-- The `.git` directory has proper permissions
-- Your Git installation is working correctly
+#### Author Configuration Precedence
 
-### "could not parse author configuration"
+git-mit loads authors from multiple sources and merges them together:
 
-Your authors file has invalid TOML or YAML syntax. The error will show which format failed:
-- Check for missing quotes around strings
-- Ensure proper indentation (YAML is indent-sensitive)
-- Validate your file with a TOML/YAML validator
-- The error message will indicate whether it failed parsing as TOML or YAML
+1. **From exec command** (highest priority):
+   - Set via `--exec` flag or `GIT_MIT_AUTHORS_EXEC` environment variable
+   - The command output must be valid TOML or YAML format
+   - The command is executed using `shell_words::split()` for proper argument parsing
 
-### "failed to install hook"
+2. **From authors file**:
+   - Default location: `$HOME/.config/git-mit/mit.toml`
+   - Custom location via `--config` flag or `GIT_MIT_AUTHORS_CONFIG` environment variable
+   - Special handling for `$HOME/.config/git-mit/mit.toml` path - it's expanded to the actual home directory
+   - If the file doesn't exist, an empty string is used (no error)
 
-The hook installation failed because:
-- **ExistingHook**: A non-symlink hook already exists at that location
-- **ExistingSymlink**: A symlink exists but points to a different location
-- You don't have write permissions to the hooks directory
+3. **From Git config**:
+   - Authors stored in `mit.author.config.<initial>.*` entries
+   - These are set when you run `git mit-config mit set <initial> <name> <email>`
+   - Stored at repository level (local) or user level (global) based on `--scope`
 
-Remove the existing hook or check where the existing symlink points.
+The authors from these sources are **merged**, with later sources overriding earlier ones if there are conflicts.
 
-### "No authors set" (from pre-commit hook)
+### Hook Installation Details
 
-This error appears when:
-- You haven't run `git mit <initials>` to set the current authors
-- The author configuration has expired (check `git config mit.author.expires`)
-- The author configuration was never set in this repository
+The installation process creates symbolic links to the git-mit binaries:
 
-### "The details of the author of this commit are stale"
-
-This error shows:
-- The exact time when the author configuration expired
-- You need to run `git mit <initials>` again to refresh the configuration
+- **Windows**: Creates file symbolic links with `.exe` extension
+- **Unix/Linux/macOS**: Creates standard symbolic links
+- **Existing hooks**: Installation will fail if hooks already exist (unless they're already symlinks to git-mit)
+- **Symlink validation**: If a symlink exists but points to the correct binary, installation succeeds silently
 
 ## Still Having Issues?
 
