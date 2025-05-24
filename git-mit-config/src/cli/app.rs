@@ -110,7 +110,7 @@ pub enum Mit {
         #[clap(
             index = 1,
             env = "GIT_MIT_SET_NON_CLEAN_BEHAVIOUR",
-            default_value = "add-to"
+            default_value = "no-change"
         )]
         behaviour: BehaviourOption,
     },
