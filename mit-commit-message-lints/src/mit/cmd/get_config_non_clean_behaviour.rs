@@ -5,7 +5,7 @@ use crate::{external::Vcs, mit::lib::non_clean_behaviour::BehaviourOption};
 
 /// # Errors
 ///
-/// On failure to parse the behaviour from the git config
+/// On failure to parse the behavior from the git config
 pub fn get_config_non_clean_behaviour(store: &dyn Vcs) -> Result<BehaviourOption> {
     let behaviour_opt = store.get_str("mit.author.non-clean-behaviour")?;
 

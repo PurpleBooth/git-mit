@@ -16,11 +16,11 @@ A clear and concise description of what the bug is.
 Steps to reproduce the behavior:
 
 1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
+2. Click on '...'
+3. Scroll down to '...'
 4. See error
 
-If this is relating to a lint, then add the text of a commit that is triggering the lint.
+If this is related to a lint, then add the text of a commit that is triggering the lint.
 
 **Expected behavior**
 

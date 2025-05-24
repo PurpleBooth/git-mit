@@ -19,7 +19,7 @@ pub trait Vcs {
     fn get_str(&self, name: &str) -> Result<Option<&str>>;
     /// # Errors
     ///
-    /// If we can't read the config, or it's not parsable into a i64
+    /// If we can't read the config, or it's not parsable into an i64
     fn get_i64(&self, name: &str) -> Result<Option<i64>>;
     /// # Errors
     ///
@@ -37,7 +37,7 @@ pub trait Vcs {
     /// The state of the repository currently
     ///
     /// None if there is no repository, and we only have config
-    fn state(&self) -> Option<crate::external::vcs::RepoState>;
+    fn state(&self) -> Option<RepoState>;
 }
 
 /// State of the repository
@@ -49,7 +49,7 @@ pub enum RepoState {
     Merge,
     /// Reverting commit
     Revert,
-    /// Reverting sequence of commits
+    /// Reverting the sequence of commits
     RevertSequence,
     /// Cherry-picking commit
     CherryPick,
@@ -65,7 +65,7 @@ pub enum RepoState {
     RebaseMerge,
     /// Repository is applying mailbox
     ApplyMailbox,
-    /// Repository is applying mailbox patch or rebasing
+    /// Repository is applying a mailbox patch or rebasing
     ApplyMailboxOrRebase,
 }
 
@@ -86,7 +86,7 @@ pub enum Error {
         code(mit_commit_message_lints::external::vcs::error::in_memory_parse_int)
     )]
     InMemoryParseInt(std::num::ParseIntError),
-    /// Failed to parse an bool from the in-memory vcs
+    /// Failed to parse a bool from the in-memory vcs
     #[error("failed to read bool from in memory datastore: {0}")]
     #[diagnostic(
         url(docsrs),

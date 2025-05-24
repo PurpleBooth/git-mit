@@ -48,7 +48,7 @@ pub enum Lint {
         #[clap(long, value_enum, value_parser, default_value = "local")]
         scope: Scope,
     },
-    /// Get status of a lint
+    /// Get the status of a lint
     Status {
         #[clap(long, value_enum, value_parser, default_value = "local")]
         scope: Scope,
@@ -88,25 +88,25 @@ pub enum Mit {
         /// Email to use for the mit
         #[clap()]
         email: String,
-        /// Signing key to use for this user
+        /// The signing key to use for this user
         #[clap()]
         signingkey: Option<String>,
     },
-    /// Get the current behaviour when the repository is mid-rebase or merge.
+    /// Get the current behavior when the repository is mid-rebase or merge.
     NonCleanBehaviour {
         #[clap(long, value_enum, value_parser, default_value = "local")]
         scope: Scope,
     },
-    /// Set the current behaviour when the repository is mid-rebase or merge.
+    /// Set the current behavior when the repository is mid-rebase or merge.
     SetNonCleanBehaviour {
         #[clap(long, value_enum, value_parser, default_value = "local")]
         scope: Scope,
         /// What to do for rebase, merge commits and similar
         ///
+        /// * 'add-to' will add the current author to the commit messages on rebase
+        /// * 'no-change' will leave the commit messages as is.
         ///
-        /// 'add-to' will add the current author to the commit messages on
-        /// rebase 'no-change' will leave the commit messages as it. This also
-        /// applies to merges and cherry-picks
+        /// This also applies to merges and cherry-picks
         #[clap(
             index = 1,
             env = "GIT_MIT_SET_NON_CLEAN_BEHAVIOUR",
@@ -125,7 +125,7 @@ pub enum Mit {
         )]
         config: String,
         /// Execute a command to generate the mit configuration, stdout will be
-        /// captured and used instead of the file, if both this and the file is
+        /// captured and used instead of the file, if both this and the file are
         /// present, this takes precedence
         #[clap(short, long, env = "GIT_MIT_AUTHORS_EXEC")]
         exec: Option<String>,
@@ -141,7 +141,7 @@ pub enum Mit {
         )]
         config: String,
         /// Execute a command to generate the mit configuration, stdout will be
-        /// captured and used instead of the file, if both this and the file is
+        /// captured and used instead of the file, if both this and the file are
         /// present, this takes precedence
         #[clap(short, long, env = "GIT_MIT_AUTHORS_EXEC")]
         exec: Option<String>,

@@ -19,8 +19,8 @@ Options:
                                  [env: GIT_MIT_AUTHORS_CONFIG=] [default:
                                  $HOME/.config/git-mit/mit.toml]
   -e, --exec <EXEC>              Execute a command to generate the mit configuration, stdout will be
-                                 captured and used instead of the file, if both this and the file is
-                                 present, this takes precedence [env: GIT_MIT_AUTHORS_EXEC=]
+                                 captured and used instead of the file, if both this and the file
+                                 are present, this takes precedence [env: GIT_MIT_AUTHORS_EXEC=]
   -t, --timeout <TIMEOUT>        Number of minutes to expire the configuration in [env:
                                  GIT_MIT_AUTHORS_TIMEOUT=] [default: 60]
       --completion <COMPLETION>  Shell to generate completions for [possible values: bash, elvish,

@@ -16,8 +16,8 @@ use crate::{
 
 /// # Errors
 ///
-/// This errors if writing to the git mit file fails for some reason. Those
-/// reasons will be specific to VCS implementation
+/// If writing to the git mit file fails for some reason.
+/// This reason will be specific to VCS implementation
 pub fn set_commit_authors(
     config: &mut dyn Vcs,
     authors: &[&Author<'_>],

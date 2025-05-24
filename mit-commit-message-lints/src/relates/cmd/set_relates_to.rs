@@ -8,8 +8,7 @@ const CONFIG_KEY_EXPIRES: &str = "mit.relate.expires";
 
 /// # Errors
 ///
-/// This errors if writing to the git mit file fails for some reason. Those
-/// reasons will be specific to VCS implementation
+/// If writing to the git mit file fails for some reason. (specific to VCS implementation)
 pub fn set_relates_to(
     config: &mut dyn Vcs,
     relates: &RelateTo<'_>,

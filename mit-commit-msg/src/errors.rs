@@ -47,7 +47,7 @@ impl Diagnostic for AggregateProblem {
         let collection = self
             .0
             .iter()
-            .filter_map(miette::Diagnostic::severity)
+            .filter_map(Diagnostic::severity)
             .collect::<Vec<Severity>>();
 
         if collection.is_empty() {
@@ -90,14 +90,14 @@ impl Diagnostic for AggregateProblem {
     }
 
     fn source_code(&self) -> Option<&dyn SourceCode> {
-        self.0.first().and_then(miette::Diagnostic::source_code)
+        self.0.first().and_then(Diagnostic::source_code)
     }
 
     fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
         let collection = self
             .0
             .iter()
-            .filter_map(miette::Diagnostic::labels)
+            .filter_map(Diagnostic::labels)
             .flatten()
             .collect::<Vec<LabeledSpan>>();
 
@@ -112,7 +112,7 @@ impl Diagnostic for AggregateProblem {
         let collection = self
             .0
             .iter()
-            .filter_map(miette::Diagnostic::related)
+            .filter_map(Diagnostic::related)
             .flatten()
             .collect::<Vec<&dyn Diagnostic>>();
 

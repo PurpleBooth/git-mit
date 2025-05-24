@@ -53,9 +53,9 @@ pub struct CliArgs {
     )]
     pub config: String,
 
-    /// Execute a command to generate the mit configuration, stdout will be
-    /// captured and used instead of the file, if both this and the file is
-    /// present, this takes precedence
+    /// Execute a command to generate the mit configuration,
+    /// stdout will be captured and used instead of the file,
+    /// if both this and the file are present, this takes precedence
     #[clap(short, long, env = "GIT_MIT_AUTHORS_EXEC")]
     pub exec: Option<String>,
 

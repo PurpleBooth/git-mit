@@ -26,7 +26,7 @@ impl<'a> Author<'a> {
         }
     }
 
-    /// The authors name
+    /// The author name
     #[must_use]
     pub fn name(&self) -> &str {
         &self.name

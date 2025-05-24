@@ -4,7 +4,7 @@ This is the `git mit-relates-to` part of the tool.
 
 ## Setup
 
-In order to get started with this tool you'll need a git repository
+To get started with this tool you'll need a git repository
 
 ``` shell,script(name="init-repo",expected_exit_code=0)
 git init .
@@ -19,8 +19,8 @@ git mit-install
 ## Running the command
 
 In projects, it is nice to help out your co-workers by linking the
-commits you're making back to issue in the backlog. Be very easy to
-forget though, so here's a command to automate it.
+commits you're making back to the issue in the backlog. It's easy to
+forget to include this, so here's a command to automate it.
 
 Say you've just made this awesome `README.md` for Pivotal Tracker ID
 `[#12321513]`

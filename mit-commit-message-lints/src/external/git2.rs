@@ -11,9 +11,9 @@ use crate::{
 /// Libgit2 vcs implementation
 #[allow(missing_debug_implementations)]
 pub struct Git2 {
-    config_snapshot: git2::Config,
-    config_live: git2::Config,
-    state: Option<git2::RepositoryState>,
+    config_snapshot: Config,
+    config_live: Config,
+    state: Option<RepositoryState>,
 }
 
 impl Git2 {
@@ -21,7 +21,7 @@ impl Git2 {
     ///
     /// Will panic if it can't open the git config in snapshot mode
     #[must_use]
-    pub fn new(mut config: git2::Config, state: Option<git2::RepositoryState>) -> Self {
+    pub fn new(mut config: Config, state: Option<RepositoryState>) -> Self {
         Self {
             config_snapshot: config.snapshot().unwrap(),
             config_live: config,
@@ -142,7 +142,7 @@ impl TryFrom<PathBuf> for Git2 {
                 let state = repo.state();
                 repo.config().map(|config| (config, Some(state)))
             })
-            .or_else(|_| (Config::open_default().map(|config| (config, None))))
+            .or_else(|_| Config::open_default().map(|config| (config, None)))
             .map(|(config, state)| Self::new(config, state))
             .into_diagnostic()
     }

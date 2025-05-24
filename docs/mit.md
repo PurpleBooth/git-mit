@@ -4,7 +4,7 @@ This is the `git mit` part of the tool.
 
 ## Setup
 
-In order to get started with this tool you'll need a git repository
+To get started with this tool you'll need a git repository
 
 ``` shell,script(name="init-repo",expected_exit_code=0)
 git init .
@@ -238,7 +238,7 @@ git mit-config mit set-non-clean-behaviour no-change
 git mit-config mit non-clean-behaviour
 ```
 
-To get the current behaviour run
+To get the current behavior run
 
 ``` text,verify(script_name="set-non-clean-behavior-no-change",stream=stdout)
 no-change

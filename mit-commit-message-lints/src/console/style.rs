@@ -11,7 +11,7 @@ use thiserror::Error;
 
 use crate::mit::Authors;
 
-/// Print a advice using our error handler tool
+/// Print an advice using our error handler tool
 ///
 /// # Panics
 ///

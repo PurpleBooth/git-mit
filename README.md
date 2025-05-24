@@ -282,6 +282,7 @@ Each binary also has a command to generate completion.
 -   [Using the issue number inserting part of the tool](./docs/mit-relates-to.md)
 -   [Configuring lints](./docs/lints/configuring.md)
 -   [Lint list](./docs/lints/index.md)
+-   [Troubleshooting](./docs/troubleshooting.md)
 
 ### Usage
 

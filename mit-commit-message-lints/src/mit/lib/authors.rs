@@ -16,7 +16,7 @@ pub struct Authors<'a> {
 }
 
 impl<'a> Authors<'a> {
-    /// From a list of initials get te ones that aren't in our config
+    /// From a list of initials get the ones that aren't in our config
     #[must_use]
     pub fn missing_initials(&'a self, authors_initials: Vec<&'a str>) -> Vec<&'a str> {
         let configured: HashSet<_> = self.authors.keys().map(String::as_str).collect();
@@ -41,7 +41,7 @@ impl<'a> Authors<'a> {
 
     /// Merge two lists of authors
     ///
-    /// This is used if the user has a author config file, and the authors are
+    /// This is used if the user has an author config file, and the authors are
     /// also saved in the vcs config
     #[must_use]
     pub fn merge(&self, authors: &Self) -> Self {
@@ -83,8 +83,8 @@ impl<'a> Authors<'a> {
 }
 
 impl<'a> IntoIterator for Authors<'a> {
-    type IntoIter = IntoIter<String, Author<'a>>;
     type Item = (String, Author<'a>);
+    type IntoIter = IntoIter<String, Author<'a>>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.authors.into_iter()
@@ -94,7 +94,7 @@ impl<'a> IntoIterator for Authors<'a> {
 impl<'a> TryFrom<&'a str> for Authors<'a> {
     type Error = DeserializeAuthorsError;
 
-    fn try_from(input: &str) -> std::result::Result<Self, Self::Error> {
+    fn try_from(input: &str) -> Result<Self, Self::Error> {
         serde_yaml::from_str(input)
             .or_else(|yaml_error| {
                 toml::from_str(input).map_err(|toml_error| {
@@ -108,7 +108,7 @@ impl<'a> TryFrom<&'a str> for Authors<'a> {
 impl TryFrom<String> for Authors<'_> {
     type Error = DeserializeAuthorsError;
 
-    fn try_from(input: String) -> std::result::Result<Self, Self::Error> {
+    fn try_from(input: String) -> Result<Self, Self::Error> {
         serde_yaml::from_str(&input)
             .or_else(|yaml_error| {
                 toml::from_str(&input).map_err(|toml_error| {

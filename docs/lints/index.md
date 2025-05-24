@@ -392,7 +392,7 @@ The style from the git book, but that doesn't affect using git
 
 ##### subject-line-not-capitalized
 
-Detect a subject line that is not capitalised
+Detect a subject line that is not capitalized
 
 ###### Default status
 
@@ -480,7 +480,7 @@ git mit-config lint disable subject-line-not-capitalized
 
 ##### subject-line-ends-with-period
 
-Detect a subject line that is not capitalised
+Detect a subject line that is not capitalized
 
 ###### Default status
 

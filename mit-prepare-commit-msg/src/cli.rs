@@ -24,13 +24,13 @@ pub struct Args {
     #[clap(index = 3)]
     pub commit_sha: Option<String>,
 
-    /// A command to execute to get the value for the relates to trailer
+    /// A command to execute to get the value for the "relates to" trailer
     #[clap(long, env = "GIT_MIT_RELATES_TO_EXEC")]
     pub relates_to_exec: Option<String>,
-    /// A template to apply to the relates to trailer
+    /// A template to apply to the "relates to" trailer
     #[clap(long, env = "GIT_MIT_RELATES_TO_TEMPLATE")]
     pub relates_to_template: Option<String>,
-    /// A template to apply to the relates to trailer
+    /// What to do when we rebase
     #[clap(long, env = "GIT_MIT_SET_NON_CLEAN_BEHAVIOUR")]
     pub non_clean_behaviour_option: Option<BehaviourOption>,
     #[clap(long, value_enum, value_parser)]

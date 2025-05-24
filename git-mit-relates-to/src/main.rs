@@ -23,7 +23,6 @@ use std::{convert::TryFrom, env, io::stdout, time::Duration};
 
 use clap::{CommandFactory, Parser};
 use clap_complete::generate;
-use cli::app;
 use git2::Repository;
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
@@ -32,7 +31,8 @@ use mit_commit_message_lints::{
     relates::{set_relates_to, RelateTo},
 };
 
-use crate::{app::Args, errors::GitRelatesTo};
+use crate::cli::app::Args;
+use crate::errors::GitRelatesTo;
 
 mod cli;
 mod errors;

@@ -29,7 +29,7 @@ impl Vcs for InMemory<'_> {
         let mut keys: Vec<String> = self.store.keys().map(String::from).collect();
 
         if let Some(pattern) = glob {
-            let compiled_glob = glob::Pattern::new(pattern).into_diagnostic()?;
+            let compiled_glob = Pattern::new(pattern).into_diagnostic()?;
 
             keys.retain(|value| Pattern::matches(&compiled_glob, value));
         }

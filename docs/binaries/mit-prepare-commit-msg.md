@@ -29,17 +29,17 @@ Arguments:
 
 Options:
       --relates-to-exec <RELATES_TO_EXEC>
-          A command to execute to get the value for the relates to trailer
+          A command to execute to get the value for the "relates to" trailer
           
           [env: GIT_MIT_RELATES_TO_EXEC=]
 
       --relates-to-template <RELATES_TO_TEMPLATE>
-          A template to apply to the relates to trailer
+          A template to apply to the "relates to" trailer
           
           [env: GIT_MIT_RELATES_TO_TEMPLATE=]
 
       --non-clean-behaviour-option <NON_CLEAN_BEHAVIOUR_OPTION>
-          A template to apply to the relates to trailer
+          What to do when we rebase
           
           [env: GIT_MIT_SET_NON_CLEAN_BEHAVIOUR=]
 

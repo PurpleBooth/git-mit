@@ -61,25 +61,25 @@ fn main() -> Result<()> {
     }
 
     match cli_args.action {
-        Some(app::Action::Lint {
+        Some(Action::Lint {
             action: app::Lint::Available { scope },
         }) => cmd::lint_available::run(scope),
-        Some(app::Action::Lint {
+        Some(Action::Lint {
             action: app::Lint::Enabled { scope },
         }) => cmd::lint_enabled::run(scope),
-        Some(app::Action::Lint {
+        Some(Action::Lint {
             action: app::Lint::Status { scope, lints },
         }) => cmd::lint_status::run(scope, lints),
-        Some(app::Action::Lint {
+        Some(Action::Lint {
             action: app::Lint::Enable { scope, lints },
         }) => cmd::lint_enable::run(scope, lints),
-        Some(app::Action::Lint {
+        Some(Action::Lint {
             action: app::Lint::Disable { scope, lints },
         }) => cmd::lint_disable::run(scope, lints),
-        Some(app::Action::Lint {
+        Some(Action::Lint {
             action: app::Lint::Generate { scope },
         }) => cmd::lint_generate::run(scope),
-        Some(app::Action::Mit {
+        Some(Action::Mit {
             action:
                 app::Mit::Set {
                     scope,
@@ -89,13 +89,13 @@ fn main() -> Result<()> {
                     signingkey,
                 },
         }) => author_set::run(scope, &initials, name, email, signingkey),
-        Some(app::Action::Mit {
+        Some(Action::Mit {
             action: app::Mit::Generate { config, exec },
         }) => author_generate::run_generate(&config, exec.as_deref()),
-        Some(app::Action::Mit {
+        Some(Action::Mit {
             action: app::Mit::Available { config, exec },
         }) => author_generate::run_available(&config, exec.as_deref()),
-        Some(app::Action::Mit {
+        Some(Action::Mit {
             action: app::Mit::Example,
         }) => cmd::author_example::run(),
         Some(Action::Mit {
@@ -104,7 +104,7 @@ fn main() -> Result<()> {
         Some(Action::Mit {
             action: app::Mit::SetNonCleanBehaviour { scope, behaviour },
         }) => cmd::non_clean_behaviour_set::run(scope, behaviour),
-        Some(app::Action::RelatesTo {
+        Some(Action::RelatesTo {
             action: app::RelatesTo::Template { scope, template },
         }) => cmd::relates_to_template::run(scope, &template),
         None => Err(UnrecognisedLintCommand {}.into()),

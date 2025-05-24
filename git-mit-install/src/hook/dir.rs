@@ -28,7 +28,7 @@ fn get_local_hooks_dir() -> Result<PathBuf> {
 }
 
 fn setup_global_hooks_dir(home_dir: &Path) -> Result<PathBuf> {
-    let mut config = git2::Config::open_default().into_diagnostic()?;
+    let mut config = Config::open_default().into_diagnostic()?;
 
     let template_dir = if let Ok(template_dir) = git_template_dir(&mut config) {
         template_dir

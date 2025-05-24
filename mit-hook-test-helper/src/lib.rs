@@ -140,14 +140,14 @@ pub fn calculate_cargo_toml_path(package: &str) -> String {
 ///
 /// # Panics
 ///
-/// Panics on failure to create a temporary directory, to initialise a git repo
-/// (for example if the filesystem was readonly) or to get the configuration if
+/// Panics on failure to create a temporary directory, to initialize a git repo
+/// (for example, if the filesystem was readonly) or to get the configuration if
 /// the configuration was malformed
 #[must_use]
 pub fn make_config() -> Config {
     let add_repository_to_path = |x: PathBuf| x.join("repository");
     TempDir::new()
-        .map(TempDir::into_path)
+        .map(TempDir::keep)
         .map(add_repository_to_path)
         .map(Repository::init)
         .expect("Failed to initialise the repository")
@@ -208,7 +208,7 @@ pub fn assert_output(
 pub fn setup_working_dir() -> PathBuf {
     let add_repository = |x: PathBuf| x.join("repository");
     let temp = TempDir::new()
-        .map(TempDir::into_path)
+        .map(TempDir::keep)
         .map(add_repository)
         .expect("Unable to make path");
     Repository::init(&temp).expect("Couldn't create repo");

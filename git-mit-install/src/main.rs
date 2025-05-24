@@ -21,15 +21,13 @@
 
 use std::io::stdout;
 
+use crate::cli::app::CliArgs;
 use clap::{CommandFactory, Parser};
 use clap_complete::generate;
 use hook::{dir, install};
 use indoc::indoc;
 use miette::Result;
 use mit_commit_message_lints::console::error_handling::miette_install;
-
-use crate::app::CliArgs;
-pub(crate) use crate::cli::app;
 
 mod cli;
 mod errors;
