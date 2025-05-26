@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.0.1](https://github.com/PurpleBooth/git-mit/compare/5b22fb1723ddb0a2b70a1a48678424718df51bb7..v6.0.1) - 2025-05-26
+#### Bug Fixes
+- **(deps)** update rust crate tokio to v1.45.1 (#1580) - ([b57e8e4](https://github.com/PurpleBooth/git-mit/commit/b57e8e4c4e1d2ccbc3a2956d5e1c627f6584f333)) - renovate[bot]
+#### Build system
+- aa missing final newline - ([5b22fb1](https://github.com/PurpleBooth/git-mit/commit/5b22fb1723ddb0a2b70a1a48678424718df51bb7)) - Billie Thompson
+
+- - -
+
 ## [v6.0.0](https://github.com/PurpleBooth/git-mit/compare/ab4c1cd5a083bf3a97dad0793e1f3e1a1451cef9..v6.0.0) - 2025-05-24
 #### Continuous Integration
 - Update generate-formula-action to use main branch - ([ab4c1cd](https://github.com/PurpleBooth/git-mit/commit/ab4c1cd5a083bf3a97dad0793e1f3e1a1451cef9)) - Billie Thompson
