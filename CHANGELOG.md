@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.0.5](https://github.com/PurpleBooth/git-mit/compare/3533c78c4c50547355e63de9fef01341096612e4..v6.0.5) - 2025-06-17
+#### Bug Fixes
+- **(deps)** update docker/dockerfile docker tag to v1.17 - ([3533c78](https://github.com/PurpleBooth/git-mit/commit/3533c78c4c50547355e63de9fef01341096612e4)) - renovate[bot]
+
+- - -
+
 ## [v6.0.4](https://github.com/PurpleBooth/git-mit/compare/260669578014a07046bf30dd5de8da49a5e3c45d..v6.0.4) - 2025-06-17
 #### Bug Fixes
 - **(deps)** update rust crate mit-commit to v3.3.1 - ([2606695](https://github.com/PurpleBooth/git-mit/commit/260669578014a07046bf30dd5de8da49a5e3c45d)) - renovate[bot]
