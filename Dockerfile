@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.16@sha256:e2dd261f92e4b763d789984f6eab84be66ab4f5f08052316d8eb8f173593acf7
+# syntax=docker/dockerfile:1.17@sha256:e63addfe27b10e394a5f9f1e866961adc70d08573f1cb80f8d1a0999347b3553
 ARG RUST_VERSION=1.87.0@sha256:251cec8da4689d180f124ef00024c2f83f79d9bf984e43c180a598119e326b84
 
 FROM rust:${RUST_VERSION} AS planner
