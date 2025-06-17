@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.0.3](https://github.com/PurpleBooth/git-mit/compare/23ba3b3c2bdce86f261ee8760f8441e9fc99e248..v6.0.3) - 2025-06-17
+#### Bug Fixes
+- **(deps)** update rust docker tag to v1.87.0 - ([c0ef4c6](https://github.com/PurpleBooth/git-mit/commit/c0ef4c68287f35fd44973307b73bd0fe1f0f451d)) - renovate[bot]
+- **(deps)** update docker/dockerfile docker tag to v1.16 - ([0dd9402](https://github.com/PurpleBooth/git-mit/commit/0dd9402d502695604ea42c7d65b8ada59386497c)) - renovate[bot]
+- **(deps)** update rust crate clap_complete to v4.5.54 - ([a263964](https://github.com/PurpleBooth/git-mit/commit/a263964a1cebdc601def688c4f802530a0bed5f5)) - renovate[bot]
+- **(deps)** update rust crate openssl to v0.10.73 - ([759fd92](https://github.com/PurpleBooth/git-mit/commit/759fd9250ac7190bb590653fcba6e6408cbc25ce)) - renovate[bot]
+- **(deps)** update rust crate which to v8 - ([5fbfc5e](https://github.com/PurpleBooth/git-mit/commit/5fbfc5ef7008d331fcb5cecf2f1d882ff5989b84)) - renovate[bot]
+- **(deps)** update rust crate toml to v0.8.23 - ([fd723e5](https://github.com/PurpleBooth/git-mit/commit/fd723e5385e31225bb38b476a69fb8099717bf46)) - renovate[bot]
+#### Miscellaneous Chores
+- **(deps)** update actions/attest-build-provenance digest to e8998f9 - ([23ba3b3](https://github.com/PurpleBooth/git-mit/commit/23ba3b3c2bdce86f261ee8760f8441e9fc99e248)) - renovate[bot]
+
+- - -
+
 ## [v6.0.2](https://github.com/PurpleBooth/git-mit/compare/ac0dd1f4e77f876d4e951d4774a8670ad0d39841..v6.0.2) - 2025-06-16
 #### Bug Fixes
 - **(deps)** update rust crate clap to v4.5.40 (#1582) - ([ac0dd1f](https://github.com/PurpleBooth/git-mit/commit/ac0dd1f4e77f876d4e951d4774a8670ad0d39841)) - renovate[bot]
