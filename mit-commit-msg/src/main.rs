@@ -58,7 +58,7 @@ async fn main() -> Result<()> {
     let git_config = external::Git2::try_from(current_dir)?;
     let lint_config = read_from_toml_or_else_vcs(&toml, &git_config)?;
 
-    let lint_problems = async_lint(&commit_message, lint_config).await;
+    let lint_problems = async_lint(&commit_message, &lint_config).await;
     if lint_problems.is_empty() {
         return Ok(());
     }
