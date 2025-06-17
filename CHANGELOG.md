@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.0.4](https://github.com/PurpleBooth/git-mit/compare/260669578014a07046bf30dd5de8da49a5e3c45d..v6.0.4) - 2025-06-17
+#### Bug Fixes
+- **(deps)** update rust crate mit-commit to v3.3.1 - ([2606695](https://github.com/PurpleBooth/git-mit/commit/260669578014a07046bf30dd5de8da49a5e3c45d)) - renovate[bot]
+#### Miscellaneous Chores
+- update dependencies to latest versions - ([a31c5af](https://github.com/PurpleBooth/git-mit/commit/a31c5af43ce4df6799f491445ae1a16fc06d3ec5)) - Billie Thompson
+
+- - -
+
 ## [v6.0.3](https://github.com/PurpleBooth/git-mit/compare/23ba3b3c2bdce86f261ee8760f8441e9fc99e248..v6.0.3) - 2025-06-17
 #### Bug Fixes
 - **(deps)** update rust docker tag to v1.87.0 - ([c0ef4c6](https://github.com/PurpleBooth/git-mit/commit/c0ef4c68287f35fd44973307b73bd0fe1f0f451d)) - renovate[bot]
