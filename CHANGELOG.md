@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.0.6](https://github.com/PurpleBooth/git-mit/compare/785b23fa1d0affcf17f229d6a63c7c87f3b3e6e8..v6.0.6) - 2025-06-22
+#### Bug Fixes
+- **(deps)** update docker/dockerfile:1.17 docker digest to 3838752 (#1593) - ([785b23f](https://github.com/PurpleBooth/git-mit/commit/785b23fa1d0affcf17f229d6a63c7c87f3b3e6e8)) - renovate[bot]
+
+- - -
+
 ## [v6.0.5](https://github.com/PurpleBooth/git-mit/compare/3533c78c4c50547355e63de9fef01341096612e4..v6.0.5) - 2025-06-17
 #### Bug Fixes
 - **(deps)** update docker/dockerfile docker tag to v1.17 - ([3533c78](https://github.com/PurpleBooth/git-mit/commit/3533c78c4c50547355e63de9fef01341096612e4)) - renovate[bot]

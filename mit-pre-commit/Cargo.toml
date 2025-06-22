@@ -1,6 +1,6 @@
 [package]
 name = "mit-pre-commit"
-version = "6.0.5"
+version = "6.0.6"
 authors = [ "Billie Thompson <billie+mit-pre-commit@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -22,7 +22,7 @@ openssl = { version = "0.10.68", optional = true }
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "6.0.5"
+version = "6.0.6"
 
 [features]
 default = []
