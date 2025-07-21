@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.0.7](https://github.com/PurpleBooth/git-mit/compare/71ca2a37c5042de575813ac122e5154d06878441..v6.0.7) - 2025-07-21
+#### Bug Fixes
+- **(deps)** update rust crate clap to v4.5.41 (#1599) - ([71ca2a3](https://github.com/PurpleBooth/git-mit/commit/71ca2a37c5042de575813ac122e5154d06878441)) - renovate[bot]
+
+- - -
+
 ## [v6.0.6](https://github.com/PurpleBooth/git-mit/compare/785b23fa1d0affcf17f229d6a63c7c87f3b3e6e8..v6.0.6) - 2025-06-22
 #### Bug Fixes
 - **(deps)** update docker/dockerfile:1.17 docker digest to 3838752 (#1593) - ([785b23f](https://github.com/PurpleBooth/git-mit/commit/785b23fa1d0affcf17f229d6a63c7c87f3b3e6e8)) - renovate[bot]
