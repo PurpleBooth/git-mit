@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.0.10](https://github.com/PurpleBooth/git-mit/compare/220af3bc2d0d3a0a253cad14ee7a674184c90564..v6.0.10) - 2025-09-08
+#### Bug Fixes
+- **(deps)** update rust crate glob to v0.3.3 (#1606) - ([220af3b](https://github.com/PurpleBooth/git-mit/commit/220af3bc2d0d3a0a253cad14ee7a674184c90564)) - renovate[bot]
+
+- - -
+
 ## [v6.0.9](https://github.com/PurpleBooth/git-mit/compare/7b1d4410d94826a872a76425cf389b6cbcaf128a..v6.0.9) - 2025-08-25
 #### Bug Fixes
 - **(deps)** update rust crate clap_complete to v4.5.57 (#1605) - ([0faddfb](https://github.com/PurpleBooth/git-mit/commit/0faddfb07ea1db4a6521d012d6a1862fd10d1c3c)) - renovate[bot]

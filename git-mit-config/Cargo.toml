@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-config"
-version = "6.0.9"
+version = "6.0.10"
 authors = [ "Billie Thompson <billie+git-mit-config@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -22,7 +22,7 @@ clap = { version = "4.5.26", features = ["derive", "cargo", "wrap_help", "env", 
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "6.0.9"
+version = "6.0.10"
 
 [dev-dependencies]
 
