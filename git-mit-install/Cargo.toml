@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-install"
-version = "6.0.10"
+version = "6.0.11"
 authors = [ "Billie Thompson <billie+git-mit-install@billiecodes.com>" ]
 edition = "2018"
 license = "CC0-1.0"
@@ -25,7 +25,7 @@ indoc = "2.0.5"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "6.0.10"
+version = "6.0.11"
 
 [dev-dependencies]
 
