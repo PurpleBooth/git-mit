@@ -245,7 +245,7 @@ jobs:
           fetch-depth: 0
           ref: v${{ needs.release.outputs.current_version }}
       - uses: anchore/sbom-action@v0
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           merge-multiple: true
           path: bins
