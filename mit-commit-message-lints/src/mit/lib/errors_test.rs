@@ -28,3 +28,23 @@ fn deserialize_authors_error_has_deserialise_diagnostic_code() {
         "DeserializeAuthorsError should have code 'deserialise_authors_error', got: {code}"
     );
 }
+
+#[test]
+fn deserialize_authors_error_new_populates_error_messages() {
+    let input = "{[invalid";
+    let yaml_result: Result<serde_yaml::Value, _> = serde_yaml::from_str(input);
+    let toml_result: Result<toml::Value, _> = toml::from_str(input);
+    let yaml_error = yaml_result.unwrap_err();
+    let toml_error = toml_result.unwrap_err();
+
+    let err = DeserializeAuthorsError::new(input, &yaml_error, &toml_error);
+
+    assert!(
+        !err.yaml_message.is_empty(),
+        "yaml_message should contain the actual YAML parse error, but it was empty"
+    );
+    assert!(
+        !err.toml_message.is_empty(),
+        "toml_message should contain the actual TOML parse error, but it was empty"
+    );
+}

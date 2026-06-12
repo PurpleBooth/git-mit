@@ -51,8 +51,8 @@ impl DeserializeAuthorsError {
             src: input.to_string(),
             toml_span: (Self::span_from_toml_err(toml_error, input), 0).into(),
             yaml_span: (Self::span_from_yaml_err(yaml_error, input), 0).into(),
-            yaml_message: String::new(),
-            toml_message: String::new(),
+            yaml_message: yaml_error.to_string(),
+            toml_message: toml_error.to_string(),
         }
     }
 
