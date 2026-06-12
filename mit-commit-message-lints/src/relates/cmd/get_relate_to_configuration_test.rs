@@ -1,7 +1,7 @@
 use std::{
     collections::BTreeMap,
     convert::TryFrom,
-    ops::{Add, Sub},
+    ops::Add,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
@@ -49,7 +49,7 @@ fn add_10_seconds(x: Duration) -> Duration {
 }
 
 fn subtract_10_seconds(x: Duration) -> Duration {
-    x.sub(Duration::from_secs(10))
+    x.checked_sub(Duration::from_secs(10)).unwrap()
 }
 
 const fn into_seconds(x: Duration) -> u64 {

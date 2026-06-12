@@ -50,3 +50,57 @@ fn can_set_an_author_with_signing_key() {
 
     assert_eq!(store, expected);
 }
+
+#[test]
+fn updating_author_without_signing_key_removes_old_signing_key() {
+    // First, set an author WITH a signing key
+    let mut store: BTreeMap<String, String> = BTreeMap::new();
+    {
+        let mut vcs = InMemory::new(&mut store);
+
+        set_config_authors(
+            &mut vcs,
+            "bt",
+            &Author::new(
+                "Billie Thompson".into(),
+                "billie@example.com".into(),
+                Some("ABC".into()),
+            ),
+        )
+        .expect("Should succeed");
+    }
+
+    assert!(
+        store.contains_key("mit.author.config.bt.signingkey"),
+        "Signing key should be present after first set"
+    );
+
+    // Now update the same author WITHOUT a signing key
+    {
+        let mut vcs = InMemory::new(&mut store);
+
+        set_config_authors(
+            &mut vcs,
+            "bt",
+            &Author::new(
+                "Billie Thompson".into(),
+                "billie@newdomain.com".into(),
+                None,
+            ),
+        )
+        .expect("Should succeed");
+    }
+
+    let mut expected: BTreeMap<String, String> = BTreeMap::new();
+    expected.insert("mit.author.config.bt.name".into(), "Billie Thompson".into());
+    expected.insert(
+        "mit.author.config.bt.email".into(),
+        "billie@newdomain.com".into(),
+    );
+    // signingkey should NOT be present
+
+    assert_eq!(
+        store, expected,
+        "Updating an author without a signing key should remove the old signing key entry"
+    );
+}
