@@ -127,8 +127,8 @@ pub fn author_table(authors: &Authors<'_>) -> String {
         .set_header(vec!["Initial", "Name", "Email", "Signing Key"]);
 
     let rows: Table = authors
-        .clone()
-        .into_iter()
+        .authors
+        .iter()
         .fold(table, |mut table, (initial, author)| {
             table.add_row(vec![
                 Cell::new(initial),
