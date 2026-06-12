@@ -43,7 +43,7 @@ use mit_commit_message_lints::{
 use serde::Serialize;
 use tinytemplate::TinyTemplate;
 
-use crate::{cli::Args, errors::MitPrepareCommitMessageError::MissingCommitFilePath};
+use crate::{cli::Args, errors::MitPrepareCommitMessageError};
 
 mod cli;
 mod errors;
@@ -67,7 +67,9 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
-    let commit_message_path = cli_args.commit_message_path.ok_or(MissingCommitFilePath)?;
+    let commit_message_path = cli_args
+        .commit_message_path
+        .ok_or(MitPrepareCommitMessageError::MissingCommitFilePath)?;
 
     let current_dir = env::current_dir().into_diagnostic()?;
 
@@ -210,14 +212,40 @@ fn add_trailer_if_not_existing(
 
 fn get_relates_to_from_exec(command: &str) -> Result<RelateTo<'_>> {
     let commandline = shell_words::split(command).into_diagnostic()?;
-    Command::new(commandline.first().unwrap_or(&String::new()))
+    let output = Command::new(commandline.first().unwrap_or(&String::new()))
         .stderr(Stdio::inherit())
         .args(commandline.iter().skip(1))
         .output()
-        .into_diagnostic()
-        .and_then(|x| {
-            Ok(RelateTo::from(
-                String::from_utf8(x.stdout).into_diagnostic()?,
-            ))
-        })
+        .into_diagnostic()?;
+
+    if !output.status.success() {
+        return Err(MitPrepareCommitMessageError::RelatesToExecFailed {
+            exit_code: output.status.code().unwrap_or(-1),
+        }
+        .into());
+    }
+
+    Ok(RelateTo::from(
+        String::from_utf8(output.stdout)
+            .into_diagnostic()?
+            .trim()
+            .to_string(),
+    ))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_relates_to_from_exec_trims_trailing_newline() {
+        let result = get_relates_to_from_exec("echo '[#123]'").unwrap();
+        assert_eq!(result, RelateTo::from("[#123]"));
+    }
+
+    #[test]
+    fn test_get_relates_to_from_exec_fails_on_nonzero_exit() {
+        let result = get_relates_to_from_exec("false");
+        assert!(result.is_err());
+    }
 }
