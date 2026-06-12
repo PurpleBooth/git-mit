@@ -18,7 +18,7 @@ fn the_first_initial_becomes_the_relates() {
     let mut vcs_config = InMemory::new(&mut buffer);
 
     let relates_to = RelateTo::from("[#12345678]");
-    let actual = set_relates_to(&mut vcs_config, &relates_to, Duration::from_secs(60 * 60));
+    let actual = set_relates_to(&mut vcs_config, &relates_to, Duration::from_hours(1));
 
     actual.unwrap();
     assert_eq!(
@@ -33,13 +33,13 @@ fn sets_the_expiry_time() {
     let mut vcs_config = InMemory::new(&mut buffer);
 
     let relates = RelateTo::from("[#12345678]");
-    let actual = set_relates_to(&mut vcs_config, &relates, Duration::from_secs(60 * 60));
+    let actual = set_relates_to(&mut vcs_config, &relates, Duration::from_hours(1));
 
     actual.unwrap();
 
     let sec59min = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .map(|x| x.add(Duration::from_secs(60 * 59)))
+        .map(|x| x.add(Duration::from_mins(59)))
         .map_err(|x| -> Box<dyn Error> { Box::from(x) })
         .map(|x| x.as_secs())
         .and_then(|x| i64::try_from(x).map_err(Box::from))
@@ -47,7 +47,7 @@ fn sets_the_expiry_time() {
 
     let sec61min = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .map(|x| x.add(Duration::from_secs(60 * 61)))
+        .map(|x| x.add(Duration::from_mins(61)))
         .map_err(|x| -> Box<dyn Error> { Box::from(x) })
         .map(|x| x.as_secs())
         .and_then(|x| i64::try_from(x).map_err(Box::from))
