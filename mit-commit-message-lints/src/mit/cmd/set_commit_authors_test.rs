@@ -245,3 +245,64 @@ fn propagates_error_when_removing_signing_key_fails() {
 
     assert!(actual.is_err());
 }
+
+struct ExpiryFailingVcs;
+
+impl Vcs for ExpiryFailingVcs {
+    fn entries(&self, _glob: Option<&str>) -> Result<Vec<String>> {
+        Ok(vec![])
+    }
+
+    fn get_bool(&self, _name: &str) -> Result<Option<bool>> {
+        Ok(None)
+    }
+
+    fn get_str(&self, name: &str) -> Result<Option<&str>> {
+        if name == "user.signingkey" {
+            Ok(None)
+        } else {
+            Ok(None)
+        }
+    }
+
+    fn get_i64(&self, _name: &str) -> Result<Option<i64>> {
+        Ok(None)
+    }
+
+    fn set_str(&mut self, _name: &str, _value: &str) -> Result<()> {
+        Ok(())
+    }
+
+    fn set_i64(&mut self, _name: &str, _value: i64) -> Result<()> {
+        Err(miette!("simulated set_i64 error"))
+    }
+
+    fn remove(&mut self, _name: &str) -> Result<()> {
+        Ok(())
+    }
+
+    fn state(&self) -> Option<RepoState> {
+        None
+    }
+}
+
+#[test]
+fn expiry_error_message_mentions_time_not_name() {
+    let mut vcs_config = ExpiryFailingVcs;
+
+    let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
+    let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_hours(1));
+
+    let err = actual.expect_err("expected set_commit_authors to fail with ExpiryFailingVcs");
+    let err_msg = format!("{err:#?}");
+    assert!(
+        err_msg.contains("time") || format!("{err}").contains("time"),
+        "Expected the expiry error message to mention 'time', got: {}",
+        err_msg
+    );
+    assert!(
+        !format!("{err}").contains("expiry name"),
+        "Error message should not say 'expiry name', got: {}",
+        err
+    );
+}

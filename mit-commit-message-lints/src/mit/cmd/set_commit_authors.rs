@@ -111,5 +111,5 @@ fn set_vcs_expires_time(config: &mut dyn Vcs, expires_in: Duration) -> Result<()
     let expiry_time = now.add(expires_in).as_secs().try_into().into_diagnostic()?;
     config
         .set_i64(CONFIG_KEY_EXPIRES, expiry_time)
-        .wrap_err("failed to set author expiry name")
+        .wrap_err("failed to set author expiry time")
 }
