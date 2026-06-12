@@ -370,3 +370,16 @@ fn broken_authors_are_skipped() {
         "Expected the mit config to be {expected:?}, instead got {actual:?}"
     );
 }
+
+#[test]
+fn malformed_config_key_does_not_panic() {
+    let mut strings: BTreeMap<String, String> = BTreeMap::new();
+    strings.insert("mit.author.config.".into(), "value".into());
+    let vcs = InMemory::new(&mut strings);
+
+    let result = Authors::try_from(&vcs);
+    assert!(
+        result.is_err(),
+        "Expected an error for malformed config key"
+    );
+}

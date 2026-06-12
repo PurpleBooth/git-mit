@@ -1,7 +1,7 @@
 use std::{collections::BTreeMap, convert::TryFrom};
 
 use glob::Pattern;
-use miette::{IntoDiagnostic, Report, Result};
+use miette::{miette, IntoDiagnostic, Report, Result};
 
 use crate::{
     external::{vcs::RepoState, Vcs},
@@ -88,8 +88,16 @@ impl TryFrom<&'_ InMemory<'_>> for Authors<'_> {
                 BTreeMap::new(),
                 |mut acc, (key, fragments)| {
                     let mut fragment_iterator = fragments.iter();
-                    let initial = String::from(*fragment_iterator.next().unwrap());
-                    let part = String::from(*fragment_iterator.next().unwrap());
+                    let initial = String::from(
+                        *fragment_iterator
+                            .next()
+                            .ok_or_else(|| miette!("Malformed config key: {key}"))?,
+                    );
+                    let part = String::from(
+                        *fragment_iterator
+                            .next()
+                            .ok_or_else(|| miette!("Malformed config key: {key}"))?,
+                    );
 
                     let mut existing: BTreeMap<String, String> =
                         acc.get(&initial).cloned().unwrap_or_default();
