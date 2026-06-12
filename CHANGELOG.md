@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.0.12](https://github.com/PurpleBooth/git-mit/compare/ecee4d5db18488a9128904c908621f494d84e36d..v6.0.12) - 2026-06-12
+#### Bug Fixes
+- remove stale signingkey when updating author config without one - ([2c5eedb](https://github.com/PurpleBooth/git-mit/commit/2c5eedb24da404d0b9d06ae30f7e54e65cdade4a)) - Billie Thompson
+#### Refactoring
+- fix clippy pedantic warnings and remove unused imports - ([626b4b9](https://github.com/PurpleBooth/git-mit/commit/626b4b9149f6fb1ba49bae6bf9e361e6eff096c6)) - Billie Thompson
+#### Miscellaneous Chores
+- (**deps**) update actions/cache action to v4.3.0 (#1609) - ([cdc8f5e](https://github.com/PurpleBooth/git-mit/commit/cdc8f5e40b9078f02d4c4f256f928d1bf7513c01)) - renovate[bot], renovate[bot]
+- (**deps**) update ncipollo/release-action action to v1.20.0 (#1596) - ([ecee4d5](https://github.com/PurpleBooth/git-mit/commit/ecee4d5db18488a9128904c908621f494d84e36d)) - renovate[bot], renovate[bot]
+
+- - -
+
 ## [v6.0.11](https://github.com/PurpleBooth/git-mit/compare/450a91625f316aa0a64a1f7b73b748d248e94c29..v6.0.11) - 2025-09-15
 #### Bug Fixes
 - **(deps)** update rust crate thiserror to v2.0.16 (#1607) - ([450a916](https://github.com/PurpleBooth/git-mit/commit/450a91625f316aa0a64a1f7b73b748d248e94c29)) - renovate[bot]
