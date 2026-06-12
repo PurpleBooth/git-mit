@@ -2,6 +2,8 @@
 const CONFIG_KEY_EXPIRES: &str = "mit.author.expires";
 
 pub(crate) mod get_authors;
+#[cfg(test)]
+mod get_authors_test;
 pub(crate) mod get_commit_coauthor_configuration;
 #[cfg(test)]
 pub(crate) mod get_commit_coauthor_configuration_test;
