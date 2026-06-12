@@ -190,7 +190,7 @@ pub fn assert_output(
         expect_success,
         "Expected status to be {:?}, instead it was {:?}  stdout {:?} stderr {:?}",
         expect_success,
-        &output.status.code(),
+        output.status.code(),
         stdout,
         stderr
     );
