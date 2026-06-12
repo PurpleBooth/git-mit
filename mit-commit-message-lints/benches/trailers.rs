@@ -107,7 +107,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
                             format!("{} <{}>", x.name(), x.email()).into(),
                         )
                     })
-                    .fold(message.clone(), |_acc, author| message.add_trailer(author))
+                    .fold(message.clone(), |acc, author| acc.add_trailer(author))
             });
         },
     );

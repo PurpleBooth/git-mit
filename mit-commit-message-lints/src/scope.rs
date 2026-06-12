@@ -15,5 +15,3 @@ impl Scope {
         &Self::Global == self
     }
 }
-
-impl Scope {}

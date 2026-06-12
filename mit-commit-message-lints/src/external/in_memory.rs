@@ -26,15 +26,18 @@ impl InMemory<'_> {
 
 impl Vcs for InMemory<'_> {
     fn entries(&self, glob: Option<&str>) -> Result<Vec<String>> {
-        let mut keys: Vec<String> = self.store.keys().map(String::from).collect();
+        let compiled_glob = glob.map(Pattern::new).transpose().into_diagnostic()?;
 
-        if let Some(pattern) = glob {
-            let compiled_glob = Pattern::new(pattern).into_diagnostic()?;
-
-            keys.retain(|value| Pattern::matches(&compiled_glob, value));
-        }
-
-        Ok(keys)
+        Ok(self
+            .store
+            .keys()
+            .filter(|key| {
+                compiled_glob
+                    .as_ref()
+                    .is_none_or(|pattern| pattern.matches(key))
+            })
+            .cloned()
+            .collect())
     }
 
     fn get_bool(&self, name: &str) -> Result<Option<bool>> {
@@ -127,13 +130,8 @@ impl TryFrom<&'_ InMemory<'_>> for Authors<'_> {
                         _ => None,
                     }
                 })
-                .fold(
-                    BTreeMap::new(),
-                    |mut acc: BTreeMap<String, Author<'_>>, (key, value): (&String, Author<'_>)| {
-                        acc.insert(key.clone(), value);
-                        acc
-                    },
-                ),
+                .map(|(key, value): (&String, Author<'_>)| (key.clone(), value))
+                .collect(),
         ))
     }
 }

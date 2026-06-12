@@ -36,6 +36,11 @@ impl Git2 {
             .next()
             .is_some())
     }
+
+    fn refresh_snapshot(&mut self) -> Result<()> {
+        self.config_snapshot = self.config_live.snapshot().into_diagnostic()?;
+        Ok(())
+    }
 }
 
 impl Vcs for Git2 {
@@ -87,30 +92,17 @@ impl Vcs for Git2 {
 
     fn set_str(&mut self, name: &str, value: &str) -> Result<()> {
         self.config_live.set_str(name, value).into_diagnostic()?;
-
-        let config = self.config_live.snapshot().into_diagnostic()?;
-
-        self.config_snapshot = config;
-
-        Ok(())
+        self.refresh_snapshot()
     }
 
     fn set_i64(&mut self, name: &str, value: i64) -> Result<()> {
         self.config_live.set_i64(name, value).into_diagnostic()?;
-
-        let config = self.config_live.snapshot().into_diagnostic()?;
-        self.config_snapshot = config;
-
-        Ok(())
+        self.refresh_snapshot()
     }
 
     fn remove(&mut self, name: &str) -> Result<()> {
         self.config_live.remove(name).into_diagnostic()?;
-
-        let config = self.config_live.snapshot().into_diagnostic()?;
-        self.config_snapshot = config;
-
-        Ok(())
+        self.refresh_snapshot()
     }
 
     fn state(&self) -> Option<RepoState> {
@@ -199,13 +191,8 @@ impl TryFrom<&'_ Git2> for Authors<'_> {
                         _ => None,
                     }
                 })
-                .fold(
-                    BTreeMap::new(),
-                    |mut acc: BTreeMap<String, Author<'_>>, (key, value): (&String, Author<'_>)| {
-                        acc.insert(key.clone(), value);
-                        acc
-                    },
-                ),
+                .map(|(key, value): (&String, Author<'_>)| (key.clone(), value))
+                .collect(),
         ))
     }
 }

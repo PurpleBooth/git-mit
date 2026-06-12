@@ -46,11 +46,10 @@ fn get_defined_vcs_coauthor_keys(config: &dyn Vcs) -> Vec<String> {
     (0..)
         .take_while(|index| has_vcs_coauthor(config, *index))
         .flat_map(|index| {
-            vec![
+            [
                 format!("mit.author.coauthors.{index}.name"),
                 format!("mit.author.coauthors.{index}.email"),
             ]
-            .into_iter()
         })
         .collect()
 }

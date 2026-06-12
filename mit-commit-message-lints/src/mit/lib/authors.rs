@@ -45,15 +45,9 @@ impl<'a> Authors<'a> {
     /// also saved in the vcs config
     #[must_use]
     pub fn merge(&self, authors: &Self) -> Self {
-        Self {
-            authors: authors
-                .authors
-                .iter()
-                .fold(self.authors.clone(), |mut acc, (key, value)| {
-                    acc.insert(key.clone(), value.clone());
-                    acc
-                }),
-        }
+        let mut merged = self.authors.clone();
+        merged.extend(authors.authors.clone());
+        Self { authors: merged }
     }
 
     /// Generate an example authors list
