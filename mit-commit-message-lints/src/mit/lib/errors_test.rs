@@ -8,8 +8,7 @@ fn serialize_authors_error_has_serialise_diagnostic_code() {
     let err = SerializeAuthorsError::from(ser_err);
     let code = err.code().unwrap().to_string();
     assert_eq!(
-        code,
-        "mit_commit_message_lints::mit::lib::authors::serialise_authors_error",
+        code, "mit_commit_message_lints::mit::lib::authors::serialise_authors_error",
         "SerializeAuthorsError should have code 'serialise_authors_error', got: {code}"
     );
 }
@@ -25,8 +24,7 @@ fn deserialize_authors_error_has_deserialise_diagnostic_code() {
     };
     let code = err.code().unwrap().to_string();
     assert_eq!(
-        code,
-        "mit_commit_message_lints::mit::lib::authors::deserialise_authors_error",
+        code, "mit_commit_message_lints::mit::lib::authors::deserialise_authors_error",
         "DeserializeAuthorsError should have code 'deserialise_authors_error', got: {code}"
     );
 }
