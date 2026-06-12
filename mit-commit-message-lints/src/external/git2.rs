@@ -17,16 +17,15 @@ pub struct Git2 {
 }
 
 impl Git2 {
-    /// # Panics
+    /// # Errors
     ///
-    /// Will panic if it can't open the git config in snapshot mode
-    #[must_use]
-    pub fn new(mut config: Config, state: Option<RepositoryState>) -> Self {
-        Self {
-            config_snapshot: config.snapshot().unwrap(),
+    /// If it can't open the git config in snapshot mode
+    pub fn new(mut config: Config, state: Option<RepositoryState>) -> Result<Self> {
+        Ok(Self {
+            config_snapshot: config.snapshot().into_diagnostic()?,
             config_live: config,
             state,
-        }
+        })
     }
 
     fn config_defined(&self, lint_name: &str) -> Result<bool> {
@@ -137,14 +136,14 @@ impl TryFrom<PathBuf> for Git2 {
     type Error = Report;
 
     fn try_from(current_dir: PathBuf) -> Result<Self, Self::Error> {
-        Repository::discover(current_dir)
+        let (config, state) = Repository::discover(current_dir)
             .and_then(|repo| {
                 let state = repo.state();
                 repo.config().map(|config| (config, Some(state)))
             })
             .or_else(|_| Config::open_default().map(|config| (config, None)))
-            .map(|(config, state)| Self::new(config, state))
-            .into_diagnostic()
+            .into_diagnostic()?;
+        Self::new(config, state)
     }
 }
 

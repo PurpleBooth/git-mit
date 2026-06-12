@@ -7,7 +7,7 @@ use thiserror::Error;
 pub trait Vcs {
     /// # Errors
     ///
-    /// If we can't read the config, or it's not parsable into a bool
+    /// If we can't read the config entries
     fn entries(&self, glob: Option<&str>) -> Result<Vec<String>>;
     /// # Errors
     ///

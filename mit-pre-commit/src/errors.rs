@@ -50,7 +50,7 @@ impl Diagnostic for StaleAuthorError {
 #[derive(Error, Debug, Diagnostic)]
 #[error("No authors set")]
 #[diagnostic(
-code(mit_pre_commit::errors::stale_author_error),
+code(mit_pre_commit::errors::no_author_error),
 help("Can you set who's currently coding? It's nice to get and give the right credit. You can fix this by running `git mit` then the initials of whoever is coding for example: `git mit bt` or `git mit bt se`")
 )]
 pub struct NoAuthorError {}

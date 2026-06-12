@@ -126,7 +126,7 @@ fn get_vcs(local: bool, current_dir: &Path) -> Result<Git2> {
             .map(|config| (config, None))?
     };
 
-    Ok(Git2::new(git_config, git_state))
+    Git2::new(git_config, git_state)
 }
 
 fn current_dir() -> Result<PathBuf> {
