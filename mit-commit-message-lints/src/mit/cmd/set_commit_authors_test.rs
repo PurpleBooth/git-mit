@@ -6,10 +6,56 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
+use miette::{miette, Result};
+
 use crate::{
-    external::InMemory,
+    external::{InMemory, RepoState, Vcs},
     mit::{set_commit_authors, Author},
 };
+
+struct FailingVcs;
+
+impl Vcs for FailingVcs {
+    fn entries(&self, _glob: Option<&str>) -> Result<Vec<String>> {
+        Ok(vec![])
+    }
+
+    fn get_bool(&self, _name: &str) -> Result<Option<bool>> {
+        Ok(None)
+    }
+
+    fn get_str(&self, name: &str) -> Result<Option<&str>> {
+        if name == "user.signingkey" {
+            Ok(Some("existing-key"))
+        } else {
+            Ok(None)
+        }
+    }
+
+    fn get_i64(&self, _name: &str) -> Result<Option<i64>> {
+        Ok(None)
+    }
+
+    fn set_str(&mut self, _name: &str, _value: &str) -> Result<()> {
+        Ok(())
+    }
+
+    fn set_i64(&mut self, _name: &str, _value: i64) -> Result<()> {
+        Ok(())
+    }
+
+    fn remove(&mut self, name: &str) -> Result<()> {
+        if name == "user.signingkey" {
+            Err(miette!("simulated remove error"))
+        } else {
+            Ok(())
+        }
+    }
+
+    fn state(&self) -> Option<RepoState> {
+        None
+    }
+}
 
 #[test]
 fn the_first_initial_becomes_the_author() {
@@ -188,4 +234,14 @@ fn sets_the_expiry_time() {
         sec59min,
         actual_expire_time
     );
+}
+
+#[test]
+fn propagates_error_when_removing_signing_key_fails() {
+    let mut vcs_config = FailingVcs;
+
+    let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
+    let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_hours(1));
+
+    assert!(actual.is_err());
 }

@@ -91,11 +91,17 @@ fn set_vcs_user(config: &mut dyn Vcs, author: &Author<'_>) -> Result<()> {
 }
 
 fn set_author_signing_key(config: &mut dyn Vcs, author: &Author<'_>) -> Result<()> {
-    match author.signingkey() {
-        Some(key) => config
+    if let Some(key) = author.signingkey() {
+        config
             .set_str("user.signingkey", key)
-            .wrap_err("failed to set git author's signing key "),
-        None => config.remove("user.signingkey").or_else(|_| Ok(())),
+            .wrap_err("failed to set git author's signing key ")
+    } else {
+        if config.get_str("user.signingkey")?.is_some() {
+            config
+                .remove("user.signingkey")
+                .wrap_err("failed to remove git author's signing key")?;
+        }
+        Ok(())
     }
 }
 
