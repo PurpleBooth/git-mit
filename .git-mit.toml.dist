@@ -1,3 +1,2 @@
 [mit.lint]
-not-conventional-commit = true
-
+"pivotal-tracker-id-missing" = true
