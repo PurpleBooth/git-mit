@@ -7,7 +7,7 @@ use toml::de::Error as TomlDeserializeError;
 #[error("could not convert author configuration to toml")]
 #[diagnostic(
     url("https://github.com/PurpleBooth/git-mit/issues/new"),
-    code(mit_commit_message_lints::mit::lib::authors::deserialise_authors_error),
+    code(mit_commit_message_lints::mit::lib::authors::serialise_authors_error),
     help("please report this error on our issue tracker, this is a bug")
 )]
 pub struct SerializeAuthorsError(#[from] pub toml::ser::Error);
@@ -15,8 +15,8 @@ pub struct SerializeAuthorsError(#[from] pub toml::ser::Error);
 #[derive(Error, Debug, Diagnostic)]
 #[error("could not parse author configuration")]
 #[diagnostic(
-code(mit_commit_message_lints::mit::lib::authors::serialise_authors_error),
-help("`git mit-config mit example` can show you an example of what it should look like, or you can generate one using `git mit-config mit generate` after setting up some authors with `git mit-config mit set`"),
+    code(mit_commit_message_lints::mit::lib::authors::deserialise_authors_error),
+    help("`git mit-config mit example` can show you an example of what it should look like, or you can generate one using `git mit-config mit generate` after setting up some authors with `git mit-config mit set`"),
 )]
 pub struct DeserializeAuthorsError {
     #[source_code]

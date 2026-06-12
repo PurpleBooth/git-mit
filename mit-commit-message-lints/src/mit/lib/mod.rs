@@ -10,4 +10,6 @@ pub(crate) mod authors;
 #[cfg(test)]
 mod authors_test;
 mod errors;
+#[cfg(test)]
+mod errors_test;
 pub mod non_clean_behaviour;
