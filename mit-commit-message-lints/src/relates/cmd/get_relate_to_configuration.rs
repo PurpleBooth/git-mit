@@ -40,7 +40,6 @@ fn now() -> Result<Duration> {
         .into_diagnostic()
 }
 
-#[allow(clippy::maybe_infinite_iter)]
 fn get_vcs_relate_to(config: &dyn Vcs) -> Result<Option<&str>> {
     config
         .get_str("mit.relate.to")

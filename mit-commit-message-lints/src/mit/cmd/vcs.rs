@@ -4,7 +4,6 @@ use miette::Result;
 
 use crate::external::Vcs;
 
-#[allow(clippy::maybe_infinite_iter)]
 pub fn get_vcs_coauthors_config<'a>(
     config: &'a dyn Vcs,
     key: &'a str,
