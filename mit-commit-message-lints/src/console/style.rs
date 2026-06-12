@@ -6,7 +6,7 @@ use comfy_table::{
     modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL, Attribute, Cell, ContentArrangement, Table,
 };
 use miette::{Diagnostic, GraphicalReportHandler, Severity};
-use mit_lint::Lints;
+use mit_lint::{Lint, Lints};
 use thiserror::Error;
 
 use crate::mit::Authors;
@@ -99,10 +99,12 @@ pub fn lint_table(list: &Lints, enabled: &Lints) {
         .set_content_arrangement(ContentArrangement::Dynamic)
         .set_header(vec!["Lint", "Status"]);
 
+    let enabled_set: std::collections::HashSet<Lint> = enabled.clone().into_iter().collect();
+
     let rows: Table = list.clone().into_iter().fold(table, |mut table, lint| {
         table.add_row(vec![
             lint.name(),
-            if enabled.clone().into_iter().any(|x| x == lint) {
+            if enabled_set.contains(&lint) {
                 "enabled"
             } else {
                 "disabled"
