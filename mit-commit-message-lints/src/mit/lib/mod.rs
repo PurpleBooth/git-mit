@@ -13,3 +13,5 @@ mod errors;
 #[cfg(test)]
 mod errors_test;
 pub mod non_clean_behaviour;
+#[cfg(test)]
+mod non_clean_behaviour_test;

@@ -22,7 +22,7 @@ impl FromStr for BehaviourOption {
     type Err = DeserializeRebaseBehaviourError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
+        match s.to_ascii_lowercase().as_str() {
             ADD_TO_DISPLAY => Ok(Self::AddTo),
             NO_CHANGE_DISPLAY => Ok(Self::NoChange),
             _ => Err(DeserializeRebaseBehaviourError { src: s.into() }),
