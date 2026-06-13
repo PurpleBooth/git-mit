@@ -410,9 +410,8 @@ This is an example commit
         id: usize,
     ) -> TestResult {
         if commit
-            .clone()
-            .filter(|x| x.starts_with('#') || x.contains("\n#"))
-            .is_some()
+            .as_ref()
+            .is_some_and(|x| x.starts_with('#') || x.contains("\n#"))
         {
             return TestResult::discard();
         }
@@ -434,10 +433,10 @@ This is an example commit
         commit_suffix: Option<String>,
         id: usize,
     ) -> TestResult {
-        if let Some(ref initial) = commit {
-            if initial.starts_with('!') || initial.contains("\n!") {
-                return TestResult::discard();
-            }
+        if let Some(ref initial) = commit
+            && (initial.starts_with('!') || initial.contains("\n!"))
+        {
+            return TestResult::discard();
         }
 
         let message = CommitMessage::from(format!(
@@ -459,7 +458,7 @@ This is an example commit
         repo: String,
         id: usize,
     ) -> TestResult {
-        if commit.clone().filter(|x| x.starts_with('#')).is_some() {
+        if commit.as_ref().is_some_and(|x| x.starts_with('#')) {
             return TestResult::discard();
         }
 
