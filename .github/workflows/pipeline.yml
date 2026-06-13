@@ -19,6 +19,8 @@ jobs:
     uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@main
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev && npm install -g lefthook
+      mac_before_script: brew install lefthook
+      windows_before_script: npm install -g lefthook
 
   release:
     if: github.ref == 'refs/heads/main'
