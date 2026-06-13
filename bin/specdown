@@ -46,10 +46,14 @@ Expire-Date: 0
 %commit
 %echo done
 EOF
-            gpg --batch --generate-key batchfile 2>/dev/null
+            gpg --batch --generate-key batchfile
             chmod o-rwx "$GNUPGHOME"
             chmod g-rwx "$GNUPGHOME"
-            KEY="$(gpg --with-colons --fingerprint billie@example.com 2>/dev/null | awk -F: '$1 == "fpr" {print $10;}' | head -n 1)"
+            KEY="$(gpg --with-colons --fingerprint billie@example.com | awk -F: '$1 == "fpr" {print $10;}' | head -n 1)"
+            if [ -z "$KEY" ]; then
+                echo "ERROR: GPG key generation failed — no fingerprint found" >&2
+                exit 1
+            fi
             export KEY
             rm batchfile
 
@@ -84,6 +88,7 @@ EOF
             export APPDATA="$TEMPORARY_DIR"
             echo "$MARKDOWN_PATH"
             git config --global core.autocrlf false
+            git config --global gpg.program "$(command -v gpg)"
             specdown run "$MARKDOWN_PATH" --add-path "$REPOSITORY_DIR/target/release"
         )
     else
