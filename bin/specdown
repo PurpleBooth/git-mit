@@ -97,6 +97,9 @@ EOF
                 export GNUPGHOME
             fi
             echo "DEBUG: GNUPGHOME=$GNUPGHOME KEY=$KEY HOME=$HOME APPDATA=$APPDATA"
+            echo "DEBUG: gpg=$(command -v gpg || echo 'not found')"
+            echo "DEBUG: gpg.program=$(git config --global gpg.program || echo 'default')"
+            gpg --list-keys 2>&1 || true
             specdown run "$MARKDOWN_PATH" --add-path "$REPOSITORY_DIR/target/release"
         )
     else
