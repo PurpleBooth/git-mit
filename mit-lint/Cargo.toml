@@ -75,7 +75,7 @@ version = "2.0.12"
 version = "0.8.22"
 
 [dev-dependencies.criterion]
-version = "=0.6.0"
+version = "=0.8.2"
 features = ["async_tokio"]
 
 [dev-dependencies.quickcheck]
