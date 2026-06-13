@@ -410,7 +410,8 @@ This is an example commit
         id: usize,
     ) -> TestResult {
         if commit
-            .as_ref().is_some_and(|x| x.starts_with('#') || x.contains("\n#"))
+            .as_ref()
+            .is_some_and(|x| x.starts_with('#') || x.contains("\n#"))
         {
             return TestResult::discard();
         }
@@ -433,9 +434,10 @@ This is an example commit
         id: usize,
     ) -> TestResult {
         if let Some(ref initial) = commit
-            && (initial.starts_with('!') || initial.contains("\n!")) {
-                return TestResult::discard();
-            }
+            && (initial.starts_with('!') || initial.contains("\n!"))
+        {
+            return TestResult::discard();
+        }
 
         let message = CommitMessage::from(format!(
             "{}#{}{}\n! comment",

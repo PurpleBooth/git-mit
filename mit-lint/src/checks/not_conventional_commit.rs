@@ -414,9 +414,10 @@ This is an example commit
             return TestResult::discard();
         }
         if let Some(scope) = scope.clone()
-            && (scope.is_empty() || scope.chars().any(|x| !x.is_ascii_alphanumeric())) {
-                return TestResult::discard();
-            }
+            && (scope.is_empty() || scope.chars().any(|x| !x.is_ascii_alphanumeric()))
+        {
+            return TestResult::discard();
+        }
 
         let mut commit: CommitMessage<'_> = CommitMessage::default().with_subject(
             format!(
