@@ -32,7 +32,7 @@ use miette::{IntoDiagnostic, Result};
 use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
     console::error_handling::miette_install,
-    external::{Git2, RepoState, Vcs},
+    external::{self, Git2, RepoState, Vcs},
     mit::{
         cmd::get_config_non_clean_behaviour::get_config_non_clean_behaviour,
         get_commit_coauthor_configuration, lib::non_clean_behaviour::BehaviourOption, Author,
@@ -67,11 +67,9 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
-    let commit_message_path = cli_args
-        .commit_message_path
-        .ok_or(MitPrepareCommitMessageError::MissingCommitFilePath)?;
-
     let current_dir = env::current_dir().into_diagnostic()?;
+    let commit_message_path =
+        external::resolve_commit_message_path(cli_args.commit_message_path, &current_dir)?;
 
     let git_config = Git2::try_from(current_dir)?;
 

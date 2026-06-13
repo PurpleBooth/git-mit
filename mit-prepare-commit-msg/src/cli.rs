@@ -9,7 +9,11 @@ use mit_commit_message_lints::mit::lib::non_clean_behaviour::BehaviourOption;
 #[clap(bin_name = "mit-prepare-commit-msg")]
 pub struct Args {
     /// The name of the file that contains the commit log message
-    #[clap(index = 1, required_unless_present = "completion")]
+    ///
+    /// When omitted the hook falls back to `<gitdir>/COMMIT_EDITMSG`,
+    /// which is useful when the hook is invoked via a hook manager like
+    /// lefthook that does not forward git's positional argument.
+    #[clap(index = 1)]
     pub commit_message_path: Option<PathBuf>,
 
     /// The commit message, and can be: message (if a -m or -F option was given

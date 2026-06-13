@@ -18,6 +18,10 @@ Usage: mit-prepare-commit-msg [OPTIONS] [COMMIT_MESSAGE_PATH] [COMMIT_MESSAGE_SO
 Arguments:
   [COMMIT_MESSAGE_PATH]
           The name of the file that contains the commit log message
+          
+          When omitted the hook falls back to `<gitdir>/COMMIT_EDITMSG`, which is useful when the
+          hook is invoked via a hook manager like lefthook that does not forward git's positional
+          argument.
 
   [COMMIT_MESSAGE_SOURCE]
           The commit message, and can be: message (if a -m or -F option was given to git); template
@@ -64,17 +68,22 @@ You can generate completion with
 mit-prepare-commit-msg --completion bash
 ```
 
-Otherwise, you need a commit message path
+When no commit message path is provided — for example when a hook manager
+like [lefthook](https://github.com/evilmartians/lefthook) invokes the hook
+without forwarding git's positional argument — the hook falls back to
+reading from `.git/COMMIT_EDITMSG`.
 
-``` shell,script(name="missing-commit-path-error",expected_exit_code=2)
+``` shell,script(name="no-argument-fallback",expected_exit_code=0)
+git init --quiet .
+git mit bt se
+printf 'Add a feature\n' > .git/COMMIT_EDITMSG
 mit-prepare-commit-msg
+cat .git/COMMIT_EDITMSG
 ```
 
-``` shell,verify(script_name="missing-commit-path-error",stream=stderr)
-error: the following required arguments were not provided:
-  <COMMIT_MESSAGE_PATH>
+``` text,verify(script_name="no-argument-fallback",stream=stdout)
+Add a feature
 
-Usage: mit-prepare-commit-msg <COMMIT_MESSAGE_PATH> [COMMIT_MESSAGE_SOURCE] [COMMIT_SHA]
 
-For more information, try '--help'.
+Co-authored-by: Someone Else <someone@example.com>
 ```

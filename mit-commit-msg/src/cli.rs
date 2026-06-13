@@ -9,7 +9,11 @@ use clap_complete::Shell;
 pub struct Args {
     /// Path to a temporary file that contains the commit message written by the
     /// developer
-    #[clap(index = 1, required_unless_present = "completion")]
+    ///
+    /// When omitted the hook falls back to `<gitdir>/COMMIT_EDITMSG`, which
+    /// is useful when the hook is invoked via a hook manager like lefthook
+    /// that does not forward git's positional argument.
+    #[clap(index = 1)]
     pub commit_file_path: Option<PathBuf>,
 
     /// On lint failure copy the message to clipboard
