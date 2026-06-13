@@ -3,13 +3,13 @@ ARG RUST_VERSION=1.88.0@sha256:af306cfa71d987911a781c37b59d7d67d934f49684058f96c
 
 FROM rust:${RUST_VERSION} AS planner
 WORKDIR /app
-RUN cargo install cargo-chef
+RUN cargo install cargo-chef --locked
 COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
 FROM rust:${RUST_VERSION} AS cacher
 WORKDIR /app
-RUN cargo install cargo-chef
+RUN cargo install cargo-chef --locked
 COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 
