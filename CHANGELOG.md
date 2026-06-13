@@ -2,6 +2,46 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.1.0](https://github.com/PurpleBooth/git-mit/compare/1f4becfd882d8ca230b1cf04ac5281bbaef242f1..v6.1.0) - 2026-06-13
+#### Features
+- support dots in author initials - ([56b3b63](https://github.com/PurpleBooth/git-mit/commit/56b3b63579daf286763123487c96edab00d18500)) - Billie Thompson
+#### Bug Fixes
+- (**mit-lint**) fix titlecase quickcheck discard filter - ([dcd8b16](https://github.com/PurpleBooth/git-mit/commit/dcd8b16d6f9ba0b6f806b04c3c2fa8ebc9566683)) - Billie Thompson
+- (**mit-lint**) fix conventional commit bugs and clippy warnings - ([8c487df](https://github.com/PurpleBooth/git-mit/commit/8c487dfcb5a7cbad9d1a0fa5faf6f9f0798e47bf)) - Billie Thompson
+- wrap gpg so MSYS2 GNUPGHOME survives git signing on Windows - ([d0b6701](https://github.com/PurpleBooth/git-mit/commit/d0b67010f27c7b309c5485edf854df82a6d34e2f)) - Billie Thompson
+- update help output specs for clap 4.6 - ([1fec88d](https://github.com/PurpleBooth/git-mit/commit/1fec88d889de1313184d0ac920ef56c481603f16)) - Billie Thompson
+- bump docker rust to 1.88 and use --locked for cargo-chef - ([96c9d37](https://github.com/PurpleBooth/git-mit/commit/96c9d37106e852ff99b1db169304443cf6cd72ed)) - Billie Thompson
+- correct config parsing error output in specs - ([8ec41f1](https://github.com/PurpleBooth/git-mit/commit/8ec41f1b1b67c039b7a44e04426bd0a538b6c4e4)) - Billie Thompson
+- don't error when removing nonexistent signingkey - ([e173fba](https://github.com/PurpleBooth/git-mit/commit/e173fba8e49bba1b0646c44c0a4b3e2a2ad76d04)) - Billie Thompson
+- resolve clippy warnings for rust 1.96 - ([5fb9eae](https://github.com/PurpleBooth/git-mit/commit/5fb9eaebe4d765679943d89488d99aa1f061fca7)) - Billie Thompson
+- correct misleading error message in set_vcs_expires_time - ([3d93db4](https://github.com/PurpleBooth/git-mit/commit/3d93db452b21082554ea47ce127871880a16801b)) - Billie Thompson
+- make BehaviourOption FromStr case-insensitive to match clap ValueEnum - ([b8580dd](https://github.com/PurpleBooth/git-mit/commit/b8580dd3fdab04c0bb4c8ccdf444fe646f05c209)) - Billie Thompson
+- populate error messages in DeserializeAuthorsError - ([28f93dd](https://github.com/PurpleBooth/git-mit/commit/28f93ddb39ecec2abc8155ddd15f190790714cee)) - Billie Thompson
+- clippy redundant ref, duplicate diagnostic codes, misleading docs - ([0bd2792](https://github.com/PurpleBooth/git-mit/commit/0bd27924c7e33e95e9e02d639a898e1da92d8b79)) - Billie Thompson
+- correct minor typos in code - ([c3ea55f](https://github.com/PurpleBooth/git-mit/commit/c3ea55fd1b186d4854012125a8508d9903717394)) - Billie Thompson
+- avoid panic on malformed config key fragments - ([5e31486](https://github.com/PurpleBooth/git-mit/commit/5e3148637dc301d8ca7c8bb3926fcf462ddea606)) - Billie Thompson
+- propagate VCS config errors when removing signingkey - ([853ea9e](https://github.com/PurpleBooth/git-mit/commit/853ea9e04bc5ccbd958474e5d6b69bb7e6dea114)) - Billie Thompson
+- propagate IO errors from get_authors from_file - ([4f0a5d9](https://github.com/PurpleBooth/git-mit/commit/4f0a5d936b2a421b952aca6a34b3b96ca7379fec)) - Billie Thompson
+- trim relates-to exec stdout and check exit status - ([8ebfe5c](https://github.com/PurpleBooth/git-mit/commit/8ebfe5c5287c62eaf3d710fe2a82ef74deaed611)) - Billie Thompson
+- correct install symlink detection and remove unwrap - ([aa915f4](https://github.com/PurpleBooth/git-mit/commit/aa915f445bb1a5fc125c20616ba437751b78afea)) - Billie Thompson
+- correct swapped diagnostic codes in author errors - ([cf3d77b](https://github.com/PurpleBooth/git-mit/commit/cf3d77b3e48f0ff95c3220f90747e4cd90bfb063)) - Billie Thompson
+- replace suboptimal Duration constructors in tests - ([1f4becf](https://github.com/PurpleBooth/git-mit/commit/1f4becfd882d8ca230b1cf04ac5281bbaef242f1)) - Billie Thompson
+#### Build system
+- don't build with contradictory features - ([d3051ce](https://github.com/PurpleBooth/git-mit/commit/d3051ce2eeaec52f964436474aa8cf1299a9d77b)) - Billie Thompson
+#### Refactoring
+- remove unnecessary clone in author_table - ([439dcbe](https://github.com/PurpleBooth/git-mit/commit/439dcbe4b03ae6e53b85485265ebeb4157c6cd83)) - Billie Thompson
+- remove unnecessary clippy::maybe_infinite_iter allows - ([08efdfc](https://github.com/PurpleBooth/git-mit/commit/08efdfc5c9fa785ce57a01c53e9c8c7ec2c25d5d)) - Billie Thompson
+- DRY snapshot refresh, simplify merge/collect, fix benchmark accumulator, remove dead Scope impl - ([7d39c98](https://github.com/PurpleBooth/git-mit/commit/7d39c98cc4baeb9e59f6994a6d1474a8537a5cb5)) - Billie Thompson
+- remove needless borrow in assert_output - ([ccf72b8](https://github.com/PurpleBooth/git-mit/commit/ccf72b8bfadfb75f30ce411d07723e6b89df7abe)) - Billie Thompson
+- use HashSet for O(1) lint status lookups in lint_table - ([210bf13](https://github.com/PurpleBooth/git-mit/commit/210bf13c027dd6a53cf1aebbe80ea8f8cbdf4eeb)) - Billie Thompson
+#### Miscellaneous Chores
+- upgrade all dependencies to latest - ([9b0f8d0](https://github.com/PurpleBooth/git-mit/commit/9b0f8d090d56d700b001ba1acb3082e1a6c743ef)) - Billie Thompson
+- use workspace resolver v3 and refresh dependencies - ([3cda7e4](https://github.com/PurpleBooth/git-mit/commit/3cda7e4dc7ec97251d930e11ed5efa72c6d6a81a)) - Billie Thompson
+- update dependencies to fix RUSTSEC-2026-0007 (bytes), RUSTSEC-2026-0009 (time), RUSTSEC-2026-0097 (rand) - ([6644b54](https://github.com/PurpleBooth/git-mit/commit/6644b5480be934af39a0490d2a57ebfc6e037627)) - Billie Thompson
+- clean up specdown test artifacts - ([44e1553](https://github.com/PurpleBooth/git-mit/commit/44e1553e4cbac0230e94c829b0b9365654909154)) - Billie Thompson
+
+- - -
+
 ## [v6.0.12](https://github.com/PurpleBooth/git-mit/compare/ecee4d5db18488a9128904c908621f494d84e36d..v6.0.12) - 2026-06-12
 #### Bug Fixes
 - remove stale signingkey when updating author config without one - ([2c5eedb](https://github.com/PurpleBooth/git-mit/commit/2c5eedb24da404d0b9d06ae30f7e54e65cdade4a)) - Billie Thompson
