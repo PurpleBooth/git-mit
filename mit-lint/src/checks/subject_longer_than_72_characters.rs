@@ -397,7 +397,7 @@ index 5a83784..ebaee48 100644
     #[test]
     fn formatting() {
         let message = "x".repeat(73);
-        let problem = lint(&CommitMessage::from(message.to_string()));
+        let problem = lint(&CommitMessage::from(message.clone()));
         let actual = fmt_report(&Report::new(problem.unwrap()));
         let expected = "SubjectLongerThan72Characters (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
@@ -796,11 +796,7 @@ index 5a83784..ebaee48 100644
         );
 
         // Also verify that it's not using division instead of subtraction
-        let incorrect_length = if LIMIT != 0 {
-            subject_length / LIMIT
-        } else {
-            0
-        };
+        let incorrect_length = subject_length.checked_div(LIMIT).unwrap_or(0);
 
         assert_ne!(
             labels[0].len(),
@@ -812,7 +808,7 @@ index 5a83784..ebaee48 100644
     #[test]
     fn formatting_a() {
         let message = "x".repeat(73);
-        let problem = lint(&CommitMessage::from(message.to_string()));
+        let problem = lint(&CommitMessage::from(message.clone()));
         let actual = fmt_report(&Report::new(problem.unwrap()));
         let expected = "SubjectLongerThan72Characters (https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
 
