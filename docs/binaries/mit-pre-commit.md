@@ -34,7 +34,7 @@ mit-pre-commit
 ```
 
 ``` shell,verify(script_name="no-authors-configured-error",stream=stderr)
-Error: mit_pre_commit::errors::stale_author_error
+Error: mit_pre_commit::errors::no_author_error
 
   × No authors set
   help: Can you set who's currently coding? It's nice to get and give the

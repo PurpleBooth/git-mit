@@ -15,11 +15,11 @@ Usage: git-mit-install [OPTIONS]
 
 Options:
   -s, --scope <SCOPE>
-          [default: local]
-
           Possible values:
           - global: The home directory
           - local:  The local folder
+          
+          [default: local]
 
       --completion <COMPLETION>
           [possible values: bash, elvish, fish, powershell, zsh]
@@ -43,11 +43,11 @@ Usage: git-mit-install [OPTIONS]
 
 Options:
   -s, --scope <SCOPE>
-          [default: local]
-
           Possible values:
           - global: The home directory
           - local:  The local folder
+          
+          [default: local]
 
       --completion <COMPLETION>
           [possible values: bash, elvish, fish, powershell, zsh]
