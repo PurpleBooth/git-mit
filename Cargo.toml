@@ -10,4 +10,8 @@ members = [
     "mit-hook-test-helper",
     "git-mit",
     "git-mit-relates-to",
+    "mit-lint",
 ]
+
+[patch.crates-io]
+mit-lint = { path = "mit-lint" }

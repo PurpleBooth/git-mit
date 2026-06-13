@@ -1,0 +1,3 @@
+[mit.lint]
+not-conventional-commit = true
+

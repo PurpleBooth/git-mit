@@ -1,0 +1,138 @@
+# Todo List
+
+This file tracks tasks related to ensuring the codebase adheres to the guidelines in `.junie/guidelines.md`.
+
+## Files to Examine
+
+- [x] look at ./benches/async_linting.rs
+- [x] look at ./benches/linting.rs
+- [x] look at ./Cargo.lock
+- [x] look at ./Cargo.toml
+- [x] look at ./cog.toml
+- [x] look at ./Justfile
+- [x] look at ./LICENSE.md
+- [x] look at ./README.md
+- [x] look at ./renovate.json
+- [x] look at ./src/checks/body_wider_than_72_characters.rs
+- [x] look at ./src/checks/body_wider_than_72_characters_test.rs
+- [x] look at ./src/checks/duplicate_trailers.rs
+- [x] look at ./src/checks/duplicate_trailers_test.rs
+- [x] look at ./src/checks/missing_github_id.rs
+- [x] look at ./src/checks/missing_github_id_test.rs
+- [x] look at ./src/checks/missing_jira_issue_key.rs
+- [x] look at ./src/checks/missing_jira_issue_key_test.rs
+- [x] look at ./src/checks/missing_pivotal_tracker_id.rs
+- [x] look at ./src/checks/missing_pivotal_tracker_id_test.rs
+- [x] look at ./src/checks/mod.rs
+- [x] look at ./src/checks/not_conventional_commit.rs
+- [x] look at ./src/checks/not_conventional_commit_test.rs
+- [x] look at ./src/checks/not_emoji_log.rs
+- [x] look at ./src/checks/not_emoji_log_test.rs
+- [x] look at ./src/checks/subject_line_ends_with_period.rs
+- [x] look at ./src/checks/subject_line_ends_with_period_test.rs
+- [x] look at ./src/checks/subject_longer_than_72_characters.rs
+- [x] look at ./src/checks/subject_longer_than_72_characters_test.rs
+- [x] look at ./src/checks/subject_not_capitalized.rs
+- [x] look at ./src/checks/subject_not_capitalized_test.rs
+- [x] look at ./src/checks/subject_not_separate_from_body.rs
+- [x] look at ./src/checks/subject_not_separate_from_body_test.rs
+- [x] look at ./src/cmd/async_lint.rs
+- [x] look at ./src/cmd/lint.rs
+- [x] look at ./src/cmd/mod.rs
+- [x] look at ./src/lib.rs
+- [x] look at ./src/model/code.rs
+- [x] look at ./src/model/lint.rs
+- [x] look at ./src/model/lints.rs
+- [x] look at ./src/model/lints_test.rs
+- [x] look at ./src/model/lint_test.rs
+- [x] look at ./src/model/mod.rs
+- [x] look at ./src/model/problem.rs
+- [x] look at ./src/model/problem_test.rs
+
+## Issues to Fix
+- [x] Remove unnecessary cloning in ./benches/async_linting.rs (lines 81, 93)
+- [x] Remove unnecessary cloning in ./benches/linting.rs (lines 74, 85)
+- [x] Remove unnecessary cloning in ./src/checks/duplicate_trailers.rs (lines 25, 52)
+- [x] Simplify warning function in ./src/checks/duplicate_trailers.rs to return format! result directly
+- [ ] Add complete documentation to ./src/checks/missing_github_id.rs - lint function is missing required documentation sections
+- [ ] Remove unnecessary cloning in ./src/checks/missing_github_id.rs (line 34)
+- [ ] Add complete documentation to ./src/checks/missing_jira_issue_key.rs - lint function is missing required documentation sections
+- [ ] Remove unnecessary cloning in ./src/checks/missing_jira_issue_key.rs (lines 22, 35)
+- [ ] Add complete documentation to ./src/checks/missing_pivotal_tracker_id.rs - lint function is missing required documentation sections
+- [ ] Remove unnecessary cloning in ./src/checks/missing_pivotal_tracker_id.rs (line 40)
+- [ ] Add complete documentation to ./src/checks/not_conventional_commit.rs - lint function is missing required documentation sections
+- [ ] Remove unnecessary cloning in ./src/checks/not_conventional_commit.rs (line 38)
+- [ ] Rename test function in ./src/checks/not_conventional_commit.rs from test_subject_not_separate_from_body to test_not_conventional_commit
+- [ ] Consider consolidating tests from ./src/checks/not_conventional_commit.rs and ./src/checks/not_conventional_commit_test.rs into a single location
+- [ ] Add complete documentation to ./src/checks/not_emoji_log.rs - lint function is missing required documentation sections
+- [ ] Remove unnecessary cloning in ./src/checks/not_emoji_log.rs (line 39)
+- [ ] Optimize string operations in ./src/checks/not_emoji_log.rs (lines 34-35) to avoid unnecessary allocations
+- [ ] Add complete documentation to ./src/checks/subject_line_ends_with_period.rs - lint function is missing required documentation sections
+- [ ] Remove unnecessary string allocations in ./src/checks/subject_line_ends_with_period.rs (lines 21, 31)
+- [ ] Simplify the complex period position calculation in ./src/checks/subject_line_ends_with_period.rs (lines 39-51)
+- [ ] Add complete documentation to ./src/checks/subject_longer_than_72_characters.rs - lint function is missing required documentation sections
+- [ ] Remove unnecessary cloning in ./src/checks/subject_longer_than_72_characters.rs (lines 201, 217, 233, 304, 378)
+- [ ] Add complete documentation to ./src/checks/subject_not_capitalized.rs - lint function is missing required documentation sections
+- [ ] Optimize string operations in ./src/checks/subject_not_capitalized.rs (line 21) to avoid unnecessary allocations
+- [ ] Simplify the position calculation in ./src/checks/subject_not_capitalized.rs (lines 35-40)
+- [ ] Remove unnecessary string allocations in ./src/checks/subject_not_capitalized_test.rs (line 59)
+- [ ] Optimize string operations in ./src/checks/subject_not_capitalized_test.rs (lines 91, 117) to avoid unnecessary allocations
+- [ ] Add complete documentation to ./src/checks/subject_not_separate_from_body.rs - lint function is missing required documentation sections
+- [ ] Remove unnecessary cloning in ./src/checks/subject_not_separate_from_body.rs (line 26)
+- [ ] Optimize string operations in ./src/checks/subject_not_separate_from_body.rs (lines 20, 26) to avoid unnecessary allocations
+- [ ] Remove unnecessary string allocations in ./src/checks/subject_not_separate_from_body_test.rs (line 150)
+- [ ] Optimize string operations in ./src/checks/subject_not_separate_from_body_test.rs (lines 200-205, 207) to avoid unnecessary allocations
+- [ ] Complete documentation in ./src/cmd/async_lint.rs - add missing "Arguments" and "Returns" sections
+- [ ] Remove unnecessary cloning in ./src/cmd/async_lint.rs example code (line 35)
+- [ ] Complete documentation in ./src/cmd/lint.rs - add missing "Arguments" and "Returns" sections
+- [ ] Remove unnecessary cloning in ./src/cmd/lint.rs example code (line 28)
+- [ ] Optimize implementation in ./src/cmd/lint.rs to avoid double collection (lines 41-44)
+- [ ] Remove unnecessary cloning in ./src/lib.rs example code (line 15)
+- [ ] Complete documentation in ./src/model/lint.rs - `lint` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/lint.rs - `from_names` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/lint.rs - `config_key` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/lint.rs - `enabled_by_default` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/lint.rs - `all_lints` method is missing required "Arguments" and "Returns" sections
+- [ ] Optimize string formatting in ./src/model/lint.rs - avoid unnecessary string creation in `try_from` method (line 516)
+- [ ] Simplify implementation in ./src/model/lint.rs - refactor `try_from` method to use more functional patterns (lines 513-521)
+- [ ] Complete documentation in ./src/model/lints.rs - `new` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/lints.rs - `available` method is missing required "Returns" section
+- [ ] Complete documentation in ./src/model/lints.rs - `names` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/lints.rs - `config_keys` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/lints.rs - `merge` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/lints.rs - `subtract` method is missing required "Arguments" and "Returns" sections
+- [ ] Optimize memory usage in ./src/model/lints.rs - avoid unnecessary collection in `into_iter` method (line 124)
+- [ ] Optimize memory usage in ./src/model/lints.rs - avoid unnecessary vector concatenation in `try_from` method (line 173)
+- [ ] Simplify implementation in ./src/model/lints.rs - refactor `try_from` method to use more functional patterns (lines 165-179)
+- [ ] Rename test functions in ./src/model/lints_test.rs to follow the naming convention `test_<scenario>_<expected_outcome>`
+- [ ] Improve test assertions in ./src/model/lints_test.rs - add descriptive failure message to `unwrap_err()` call (line 52)
+- [ ] Improve test assertions in ./src/model/lints_test.rs - make `expect()` message more descriptive (line 62)
+- [ ] Remove duplicate test functions in ./src/model/lints_test.rs - consolidate `can_get_all` and `example_can_get_all`
+- [ ] Rename test functions in ./src/model/lint_test.rs to follow the naming convention `test_<scenario>_<expected_outcome>`
+- [ ] Improve test assertions in ./src/model/lint_test.rs - add descriptive failure message to `unwrap()` call (line 8)
+- [ ] Improve test assertions in ./src/model/lint_test.rs - add descriptive failure message to `unwrap()` call (line 19)
+- [ ] Improve test assertions in ./src/model/lint_test.rs - add descriptive failure message to `unwrap()` call (line 41)
+- [ ] Consider consolidating similar test functions in ./src/model/lint_test.rs - `it_is_convertible_to_string` and `it_can_be_created_from_string`
+- [ ] Complete documentation in ./src/model/problem.rs - `new` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/problem.rs - `code` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/problem.rs - `commit_message` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/problem.rs - `error` method is missing required "Arguments" and "Returns" sections
+- [ ] Complete documentation in ./src/model/problem.rs - `tip` method is missing required "Arguments" and "Returns" sections
+- [ ] Remove unnecessary cloning in ./src/model/problem.rs - avoid clone in `new` method (line 99)
+- [ ] Remove unnecessary cloning in ./src/model/problem.rs - avoid clone in `commit_message` method (line 154)
+- [ ] Optimize string formatting in ./src/model/problem.rs - avoid unnecessary string creation in `code` method (line 28)
+- [ ] Remove unnecessary cloning in ./src/model/problem.rs - avoid clone in `labels` method (line 59)
+- [ ] Rename test functions in ./src/model/problem_test.rs to follow the naming convention `test_<scenario>_<expected_outcome>`
+- [ ] Remove unnecessary string allocations in ./src/model/problem_test.rs - avoid `to_string()` calls (lines 144, 163)
+- [ ] Improve test assertions in ./src/model/problem_test.rs - add descriptive failure message to `unwrap()` calls (lines 151, 169)
+- [ ] Consider consolidating duplicate test functions in ./src/model/problem_test.rs (e.g., `examples_has_error` and `test_has_error`)
+
+## Completed Tasks
+
+- [x] Fix documentation in ./benches/async_linting.rs - criterion_benchmark function is missing required "Arguments" and "Returns" sections
+- [x] Add complete documentation to ./benches/linting.rs - criterion_benchmark function has no documentation at all
+- [x] Update Rust edition in ./Cargo.toml from 2018 to 2024 as per guidelines
+- [x] Optimize example code in ./README.md to avoid unnecessary cloning (line 16)
+- [x] Add complete documentation to ./src/checks/body_wider_than_72_characters.rs - lint function is missing required documentation sections
+- [x] Remove unnecessary cloning in ./src/checks/body_wider_than_72_characters.rs (lines 35, 42, 48)
+- [x] Add complete documentation to ./src/checks/duplicate_trailers.rs - lint function is missing required documentation sections

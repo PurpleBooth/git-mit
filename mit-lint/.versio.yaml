@@ -1,0 +1,17 @@
+options:
+  prev_tag: versio-prev
+
+projects:
+  - name: mit-lint
+    id: 1
+    tag_prefix: ""
+    labels: cargo
+    version:
+      file: Cargo.toml
+      toml: package.version
+    hooks:
+      post_write: cargo fetch
+
+sizes:
+  use_angular: true
+  none: [ ci, "-" ]

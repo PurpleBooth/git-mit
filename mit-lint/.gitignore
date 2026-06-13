@@ -1,0 +1,10 @@
+/target
+Cargo.lock
+/.versio-paused
+./CHANGELOG.md
+mutants.out*
+/.aider.chat.history.md
+/.aider.conf.yml
+/.aider.input.history
+/.aider.*
+.aider*

@@ -1,0 +1,285 @@
+name: Test
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  semver:
+    name: "Calculate the Next Version Number"
+    outputs:
+      current_version: ${{ steps.current_version.outputs.current_version }}
+      next_version: ${{ steps.next_version.outputs.next_version }}
+    runs-on: runner-latest
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        name: Checkout
+        with:
+          fetch-depth: 0
+
+      - uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+        name: Install Rust
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-yq@main
+        name: Install yq
+
+      - uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-cocogitto@main
+        name: Install Cocogitto
+
+      - run: echo current_version="$(yq .package.version Cargo.toml)" >> "$GITHUB_OUTPUT"
+        id: current_version
+        name: Get Current Version
+
+      - name: Update Version to Next
+        shell: bash
+        if: github.event_name != 'schedule' && github.ref == 'refs/heads/main'
+        run: |
+          cog_bump="$(cog bump --auto --skip-ci --dry-run || true)"
+
+          # Check if there are relevant commits to bump the version
+          if ( ! [[ "$cog_bump" == *"No conventional commits"* ]] ) && [[ "$cog_bump" != "" ]] ; then
+            # Update the version based on the output of 'cog bump'
+            cargo set-version "$(cog bump --auto --skip-ci --dry-run | cut -c2- )"
+          fi
+
+      - run: echo next_version="$(yq .package.version Cargo.toml)" >> "$GITHUB_OUTPUT"
+        id: next_version
+        name: Get Next Version
+
+  build:
+    name: "Build Binaries"
+    runs-on: runner-latest
+    needs:
+      - semver
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        name: Checkout Repository
+      - uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+        name: Install Rust Toolchain
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-just@main
+        name: Install Just Task Runner
+      - uses: https://code.forgejo.org/actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        name: Restore Cargo Cache
+        with:
+          path: target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Version to Next Semantic Version
+        shell: bash
+        env:
+          VERSION: ${{ needs.semver.outputs.next_version }}
+        run: cargo set-version "$VERSION"
+      - name: Build Supported Targets
+        run: just build
+      - name: Package Built Assets
+        run: tar -cvf build-artifacts.tar target
+      - uses: https://code.forgejo.org/forgejo/upload-artifact@16871d9e8cfcf27ff31822cac382bbb5450f1e1e # v4
+        name: Upload Build Artifacts
+        with:
+          name: build-artifacts
+          path: build-artifacts.tar
+
+  lint:
+    name: "Lint"
+    continue-on-error: true
+    runs-on: runner-latest
+    needs:
+      - build
+      - semver
+    steps:
+      - name: Checkout code
+        uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Install Rust
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Install Just task runner
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-just@main
+
+      - name: Download built assets archive
+        uses: https://code.forgejo.org/forgejo/download-artifact@d8d0a99033603453ad2255e58720b460a0555e1e # v4
+        with:
+          name: build-artifacts
+
+      - name: "Unpack built assets"
+        run: tar -xvf build-artifacts.tar && rm build-artifacts.tar
+
+      - name: Update Cargo package version
+        shell: bash
+        env:
+          NEXT_VERSION: ${{ needs.semver.outputs.next_version }}
+        run: cargo set-version "$NEXT_VERSION"
+
+      - name: Run lint checks
+        run: just lint
+
+  fix:
+    name: "Fix Formatting"
+    needs:
+      - lint
+    runs-on: runner-latest
+    if: always() && contains(needs.lint.result, 'failure') && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Repository
+        uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          token: ${{ secrets.FJ_TOKEN }}
+      - name: Install Rust Toolchain
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Install Specdown
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-specdown@main
+      - name: Install Just
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-just@main
+      - name: Download Built Assets
+        uses: https://code.forgejo.org/forgejo/download-artifact@d8d0a99033603453ad2255e58720b460a0555e1e # v4
+        with:
+          name: build-artifacts
+      - name: Unpack Built Assets
+        run: |
+          tar -xvf build-artifacts.tar
+          rm build-artifacts.tar
+      - name: Format Code
+        run: just fmt
+      - name: Lint Code
+        run: just lint
+      - name: Run Unit Tests
+        run: just test
+      - name: Run Integration Tests
+        run: just specdown
+      - name: Configure Git User
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/configure-git-user@main
+      - name: Commit Formatting Changes
+        run: |
+          git add .
+          git commit -m "chore: fix formatting"
+          git push origin main
+
+  unit-test:
+    name: "Unit Test"
+    needs:
+      - build
+      - semver
+    runs-on: runner-latest
+    steps:
+      - name: Checkout Repository
+        uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Install Rust
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Install Just
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-just@main
+
+      - name: Download Built Artifacts Archive
+        uses: https://code.forgejo.org/forgejo/download-artifact@d8d0a99033603453ad2255e58720b460a0555e1e # v4
+        with:
+          name: build-artifacts
+
+      - name: Extract Built Artifacts
+        run: tar -xvf build-artifacts.tar && rm build-artifacts.tar
+
+      - name: Set Cargo Version to Next Semver
+        shell: bash
+        env:
+          VERSION: ${{ needs.semver.outputs.next_version }}
+        run: cargo set-version "$VERSION"
+
+      - name: Run Tests
+        run: just test
+
+  all-tests-passed:
+    name: All tests passed
+    needs:
+      - unit-test
+      - lint
+    runs-on: runner-latest
+    steps:
+      - run: echo "Looks good"
+        shell: bash
+
+  release:
+    if: github.ref == 'refs/heads/main'
+    name: Release
+    needs:
+      - all-tests-passed
+    outputs:
+      current_version: ${{ steps.release.outputs.current_version }}
+      previous_version: ${{ steps.release.outputs.previous_version }}
+      changelog: ${{ steps.release.outputs.changelog }}
+    runs-on: runner-latest
+    steps:
+      - name: Checkout Repository
+        uses: https://code.forgejo.org/actions/checkout@main
+        with:
+          token: ${{ secrets.FJ_TOKEN }}
+          fetch-depth: 0
+      - name: Install Rust Toolchain
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Install Cocogitto
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-cocogitto@main
+      - name: Configure Git User
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/configure-git-user@main
+      - name: Release with Cocogitto
+        id: release
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/release-with-cog@main
+
+  cargo-publish:
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
+    name: Publish crate to crates.io
+    runs-on: runner-latest
+    needs:
+      - release
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        name: Checkout the repository
+        with:
+          ref: v${{ needs.release.outputs.current_version }}
+      - uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+        name: Install Rust
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Generate release
+        run: |
+          if [ -n "$CARGO_TOKEN" ] ; then
+            cargo login "$CARGO_TOKEN"
+            cargo publish
+          fi
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+
+  codeberg-release:
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
+    name: Create release
+    runs-on: runner-latest
+    needs:
+      - release
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        name: Checkout the repository
+        with:
+          ref: v${{ needs.release.outputs.current_version }}
+      - id: release_option_prep
+        run: |
+          echo "sha=$(git rev-parse  HEAD)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: https://code.forgejo.org/actions/forgejo-release@v2
+        with:
+          token: ${{ secrets.FJ_TOKEN }}
+          sha: ${{ steps.release_option_prep.outputs.sha }}
+          direction: upload
+          title: Release v${{ needs.release.outputs.current_version }}
+          tag: v${{ needs.release.outputs.current_version }}
+          release-notes: ${{ needs.release.outputs.changelog }}
