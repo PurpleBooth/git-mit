@@ -165,11 +165,9 @@ mod tests {
             None => return TestResult::discard(),
             Some(char) => {
                 // The lint flags a commit only when the first non-whitespace
-                // character is lowercase, so discard anything that isn't. This
-                // includes titlecase characters like "ǅ" (U+01C5, General
-                // Category Lt) for which both is_lowercase() and is_uppercase()
-                // return false — the lint won't flag them.
-                if !char.is_lowercase() {
+                // character is lowercase, so discard anything that isn't. Titlecase
+                // characters like "ǅ" (U+01C5) should pass the lint.
+                if !char.is_lowercase() && (char.is_uppercase() || char.to_uppercase().to_string() == char.to_string()) {
                     return TestResult::discard();
                 }
             }
