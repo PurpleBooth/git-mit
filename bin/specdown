@@ -96,6 +96,7 @@ EOF
                 GNUPGHOME="$(cygpath -w "$GNUPGHOME")"
                 export GNUPGHOME
             fi
+            echo "DEBUG: GNUPGHOME=$GNUPGHOME KEY=$KEY HOME=$HOME APPDATA=$APPDATA"
             specdown run "$MARKDOWN_PATH" --add-path "$REPOSITORY_DIR/target/release"
         )
     else
