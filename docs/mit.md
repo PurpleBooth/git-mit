@@ -373,8 +373,13 @@ Error: mit_commit_message_lints::mit::lib::authors::deserialise_authors_error
    ╭────
  1 │ Hello, I am a broken file
    · ▲    ▲
-   · │    ╰── invalid in toml: 
-   · ╰── invalid in yaml: 
+   · │    ╰─┤ invalid in toml: TOML parse error at line 1, column 6
+   · │      │   |
+   · │      │ 1 | Hello, I am a broken file
+   · │      │   |      ^
+   · │      │ expected `.`, `=`
+   · │      │ 
+   · ╰── invalid in yaml: invalid type: string "Hello, I am a broken file", expected a map
    ╰────
   help: `git mit-config mit example` can show you an example of what it should
         look like, or you can generate one using `git mit-config mit generate`
@@ -395,8 +400,13 @@ Error: mit_commit_message_lints::mit::lib::authors::deserialise_authors_error
    ╭────
  1 │ Hello, I am a broken file
    · ▲    ▲
-   · │    ╰── invalid in toml: 
-   · ╰── invalid in yaml: 
+   · │    ╰─┤ invalid in toml: TOML parse error at line 1, column 6
+   · │      │   |
+   · │      │ 1 | Hello, I am a broken file
+   · │      │   |      ^
+   · │      │ expected `.`, `=`
+   · │      │ 
+   · ╰── invalid in yaml: invalid type: string "Hello, I am a broken file", expected a map
    ╰────
   help: `git mit-config mit example` can show you an example of what it should
         look like, or you can generate one using `git mit-config mit generate`
