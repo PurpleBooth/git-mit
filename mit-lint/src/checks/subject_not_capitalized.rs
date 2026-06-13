@@ -123,6 +123,17 @@ mod tests {
     }
 
     #[test]
+    fn test_unicode_capital_letter_with_prosgegrammeni_not_flagged() {
+        // "ῼ" (U+1FFC GREEK CAPITAL LETTER OMEGA WITH PROSGEGRAMMENI) is a capital
+        // letter (lowercase "ῳ"). It is neither is_lowercase() nor is_uppercase(),
+        // and its uppercase mapping ("ΩΙ") differs from itself. Regression guard
+        // for the quickcheck property test_lowercase_first_character_always_fails,
+        // which must discard such characters rather than asserting the lint flags
+        // them.
+        run_test("ῼ", None);
+    }
+
+    #[test]
     fn test_error_formatting_matches_expected_output() {
         let message = "  an example commit\n\nexample";
         let problem = lint(&CommitMessage::from(message.to_string()));
@@ -165,9 +176,15 @@ mod tests {
             None => return TestResult::discard(),
             Some(char) => {
                 // The lint flags a commit only when the first non-whitespace
-                // character is lowercase, so discard anything that isn't. Titlecase
-                // characters like "ǅ" (U+01C5) should pass the lint.
-                if !char.is_lowercase() && (char.is_uppercase() || char.to_uppercase().to_string() == char.to_string()) {
+                // character is lowercase, so discard anything that isn't. This
+                // must exactly mirror has_problem()'s `char::is_lowercase`
+                // predicate: any divergence lets a character slip past the
+                // filter that the lint won't actually flag, failing the
+                // property. This covers titlecase characters like "ǅ"
+                // (U+01C5, General Category Lt) and capital letters that are
+                // neither is_lowercase() nor is_uppercase() like "ῼ"
+                // (U+1FFC GREEK CAPITAL LETTER OMEGA WITH PROSGEGRAMMENI).
+                if !char.is_lowercase() {
                     return TestResult::discard();
                 }
             }
