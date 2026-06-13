@@ -35,6 +35,7 @@ features = [ "derive" ]
 
 [dev-dependencies]
 criterion = "0.8.0"
+tempfile = "3.0.0"
 
 
 [[bench]]
