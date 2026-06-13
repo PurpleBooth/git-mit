@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.2.0](https://github.com/PurpleBooth/git-mit/compare/7aebd531bfb690a7d09ce223424f632cc57663e3..v6.2.0) - 2026-06-13
+#### Features
+- support lefthook by falling back to COMMIT_EDITMSG - ([7aebd53](https://github.com/PurpleBooth/git-mit/commit/7aebd531bfb690a7d09ce223424f632cc57663e3)) - Billie Thompson
+#### Bug Fixes
+- remove platform-specific lefthook hook backup verification - ([57baf29](https://github.com/PurpleBooth/git-mit/commit/57baf29597455abfa29532b56d01315d80d7b508)) - Billie Thompson
+- install lefthook on macos and windows CI runners - ([aa5fc9a](https://github.com/PurpleBooth/git-mit/commit/aa5fc9ad7f7d02a42185d6f45dc1c64315d16332)) - Billie Thompson
+
+- - -
+
 ## [v6.1.0](https://github.com/PurpleBooth/git-mit/compare/1f4becfd882d8ca230b1cf04ac5281bbaef242f1..v6.1.0) - 2026-06-13
 #### Features
 - support dots in author initials - ([56b3b63](https://github.com/PurpleBooth/git-mit/commit/56b3b63579daf286763123487c96edab00d18500)) - Billie Thompson
