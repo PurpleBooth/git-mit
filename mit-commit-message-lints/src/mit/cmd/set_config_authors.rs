@@ -11,15 +11,15 @@ pub fn set_config_authors(store: &mut dyn Vcs, initial: &str, author: &Author<'_
     )?;
     store.set_str(&format!("mit.author.config.{initial}.name"), author.name())?;
 
-    match author.signingkey() {
-        Some(signingkey) => {
-            store.set_str(
-                &format!("mit.author.config.{initial}.signingkey"),
-                signingkey,
-            )?;
-        }
-        None => {
-            store.remove(&format!("mit.author.config.{initial}.signingkey"))?;
+    if let Some(signingkey) = author.signingkey() {
+        store.set_str(
+            &format!("mit.author.config.{initial}.signingkey"),
+            signingkey,
+        )?;
+    } else {
+        let key = format!("mit.author.config.{initial}.signingkey");
+        if store.get_str(&key)?.is_some() {
+            store.remove(&key)?;
         }
     }
 
