@@ -367,14 +367,19 @@ git mit -c "broken.toml" ae bt se
 ```
 
 ``` text,verify(script_name="error-invalid-config-file",stream=stderr)
-Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
+Error: mit_commit_message_lints::mit::lib::authors::deserialise_authors_error
 
   × could not parse author configuration
    ╭────
  1 │ Hello, I am a broken file
    · ▲    ▲
-   · │    ╰── invalid in toml: 
-   · ╰── invalid in yaml: 
+   · │    ╰─┤ invalid in toml: TOML parse error at line 1, column 6
+   · │      │   |
+   · │      │ 1 | Hello, I am a broken file
+   · │      │   |      ^
+   · │      │ expected `.`, `=`
+   · │      │ 
+   · ╰── invalid in yaml: invalid type: string "Hello, I am a broken file", expected a map
    ╰────
   help: `git mit-config mit example` can show you an example of what it should
         look like, or you can generate one using `git mit-config mit generate`
@@ -389,14 +394,19 @@ git mit-config mit generate -c "broken.toml"
 ```
 
 ``` text,verify(script_name="error-generate-invalid-config",stream=stderr)
-Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
+Error: mit_commit_message_lints::mit::lib::authors::deserialise_authors_error
 
   × could not parse author configuration
    ╭────
  1 │ Hello, I am a broken file
    · ▲    ▲
-   · │    ╰── invalid in toml: 
-   · ╰── invalid in yaml: 
+   · │    ╰─┤ invalid in toml: TOML parse error at line 1, column 6
+   · │      │   |
+   · │      │ 1 | Hello, I am a broken file
+   · │      │   |      ^
+   · │      │ expected `.`, `=`
+   · │      │ 
+   · ╰── invalid in yaml: invalid type: string "Hello, I am a broken file", expected a map
    ╰────
   help: `git mit-config mit example` can show you an example of what it should
         look like, or you can generate one using `git mit-config mit generate`
