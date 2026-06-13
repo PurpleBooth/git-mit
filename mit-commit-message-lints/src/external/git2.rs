@@ -48,7 +48,7 @@ impl Vcs for Git2 {
         let mut entries = vec![];
         let mut item = self.config_snapshot.entries(glob).into_diagnostic()?;
         while let Some(entry) = item.next() {
-            if let Some(name) = entry.into_diagnostic()?.name() {
+            if let Ok(name) = entry.into_diagnostic()?.name() {
                 entries.push(name.into());
             }
         }

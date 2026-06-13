@@ -388,7 +388,7 @@ Error: mit_commit_message_lints::mit::lib::authors::deserialise_authors_error
    · │      │   |
    · │      │ 1 | Hello, I am a broken file
    · │      │   |      ^
-   · │      │ expected `.`, `=`
+   · │      │ key with no value, expected `=`
    · │      │ 
    · ╰── invalid in yaml: invalid type: string "Hello, I am a broken file", expected a map
    ╰────
@@ -415,7 +415,7 @@ Error: mit_commit_message_lints::mit::lib::authors::deserialise_authors_error
    · │      │   |
    · │      │ 1 | Hello, I am a broken file
    · │      │   |      ^
-   · │      │ expected `.`, `=`
+   · │      │ key with no value, expected `=`
    · │      │ 
    · ╰── invalid in yaml: invalid type: string "Hello, I am a broken file", expected a map
    ╰────
