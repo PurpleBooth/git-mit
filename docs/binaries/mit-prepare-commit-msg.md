@@ -41,12 +41,12 @@ Options:
 
       --non-clean-behaviour-option <NON_CLEAN_BEHAVIOUR_OPTION>
           What to do when we rebase
-          
-          [env: GIT_MIT_SET_NON_CLEAN_BEHAVIOUR=]
 
           Possible values:
           - add-to:    Change the commit message to include the current author
           - no-change: Do not change the commit message
+          
+          [env: GIT_MIT_SET_NON_CLEAN_BEHAVIOUR=]
 
       --completion <COMPLETION>
           [possible values: bash, elvish, fish, powershell, zsh]
