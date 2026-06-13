@@ -88,18 +88,20 @@ EOF
             export APPDATA="$TEMPORARY_DIR"
             echo "$MARKDOWN_PATH"
             git config --global core.autocrlf false
-            # On Windows, GNUPGHOME uses a Unix path (/tmp/...) that the native
-            # gpg.exe invoked by git for signing cannot resolve.  Convert to a
-            # Windows path so both the MSYS2 gpg (key generation) and the native
-            # gpg (commit signing) agree on the keyring location.
+            # On Windows, GNUPGHOME and HOME use Unix paths (/tmp/...) that
+            # the native git.exe → gpg.exe subprocess chain cannot resolve.
+            # Convert to Windows paths using mixed mode (forward slashes) so
+            # both the MSYS2 gpg (key generation) and the native gpg invoked
+            # by git for commit signing agree on the keyring location.
             if command -v cygpath >/dev/null 2>&1; then
-                GNUPGHOME="$(cygpath -w "$GNUPGHOME")"
+                GNUPGHOME="$(cygpath -m "$GNUPGHOME")"
                 export GNUPGHOME
+                HOME="$(cygpath -m "$HOME")"
+                export HOME
+                export APPDATA="$HOME"
+                GPG_PROGRAM="$(cygpath -m "$(command -v gpg)")"
+                git config --global gpg.program "$GPG_PROGRAM"
             fi
-            echo "DEBUG: GNUPGHOME=$GNUPGHOME KEY=$KEY HOME=$HOME APPDATA=$APPDATA"
-            echo "DEBUG: gpg=$(command -v gpg || echo 'not found')"
-            echo "DEBUG: gpg.program=$(git config --global gpg.program || echo 'default')"
-            gpg --list-keys 2>&1 || true
             specdown run "$MARKDOWN_PATH" --add-path "$REPOSITORY_DIR/target/release"
         )
     else
