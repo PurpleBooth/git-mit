@@ -257,12 +257,8 @@ impl Vcs for ExpiryFailingVcs {
         Ok(None)
     }
 
-    fn get_str(&self, name: &str) -> Result<Option<&str>> {
-        if name == "user.signingkey" {
-            Ok(None)
-        } else {
-            Ok(None)
-        }
+    fn get_str(&self, _name: &str) -> Result<Option<&str>> {
+        Ok(None)
     }
 
     fn get_i64(&self, _name: &str) -> Result<Option<i64>> {

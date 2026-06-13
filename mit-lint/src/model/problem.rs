@@ -290,7 +290,7 @@ mod tests {
     fn test_tip_matches_input(tip: String) -> bool {
         let problem = Problem::new(
             String::new(),
-            tip.to_string(),
+            tip.clone(),
             Code::NotConventionalCommit,
             &"".into(),
             None,
