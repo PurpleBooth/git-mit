@@ -79,12 +79,12 @@ EOF
             mkdir "$TEMPORARY_DIR/repo"
 
             cd "$TEMPORARY_DIR/repo"
-            export PATH="$REPOSITORY_DIR/target/release/:$PATH"
+            export PATH="$REPOSITORY_DIR/target/release:$PATH"
             export HOME="$TEMPORARY_DIR"
             export APPDATA="$TEMPORARY_DIR"
             echo "$MARKDOWN_PATH"
             git config --global core.autocrlf false
-            specdown run "$MARKDOWN_PATH"
+            specdown run "$MARKDOWN_PATH" --add-path "$REPOSITORY_DIR/target/release"
         )
     else
         echo "$1 is not valid"
