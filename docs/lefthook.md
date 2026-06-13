@@ -2,10 +2,9 @@
 
 [lefthook](https://github.com/evilmartians/lefthook) is a popular git hook
 manager. When lefthook takes over a repository's hooks it replaces the hook
-scripts in `.git/hooks` with its own runner and backs the originals up as
-`*.old` symlinks. Lefthook then invokes the configured commands but, unlike
-git, does **not** forward the positional arguments (such as the commit-message
-file path) to those commands.
+scripts in `.git/hooks` with its own runner. Lefthook then invokes the
+configured commands but, unlike git, does **not** forward the positional
+arguments (such as the commit-message file path) to those commands.
 
 This means that when lefthook runs `mit-commit-msg` and
 `mit-prepare-commit-msg` the commit-message path argument is missing. The
@@ -51,15 +50,10 @@ commit-msg:
       run: mit-commit-msg
 ```
 
-Installing lefthook takes over the hooks. The original git-mit symlinks are
-backed up as `*.old`.
+Installing lefthook takes over the hooks.
 
 ```shell,script(name="lefthook-install",expected_exit_code=0)
 lefthook install
-```
-
-```shell,script(name="verify-hooks-backed-up",expected_exit_code=0)
-ls .git/hooks/commit-msg.old .git/hooks/prepare-commit-msg.old .git/hooks/pre-commit.old
 ```
 
 ## Committing through lefthook
