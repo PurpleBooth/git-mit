@@ -116,35 +116,10 @@ mod tests {
 
     #[test]
     fn test_unicode_titlecase_character() {
-        // Test with the specific character "ǅ" (U+01C5 LATIN CAPITAL LETTER D WITH SMALL LETTER Z WITH CARON)
-        // This is a titlecase character in Unicode
+        // "ǅ" (U+01C5 LATIN CAPITAL LETTER D WITH SMALL LETTER Z WITH CARON) is a
+        // titlecase character (General Category Lt): both is_lowercase() and
+        // is_uppercase() return false for it, so the lint must not flag it.
         run_test("ǅ", None);
-    }
-
-    #[test]
-    fn test_unicode_titlecase_character_in_quickcheck() {
-        // This test simulates the quickcheck test with the specific character "ǅ"
-        let commit_message_body = "ǅ";
-
-        // Check if the character would be discarded by the quickcheck test
-        let char = commit_message_body.chars().next().unwrap();
-        let would_discard = char.to_uppercase().to_string() == char.to_string()
-            || char.is_uppercase()
-            || !char.is_alphabetic();
-
-        // The character should not be discarded, and the lint should pass
-        assert!(
-            !would_discard,
-            "The character 'ǅ' should not be discarded by the quickcheck test"
-        );
-
-        // Verify the lint result
-        let message = CommitMessage::from(format!("{commit_message_body}\n# commit"));
-        let result = lint(&message);
-        assert!(
-            result.is_none(),
-            "The lint should pass for the character 'ǅ'"
-        );
     }
 
     #[test]
@@ -189,12 +164,12 @@ mod tests {
         {
             None => return TestResult::discard(),
             Some(char) => {
-                // Some Unicode characters don't have proper case mapping
-                // Skip characters that don't have a clear uppercase version
-                if char.to_uppercase().to_string() == char.to_string()
-                    || char.is_uppercase()
-                    || !char.is_alphabetic()
-                {
+                // The lint flags a commit only when the first non-whitespace
+                // character is lowercase, so discard anything that isn't. This
+                // includes titlecase characters like "ǅ" (U+01C5, General
+                // Category Lt) for which both is_lowercase() and is_uppercase()
+                // return false — the lint won't flag them.
+                if !char.is_lowercase() {
                     return TestResult::discard();
                 }
             }
