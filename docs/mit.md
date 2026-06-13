@@ -367,7 +367,7 @@ git mit -c "broken.toml" ae bt se
 ```
 
 ``` text,verify(script_name="error-invalid-config-file",stream=stderr)
-Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
+Error: mit_commit_message_lints::mit::lib::authors::deserialise_authors_error
 
   × could not parse author configuration
    ╭────
@@ -389,7 +389,7 @@ git mit-config mit generate -c "broken.toml"
 ```
 
 ``` text,verify(script_name="error-generate-invalid-config",stream=stderr)
-Error: mit_commit_message_lints::mit::lib::authors::serialise_authors_error
+Error: mit_commit_message_lints::mit::lib::authors::deserialise_authors_error
 
   × could not parse author configuration
    ╭────
