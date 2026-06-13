@@ -139,6 +139,27 @@ impl TryFrom<PathBuf> for Git2 {
     }
 }
 
+/// Parse a config key like `mit.author.config.bt.email` into its
+/// initial (`bt`) and part (`email`).
+///
+/// The part is always the last dot-separated fragment (one of `name`,
+/// `email`, `signingkey`). Everything before it is the initial, which
+/// may itself contain dots (e.g. `b.t`).
+///
+/// # Errors
+///
+/// If the key does not contain at least an initial and a part.
+fn parse_initial_and_part(config_key: &str) -> Result<(String, String)> {
+    let stripped = config_key.trim_start_matches("mit.author.config.");
+    let fragments: Vec<&str> = stripped.split_terminator('.').collect();
+    if fragments.len() < 2 {
+        return Err(miette!("Malformed config key: {config_key}"));
+    }
+    let part = String::from(fragments[fragments.len() - 1]);
+    let initial = fragments[..fragments.len() - 1].join(".");
+    Ok((initial, part))
+}
+
 impl TryFrom<&'_ Git2> for Authors<'_> {
     type Error = Report;
 
@@ -146,31 +167,15 @@ impl TryFrom<&'_ Git2> for Authors<'_> {
         let raw_entries: BTreeMap<String, BTreeMap<String, String>> = vcs
             .entries(Some("mit.author.config.*"))?
             .iter()
-            .map(|key| (key, key.trim_start_matches("mit.author.config.")))
-            .map(|(key, parts)| (key, parts.split_terminator('.').collect::<Vec<_>>()))
-            .try_fold::<_, _, Result<_, Self::Error>>(
-                BTreeMap::new(),
-                |mut acc, (key, fragments)| {
-                    let mut fragment_iterator = fragments.iter();
-                    let initial = String::from(
-                        *fragment_iterator
-                            .next()
-                            .ok_or_else(|| miette!("Malformed config key: {key}"))?,
-                    );
-                    let part = String::from(
-                        *fragment_iterator
-                            .next()
-                            .ok_or_else(|| miette!("Malformed config key: {key}"))?,
-                    );
+            .try_fold::<_, _, Result<_, Self::Error>>(BTreeMap::new(), |mut acc, key| {
+                let (initial, part) = parse_initial_and_part(key)?;
+                let mut existing: BTreeMap<String, String> =
+                    acc.get(&initial).cloned().unwrap_or_default();
+                existing.insert(part, String::from(vcs.get_str(key)?.unwrap()));
 
-                    let mut existing: BTreeMap<String, String> =
-                        acc.get(&initial).cloned().unwrap_or_default();
-                    existing.insert(part, String::from(vcs.get_str(key)?.unwrap()));
-
-                    acc.insert(initial, existing);
-                    Ok(acc)
-                },
-            )?;
+                acc.insert(initial, existing);
+                Ok(acc)
+            })?;
 
         Ok(Self::new(
             raw_entries
@@ -194,5 +199,39 @@ impl TryFrom<&'_ Git2> for Authors<'_> {
                 .map(|(key, value): (&String, Author<'_>)| (key.clone(), value))
                 .collect(),
         ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_initial_and_part;
+
+    #[test]
+    fn parses_simple_initials() {
+        let (initial, part) =
+            parse_initial_and_part("mit.author.config.bt.email").expect("should parse");
+        assert_eq!(initial, "bt");
+        assert_eq!(part, "email");
+    }
+
+    #[test]
+    fn parses_initials_containing_dots() {
+        let (initial, part) =
+            parse_initial_and_part("mit.author.config.b.t.email").expect("should parse");
+        assert_eq!(initial, "b.t");
+        assert_eq!(part, "email");
+    }
+
+    #[test]
+    fn parses_signingkey_with_dotted_initials() {
+        let (initial, part) =
+            parse_initial_and_part("mit.author.config.b.t.signingkey").expect("should parse");
+        assert_eq!(initial, "b.t");
+        assert_eq!(part, "signingkey");
+    }
+
+    #[test]
+    fn errors_on_malformed_key() {
+        parse_initial_and_part("mit.author.config.bt").expect_err("should fail");
     }
 }

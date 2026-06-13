@@ -126,6 +126,17 @@ git mit-config mit available
 ╰─────────┴─────────────────┴────────────────────┴─────────────╯
 ```
 
+Initials can contain dots, which is useful when your initials would
+otherwise collide with someone else's.
+
+``` shell,script(name="set-author-with-dotted-initials",expected_exit_code=0)
+git mit-config mit set b.t "Boop Test" "b.t@example.com"
+```
+
+``` shell,script(name="commit-with-dotted-initials",expected_exit_code=0)
+git mit b.t
+```
+
 ## Running the command
 
 We can then use this by passing `-c` to the `git-mit` command.
