@@ -38,7 +38,8 @@ Error: mit_pre_commit::errors::no_author_error
 
   × No authors set
   help: Can you set who's currently coding? It's nice to get and give the
-        right credit. You can fix this by running `git mit` then the initials
-        of whoever is coding for example: `git mit bt` or `git mit bt se`
+        right credit. You can fix this by running `git mit` with the initials
+        of whoever is coding (e.g. `git mit bt`). To list available authors,
+        run `git mit-config mit available`
 
 ```
