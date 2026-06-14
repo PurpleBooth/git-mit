@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.3.0](https://github.com/PurpleBooth/git-mit/compare/7672ec87658e62593cc5e54ff9b3ce89d14e8a5c..v6.3.0) - 2026-06-14
+#### Features
+- add available authors hint to no-author and stale-author errors - ([7672ec8](https://github.com/PurpleBooth/git-mit/commit/7672ec87658e62593cc5e54ff9b3ce89d14e8a5c)) - Billie Thompson
+
+- - -
+
 ## [v6.2.0](https://github.com/PurpleBooth/git-mit/compare/7aebd531bfb690a7d09ce223424f632cc57663e3..v6.2.0) - 2026-06-13
 #### Features
 - support lefthook by falling back to COMMIT_EDITMSG - ([7aebd53](https://github.com/PurpleBooth/git-mit/commit/7aebd531bfb690a7d09ce223424f632cc57663e3)) - Billie Thompson

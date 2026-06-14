@@ -12,7 +12,7 @@
 [package]
 edition = "2024"
 name = "mit-lint"
-version = "6.2.0"
+version = "6.3.0"
 authors = ["Billie Thompson <billie+mit-lint@billiecodes.com>"]
 build = false
 autolib = false
