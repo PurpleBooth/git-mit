@@ -98,9 +98,6 @@ Usage: git-mit-config mit set-rotation [OPTIONS] [ROTATION]
 Arguments:
   [ROTATION]
           Which rotation strategy to use
-          
-          * 'off' disables rotation * 'round-robin' will rotate through authors in order, one per
-          commit * 'random' will shuffle authors randomly on each commit
 
           Possible values:
           - off:         Rotation is disabled

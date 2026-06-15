@@ -127,10 +127,6 @@ pub enum Mit {
         #[clap(long, value_enum, value_parser, default_value = "local")]
         scope: Scope,
         /// Which rotation strategy to use
-        ///
-        /// * 'off' disables rotation
-        /// * 'round-robin' will rotate through authors in order, one per commit
-        /// * 'random' will shuffle authors randomly on each commit
         #[clap(
             index = 1,
             env = "GIT_MIT_SET_ROTATION",
