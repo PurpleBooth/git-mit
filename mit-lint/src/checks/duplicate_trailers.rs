@@ -470,7 +470,15 @@ Co-authored-by: Billie Thompson <email@example.com>
             commit,
             format!("{trailer_tag}: {trailer_text}\n").repeat(repeats.saturating_add(2))
         ));
-        let result = lint(&message);
+
+        // Use a config that includes the generated tag so the lint
+        // actually checks it for duplicates. The default config only
+        // checks Signed-off-by, Co-authored-by, and Relates-to, which
+        // can never be produced by the alphanumeric-only generator.
+        let config = DuplicatedTrailersConfig {
+            trailers_to_check: vec![trailer_tag.clone()],
+        };
+        let result = lint_with_config(&message, &config);
         TestResult::from_bool(result.is_some())
     }
 
