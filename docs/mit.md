@@ -362,6 +362,129 @@ author: [Billie Thompson billie@example.com] signed-by: [Billie Thompson <billie
 Third Commit
 ```
 
+## Rotation
+
+When pairing or mob programming you might want to rotate who appears as
+the primary author on each commit, so that credit is distributed evenly.
+This is an opt-in behaviour, just like the rebase behaviour above.
+
+By default rotation is off.
+
+``` shell,script(name="check-rotation-default",expected_exit_code=0)
+git-mit-config mit rotation
+```
+
+``` text,verify(script_name="check-rotation-default",stream=stdout)
+false
+```
+
+You can turn rotation on by running
+
+``` shell,script(name="enable-rotation",expected_exit_code=0)
+git-mit-config mit set-rotation true
+git-mit-config mit rotation
+```
+
+``` text,verify(script_name="enable-rotation",stream=stdout)
+true
+```
+
+To see the effect, let's set up three authors and make a series of
+commits. Each commit will have a different primary author because the
+configuration rotates after every commit.
+
+``` shell,script(name="rotation-set-authors",expected_exit_code=0)
+git mit bt se ae
+```
+
+The first commit has Billie Thompson as the author
+
+``` shell,script(name="rotation-commit-one",expected_exit_code=0)
+echo "Rotation test" >> README.md
+git commit --all --message="Rotation commit one" --quiet
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+``` text,verify(script_name="rotation-commit-one",stream=stdout)
+author: [Billie Thompson billie@example.com] signed-by: [] 
+---
+Rotation commit one
+
+Co-authored-by: Someone Else <se@example.com>
+Co-authored-by: Anyone Else <anyone@example.com>
+```
+
+The author has now rotated, so the next commit will have Someone Else as
+the author
+
+``` shell,script(name="rotation-commit-two",expected_exit_code=0)
+echo "Rotation test" >> README.md
+git commit --all --message="Rotation commit two" --quiet
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+``` text,verify(script_name="rotation-commit-two",stream=stdout)
+author: [Someone Else se@example.com] signed-by: [] 
+---
+Rotation commit two
+
+Co-authored-by: Anyone Else <anyone@example.com>
+Co-authored-by: Billie Thompson <billie@example.com>
+```
+
+And the third commit completes the cycle with Anyone Else as the author
+
+``` shell,script(name="rotation-commit-three",expected_exit_code=0)
+echo "Rotation test" >> README.md
+git commit --all --message="Rotation commit three" --quiet
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+``` text,verify(script_name="rotation-commit-three",stream=stdout)
+author: [Anyone Else anyone@example.com] signed-by: [] 
+---
+Rotation commit three
+
+Co-authored-by: Billie Thompson <billie@example.com>
+Co-authored-by: Someone Else <se@example.com>
+```
+
+You can turn rotation off again
+
+``` shell,script(name="disable-rotation",expected_exit_code=0)
+git-mit-config mit set-rotation false
+git-mit-config mit rotation
+```
+
+``` text,verify(script_name="disable-rotation",stream=stdout)
+false
+```
+
+When rotation is off the author no longer changes between commits
+
+``` shell,script(name="rotation-disabled-commit",expected_exit_code=0)
+echo "Rotation test" >> README.md
+git commit --all --message="No rotation commit" --quiet
+git show --pretty='format:author: [%an %ae] signed-by: [%GS] 
+---
+%B' -q
+```
+
+``` text,verify(script_name="rotation-disabled-commit",stream=stdout)
+author: [Billie Thompson billie@example.com] signed-by: [] 
+---
+No rotation commit
+
+Co-authored-by: Someone Else <se@example.com>
+Co-authored-by: Anyone Else <anyone@example.com>
+```
+
 ## Errors
 
 If your authors file is broken like the one below (or for any other
