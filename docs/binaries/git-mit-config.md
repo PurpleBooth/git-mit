@@ -86,6 +86,42 @@ Options:
   -h, --help  Print help
 ```
 
+``` shell,script(name="show-set-rotation-help",expected_exit_code=0)
+git-mit-config mit set-rotation --help
+```
+
+``` shell,verify(script_name="show-set-rotation-help",stream=stdout)
+Set the rotation setting for primary author across commits
+
+Usage: git-mit-config mit set-rotation [OPTIONS] [ROTATION]
+
+Arguments:
+  [ROTATION]
+          Which rotation strategy to use
+          
+          * 'off' disables rotation * 'round-robin' will rotate through authors in order, one per
+          commit * 'random' will shuffle authors randomly on each commit
+
+          Possible values:
+          - off:         Rotation is disabled
+          - round-robin: Rotate through authors in order, one per commit
+          - random:      Shuffle authors randomly on each commit
+          
+          [env: GIT_MIT_SET_ROTATION=]
+          [default: round-robin]
+
+Options:
+      --scope <SCOPE>
+          Possible values:
+          - global: The home directory
+          - local:  The local folder
+          
+          [default: local]
+
+  -h, --help
+          Print help (see a summary with '-h')
+```
+
 You can generate completion with
 
 ``` shell,script(name="generate-bash-completion",expected_exit_code=0)
