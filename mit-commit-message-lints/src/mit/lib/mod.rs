@@ -15,3 +15,6 @@ mod errors_test;
 pub mod non_clean_behaviour;
 #[cfg(test)]
 mod non_clean_behaviour_test;
+pub mod rotation_option;
+#[cfg(test)]
+mod rotation_option_test;

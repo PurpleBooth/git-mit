@@ -11,7 +11,10 @@ pub fn run(scope: Scope) -> Result<()> {
 
     let rotation = get_config_rotation(&vcs)?;
 
-    println!("{rotation}");
+    match rotation {
+        Some(option) => println!("{option}"),
+        None => println!("off"),
+    }
 
     Ok(())
 }

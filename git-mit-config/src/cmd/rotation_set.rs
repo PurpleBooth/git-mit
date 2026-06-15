@@ -1,11 +1,14 @@
 use std::env::current_dir;
 
 use miette::{IntoDiagnostic, Result};
-use mit_commit_message_lints::{mit::cmd::set_config_rotation::set_config_rotation, scope::Scope};
+use mit_commit_message_lints::{
+    mit::cmd::set_config_rotation::set_config_rotation, mit::lib::rotation_option::RotationOption,
+    scope::Scope,
+};
 
 use crate::get_vcs;
 
-pub fn run(scope: Scope, rotation: bool) -> Result<()> {
+pub fn run(scope: Scope, rotation: RotationOption) -> Result<()> {
     let current_dir = current_dir().into_diagnostic()?;
     let mut vcs = get_vcs(scope == Scope::Local, &current_dir)?;
 

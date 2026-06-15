@@ -375,18 +375,18 @@ git-mit-config mit rotation
 ```
 
 ``` text,verify(script_name="check-rotation-default",stream=stdout)
-false
+off
 ```
 
 You can turn rotation on by running
 
 ``` shell,script(name="enable-rotation",expected_exit_code=0)
-git-mit-config mit set-rotation true
+git-mit-config mit set-rotation round-robin
 git-mit-config mit rotation
 ```
 
 ``` text,verify(script_name="enable-rotation",stream=stdout)
-true
+round-robin
 ```
 
 To see the effect, let's set up three authors and make a series of
@@ -458,12 +458,12 @@ Co-authored-by: Someone Else <se@example.com>
 You can turn rotation off again
 
 ``` shell,script(name="disable-rotation",expected_exit_code=0)
-git-mit-config mit set-rotation false
+git config --unset mit.author.rotate
 git-mit-config mit rotation
 ```
 
 ``` text,verify(script_name="disable-rotation",stream=stdout)
-false
+off
 ```
 
 When rotation is off the author no longer changes between commits
