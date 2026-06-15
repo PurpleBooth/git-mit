@@ -104,6 +104,12 @@ fn main() -> Result<()> {
         Some(Action::Mit {
             action: app::Mit::SetNonCleanBehaviour { scope, behaviour },
         }) => cmd::non_clean_behaviour_set::run(scope, behaviour),
+        Some(Action::Mit {
+            action: app::Mit::Rotation { scope },
+        }) => cmd::rotation::run(scope),
+        Some(Action::Mit {
+            action: app::Mit::SetRotation { scope, rotation },
+        }) => cmd::rotation_set::run(scope, rotation),
         Some(Action::RelatesTo {
             action: app::RelatesTo::Template { scope, template },
         }) => cmd::relates_to_template::run(scope, &template),

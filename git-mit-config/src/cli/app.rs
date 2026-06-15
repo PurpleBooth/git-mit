@@ -114,6 +114,23 @@ pub enum Mit {
         )]
         behaviour: BehaviourOption,
     },
+    /// Get the current rotation setting for primary author across commits
+    Rotation {
+        #[clap(long, value_enum, value_parser, default_value = "local")]
+        scope: Scope,
+    },
+    /// Set the rotation setting for primary author across commits
+    SetRotation {
+        #[clap(long, value_enum, value_parser, default_value = "local")]
+        scope: Scope,
+        /// Whether to rotate the primary author across commits
+        #[clap(
+            index = 1,
+            env = "GIT_MIT_SET_ROTATION",
+            default_value = "false"
+        )]
+        rotation: bool,
+    },
     /// Generate a file version of available authors
     Generate {
         /// Path to a file where mit initials, emails and names can be found
