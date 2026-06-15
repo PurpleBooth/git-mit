@@ -58,6 +58,8 @@ Commands:
   set                      Update or add an initial in the mit configuration
   non-clean-behaviour      Get the current behavior when the repository is mid-rebase or merge
   set-non-clean-behaviour  Set the current behavior when the repository is mid-rebase or merge
+  rotation                 Get the current rotation setting for primary author across commits
+  set-rotation             Set the rotation setting for primary author across commits
   generate                 Generate a file version of available authors
   available                List available authors
   example                  Print example mit toml file

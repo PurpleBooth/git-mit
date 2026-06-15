@@ -34,7 +34,11 @@ use mit_commit_message_lints::{
     console::error_handling::miette_install,
     external::{self, Git2, RepoState, Vcs},
     mit::{
-        cmd::get_config_non_clean_behaviour::get_config_non_clean_behaviour,
+        cmd::{
+            get_config_non_clean_behaviour::get_config_non_clean_behaviour,
+            get_config_rotation::get_config_rotation,
+            rotate_authors::rotate_authors,
+        },
         get_commit_coauthor_configuration, lib::non_clean_behaviour::BehaviourOption, Author,
         AuthorState,
     },
@@ -71,7 +75,7 @@ fn main() -> Result<()> {
     let commit_message_path =
         external::resolve_commit_message_path(cli_args.commit_message_path, &current_dir)?;
 
-    let git_config = Git2::try_from(current_dir)?;
+    let git_config = Git2::try_from(current_dir.clone())?;
 
     if matches!(
         (
@@ -102,6 +106,12 @@ fn main() -> Result<()> {
 
     if let AuthorState::Some(authors) = get_commit_coauthor_configuration(&git_config)? {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?;
+
+        // Rotate primary author for the next commit if rotation is enabled
+        if get_config_rotation(&git_config)? {
+            let mut mutable_config = Git2::try_from(current_dir)?;
+            rotate_authors(&mut mutable_config)?;
+        }
     }
 
     let relates_to_template = cli_args

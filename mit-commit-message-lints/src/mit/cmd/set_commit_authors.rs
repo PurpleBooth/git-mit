@@ -33,7 +33,7 @@ pub fn set_commit_authors(
     Ok(())
 }
 
-fn remove_coauthors(config: &mut dyn Vcs) -> Result<()> {
+pub fn remove_coauthors(config: &mut dyn Vcs) -> Result<()> {
     get_defined_vcs_coauthor_keys(config)
         .into_iter()
         .try_for_each(|key| config.remove(&key))?;
@@ -61,7 +61,7 @@ fn set_vcs_coauthors(config: &mut dyn Vcs, authors: &[&Author<'_>]) -> Result<()
         .try_for_each(|(index, author)| set_vcs_coauthor(config, index, author))
 }
 
-fn set_vcs_coauthor(config: &mut dyn Vcs, index: usize, author: &Author<'_>) -> Result<()> {
+pub fn set_vcs_coauthor(config: &mut dyn Vcs, index: usize, author: &Author<'_>) -> Result<()> {
     set_vcs_coauthor_name(config, index, author)?;
     set_vcs_coauthor_email(config, index, author)?;
 
@@ -81,7 +81,7 @@ fn set_vcs_coauthor_email(config: &mut dyn Vcs, index: usize, author: &Author<'_
     Ok(())
 }
 
-fn set_vcs_user(config: &mut dyn Vcs, author: &Author<'_>) -> Result<()> {
+pub fn set_vcs_user(config: &mut dyn Vcs, author: &Author<'_>) -> Result<()> {
     config.set_str("user.name", author.name())?;
     config.set_str("user.email", author.email())?;
     set_author_signing_key(config, author)?;
