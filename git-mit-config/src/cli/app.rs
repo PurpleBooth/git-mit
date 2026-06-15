@@ -129,6 +129,7 @@ pub enum Mit {
         /// Which rotation strategy to use
         ///
         /// * 'round-robin' will rotate through authors in order, one per commit
+        /// * 'random' will shuffle authors randomly on each commit
         #[clap(
             index = 1,
             env = "GIT_MIT_SET_ROTATION",

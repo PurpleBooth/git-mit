@@ -70,6 +70,7 @@ pub fn rotate_authors(config: &mut dyn Vcs, strategy: crate::mit::RotationOption
 
     // Apply the rotation strategy
     match strategy {
+        crate::mit::RotationOption::Off => return Ok(()),
         crate::mit::RotationOption::RoundRobin => {
             all_authors.rotate_left(1);
         }

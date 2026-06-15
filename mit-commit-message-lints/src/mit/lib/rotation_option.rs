@@ -12,12 +12,15 @@ use crate::mit::lib::errors::DeserializeRotationOptionError;
 /// additional variants here.
 #[derive(clap::ValueEnum, Ord, PartialOrd, Eq, PartialEq, Debug, Clone, Copy)]
 pub enum RotationOption {
+    /// Rotation is disabled
+    Off,
     /// Rotate through authors in order, one per commit
     RoundRobin,
     /// Shuffle authors randomly on each commit
     Random,
 }
 
+const OFF_DISPLAY: &str = "off";
 const ROUND_ROBIN_DISPLAY: &str = "round-robin";
 const RANDOM_DISPLAY: &str = "random";
 
@@ -26,6 +29,7 @@ impl FromStr for RotationOption {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_ascii_lowercase().as_str() {
+            OFF_DISPLAY => Ok(Self::Off),
             ROUND_ROBIN_DISPLAY => Ok(Self::RoundRobin),
             RANDOM_DISPLAY => Ok(Self::Random),
             _ => Err(DeserializeRotationOptionError { src: s.into() }),
@@ -36,6 +40,7 @@ impl FromStr for RotationOption {
 impl Display for RotationOption {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
+            Self::Off => write!(f, "{OFF_DISPLAY}"),
             Self::RoundRobin => write!(f, "{ROUND_ROBIN_DISPLAY}"),
             Self::Random => write!(f, "{RANDOM_DISPLAY}"),
         }
