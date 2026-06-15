@@ -61,7 +61,8 @@ troubleshooting:
     `git mit-install --scope=local`):
 
     - Location: `.git/hooks/` in current repository
-    - Creates symbolic links to the actual git-mit binaries
+    - Installs the git-mit hooks (a symlink on Unix, a shell wrapper on
+      Windows)
 
 2.  **Global installation** (`git mit-install --scope=global`):
 
