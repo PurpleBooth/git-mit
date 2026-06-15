@@ -28,8 +28,37 @@ fn from_str_is_case_insensitive_like_value_enum() {
 }
 
 #[test]
+fn from_str_accepts_random() {
+    assert_eq!(
+        RotationOption::from_str("random").unwrap(),
+        RotationOption::Random
+    );
+}
+
+#[test]
+fn from_str_accepts_random_case_insensitive() {
+    assert_eq!(
+        RotationOption::from_str("Random").unwrap(),
+        RotationOption::Random
+    );
+    assert_eq!(
+        RotationOption::from_str("RANDOM").unwrap(),
+        RotationOption::Random
+    );
+}
+
+#[test]
 fn display_round_trips_through_from_str() {
-    let original = RotationOption::RoundRobin;
+    for original in [RotationOption::RoundRobin, RotationOption::Random] {
+        let displayed = original.to_string();
+        let parsed = RotationOption::from_str(&displayed);
+        assert_eq!(parsed.unwrap(), original);
+    }
+}
+
+#[test]
+fn display_random_round_trips() {
+    let original = RotationOption::Random;
     let displayed = original.to_string();
     let parsed = RotationOption::from_str(&displayed);
     assert_eq!(parsed.unwrap(), original);

@@ -45,7 +45,7 @@ pub struct DeserializeRebaseBehaviourError {
 #[error("could not parse rotation option configuration")]
 #[diagnostic(
     code(mit_commit_message_lints::mit::lib::authors::DeserializeRotationOptionError),
-    help("valid values are: round-robin")
+    help("valid values are: round-robin, random")
 )]
 pub struct DeserializeRotationOptionError {
     #[source_code]
