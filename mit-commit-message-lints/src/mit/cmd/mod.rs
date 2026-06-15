@@ -24,6 +24,8 @@ mod get_config_rotation_test;
 /// Rotate the primary author among configured authors
 pub mod rotate_authors;
 #[cfg(test)]
+mod rotate_authors_test;
+#[cfg(test)]
 mod set_commit_authors_test;
 #[cfg(test)]
 mod set_config_authors_test;

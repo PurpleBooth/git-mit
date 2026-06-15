@@ -1,4 +1,5 @@
 use miette::Result;
+use rand::seq::SliceRandom;
 
 use crate::external::Vcs;
 use crate::mit::cmd::set_commit_authors::{remove_coauthors, set_vcs_coauthor, set_vcs_user};
@@ -24,7 +25,7 @@ use crate::mit::{cmd::vcs::get_vcs_coauthors_config, Author};
 /// if either user.name or user.email is missing, the function returns Ok(())
 /// without attempting to unwrap. The unwrap on line 47 is safe because at that
 /// point we've confirmed both name and email exist.
-pub fn rotate_authors(config: &mut dyn Vcs) -> Result<()> {
+pub fn rotate_authors(config: &mut dyn Vcs, strategy: crate::mit::RotationOption) -> Result<()> {
     // Read the current primary author
     let primary_name = config.get_str("user.name")?.map(String::from);
     let primary_email = config.get_str("user.email")?.map(String::from);
@@ -67,8 +68,15 @@ pub fn rotate_authors(config: &mut dyn Vcs) -> Result<()> {
         return Ok(());
     }
 
-    // Rotate left: [A, B, C] -> [B, C, A]
-    all_authors.rotate_left(1);
+    // Apply the rotation strategy
+    match strategy {
+        crate::mit::RotationOption::RoundRobin => {
+            all_authors.rotate_left(1);
+        }
+        crate::mit::RotationOption::Random => {
+            all_authors.shuffle(&mut rand::rng());
+        }
+    }
 
     // Write back
     remove_coauthors(config)?;
