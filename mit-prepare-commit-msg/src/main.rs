@@ -39,7 +39,7 @@ use mit_commit_message_lints::{
             get_config_rotation::get_config_rotation, rotate_authors::rotate_authors,
         },
         get_commit_coauthor_configuration,
-        lib::{non_clean_behaviour::BehaviourOption, rotation_option::RotationOption},
+        lib::non_clean_behaviour::BehaviourOption,
         Author, AuthorState,
     },
     relates::{get_relate_to_configuration, RelateTo},
@@ -109,9 +109,9 @@ fn main() -> Result<()> {
 
         // Rotate primary author for the next commit if rotation is enabled
         let rotation = get_config_rotation(&git_config)?;
-        if matches!(rotation, Some(RotationOption::RoundRobin)) {
+        if let Some(strategy) = rotation {
             let mut mutable_config = Git2::try_from(current_dir)?;
-            rotate_authors(&mut mutable_config)?;
+            rotate_authors(&mut mutable_config, strategy)?;
         }
     }
 
