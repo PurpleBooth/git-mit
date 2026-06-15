@@ -18,7 +18,8 @@ git init .
 git mit-install
 ```
 
-This works by creating a symlink in your repositories hooks directory.
+This works by installing the hooks in your repositories hooks directory
+(a symlink on Unix, a shell wrapper on Windows).
 You can do this automatically by adding them to your [init
 template](https://git-scm.com/docs/git-init#_template_directory). This
 is the template that git uses to create the `.git` directory when you
