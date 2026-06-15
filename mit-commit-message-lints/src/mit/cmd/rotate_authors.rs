@@ -36,17 +36,14 @@ pub fn rotate_authors(config: &mut dyn Vcs) -> Result<()> {
     };
 
     // Read coauthors
-    let coauthor_names: Vec<String> = get_vcs_coauthors_config(config, "name")?
-        .into_iter()
-        .filter_map(|x| x.map(|s| s.to_string()))
-        .collect();
     let coauthor_emails: Vec<String> = get_vcs_coauthors_config(config, "email")?
         .into_iter()
         .filter_map(|x| x.map(|s| s.to_string()))
         .collect();
 
-    let coauthors: Vec<Author> = coauthor_names
+    let coauthors: Vec<Author> = get_vcs_coauthors_config(config, "name")?
         .into_iter()
+        .filter_map(|x| x.map(|s| s.to_string()))
         .zip(coauthor_emails)
         .filter_map(|(name, email)| {
             if name.is_empty() || email.is_empty() {
