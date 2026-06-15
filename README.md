@@ -283,6 +283,7 @@ Each binary also has a command to generate completion.
   tool](./docs/mit-relates-to.md)
 - [Configuring lints](./docs/lints/configuring.md)
 - [Lint list](./docs/lints/index.md)
+- [Lefthook integration](./docs/lefthook.md)
 - [Troubleshooting](./docs/troubleshooting/index.md)
 
 ### Usage
@@ -295,3 +296,9 @@ Each binary also has a command to generate completion.
 - [Hook: mit-pre-commit](./docs/binaries/mit-pre-commit.md)
 - [Hook:
   mit-prepare-commit-msg](./docs/binaries/mit-prepare-commit-msg.md)
+
+### Community
+
+- [Contributing](./CONTRIBUTING.md)
+- [Code of Conduct](./CODE_OF_CONDUCT.md)
+- [Changelog](./CHANGELOG.md)
