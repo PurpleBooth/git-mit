@@ -47,7 +47,8 @@ mit-commit-msg --completion bash
 When no commit file path is provided — for example when a hook manager like
 [lefthook](https://github.com/evilmartians/lefthook) invokes the hook
 without forwarding git's positional argument — the hook falls back to
-reading the commit message from `.git/COMMIT_EDITMSG`.
+reading the commit message from `.git/COMMIT_EDITMSG`. See the
+[lefthook integration guide](../lefthook.md) for setup instructions.
 
 ``` shell,script(name="no-argument-fallback",expected_exit_code=0)
 git init .
