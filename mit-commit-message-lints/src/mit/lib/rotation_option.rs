@@ -7,9 +7,6 @@ use std::{
 use crate::mit::lib::errors::DeserializeRotationOptionError;
 
 /// How to rotate the primary author when pairing or mobbing
-///
-/// When new strategies are added (e.g. random) they will appear as
-/// additional variants here.
 #[derive(clap::ValueEnum, Ord, PartialOrd, Eq, PartialEq, Debug, Clone, Copy)]
 pub enum RotationOption {
     /// Rotation is disabled
