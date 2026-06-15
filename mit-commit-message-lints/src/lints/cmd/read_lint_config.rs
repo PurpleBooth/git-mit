@@ -79,3 +79,27 @@ fn get_config_or_default(config: &dyn Vcs, lint: Lint, default: bool) -> Result<
         .filter(|lint_value| lint_value == &true)
         .map(|_| lint))
 }
+
+#[cfg(test)]
+mod tests {
+    use mit_lint::Lint;
+    use std::collections::BTreeMap;
+
+    use crate::{external::InMemory, lints::cmd::read_lint_config::read_from_toml_or_else_vcs};
+
+    #[test]
+    fn explicitly_enabled_lint_from_vcs_is_included() {
+        let mut strings = BTreeMap::new();
+        strings.insert("mit.lint.pivotal-tracker-id-missing".into(), "true".into());
+        let vcs = InMemory::new(&mut strings);
+
+        let lints = read_from_toml_or_else_vcs("", &vcs).unwrap();
+
+        // With the == → != mutation, true values would be filtered out,
+        // so this lint would be missing (incorrectly).
+        let found = lints
+            .into_iter()
+            .any(|l| l == Lint::PivotalTrackerIdMissing);
+        assert!(found, "Enabled lint should be included in results");
+    }
+}

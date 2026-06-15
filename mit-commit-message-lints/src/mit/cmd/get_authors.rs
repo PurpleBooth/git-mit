@@ -144,4 +144,42 @@ mod tests {
         std::fs::set_permissions(&temp_file, permissions).unwrap();
         let _ = std::fs::remove_file(&temp_file);
     }
+
+    use super::AuthorArgs;
+
+    #[test]
+    fn author_command_passes_through_some_value() {
+        let args = GenericArgs {
+            author_command: Some("echo hello"),
+            author_file: None,
+        };
+        assert_eq!(args.author_command(), Some("echo hello"));
+    }
+
+    #[test]
+    fn author_command_passes_through_none() {
+        let args = GenericArgs {
+            author_command: None,
+            author_file: None,
+        };
+        assert_eq!(args.author_command(), None);
+    }
+
+    #[test]
+    fn author_file_passes_through_some_value() {
+        let args = GenericArgs {
+            author_command: None,
+            author_file: Some("/custom/path.toml"),
+        };
+        assert_eq!(args.author_file(), Some("/custom/path.toml"));
+    }
+
+    #[test]
+    fn author_file_passes_through_none() {
+        let args = GenericArgs {
+            author_command: None,
+            author_file: None,
+        };
+        assert_eq!(args.author_file(), None);
+    }
 }
