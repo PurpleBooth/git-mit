@@ -368,6 +368,11 @@ When pairing or mob programming you might want to rotate who appears as
 the primary author on each commit, so that credit is distributed evenly.
 This is an opt-in behaviour, just like the rebase behaviour above.
 
+There are two rotation strategies:
+
+- `round-robin` rotates through the authors in order, one per commit
+- `random` shuffles the authors randomly on each commit
+
 By default rotation is off.
 
 ``` shell,script(name="check-rotation-default",expected_exit_code=0)
@@ -455,10 +460,10 @@ Co-authored-by: Billie Thompson <billie@example.com>
 Co-authored-by: Someone Else <se@example.com>
 ```
 
-You can turn rotation off again
+You can turn rotation off by running
 
 ``` shell,script(name="disable-rotation",expected_exit_code=0)
-git config --unset mit.author.rotate
+git-mit-config mit set-rotation off
 git-mit-config mit rotation
 ```
 
@@ -483,6 +488,38 @@ No rotation commit
 
 Co-authored-by: Someone Else <se@example.com>
 Co-authored-by: Anyone Else <anyone@example.com>
+```
+
+### Random rotation
+
+You can also shuffle authors randomly on each commit.
+
+``` shell,script(name="enable-random-rotation",expected_exit_code=0)
+git-mit-config mit set-rotation random
+git-mit-config mit rotation
+```
+
+``` text,verify(script_name="enable-random-rotation",stream=stdout)
+random
+```
+
+With random rotation enabled, each commit gets a randomly chosen
+primary author from the configured set.
+
+``` shell,script(name="random-rotation-commit",expected_exit_code=0)
+echo "Random rotation test" >> README.md
+git commit --all --message="Random rotation commit" --quiet
+```
+
+Turn rotation off again
+
+``` shell,script(name="disable-random-rotation",expected_exit_code=0)
+git-mit-config mit set-rotation off
+git-mit-config mit rotation
+```
+
+``` text,verify(script_name="disable-random-rotation",stream=stdout)
+off
 ```
 
 ## Errors

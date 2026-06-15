@@ -49,7 +49,11 @@ fn from_str_accepts_random_case_insensitive() {
 
 #[test]
 fn display_round_trips_through_from_str() {
-    for original in [RotationOption::RoundRobin, RotationOption::Random] {
+    for original in [
+        RotationOption::Off,
+        RotationOption::RoundRobin,
+        RotationOption::Random,
+    ] {
         let displayed = original.to_string();
         let parsed = RotationOption::from_str(&displayed);
         assert_eq!(parsed.unwrap(), original);
