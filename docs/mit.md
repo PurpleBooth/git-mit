@@ -368,8 +368,9 @@ When pairing or mob programming you might want to rotate who appears as
 the primary author on each commit, so that credit is distributed evenly.
 This is an opt-in behaviour, just like the rebase behaviour above.
 
-There are two rotation strategies:
+There are three rotation strategies:
 
+- `off` disables rotation (the default)
 - `round-robin` rotates through the authors in order, one per commit
 - `random` shuffles the authors randomly on each commit
 

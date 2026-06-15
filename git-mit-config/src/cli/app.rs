@@ -128,6 +128,7 @@ pub enum Mit {
         scope: Scope,
         /// Which rotation strategy to use
         ///
+        /// * 'off' disables rotation
         /// * 'round-robin' will rotate through authors in order, one per commit
         /// * 'random' will shuffle authors randomly on each commit
         #[clap(
