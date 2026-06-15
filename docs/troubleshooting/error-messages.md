@@ -25,12 +25,11 @@ which format failed:
 
 The hook installation failed because:
 
-- **ExistingHook**: A non-symlink hook already exists at that location
-- **ExistingSymlink**: A symlink exists but points to a different
-  location
+- **ExistingHook**: A hook already exists at that location (a regular file,
+  or a symlink/wrapper that is not git-mit's)
 - You don't have write permissions to the hooks directory
 
-Remove the existing hook or check where the existing symlink points.
+Remove the existing hook and run `git mit-install` again.
 
 ## "No authors set" (from pre-commit hook)
 

@@ -11,12 +11,14 @@ isn't working:
     ls -la .git/hooks/ | grep mit
     ```
 
-    You should see symbolic links for:
+    You should see git-mit's hooks for:
 
-    - `commit-msg` → mit-commit-msg (or mit-commit-msg.exe on Windows)
-    - `pre-commit` → mit-pre-commit (or mit-pre-commit.exe on Windows)
-    - `prepare-commit-msg` → mit-prepare-commit-msg (or
-      mit-prepare-commit-msg.exe on Windows)
+    - `commit-msg`
+    - `pre-commit`
+    - `prepare-commit-msg`
+
+    On Unix these are symlinks to the mit binaries; on Windows they are small
+    `#!/bin/sh` wrappers that invoke them.
 
 2.  **For global installations, check the template directory**:
 

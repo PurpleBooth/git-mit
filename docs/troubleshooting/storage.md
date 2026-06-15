@@ -142,11 +142,16 @@ overriding earlier ones if there are conflicts.
 
 ## Hook Installation Details
 
-The installation process creates symbolic links to the git-mit binaries:
+The installation process creates a reference to the git-mit binaries so the
+hooks stay in sync when the binaries are updated:
 
-- **Windows**: Creates file symbolic links with `.exe` extension
-- **Unix/Linux/macOS**: Creates standard symbolic links
-- **Existing hooks**: Installation will fail if hooks already exist
-  (unless they're already symlinks to git-mit)
-- **Symlink validation**: If a symlink exists but points to the correct
-  binary, installation succeeds silently
+- **Windows**: writes a small `#!/bin/sh` wrapper (named exactly `pre-commit`,
+  `commit-msg`, `prepare-commit-msg`) that `exec`s the absolute mit binary.
+  This needs no Administrator privilege and is run by Git for Windows' bundled
+  bash
+- **Unix/Linux/macOS**: creates a symbolic link to the binary
+- **Existing hooks**: installation will fail if a non-git-mit hook already
+  exists at that location
+- **Re-running**: if the hook is already correctly installed (a symlink
+  resolving to the binary on Unix, or a wrapper whose content matches on
+  Windows), installation succeeds silently
