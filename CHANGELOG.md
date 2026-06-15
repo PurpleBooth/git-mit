@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.4.0](https://github.com/PurpleBooth/git-mit/compare/baaa4b1e0696f26279c75f266106b3487e1218f5..v6.4.0) - 2026-06-15
+#### Features
+- Add random rotation and set-rotation off command - ([6e87cf7](https://github.com/PurpleBooth/git-mit/commit/6e87cf75015675e3c311d8e6cdc09652ae1c74fb)) - Billie Thompson
+- rotate_authors accepts RotationOption strategy - ([f27d59d](https://github.com/PurpleBooth/git-mit/commit/f27d59d427cbb7de36933f660a818865b9c72fbe)) - Billie Thompson
+- add Random variant to RotationOption - ([10e0ae4](https://github.com/PurpleBooth/git-mit/commit/10e0ae47b17b423fac601d726043c784c4f0af21)) - Billie Thompson
+- Add opt-in primary author rotation (fixes #1166) - ([b622b4e](https://github.com/PurpleBooth/git-mit/commit/b622b4e8c52ffe573e1806e957a4c919b7d08557)) - Billie Thompson
+#### Bug Fixes
+- Fix flaky quickcheck test in mit-lint duplicate_trailers - ([52116b8](https://github.com/PurpleBooth/git-mit/commit/52116b88cc66f4780b65b1459f49483c45aafe3c)) - Billie Thompson
+#### Documentation
+- Include 'off' value consistently in rotation documentation - ([4e6d394](https://github.com/PurpleBooth/git-mit/commit/4e6d39450fcdb66dd17501c19038234c6f43c39a)) - Billie Thompson
+#### Tests
+- Add specdown tests for rotation behaviour - ([f96502c](https://github.com/PurpleBooth/git-mit/commit/f96502ccd7fb11aa03f5f7f1fd6323ecbd196ebe)) - Billie Thompson
+#### Refactoring
+- Remove duplicated rotation values from CLI help - ([b760141](https://github.com/PurpleBooth/git-mit/commit/b7601417435d51cac834cbb944182d9e3901bc12)) - Billie Thompson
+- Use RotationOption enum instead of boolean - ([b204a2c](https://github.com/PurpleBooth/git-mit/commit/b204a2c49d1966b8634f10f9547694765a12232a)) - Billie Thompson
+#### Miscellaneous Chores
+- (**deps**) update https://code.forgejo.org/actions/cache digest to 0057852 (#1621) - ([baaa4b1](https://github.com/PurpleBooth/git-mit/commit/baaa4b1e0696f26279c75f266106b3487e1218f5)) - renovate[bot], renovate[bot]
+#### Style
+- Fix rustfmt violations - ([0f3b31c](https://github.com/PurpleBooth/git-mit/commit/0f3b31ce7632c46f5e06664953dfb6389421af6a)) - Billie Thompson
+
+- - -
+
 ## [v6.3.0](https://github.com/PurpleBooth/git-mit/compare/7672ec87658e62593cc5e54ff9b3ce89d14e8a5c..v6.3.0) - 2026-06-14
 #### Features
 - add available authors hint to no-author and stale-author errors - ([7672ec8](https://github.com/PurpleBooth/git-mit/commit/7672ec87658e62593cc5e54ff9b3ce89d14e8a5c)) - Billie Thompson
