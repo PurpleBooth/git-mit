@@ -21,15 +21,15 @@ pub mod get_config_non_clean_behaviour;
 pub mod get_config_rotation;
 #[cfg(test)]
 mod get_config_rotation_test;
-/// Configuration for rotating primary author across commits
-pub mod set_config_rotation;
-#[cfg(test)]
-mod set_config_rotation_test;
-pub mod set_config_non_clean_behaviour;
 /// Rotate the primary author among configured authors
 pub mod rotate_authors;
 #[cfg(test)]
 mod set_commit_authors_test;
 #[cfg(test)]
 mod set_config_authors_test;
+pub mod set_config_non_clean_behaviour;
+/// Configuration for rotating primary author across commits
+pub mod set_config_rotation;
+#[cfg(test)]
+mod set_config_rotation_test;
 mod vcs;

@@ -1,8 +1,8 @@
 use miette::Result;
 
 use crate::external::Vcs;
-use crate::mit::{Author, cmd::vcs::get_vcs_coauthors_config};
-use crate::mit::cmd::set_commit_authors::{remove_coauthors, set_vcs_user, set_vcs_coauthor};
+use crate::mit::cmd::set_commit_authors::{remove_coauthors, set_vcs_coauthor, set_vcs_user};
+use crate::mit::{cmd::vcs::get_vcs_coauthors_config, Author};
 
 /// Rotate the primary author among configured authors
 ///
@@ -31,7 +31,11 @@ pub fn rotate_authors(config: &mut dyn Vcs) -> Result<()> {
     let primary_signingkey = config.get_str("user.signingkey")?.map(String::from);
 
     let primary = match (primary_name, primary_email, primary_signingkey) {
-        (Some(name), Some(email), signingkey) => Some(Author::new(name.into(), email.into(), signingkey.map(Into::into))),
+        (Some(name), Some(email), signingkey) => Some(Author::new(
+            name.into(),
+            email.into(),
+            signingkey.map(Into::into),
+        )),
         _ => return Ok(()), // No primary author, nothing to rotate
     };
 

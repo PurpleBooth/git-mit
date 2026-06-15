@@ -36,11 +36,11 @@ use mit_commit_message_lints::{
     mit::{
         cmd::{
             get_config_non_clean_behaviour::get_config_non_clean_behaviour,
-            get_config_rotation::get_config_rotation,
-            rotate_authors::rotate_authors,
+            get_config_rotation::get_config_rotation, rotate_authors::rotate_authors,
         },
-        get_commit_coauthor_configuration, lib::non_clean_behaviour::BehaviourOption, Author,
-        AuthorState,
+        get_commit_coauthor_configuration,
+        lib::non_clean_behaviour::BehaviourOption,
+        Author, AuthorState,
     },
     relates::{get_relate_to_configuration, RelateTo},
 };

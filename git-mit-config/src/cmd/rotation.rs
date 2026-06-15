@@ -1,10 +1,7 @@
 use std::env::current_dir;
 
 use miette::{IntoDiagnostic, Result};
-use mit_commit_message_lints::{
-    mit::cmd::get_config_rotation::get_config_rotation,
-    scope::Scope,
-};
+use mit_commit_message_lints::{mit::cmd::get_config_rotation::get_config_rotation, scope::Scope};
 
 use crate::get_vcs;
 
