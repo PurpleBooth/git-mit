@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/app/target \
         help2man target/release/$bin > target/$bin.1; \
     done
 
-FROM debian:bookworm-slim
+FROM debian:bookworm-slim@sha256:96e378d7e6531ac9a15ad505478fcc2e69f371b10f5cdf87857c4b8188404716
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \

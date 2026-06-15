@@ -8,15 +8,15 @@ on:
 
 jobs:
   docker-build:
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@main
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@1d3ce157df204132c91fbe85964280bda79fb19f # main
 
   rust-check:
-    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@main
+    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@1d3ce157df204132c91fbe85964280bda79fb19f # main
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
   specdown:
-    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@main
+    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@1d3ce157df204132c91fbe85964280bda79fb19f # main
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev && npm install -g lefthook
       mac_before_script: brew install lefthook
@@ -33,10 +33,10 @@ jobs:
       previous_version: ${{ steps.previous_version.outputs.previous_version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # main
         with:
           fetch-depth: 0
-      - uses: taiki-e/install-action@cargo-binstall
+      - uses: taiki-e/install-action@e51d8b05bd75d95ec409fff6f1993c7cc6977d39 # cargo-binstall
       - name: Get tags
         run: git fetch --tags origin
       - shell: bash
@@ -64,11 +64,11 @@ jobs:
       - release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         name: Checkout the repository
         with:
           ref: v${{ needs.release.outputs.current_version }}
-      - uses: actions-rs/toolchain@v1.0.7
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1.0.7
         with:
           toolchain: stable
           profile: default
@@ -173,7 +173,7 @@ jobs:
       - run: ${{ matrix.install }}
         env:
           DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           lfs: true
           ref: v${{ needs.release.outputs.current_version }}
@@ -185,8 +185,8 @@ jobs:
             ~/.cargo/git
             ~/.cargo/bin
             target
-      - uses: taiki-e/install-action@cargo-binstall
-      - uses: dtolnay/rust-toolchain@master
+      - uses: taiki-e/install-action@e51d8b05bd75d95ec409fff6f1993c7cc6977d39 # cargo-binstall
+      - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
         with:
           toolchain: stable
           target: ${{ matrix.target }}
@@ -207,7 +207,7 @@ jobs:
           mv -v "./target/release/mit-pre-commit$EXTENSION" "./mit-pre-commit-$TARGET$EXTENSION"
           mv -v "./target/release/mit-prepare-commit-msg$EXTENSION" "./mit-prepare-commit-msg-$TARGET$EXTENSION"
         shell: bash
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: bins-${{ matrix.target }}${{ matrix.suffix }}
           path: ./*${{ matrix.target }}${{ matrix.suffix }}
@@ -241,13 +241,13 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           lfs: true
           fetch-depth: 0
           ref: v${{ needs.release.outputs.current_version }}
-      - uses: anchore/sbom-action@v0
-      - uses: actions/download-artifact@v4
+      - uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           merge-multiple: true
           path: bins
@@ -265,7 +265,7 @@ jobs:
            md5sum "$file" > "$file.md5"
           fi
           done
-      - uses: cargo-bins/cargo-binstall@main
+      - uses: cargo-bins/cargo-binstall@252c5e70a6eae3a9de06b610159a568eaf705055 # main
         name: Install cargo binstall
       - shell: bash
         run: cargo binstall --no-confirm --locked cocogitto
@@ -287,7 +287,7 @@ jobs:
     if: needs.release.outputs.current_version != needs.release.outputs.previous_version
     needs:
       - release
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@main
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@1d3ce157df204132c91fbe85964280bda79fb19f # main
     with:
       current_version: ${{ needs.release.outputs.current_version }}
 
@@ -298,7 +298,7 @@ jobs:
     name: Generate Homebrew Formula
     runs-on: ubuntu-latest
     steps:
-      - uses: PurpleBooth/generate-formula-action@main
+      - uses: PurpleBooth/generate-formula-action@de3addc8032cdd9e6483e3dea09c7158387f4f78 # main
         with:
           current_version: ${{ needs.release.outputs.current_version }}
           previous_version: ${{ needs.release.outputs.previous_version }}
