@@ -19,6 +19,7 @@ thiserror = "2.0.18"
 miette = { version = "7.6.0", features = [ "fancy" ] }
 git2 = "0.21.0"
 openssl = { version = "0.10.81", optional = true }
+rand = "0.10.1"
 serde_yaml = "0.9.34"
 indoc = "2.0.7"
 toml = "1.1.2"
