@@ -9,6 +9,6 @@ pub mod lint_generate;
 pub mod lint_status;
 pub mod non_clean_behaviour;
 pub mod non_clean_behaviour_set;
+pub mod relates_to_template;
 pub mod rotation;
 pub mod rotation_set;
-pub mod relates_to_template;

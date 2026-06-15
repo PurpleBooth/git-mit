@@ -128,7 +128,7 @@ pub enum Mit {
             index = 1,
             env = "GIT_MIT_SET_ROTATION",
             default_value = "false",
-            num_args = 1,
+            num_args = 1
         )]
         rotation: bool,
     },
