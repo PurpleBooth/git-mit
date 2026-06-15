@@ -94,8 +94,7 @@ fn is_hook_present() -> bool {
         .is_some_and(|path_buf| {
             path_buf
                 .canonicalize()
-                .ok()
-                .is_some_and(|path| path.to_string_lossy().contains("mit-commit-msg"))
+                .is_ok_and(|path| path.to_string_lossy().contains("mit-commit-msg"))
         })
 }
 

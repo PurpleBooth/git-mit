@@ -4,5 +4,3 @@ pub use set_status::set_status;
 mod errors;
 mod read_lint_config;
 mod set_status;
-#[cfg(test)]
-mod set_status_test;
