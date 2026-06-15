@@ -476,7 +476,7 @@ Co-authored-by: Billie Thompson <email@example.com>
         // checks Signed-off-by, Co-authored-by, and Relates-to, which
         // can never be produced by the alphanumeric-only generator.
         let config = DuplicatedTrailersConfig {
-            trailers_to_check: vec![trailer_tag.clone()],
+            trailers_to_check: vec![trailer_tag],
         };
         let result = lint_with_config(&message, &config);
         TestResult::from_bool(result.is_some())
