@@ -47,6 +47,10 @@ mod tests {
     fn test_convert_string_to_relate_to() {
         let relate = RelateTo::from("[#12343567]");
 
-        assert_eq!(relate.to(), "[#12343567]");
+        assert_eq!(
+            relate.to(),
+            "[#12343567]",
+            "Expected the relates-to value to match the string used to construct it"
+        );
     }
 }

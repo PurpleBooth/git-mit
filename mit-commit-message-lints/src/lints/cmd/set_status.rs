@@ -37,7 +37,10 @@ mod tests {
             .get("mit.lint.pivotal-tracker-id-missing")
             .unwrap()
             .clone();
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected the lint to be enabled, instead got {actual}"
+        );
     }
 
     #[test]
@@ -56,6 +59,9 @@ mod tests {
             .get("mit.lint.pivotal-tracker-id-missing")
             .unwrap()
             .clone();
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected the lint to be disabled, instead got {actual}"
+        );
     }
 }

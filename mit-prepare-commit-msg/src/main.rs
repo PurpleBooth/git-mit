@@ -249,12 +249,19 @@ mod tests {
     #[test]
     fn test_get_relates_to_from_exec_trims_trailing_newline() {
         let result = get_relates_to_from_exec("echo '[#123]'").unwrap();
-        assert_eq!(result, RelateTo::from("[#123]"));
+        assert_eq!(
+            result,
+            RelateTo::from("[#123]"),
+            "Expected the relates-to value to be trimmed of trailing newline, got {result:?}"
+        );
     }
 
     #[test]
     fn test_get_relates_to_from_exec_fails_on_nonzero_exit() {
         let result = get_relates_to_from_exec("false");
-        assert!(result.is_err());
+        assert!(
+            result.is_err(),
+            "Expected an error when the exec command exits non-zero"
+        );
     }
 }

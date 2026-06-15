@@ -339,42 +339,66 @@ This is an example commit
     fn emoji_log_prefixes_new() {
         let input: Prefix = Prefix::New;
 
-        assert_eq!(String::from(input), "\u{1f4e6} NEW: ".to_string());
+        assert_eq!(
+            String::from(input),
+            "\u{1f4e6} NEW: ".to_string(),
+            "Prefix::New should convert to the expected emoji-log string"
+        );
     }
 
     #[test]
     fn emoji_log_prefixes_improve() {
         let input: Prefix = Prefix::Improve;
 
-        assert_eq!(String::from(input), "\u{1f44c} IMPROVE: ".to_string());
+        assert_eq!(
+            String::from(input),
+            "\u{1f44c} IMPROVE: ".to_string(),
+            "Prefix::Improve should convert to the expected emoji-log string"
+        );
     }
 
     #[test]
     fn emoji_log_prefixes_fix() {
         let input: Prefix = Prefix::Fix;
 
-        assert_eq!(String::from(input), "\u{1f41b} FIX: ".to_string());
+        assert_eq!(
+            String::from(input),
+            "\u{1f41b} FIX: ".to_string(),
+            "Prefix::Fix should convert to the expected emoji-log string"
+        );
     }
 
     #[test]
     fn emoji_log_prefixes_docs() {
         let input: Prefix = Prefix::Doc;
 
-        assert_eq!(String::from(input), "\u{1f4d6} DOC: ".to_string());
+        assert_eq!(
+            String::from(input),
+            "\u{1f4d6} DOC: ".to_string(),
+            "Prefix::Doc should convert to the expected emoji-log string"
+        );
     }
 
     #[test]
     fn emoji_log_prefixes_release() {
         let input: Prefix = Prefix::Release;
 
-        assert_eq!(String::from(input), "\u{1f680} RELEASE: ".to_string());
+        assert_eq!(
+            String::from(input),
+            "\u{1f680} RELEASE: ".to_string(),
+            "Prefix::Release should convert to the expected emoji-log string"
+        );
     }
 
     #[test]
     fn emoji_log_prefixes_test() {
         let input: Prefix = Prefix::Test;
 
-        assert_eq!(String::from(input), "\u{1f916} TEST: ".to_string());
+        assert_eq!(
+            String::from(input),
+            "\u{1f916} TEST: ".to_string(),
+            "Prefix::Test should convert to the expected emoji-log string"
+        );
     }
 
     #[test]
@@ -383,7 +407,8 @@ This is an example commit
 
         assert_eq!(
             String::from(input),
-            "\u{203c}\u{fe0f} BREAKING: ".to_string()
+            "\u{203c}\u{fe0f} BREAKING: ".to_string(),
+            "Prefix::Breaking should convert to the expected emoji-log string"
         );
     }
 

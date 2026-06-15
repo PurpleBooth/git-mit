@@ -151,7 +151,8 @@ mod tests {
             vec![(
                 "bt".to_string(),
                 Author::new("Billie Thompson".into(), "billie@example.com".into(), None)
-            )]
+            )],
+            "Expected iterating to yield the single author with key 'bt'"
         );
     }
 
@@ -170,7 +171,8 @@ mod tests {
                 "Billie Thompson".into(),
                 "billie@example.com".into(),
                 None
-            )]
+            )],
+            "Expected get by initials to return the matching author"
         );
     }
 
@@ -193,7 +195,8 @@ mod tests {
                 "Billie Thompson".into(),
                 "billie@example.com".into(),
                 None
-            )]
+            )],
+            "Expected get by 'bt' to return Billie Thompson"
         );
         assert_eq!(
             actual.get(&["se"]),
@@ -201,7 +204,8 @@ mod tests {
                 "Somebody Else".into(),
                 "somebody@example.com".into(),
                 None
-            )]
+            )],
+            "Expected get by 'se' to return Somebody Else"
         );
     }
 
@@ -226,7 +230,11 @@ mod tests {
         );
         let expected = Authors::new(store);
 
-        assert_eq!(Authors::example(), expected,);
+        assert_eq!(
+            Authors::example(),
+            expected,
+            "Expected the example constructor to produce the predefined set of authors"
+        );
     }
 
     #[test]
@@ -270,7 +278,11 @@ mod tests {
 
         let expected: Authors<'_> = Authors::new(expected_map);
 
-        assert_eq!(expected, input1.merge(&input2));
+        assert_eq!(
+            expected,
+            input1.merge(&input2),
+            "Expected the merged authors to contain entries from both inputs, with input2 taking precedence"
+        );
     }
 
     #[test]
@@ -282,7 +294,11 @@ mod tests {
         );
         let actual = Authors::new(store);
 
-        assert_eq!(actual.missing_initials(vec!["bt", "an"]), vec!["an"]);
+        assert_eq!(
+            actual.missing_initials(vec!["bt", "an"]),
+            vec!["an"],
+            "Expected only 'an' to be missing since 'bt' is configured"
+        );
     }
 
     #[test]
@@ -309,7 +325,10 @@ mod tests {
         );
         let expected = Authors::new(input);
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected the parsed TOML to match the author for 'bt'"
+        );
     }
 
     #[test]
@@ -318,7 +337,10 @@ mod tests {
 
         let expected = Authors::default();
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected an empty file to parse as the default (empty) authors"
+        );
     }
 
     #[test]
@@ -340,7 +362,10 @@ mod tests {
         );
         let expected = Authors::new(input);
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected the parsed YAML to match the author for 'bt'"
+        );
     }
 
     #[test]
@@ -367,7 +392,10 @@ mod tests {
         );
         let expected = Authors::new(expected_authors);
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected the parsed YAML to include the signing key for 'bt'"
+        );
     }
 
     #[test]
@@ -387,7 +415,10 @@ mod tests {
         )
         .to_string();
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected the serialized TOML to match the standard format without signing key"
+        );
     }
 
     #[test]
@@ -412,7 +443,10 @@ mod tests {
         )
         .to_string();
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected the serialized TOML to include the signing key when set"
+        );
     }
 
     #[test]

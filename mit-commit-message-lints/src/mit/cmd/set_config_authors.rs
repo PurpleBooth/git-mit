@@ -103,7 +103,10 @@ mod tests {
         expected.insert("mit.author.config.zy.email".into(), "zy@example.com".into());
         expected.insert("mit.author.config.zy.name".into(), "Z Y".into());
 
-        assert_eq!(store, expected);
+        assert_eq!(
+            store, expected,
+            "Expected the VCS store to contain the author's email and name after setting an author"
+        );
     }
 
     #[test]
@@ -130,7 +133,10 @@ mod tests {
         );
         expected.insert("mit.author.config.bt.signingkey".into(), "ABC".into());
 
-        assert_eq!(store, expected);
+        assert_eq!(
+            store, expected,
+            "Expected the VCS store to contain the author's email, name, and signing key"
+        );
     }
 
     #[test]

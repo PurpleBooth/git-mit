@@ -280,7 +280,10 @@ mod tests {
         let expected = Lints::new(expected_lints);
         let actual: Lints = lints.try_into().expect("Lints to have been parsed");
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected Lints constructed from names to be {expected:?}, got {actual:?}"
+        );
     }
 
     #[quickcheck]
@@ -304,7 +307,10 @@ mod tests {
         let expected = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
         let actual = input.into_iter().collect::<Vec<_>>();
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected iterator to yield {expected:?}, got {actual:?}"
+        );
     }
 
     #[quickcheck]
@@ -328,7 +334,10 @@ mod tests {
         let expected = vec![PivotalTrackerIdMissing, JiraIssueKeyMissing];
         let actual: Vec<Lint> = input.into();
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected Vec conversion to yield {expected:?}, got {actual:?}"
+        );
     }
 
     #[quickcheck]
@@ -349,7 +358,10 @@ mod tests {
         let expected = vec![PivotalTrackerIdMissing.name(), JiraIssueKeyMissing.name()];
         let actual = input.names();
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected lint names to be {expected:?}, got {actual:?}"
+        );
     }
 
     #[quickcheck]
@@ -373,7 +385,10 @@ mod tests {
         ];
         let actual = input.config_keys();
 
-        assert_eq!(expected, actual);
+        assert_eq!(
+            expected, actual,
+            "Expected config keys to be {expected:?}, got {actual:?}"
+        );
     }
 
     #[test]

@@ -68,7 +68,8 @@ mod tests {
         actual.unwrap();
         assert_eq!(
             Some(&"[#12345678]".to_string()),
-            buffer.get("mit.relate.to")
+            buffer.get("mit.relate.to"),
+            "Expected the relates-to config to be set to the provided value"
         );
     }
 

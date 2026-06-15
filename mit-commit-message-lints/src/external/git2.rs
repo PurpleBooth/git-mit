@@ -210,24 +210,30 @@ mod tests {
     fn parses_simple_initials() {
         let (initial, part) =
             parse_initial_and_part("mit.author.config.bt.email").expect("should parse");
-        assert_eq!(initial, "bt");
-        assert_eq!(part, "email");
+        assert_eq!(initial, "bt", "Expected initial to be 'bt'");
+        assert_eq!(part, "email", "Expected part to be 'email'");
     }
 
     #[test]
     fn parses_initials_containing_dots() {
         let (initial, part) =
             parse_initial_and_part("mit.author.config.b.t.email").expect("should parse");
-        assert_eq!(initial, "b.t");
-        assert_eq!(part, "email");
+        assert_eq!(
+            initial, "b.t",
+            "Expected initial to be 'b.t' for dotted initials"
+        );
+        assert_eq!(part, "email", "Expected part to be 'email'");
     }
 
     #[test]
     fn parses_signingkey_with_dotted_initials() {
         let (initial, part) =
             parse_initial_and_part("mit.author.config.b.t.signingkey").expect("should parse");
-        assert_eq!(initial, "b.t");
-        assert_eq!(part, "signingkey");
+        assert_eq!(
+            initial, "b.t",
+            "Expected initial to be 'b.t' for dotted initials"
+        );
+        assert_eq!(part, "signingkey", "Expected part to be 'signingkey'");
     }
 
     #[test]

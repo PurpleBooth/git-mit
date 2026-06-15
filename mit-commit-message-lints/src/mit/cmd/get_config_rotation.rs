@@ -33,7 +33,11 @@ mod tests {
 
         let result = crate::mit::cmd::get_config_rotation::get_config_rotation(&vcs_config);
 
-        assert_eq!(result.unwrap(), None);
+        assert_eq!(
+            result.unwrap(),
+            None,
+            "Expected no rotation config when the key is not set"
+        );
     }
 
     #[test]
@@ -44,7 +48,11 @@ mod tests {
 
         let result = crate::mit::cmd::get_config_rotation::get_config_rotation(&vcs_config);
 
-        assert_eq!(result.unwrap(), Some(RotationOption::RoundRobin));
+        assert_eq!(
+            result.unwrap(),
+            Some(RotationOption::RoundRobin),
+            "Expected round-robin rotation config when set to 'round-robin'"
+        );
     }
 
     #[test]
@@ -55,6 +63,9 @@ mod tests {
 
         let result = crate::mit::cmd::get_config_rotation::get_config_rotation(&vcs_config);
 
-        assert!(result.is_err());
+        assert!(
+            result.is_err(),
+            "Expected an error when rotation config is set to an invalid value"
+        );
     }
 }

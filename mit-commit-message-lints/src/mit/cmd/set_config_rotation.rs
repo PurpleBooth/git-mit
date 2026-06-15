@@ -33,12 +33,17 @@ mod tests {
 
         assert_eq!(
             buffer.get("mit.author.rotate"),
-            Some(&"round-robin".to_string())
+            Some(&"round-robin".to_string()),
+            "Expected the rotation config to be set to 'round-robin'"
         );
 
         let vcs_config = InMemory::new(&mut buffer);
         let result = crate::mit::cmd::get_config_rotation::get_config_rotation(&vcs_config);
-        assert_eq!(result.unwrap(), Some(RotationOption::RoundRobin));
+        assert_eq!(
+            result.unwrap(),
+            Some(RotationOption::RoundRobin),
+            "Expected to read back the round-robin rotation config after writing it"
+        );
 
         Ok(())
     }
