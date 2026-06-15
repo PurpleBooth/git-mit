@@ -46,20 +46,20 @@ path = "benches/linting.rs"
 harness = false
 
 [dependencies.futures]
-version = "0.3.31"
+version = "0.3.32"
 
 [dependencies.miette]
 version = "7.6.0"
 features = ["fancy"]
 
 [dependencies.mit-commit]
-version = "3.3.0"
+version = "3.3.2"
 
 [dependencies.quickcheck]
 version = "1.1.0"
 
 [dependencies.regex]
-version = "1.11.1"
+version = "1.12.4"
 
 [dependencies.strum]
 version = "0.28.0"
@@ -69,7 +69,7 @@ features = ["derive"]
 version = "0.28.0"
 
 [dependencies.thiserror]
-version = "2.0.12"
+version = "2.0.18"
 
 [dependencies.toml]
 version = "1.1.2"

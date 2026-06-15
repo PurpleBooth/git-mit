@@ -11,16 +11,16 @@ readme = "../README.md"
 repository = "https://github.com/PurpleBooth/git-mit"
 
 [dependencies]
-thiserror = "2.0.0"
+thiserror = "2.0.18"
 tokio = { version = "1.52.3", features = ["full"] }
-mit-lint = "3.4.0"
-clap_complete = "4.5.42"
-clap = { version = "4.5.26", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
-openssl = { version = "0.10.68", optional = true }
-miette = { version = "7.4.0", features = [ "fancy" ] }
-mit-commit = "3.3.1"
+mit-lint = "3.4.1"
+clap_complete = "4.6.5"
+clap = { version = "4.6.1", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+openssl = { version = "0.10.81", optional = true }
+miette = { version = "7.6.0", features = [ "fancy" ] }
+mit-commit = "3.3.2"
 
-arboard = "3.4.1"
+arboard = "3.6.1"
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"

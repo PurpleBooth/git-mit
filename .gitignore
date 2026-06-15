@@ -6,3 +6,4 @@
 .idea
 .aider*
 mutants.out*
+.worktrees/
