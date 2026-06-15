@@ -1,6 +1,9 @@
 use clap::Parser;
 use clap_complete::Shell;
-use mit_commit_message_lints::{mit::lib::non_clean_behaviour::BehaviourOption, scope::Scope};
+use mit_commit_message_lints::{
+    mit::lib::{non_clean_behaviour::BehaviourOption, rotation_option::RotationOption},
+    scope::Scope,
+};
 
 #[derive(Parser, Clone, Eq, PartialEq)]
 #[clap(author, version, about)]
@@ -123,14 +126,16 @@ pub enum Mit {
     SetRotation {
         #[clap(long, value_enum, value_parser, default_value = "local")]
         scope: Scope,
-        /// Whether to rotate the primary author across commits
+        /// Which rotation strategy to use
+        ///
+        /// * 'round-robin' will rotate through authors in order, one per commit
         #[clap(
             index = 1,
             env = "GIT_MIT_SET_ROTATION",
-            default_value = "false",
+            default_value = "round-robin",
             num_args = 1
         )]
-        rotation: bool,
+        rotation: RotationOption,
     },
     /// Generate a file version of available authors
     Generate {

@@ -41,6 +41,17 @@ pub struct DeserializeRebaseBehaviourError {
     pub(crate) src: String,
 }
 
+#[derive(Error, Debug, Diagnostic)]
+#[error("could not parse rotation option configuration")]
+#[diagnostic(
+    code(mit_commit_message_lints::mit::lib::authors::DeserializeRotationOptionError),
+    help("valid values are: round-robin")
+)]
+pub struct DeserializeRotationOptionError {
+    #[source_code]
+    pub(crate) src: String,
+}
+
 impl DeserializeAuthorsError {
     pub(crate) fn new(
         input: &str,
