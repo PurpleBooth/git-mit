@@ -15,3 +15,18 @@ impl Scope {
         &Self::Global == self
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Scope;
+
+    #[test]
+    fn global_scope_is_global() {
+        assert!(Scope::Global.is_global());
+    }
+
+    #[test]
+    fn local_scope_is_not_global() {
+        assert!(!Scope::Local.is_global());
+    }
+}

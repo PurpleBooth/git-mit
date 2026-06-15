@@ -362,4 +362,34 @@ mod tests {
 
         Ok(())
     }
+
+    #[test]
+    fn rotate_authors_ignores_coauthor_with_empty_name() -> Result<()> {
+        let mut buffer = BTreeMap::new();
+        buffer.insert("user.name".into(), "Billie Thompson".into());
+        buffer.insert("user.email".into(), "billie@example.com".into());
+        // Coauthor with empty name but non-empty email — should be filtered out
+        buffer.insert("mit.author.coauthors.0.name".into(), String::new());
+        buffer.insert(
+            "mit.author.coauthors.0.email".into(),
+            "ghost@example.com".into(),
+        );
+
+        {
+            let mut vcs_config = InMemory::new(&mut buffer);
+            crate::mit::cmd::rotate_authors::rotate_authors(
+                &mut vcs_config,
+                crate::mit::RotationOption::RoundRobin,
+            )?;
+        }
+
+        // With the empty-name coauthor filtered, only the primary remains,
+        // so rotation should be a no-op.
+        assert_eq!(
+            buffer.get("user.name").map(String::as_str),
+            Some("Billie Thompson")
+        );
+
+        Ok(())
+    }
 }

@@ -144,3 +144,64 @@ pub fn author_table(authors: &Authors<'_>) -> String {
 
     format!("{rows}")
 }
+
+#[cfg(test)]
+mod tests {
+    use miette::{Diagnostic, Severity};
+
+    use super::{Success, Warning};
+
+    #[test]
+    fn success_has_advice_severity() {
+        let success = Success {
+            success: "done".into(),
+            help: Some("tip"),
+        };
+        assert_eq!(success.severity(), Some(Severity::Advice));
+    }
+
+    #[test]
+    fn success_returns_help_when_present() {
+        let success = Success {
+            success: "done".into(),
+            help: Some("use --force"),
+        };
+        assert!(success.help().is_some());
+    }
+
+    #[test]
+    fn success_returns_no_help_when_absent() {
+        let success = Success {
+            success: "done".into(),
+            help: None,
+        };
+        assert!(success.help().is_none());
+    }
+
+    #[test]
+    fn warning_has_warning_severity() {
+        let warning = Warning {
+            warning: "careful".into(),
+            help: Some("tip"),
+        };
+        assert_eq!(warning.severity(), Some(Severity::Warning));
+    }
+
+    #[test]
+    fn warning_returns_help_when_present() {
+        let warning = Warning {
+            warning: "careful".into(),
+            help: Some("check config"),
+        };
+        assert!(warning.help().is_some());
+    }
+
+    #[test]
+    fn warning_returns_no_help_when_absent() {
+        let warning = Warning {
+            warning: "careful".into(),
+            help: None,
+        };
+        assert!(warning.help().is_none());
+    }
+}
