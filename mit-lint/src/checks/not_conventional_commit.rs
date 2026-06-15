@@ -449,149 +449,171 @@ This is an example commit
 
     // Tests for custom configurations with allowed_types and allowed_scopes
     #[test]
-    fn test_lint_with_config_allowed_types() {
+    fn test_lint_with_config_allowed_type_passes() {
         use std::collections::HashSet;
 
-        // Create a config that only allows "feat" type
         let mut allowed_types = HashSet::new();
         allowed_types.insert("feat".to_string());
         let config = ConventionalCommitConfig::new(Some(allowed_types), None);
 
-        // Test with allowed type
-        let commit_allowed = CommitMessage::from("feat: add new feature");
+        let commit = CommitMessage::from("feat: add new feature");
         assert!(
-            lint_with_config(&commit_allowed, &config).is_none(),
-            "Allowed type \"feat\" should not produce a problem"
-        );
-
-        // Test with disallowed type
-        let commit_disallowed = CommitMessage::from("fix: fix a bug");
-        assert!(
-            lint_with_config(&commit_disallowed, &config).is_some(),
-            "Disallowed type \"fix\" should produce a problem"
+            lint_with_config(&commit, &config).is_none(),
+            "Commit with an allowed type should not produce a problem"
         );
     }
 
     #[test]
-    fn test_lint_with_config_allowed_scopes() {
+    fn test_lint_with_config_disallowed_type_fails() {
         use std::collections::HashSet;
 
-        // Create a config that only allows "ui" scope
+        let mut allowed_types = HashSet::new();
+        allowed_types.insert("feat".to_string());
+        let config = ConventionalCommitConfig::new(Some(allowed_types), None);
+
+        let commit = CommitMessage::from("fix: fix a bug");
+        assert!(
+            lint_with_config(&commit, &config).is_some(),
+            "Commit with a disallowed type should produce a problem"
+        );
+    }
+
+    #[test]
+    fn test_lint_with_config_allowed_scope_passes() {
+        use std::collections::HashSet;
+
         let mut allowed_scopes = HashSet::new();
         allowed_scopes.insert("ui".to_string());
         let config = ConventionalCommitConfig::new(None, Some(allowed_scopes));
 
-        // Test with allowed scope
-        let commit_allowed = CommitMessage::from("feat(ui): add new UI feature");
+        let commit = CommitMessage::from("feat(ui): add new UI feature");
         assert!(
-            lint_with_config(&commit_allowed, &config).is_none(),
-            "Allowed scope \"ui\" should not produce a problem"
-        );
-
-        // Test with disallowed scope
-        let commit_disallowed = CommitMessage::from("feat(api): add new API feature");
-        assert!(
-            lint_with_config(&commit_disallowed, &config).is_some(),
-            "Disallowed scope \"api\" should produce a problem"
+            lint_with_config(&commit, &config).is_none(),
+            "Commit with an allowed scope should not produce a problem"
         );
     }
 
-    // Tests for edge cases in parse_conventional_commit
     #[test]
-    fn test_parse_conventional_commit_colon_position() {
-        // Test with no space after colon (should fail)
+    fn test_lint_with_config_disallowed_scope_fails() {
+        use std::collections::HashSet;
+
+        let mut allowed_scopes = HashSet::new();
+        allowed_scopes.insert("ui".to_string());
+        let config = ConventionalCommitConfig::new(None, Some(allowed_scopes));
+
+        let commit = CommitMessage::from("feat(api): add new API feature");
+        assert!(
+            lint_with_config(&commit, &config).is_some(),
+            "Commit with a disallowed scope should produce a problem"
+        );
+    }
+
+    // Tests for edge cases in parse_conventional_commit: colon placement
+    #[test]
+    fn test_parse_conventional_commit_no_space_after_colon_fails() {
         assert!(
             parse_conventional_commit("feat:no-space").is_none(),
-            "Missing space after colon should fail to parse"
+            "Missing space after the colon should fail to parse"
         );
+    }
 
-        // Test with space after colon (should pass)
+    #[test]
+    fn test_parse_conventional_commit_space_after_colon_passes() {
         assert!(
             parse_conventional_commit("feat: with-space").is_some(),
-            "Space after colon should parse successfully"
+            "A space after the colon should parse successfully"
         );
+    }
 
-        // Test with colon at the end (should fail)
+    #[test]
+    fn test_parse_conventional_commit_colon_at_end_fails() {
         assert!(
             parse_conventional_commit("feat:").is_none(),
-            "Colon at end without space should fail to parse"
+            "A colon at the end with nothing following should fail to parse"
         );
+    }
 
-        // Test with colon at the end followed by a space (should pass)
+    #[test]
+    fn test_parse_conventional_commit_colon_at_end_with_space_passes() {
         // This specifically tests the case that failed in the quickcheck test
         assert!(
             parse_conventional_commit("feat: ").is_some(),
-            "Colon followed by a space should parse successfully"
+            "A colon at the end followed by a space should parse successfully"
         );
+    }
 
-        // Test with colon at position 0 (should fail because the commit type is empty)
+    #[test]
+    fn test_parse_conventional_commit_colon_at_position_zero_fails() {
         assert!(
             parse_conventional_commit(": description").is_none(),
-            "Colon at position 0 with empty type should fail to parse"
+            "A colon at position 0 should fail because the commit type is empty"
         );
+    }
 
-        // Test with colon at a high position (should pass if followed by space and description)
+    #[test]
+    fn test_parse_conventional_commit_long_type_with_scope_passes() {
         let long_type = "a".repeat(100);
         let commit_message = format!("{long_type}(scope): description");
         assert!(
             parse_conventional_commit(&commit_message).is_some(),
-            "Long alphanumeric type with scope should parse successfully"
+            "A long alphanumeric type with a scope should parse successfully"
         );
     }
 
+    // Tests for edge cases in parse_conventional_commit: scope parsing
     #[test]
-    fn test_parse_conventional_commit_scope_parsing() {
-        // Test with valid scope
+    fn test_parse_conventional_commit_valid_scope_parses_type_and_scope() {
         let result = parse_conventional_commit("feat(ui): add feature");
-        assert!(result.is_some(), "Valid scope should parse successfully");
-        let (commit_type, scope, _, _) = result.unwrap();
-        assert_eq!(
-            commit_type, "feat",
-            "Expected commit type \"feat\", got {commit_type}"
-        );
-        assert_eq!(
-            scope,
-            Some("ui".to_string()),
-            "Expected scope \"ui\", got {scope:?}"
-        );
+        let (commit_type, scope, _, _) = result.expect("a valid scope should parse");
+        assert_eq!(commit_type, "feat");
+        assert_eq!(scope, Some("ui".to_string()));
+    }
 
-        // Test with malformed scope (open paren at beginning)
+    #[test]
+    fn test_parse_conventional_commit_scope_open_paren_at_beginning_fails() {
         assert!(
             parse_conventional_commit("(ui): add feature").is_none(),
-            "Open paren at beginning with empty type should fail to parse"
-        );
-
-        // Test with malformed scope (close paren not at end)
-        assert!(
-            parse_conventional_commit("feat(ui)extra: add feature").is_none(),
-            "Close paren not at end of type should fail to parse"
-        );
-
-        // Test with malformed scope (open paren after close paren)
-        assert!(
-            parse_conventional_commit("feat)(: add feature").is_none(),
-            "Mismatched parentheses should fail to parse"
+            "A scope with an open paren at the beginning should fail to parse"
         );
     }
 
     #[test]
-    fn test_parse_conventional_commit_scope_validation() {
-        // Test with empty scope (should fail)
+    fn test_parse_conventional_commit_scope_close_paren_not_at_end_fails() {
+        assert!(
+            parse_conventional_commit("feat(ui)extra: add feature").is_none(),
+            "A scope with a close paren that is not at the end should fail to parse"
+        );
+    }
+
+    #[test]
+    fn test_parse_conventional_commit_scope_open_paren_after_close_fails() {
+        assert!(
+            parse_conventional_commit("feat)(: add feature").is_none(),
+            "A scope with an open paren after a close paren should fail to parse"
+        );
+    }
+
+    #[test]
+    fn test_parse_conventional_commit_empty_scope_fails() {
         assert!(
             parse_conventional_commit("feat(): add feature").is_none(),
-            "Empty scope should fail to parse"
+            "An empty scope should fail to parse"
         );
+    }
 
-        // Test with non-alphanumeric scope (should fail)
+    #[test]
+    fn test_parse_conventional_commit_non_alphanumeric_scope_fails() {
         assert!(
             parse_conventional_commit("feat(ui-component): add feature").is_none(),
-            "Non-alphanumeric scope should fail to parse"
+            "A non-alphanumeric scope should fail to parse"
         );
+    }
 
-        // Test with alphanumeric scope (should pass)
+    #[test]
+    fn test_parse_conventional_commit_alphanumeric_scope_passes() {
         assert!(
             parse_conventional_commit("feat(ui123): add feature").is_some(),
-            "Alphanumeric scope should parse successfully"
+            "An alphanumeric scope should parse successfully"
         );
     }
 
@@ -599,10 +621,7 @@ This is an example commit
     fn test_quickcheck_failing_case() {
         // Test the specific case that failed in QuickCheck: ("0", None, "", None, None)
         let commit = CommitMessage::from("0: ");
-        assert!(
-            lint(&commit).is_none(),
-            "Single digit type \"0\" should be a valid conventional commit"
-        );
+        assert!(lint(&commit).is_none());
     }
 
     // Bug C: fail_check's first filter (has_non_alpha_type) alone doesn't exclude valid
