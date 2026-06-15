@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.4.1](https://github.com/PurpleBooth/git-mit/compare/353b3e2ea1949097d403020950ec873e332fea73..v6.4.1) - 2026-06-15
+#### Bug Fixes
+- use shell wrapper instead of symlink on windows - ([e2d4174](https://github.com/PurpleBooth/git-mit/commit/e2d4174800784bdc9b9bd7c1524f87ff25a84f37)) - Billie Thompson
+#### Documentation
+- fix stale symlink references in README and storage docs - ([e0f059a](https://github.com/PurpleBooth/git-mit/commit/e0f059a0089eba4da8eb0e792457db001e6f5ddf)) - Billie Thompson
+- describe windows shell wrapper hooks - ([e697a04](https://github.com/PurpleBooth/git-mit/commit/e697a0452b2a51a9f51d82226985773cda280f66)) - Billie Thompson
+- make all documentation reachable via links - ([6a85ae4](https://github.com/PurpleBooth/git-mit/commit/6a85ae484c78e24bf1855445fbcdfaec2b3c5648)) - Billie Thompson
+#### Tests
+- add descriptive messages to all assertions - ([c3efe93](https://github.com/PurpleBooth/git-mit/commit/c3efe938c36208d2e7185c50fdca7c05960ea7a7)) - Billie Thompson
+- cover 17 mutation testing gaps - ([596d170](https://github.com/PurpleBooth/git-mit/commit/596d170dc3ac913aa93a295479b33dc15505585e)) - Billie Thompson
+#### Refactoring
+- (**mit-lint**) Split bundled test cases into one test per function - ([b5a4719](https://github.com/PurpleBooth/git-mit/commit/b5a47197559abb26aead36f9c4364a9d004fe254)) - Billie Thompson
+- remove duplicate tests from subject length check - ([d6ed777](https://github.com/PurpleBooth/git-mit/commit/d6ed77799b89122fe1cc22206be736425b5ea215)) - Billie Thompson
+- split long task docs and inline unit tests - ([353b3e2](https://github.com/PurpleBooth/git-mit/commit/353b3e2ea1949097d403020950ec873e332fea73)) - Billie Thompson
+
+- - -
+
 ## [v6.4.0](https://github.com/PurpleBooth/git-mit/compare/baaa4b1e0696f26279c75f266106b3487e1218f5..v6.4.0) - 2026-06-15
 #### Features
 - Add random rotation and set-rotation off command - ([6e87cf7](https://github.com/PurpleBooth/git-mit/commit/6e87cf75015675e3c311d8e6cdc09652ae1c74fb)) - Billie Thompson
