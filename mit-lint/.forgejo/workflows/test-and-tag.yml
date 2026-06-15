@@ -14,7 +14,7 @@ jobs:
       next_version: ${{ steps.next_version.outputs.next_version }}
     runs-on: runner-latest
     steps:
-      - uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: https://code.forgejo.org/actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         name: Checkout
         with:
           fetch-depth: 0
@@ -56,7 +56,7 @@ jobs:
     needs:
       - semver
     steps:
-      - uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: https://code.forgejo.org/actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         name: Checkout Repository
       - uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
         name: Install Rust Toolchain
@@ -93,7 +93,7 @@ jobs:
       - semver
     steps:
       - name: Checkout code
-        uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: https://code.forgejo.org/actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust
         uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
@@ -128,7 +128,7 @@ jobs:
     if: always() && contains(needs.lint.result, 'failure') && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Repository
-        uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: https://code.forgejo.org/actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           token: ${{ secrets.FJ_TOKEN }}
       - name: Install Rust Toolchain
@@ -171,7 +171,7 @@ jobs:
     runs-on: runner-latest
     steps:
       - name: Checkout Repository
-        uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: https://code.forgejo.org/actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust
         uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
