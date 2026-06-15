@@ -54,24 +54,30 @@ mod tests {
     fn from_str_accepts_lowercase() {
         assert_eq!(
             RotationOption::from_str("round-robin").unwrap(),
-            RotationOption::RoundRobin
+            RotationOption::RoundRobin,
+            "Expected 'round-robin' to parse as RoundRobin"
         );
     }
 
     #[test]
     fn from_str_rejects_unknown() {
-        assert!(RotationOption::from_str("unknown").is_err());
+        assert!(
+            RotationOption::from_str("unknown").is_err(),
+            "Expected parsing an unknown rotation option to return an error"
+        );
     }
 
     #[test]
     fn from_str_is_case_insensitive_like_value_enum() {
         assert_eq!(
             RotationOption::from_str("Round-Robin").unwrap(),
-            RotationOption::RoundRobin
+            RotationOption::RoundRobin,
+            "Expected 'Round-Robin' to parse as RoundRobin (case insensitive)"
         );
         assert_eq!(
             RotationOption::from_str("ROUND-ROBIN").unwrap(),
-            RotationOption::RoundRobin
+            RotationOption::RoundRobin,
+            "Expected 'ROUND-ROBIN' to parse as RoundRobin (case insensitive)"
         );
     }
 
@@ -79,7 +85,8 @@ mod tests {
     fn from_str_accepts_random() {
         assert_eq!(
             RotationOption::from_str("random").unwrap(),
-            RotationOption::Random
+            RotationOption::Random,
+            "Expected 'random' to parse as Random"
         );
     }
 
@@ -87,11 +94,13 @@ mod tests {
     fn from_str_accepts_random_case_insensitive() {
         assert_eq!(
             RotationOption::from_str("Random").unwrap(),
-            RotationOption::Random
+            RotationOption::Random,
+            "Expected 'Random' to parse as Random (case insensitive)"
         );
         assert_eq!(
             RotationOption::from_str("RANDOM").unwrap(),
-            RotationOption::Random
+            RotationOption::Random,
+            "Expected 'RANDOM' to parse as Random (case insensitive)"
         );
     }
 
@@ -104,7 +113,11 @@ mod tests {
         ] {
             let displayed = original.to_string();
             let parsed = RotationOption::from_str(&displayed);
-            assert_eq!(parsed.unwrap(), original);
+            assert_eq!(
+                parsed.unwrap(),
+                original,
+                "Expected display output to round-trip through from_str"
+            );
         }
     }
 
@@ -113,6 +126,10 @@ mod tests {
         let original = RotationOption::Random;
         let displayed = original.to_string();
         let parsed = RotationOption::from_str(&displayed);
-        assert_eq!(parsed.unwrap(), original);
+        assert_eq!(
+            parsed.unwrap(),
+            original,
+            "Expected Random display output to round-trip through from_str"
+        );
     }
 }

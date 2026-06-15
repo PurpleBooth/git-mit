@@ -65,70 +65,107 @@ mod tests {
 
     #[test]
     fn test_unwrap_some_succeeds() {
-        assert!(AuthorState::Some(true).unwrap());
+        assert!(
+            AuthorState::Some(true).unwrap(),
+            "Expected unwrap on Some state to return the inner value"
+        );
     }
 
     #[test]
     #[should_panic = "called `AuthorState::unwrap()` on a `None` value"]
     fn test_unwrap_none_panics() {
-        assert!(AuthorState::<bool>::None.unwrap());
+        assert!(
+            AuthorState::<bool>::None.unwrap(),
+            "Expected unwrap on None state to panic"
+        );
     }
 
     #[test]
     #[should_panic = "called `AuthorState::unwrap()` on a `Timeout(1970-01-01 0:00:10.0 +00:00:00)` value"]
     fn test_unwrap_timeout_panics() {
         assert!(
-            AuthorState::<bool>::Timeout(OffsetDateTime::from_unix_timestamp(10).unwrap()).unwrap()
+            AuthorState::<bool>::Timeout(OffsetDateTime::from_unix_timestamp(10).unwrap()).unwrap(),
+            "Expected unwrap on Timeout state to panic"
         );
     }
 
     #[test]
     fn test_some_state_is_some() {
-        assert!(AuthorState::Some(true).is_some());
+        assert!(
+            AuthorState::Some(true).is_some(),
+            "Expected Some state to report is_some as true"
+        );
     }
 
     #[test]
     fn test_some_state_is_not_none() {
-        assert!(!AuthorState::Some(true).is_none());
+        assert!(
+            !AuthorState::Some(true).is_none(),
+            "Expected Some state to report is_none as false"
+        );
     }
 
     #[test]
     fn test_some_state_is_not_timeout() {
-        assert!(!AuthorState::Some(true).is_timeout());
+        assert!(
+            !AuthorState::Some(true).is_timeout(),
+            "Expected Some state to report is_timeout as false"
+        );
     }
 
     #[test]
     fn test_none_state_is_not_some() {
-        assert!(!AuthorState::<bool>::None.is_some());
+        assert!(
+            !AuthorState::<bool>::None.is_some(),
+            "Expected None state to report is_some as false"
+        );
     }
 
     #[test]
     fn test_none_state_is_none() {
-        assert!(AuthorState::<bool>::None.is_none());
+        assert!(
+            AuthorState::<bool>::None.is_none(),
+            "Expected None state to report is_none as true"
+        );
     }
 
     #[test]
     fn test_none_state_is_not_timeout() {
-        assert!(!AuthorState::<bool>::None.is_timeout());
+        assert!(
+            !AuthorState::<bool>::None.is_timeout(),
+            "Expected None state to report is_timeout as false"
+        );
     }
 
     #[test]
     fn test_timeout_state_is_not_some() {
-        assert!(!AuthorState::<bool>::Timeout(OffsetDateTime::now_utc()).is_some());
+        assert!(
+            !AuthorState::<bool>::Timeout(OffsetDateTime::now_utc()).is_some(),
+            "Expected Timeout state to report is_some as false"
+        );
     }
 
     #[test]
     fn test_timeout_state_is_not_none() {
-        assert!(!AuthorState::<bool>::Timeout(OffsetDateTime::now_utc()).is_none());
+        assert!(
+            !AuthorState::<bool>::Timeout(OffsetDateTime::now_utc()).is_none(),
+            "Expected Timeout state to report is_none as false"
+        );
     }
 
     #[test]
     fn test_timeout_state_recognized() {
-        assert!(AuthorState::<bool>::Timeout(OffsetDateTime::now_utc()).is_timeout());
+        assert!(
+            AuthorState::<bool>::Timeout(OffsetDateTime::now_utc()).is_timeout(),
+            "Expected Timeout state to report is_timeout as true"
+        );
     }
 
     #[test]
     fn test_system_time_timeout_recognition() {
-        assert!(AuthorState::<bool>::Timeout(SystemTime::now().into()).is_timeout());
+        assert!(
+            AuthorState::<bool>::Timeout(SystemTime::now().into()).is_timeout(),
+            "Expected a Timeout constructed from SystemTime to be recognized as timeout"
+        );
     }
 }

@@ -157,7 +157,11 @@ mod tests {
             success: "done".into(),
             help: Some("tip"),
         };
-        assert_eq!(success.severity(), Some(Severity::Advice));
+        assert_eq!(
+            success.severity(),
+            Some(Severity::Advice),
+            "Expected success to have Advice severity"
+        );
     }
 
     #[test]
@@ -166,7 +170,10 @@ mod tests {
             success: "done".into(),
             help: Some("use --force"),
         };
-        assert!(success.help().is_some());
+        assert!(
+            success.help().is_some(),
+            "Expected help to be present when one is provided"
+        );
     }
 
     #[test]
@@ -175,7 +182,10 @@ mod tests {
             success: "done".into(),
             help: None,
         };
-        assert!(success.help().is_none());
+        assert!(
+            success.help().is_none(),
+            "Expected help to be absent when none is provided"
+        );
     }
 
     #[test]
@@ -184,7 +194,11 @@ mod tests {
             warning: "careful".into(),
             help: Some("tip"),
         };
-        assert_eq!(warning.severity(), Some(Severity::Warning));
+        assert_eq!(
+            warning.severity(),
+            Some(Severity::Warning),
+            "Expected warning to have Warning severity"
+        );
     }
 
     #[test]
@@ -193,7 +207,10 @@ mod tests {
             warning: "careful".into(),
             help: Some("check config"),
         };
-        assert!(warning.help().is_some());
+        assert!(
+            warning.help().is_some(),
+            "Expected help to be present when one is provided"
+        );
     }
 
     #[test]
@@ -202,6 +219,9 @@ mod tests {
             warning: "careful".into(),
             help: None,
         };
-        assert!(warning.help().is_none());
+        assert!(
+            warning.help().is_none(),
+            "Expected help to be absent when none is provided"
+        );
     }
 }

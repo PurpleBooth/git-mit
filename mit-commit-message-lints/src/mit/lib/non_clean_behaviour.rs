@@ -49,17 +49,22 @@ mod tests {
     fn from_str_accepts_lowercase() {
         assert_eq!(
             BehaviourOption::from_str("add-to").unwrap(),
-            BehaviourOption::AddTo
+            BehaviourOption::AddTo,
+            "Expected 'add-to' to parse as AddTo"
         );
         assert_eq!(
             BehaviourOption::from_str("no-change").unwrap(),
-            BehaviourOption::NoChange
+            BehaviourOption::NoChange,
+            "Expected 'no-change' to parse as NoChange"
         );
     }
 
     #[test]
     fn from_str_rejects_unknown() {
-        assert!(BehaviourOption::from_str("unknown").is_err());
+        assert!(
+            BehaviourOption::from_str("unknown").is_err(),
+            "Expected parsing an unknown behaviour option to return an error"
+        );
     }
 
     #[test]
@@ -67,19 +72,23 @@ mod tests {
         // clap::ValueEnum accepts any casing; FromStr should too
         assert_eq!(
             BehaviourOption::from_str("Add-To").unwrap(),
-            BehaviourOption::AddTo
+            BehaviourOption::AddTo,
+            "Expected 'Add-To' to parse as AddTo (case insensitive)"
         );
         assert_eq!(
             BehaviourOption::from_str("ADD-TO").unwrap(),
-            BehaviourOption::AddTo
+            BehaviourOption::AddTo,
+            "Expected 'ADD-TO' to parse as AddTo (case insensitive)"
         );
         assert_eq!(
             BehaviourOption::from_str("No-Change").unwrap(),
-            BehaviourOption::NoChange
+            BehaviourOption::NoChange,
+            "Expected 'No-Change' to parse as NoChange (case insensitive)"
         );
         assert_eq!(
             BehaviourOption::from_str("NO-CHANGE").unwrap(),
-            BehaviourOption::NoChange
+            BehaviourOption::NoChange,
+            "Expected 'NO-CHANGE' to parse as NoChange (case insensitive)"
         );
     }
 
@@ -88,7 +97,11 @@ mod tests {
         for original in [BehaviourOption::AddTo, BehaviourOption::NoChange] {
             let displayed = original.to_string();
             let parsed = BehaviourOption::from_str(&displayed);
-            assert_eq!(parsed.unwrap(), original);
+            assert_eq!(
+                parsed.unwrap(),
+                original,
+                "Expected display output to round-trip through from_str"
+            );
         }
     }
 }

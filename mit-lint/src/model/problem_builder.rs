@@ -167,10 +167,26 @@ mod tests {
         )
         .build();
 
-        assert_eq!(problem.error(), "Error message");
-        assert_eq!(problem.tip(), "Fix advice");
-        assert_eq!(problem.code(), &Code::BodyWiderThan72Characters);
-        assert_eq!(problem.commit_message(), commit);
+        assert_eq!(
+            problem.error(),
+            "Error message",
+            "Builder should set error to \"Error message\""
+        );
+        assert_eq!(
+            problem.tip(),
+            "Fix advice",
+            "Builder should set tip to \"Fix advice\""
+        );
+        assert_eq!(
+            problem.code(),
+            &Code::BodyWiderThan72Characters,
+            "Builder should set code to BodyWiderThan72Characters"
+        );
+        assert_eq!(
+            problem.commit_message(),
+            commit,
+            "Builder should preserve the commit message"
+        );
     }
 
     #[test]
@@ -187,7 +203,10 @@ mod tests {
 
         // We can't directly access the URL, but we can check the diagnostic output
         let diagnostic_output = format!("{problem:?}");
-        assert!(diagnostic_output.contains("https://example.com"));
+        assert!(
+            diagnostic_output.contains("https://example.com"),
+            "Diagnostic output should contain the URL"
+        );
     }
 
     #[test]
@@ -205,8 +224,14 @@ mod tests {
 
         // We can't directly access the labels, but we can check the diagnostic output
         let diagnostic_output = format!("{problem:?}");
-        assert!(diagnostic_output.contains("Label 1"));
-        assert!(diagnostic_output.contains("Label 2"));
+        assert!(
+            diagnostic_output.contains("Label 1"),
+            "Diagnostic output should contain \"Label 1\""
+        );
+        assert!(
+            diagnostic_output.contains("Label 2"),
+            "Diagnostic output should contain \"Label 2\""
+        );
     }
 
     #[test]
@@ -231,7 +256,10 @@ mod tests {
 
         // We can't directly access the labels, but we can check the diagnostic output
         let diagnostic_output = format!("{problem:?}");
-        assert!(diagnostic_output.contains("Too long"));
+        assert!(
+            diagnostic_output.contains("Too long"),
+            "Diagnostic output should contain the \"Too long\" label"
+        );
     }
 
     #[test]
@@ -250,7 +278,10 @@ mod tests {
 
         // Check that no labels were added
         let diagnostic_output = format!("{problem:?}");
-        assert!(!diagnostic_output.contains("Too long"));
+        assert!(
+            !diagnostic_output.contains("Too long"),
+            "Diagnostic output should not contain the \"Too long\" label when line is within limit"
+        );
     }
 
     #[test]
@@ -276,9 +307,18 @@ mod tests {
         .build();
 
         let diagnostic_output = format!("{problem:?}");
-        assert!(diagnostic_output.contains("https://example.com"));
-        assert!(diagnostic_output.contains("Manual label"));
-        assert!(diagnostic_output.contains("Too long"));
+        assert!(
+            diagnostic_output.contains("https://example.com"),
+            "Diagnostic output should contain the URL"
+        );
+        assert!(
+            diagnostic_output.contains("Manual label"),
+            "Diagnostic output should contain \"Manual label\""
+        );
+        assert!(
+            diagnostic_output.contains("Too long"),
+            "Diagnostic output should contain the \"Too long\" label"
+        );
     }
 
     #[test]

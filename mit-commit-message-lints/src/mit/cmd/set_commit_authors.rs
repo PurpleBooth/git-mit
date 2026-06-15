@@ -187,11 +187,13 @@ mod tests {
         actual.unwrap();
         assert_eq!(
             Some(&"Billie Thompson".to_string()),
-            buffer.get("user.name")
+            buffer.get("user.name"),
+            "Expected the first author's name to be set as user.name"
         );
         assert_eq!(
             Some(&"billie@example.com".to_string()),
-            buffer.get("user.email")
+            buffer.get("user.email"),
+            "Expected the first author's email to be set as user.email"
         );
     }
 
@@ -210,7 +212,8 @@ mod tests {
         actual.unwrap();
         assert_eq!(
             Some(&"0A46826A".to_string()),
-            str_map.get("user.signingkey")
+            str_map.get("user.signingkey"),
+            "Expected the signing key to be set when the author has one"
         );
     }
 
@@ -225,7 +228,11 @@ mod tests {
         let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_hours(1));
 
         actual.unwrap();
-        assert_eq!(None, buffer.get("user.signingkey"));
+        assert_eq!(
+            None,
+            buffer.get("user.signingkey"),
+            "Expected the signing key to be removed when the author does not have one"
+        );
     }
 
     #[test]
@@ -243,27 +250,33 @@ mod tests {
         actual.unwrap();
         assert_eq!(
             Some(&"Billie Thompson".to_string()),
-            buffer.get("user.name")
+            buffer.get("user.name"),
+            "Expected the primary author's name to be set as user.name"
         );
         assert_eq!(
             Some(&"billie@example.com".to_string()),
-            buffer.get("user.email")
+            buffer.get("user.email"),
+            "Expected the primary author's email to be set as user.email"
         );
         assert_eq!(
             Some(&"Somebody Else".to_string()),
-            buffer.get("mit.author.coauthors.0.name")
+            buffer.get("mit.author.coauthors.0.name"),
+            "Expected the first coauthor's name to be set"
         );
         assert_eq!(
             Some(&"somebody@example.com".to_string()),
-            buffer.get("mit.author.coauthors.0.email")
+            buffer.get("mit.author.coauthors.0.email"),
+            "Expected the first coauthor's email to be set"
         );
         assert_eq!(
             Some(&"Annie Example".to_string()),
-            buffer.get("mit.author.coauthors.1.name")
+            buffer.get("mit.author.coauthors.1.name"),
+            "Expected the second coauthor's name to be set"
         );
         assert_eq!(
             Some(&"annie@example.com".to_string()),
-            buffer.get("mit.author.coauthors.1.email")
+            buffer.get("mit.author.coauthors.1.email"),
+            "Expected the second coauthor's email to be set"
         );
     }
 
@@ -299,14 +312,24 @@ mod tests {
         actual.unwrap();
         assert_eq!(
             Some(&"Billie Thompson".to_string()),
-            buffer.get("user.name")
+            buffer.get("user.name"),
+            "Expected the new primary author's name to overwrite the old one"
         );
         assert_eq!(
             Some(&"billie@example.com".to_string()),
-            buffer.get("user.email")
+            buffer.get("user.email"),
+            "Expected the new primary author's email to overwrite the old one"
         );
-        assert_eq!(None, buffer.get("mit.author.coauthors.0.name"));
-        assert_eq!(None, buffer.get("mit.author.coauthors.0.email"));
+        assert_eq!(
+            None,
+            buffer.get("mit.author.coauthors.0.name"),
+            "Expected old coauthor name to be removed"
+        );
+        assert_eq!(
+            None,
+            buffer.get("mit.author.coauthors.0.email"),
+            "Expected old coauthor email to be removed"
+        );
     }
 
     #[test]
@@ -361,7 +384,10 @@ mod tests {
         let author = Author::new("Billie Thompson".into(), "billie@example.com".into(), None);
         let actual = set_commit_authors(&mut vcs_config, &[&author], Duration::from_hours(1));
 
-        assert!(actual.is_err());
+        assert!(
+            actual.is_err(),
+            "Expected an error when removing the signing key fails"
+        );
     }
 
     struct ExpiryFailingVcs;

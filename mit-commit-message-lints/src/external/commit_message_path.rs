@@ -51,7 +51,11 @@ mod tests {
     fn returns_provided_path_unchanged() {
         let provided = PathBuf::from("/some/arbitrary/path");
         let result = resolve_commit_message_path(Some(provided.clone()), Path::new("/tmp"));
-        assert_eq!(result.unwrap(), provided);
+        assert_eq!(
+            result.unwrap(),
+            provided,
+            "Expected the provided path to be returned unchanged"
+        );
     }
 
     #[test]
@@ -62,7 +66,11 @@ mod tests {
 
         let result = resolve_commit_message_path(None, temp.path());
 
-        assert_eq!(result.unwrap(), expected);
+        assert_eq!(
+            result.unwrap(),
+            expected,
+            "Expected the default COMMIT_EDITMSG path when no path is provided"
+        );
     }
 
     #[test]
@@ -76,13 +84,20 @@ mod tests {
 
         let result = resolve_commit_message_path(None, &subdir);
 
-        assert_eq!(result.unwrap(), expected);
+        assert_eq!(
+            result.unwrap(),
+            expected,
+            "Expected the COMMIT_EDITMSG path to be discovered from a subdirectory"
+        );
     }
 
     #[test]
     fn errors_when_not_in_git_repo_and_not_provided() {
         let temp = TempDir::new().unwrap();
         let result = resolve_commit_message_path(None, temp.path());
-        assert!(result.is_err());
+        assert!(
+            result.is_err(),
+            "Expected an error when not in a git repo and no path is provided"
+        );
     }
 }

@@ -22,11 +22,17 @@ mod tests {
 
     #[test]
     fn global_scope_is_global() {
-        assert!(Scope::Global.is_global());
+        assert!(
+            Scope::Global.is_global(),
+            "Expected the Global scope to report as global"
+        );
     }
 
     #[test]
     fn local_scope_is_not_global() {
-        assert!(!Scope::Local.is_global());
+        assert!(
+            !Scope::Local.is_global(),
+            "Expected the Local scope to not report as global"
+        );
     }
 }

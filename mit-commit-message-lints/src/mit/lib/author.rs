@@ -55,9 +55,21 @@ mod tests {
     fn test_new_author_creation() {
         let author = Author::new("The Name".into(), "email@example.com".into(), None);
 
-        assert_eq!(author.name(), "The Name");
-        assert_eq!(author.email(), "email@example.com");
-        assert_eq!(author.signingkey(), None);
+        assert_eq!(
+            author.name(),
+            "The Name",
+            "Expected the author's name to be 'The Name'"
+        );
+        assert_eq!(
+            author.email(),
+            "email@example.com",
+            "Expected the author's email to be 'email@example.com'"
+        );
+        assert_eq!(
+            author.signingkey(),
+            None,
+            "Expected the author's signing key to be None when not set"
+        );
     }
 
     #[test]
@@ -68,6 +80,10 @@ mod tests {
             Some("0A46826A".into()),
         );
 
-        assert_eq!(author.signingkey(), Some("0A46826A"));
+        assert_eq!(
+            author.signingkey(),
+            Some("0A46826A"),
+            "Expected the author's signing key to be '0A46826A'"
+        );
     }
 }

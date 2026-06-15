@@ -120,19 +120,22 @@ mod tests {
         // Initial state: A is primary, B & C are coauthors
         assert_eq!(
             buffer.get("user.name").map(String::as_str),
-            Some("Billie Thompson")
+            Some("Billie Thompson"),
+            "Expected the initial primary author to be Billie Thompson"
         );
         assert_eq!(
             buffer
                 .get("mit.author.coauthors.0.name")
                 .map(String::as_str),
-            Some("Somebody Else")
+            Some("Somebody Else"),
+            "Expected the first coauthor to be Somebody Else before rotation"
         );
         assert_eq!(
             buffer
                 .get("mit.author.coauthors.1.name")
                 .map(String::as_str),
-            Some("Annie Example")
+            Some("Annie Example"),
+            "Expected the second coauthor to be Annie Example before rotation"
         );
 
         // Rotate: B becomes primary, C & A are coauthors
@@ -146,19 +149,22 @@ mod tests {
 
         assert_eq!(
             buffer.get("user.name").map(String::as_str),
-            Some("Somebody Else")
+            Some("Somebody Else"),
+            "Expected the primary author to be Somebody Else after rotation"
         );
         assert_eq!(
             buffer
                 .get("mit.author.coauthors.0.name")
                 .map(String::as_str),
-            Some("Annie Example")
+            Some("Annie Example"),
+            "Expected the first coauthor to be Annie Example after rotation"
         );
         assert_eq!(
             buffer
                 .get("mit.author.coauthors.1.name")
                 .map(String::as_str),
-            Some("Billie Thompson")
+            Some("Billie Thompson"),
+            "Expected the second coauthor to be Billie Thompson after rotation"
         );
 
         Ok(())
@@ -184,13 +190,18 @@ mod tests {
         // Should be unchanged
         assert_eq!(
             buffer.get("user.name").map(String::as_str),
-            Some("Billie Thompson")
+            Some("Billie Thompson"),
+            "Expected user.name to be unchanged with a single author"
         );
         assert_eq!(
             buffer.get("user.email").map(String::as_str),
-            Some("billie@example.com")
+            Some("billie@example.com"),
+            "Expected user.email to be unchanged with a single author"
         );
-        assert!(!buffer.contains_key("mit.author.coauthors.0.name"));
+        assert!(
+            !buffer.contains_key("mit.author.coauthors.0.name"),
+            "Expected no coauthors to be set with a single author"
+        );
 
         Ok(())
     }
@@ -208,7 +219,10 @@ mod tests {
         }
 
         // Buffer should be unchanged
-        assert!(!buffer.contains_key("user.name"));
+        assert!(
+            !buffer.contains_key("user.name"),
+            "Expected no user.name to be set when there are no authors"
+        );
 
         Ok(())
     }
@@ -232,13 +246,15 @@ mod tests {
         // Initial: A is primary, B is coauthor
         assert_eq!(
             buffer.get("user.name").map(String::as_str),
-            Some("Billie Thompson")
+            Some("Billie Thompson"),
+            "Expected the initial primary author to be Billie Thompson"
         );
         assert_eq!(
             buffer
                 .get("mit.author.coauthors.0.name")
                 .map(String::as_str),
-            Some("Somebody Else")
+            Some("Somebody Else"),
+            "Expected the first coauthor to be Somebody Else before rotation"
         );
 
         // Rotate: B becomes primary, A becomes coauthor
@@ -252,13 +268,15 @@ mod tests {
 
         assert_eq!(
             buffer.get("user.name").map(String::as_str),
-            Some("Somebody Else")
+            Some("Somebody Else"),
+            "Expected the primary author to be Somebody Else after first rotation"
         );
         assert_eq!(
             buffer
                 .get("mit.author.coauthors.0.name")
                 .map(String::as_str),
-            Some("Billie Thompson")
+            Some("Billie Thompson"),
+            "Expected the first coauthor to be Billie Thompson after first rotation"
         );
 
         // Rotate again: back to A primary, B coauthor
@@ -272,13 +290,15 @@ mod tests {
 
         assert_eq!(
             buffer.get("user.name").map(String::as_str),
-            Some("Billie Thompson")
+            Some("Billie Thompson"),
+            "Expected the primary author to be Billie Thompson after second rotation"
         );
         assert_eq!(
             buffer
                 .get("mit.author.coauthors.0.name")
                 .map(String::as_str),
-            Some("Somebody Else")
+            Some("Somebody Else"),
+            "Expected the first coauthor to be Somebody Else after second rotation"
         );
 
         Ok(())
@@ -329,7 +349,10 @@ mod tests {
         result.sort();
 
         // The multiset of authors must be preserved (it's a permutation)
-        assert_eq!(result, original);
+        assert_eq!(
+            result, original,
+            "Expected random rotation to produce a valid permutation of the original authors"
+        );
 
         Ok(())
     }
@@ -353,11 +376,13 @@ mod tests {
 
         assert_eq!(
             buffer.get("user.name").map(String::as_str),
-            Some("Billie Thompson")
+            Some("Billie Thompson"),
+            "Expected user.name to be unchanged with a single author under random rotation"
         );
         assert_eq!(
             buffer.get("user.email").map(String::as_str),
-            Some("billie@example.com")
+            Some("billie@example.com"),
+            "Expected user.email to be unchanged with a single author under random rotation"
         );
 
         Ok(())
@@ -387,7 +412,8 @@ mod tests {
         // so rotation should be a no-op.
         assert_eq!(
             buffer.get("user.name").map(String::as_str),
-            Some("Billie Thompson")
+            Some("Billie Thompson"),
+            "Expected user.name to be unchanged when the only coauthor has an empty name"
         );
 
         Ok(())

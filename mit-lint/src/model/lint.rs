@@ -787,20 +787,29 @@ mod tests {
     #[test]
     fn example_it_is_convertible_to_string() {
         let string: String = Lint::PivotalTrackerIdMissing.into();
-        assert_eq!("pivotal-tracker-id-missing".to_string(), string);
+        assert_eq!(
+            "pivotal-tracker-id-missing".to_string(),
+            string,
+            "Lint::PivotalTrackerIdMissing should convert to \"pivotal-tracker-id-missing\""
+        );
     }
 
     #[test]
     fn example_it_can_be_created_from_string() {
         let lint: Lint = "pivotal-tracker-id-missing".try_into().unwrap();
-        assert_eq!(Lint::PivotalTrackerIdMissing, lint);
+        assert_eq!(
+            Lint::PivotalTrackerIdMissing,
+            lint,
+            "Parsing \"pivotal-tracker-id-missing\" should yield Lint::PivotalTrackerIdMissing"
+        );
     }
 
     #[test]
     fn example_it_is_printable() {
         assert_eq!(
             "pivotal-tracker-id-missing",
-            &format!("{}", Lint::PivotalTrackerIdMissing)
+            &format!("{}", Lint::PivotalTrackerIdMissing),
+            "Display of PivotalTrackerIdMissing should be \"pivotal-tracker-id-missing\""
         );
     }
 
@@ -821,16 +830,32 @@ mod tests {
                 Lint::BodyWiderThan72Characters,
                 Lint::NotConventionalCommit,
                 Lint::NotEmojiLog,
-            ]
+            ],
+            "all_lints() should return all 11 lints in canonical order"
         );
     }
 
     #[test]
     fn example_i_can_get_if_a_lint_is_enabled_by_default() {
-        assert!(Lint::DuplicatedTrailers.enabled_by_default());
-        assert!(!Lint::PivotalTrackerIdMissing.enabled_by_default());
-        assert!(!Lint::JiraIssueKeyMissing.enabled_by_default());
-        assert!(Lint::SubjectNotSeparateFromBody.enabled_by_default());
-        assert!(!Lint::GitHubIdMissing.enabled_by_default());
+        assert!(
+            Lint::DuplicatedTrailers.enabled_by_default(),
+            "DuplicatedTrailers should be enabled by default"
+        );
+        assert!(
+            !Lint::PivotalTrackerIdMissing.enabled_by_default(),
+            "PivotalTrackerIdMissing should not be enabled by default"
+        );
+        assert!(
+            !Lint::JiraIssueKeyMissing.enabled_by_default(),
+            "JiraIssueKeyMissing should not be enabled by default"
+        );
+        assert!(
+            Lint::SubjectNotSeparateFromBody.enabled_by_default(),
+            "SubjectNotSeparateFromBody should be enabled by default"
+        );
+        assert!(
+            !Lint::GitHubIdMissing.enabled_by_default(),
+            "GitHubIdMissing should not be enabled by default"
+        );
     }
 }

@@ -153,7 +153,11 @@ mod tests {
             author_command: Some("echo hello"),
             author_file: None,
         };
-        assert_eq!(args.author_command(), Some("echo hello"));
+        assert_eq!(
+            args.author_command(),
+            Some("echo hello"),
+            "Expected author_command to pass through the provided value"
+        );
     }
 
     #[test]
@@ -162,7 +166,11 @@ mod tests {
             author_command: None,
             author_file: None,
         };
-        assert_eq!(args.author_command(), None);
+        assert_eq!(
+            args.author_command(),
+            None,
+            "Expected author_command to be None when not set"
+        );
     }
 
     #[test]
@@ -171,7 +179,11 @@ mod tests {
             author_command: None,
             author_file: Some("/custom/path.toml"),
         };
-        assert_eq!(args.author_file(), Some("/custom/path.toml"));
+        assert_eq!(
+            args.author_file(),
+            Some("/custom/path.toml"),
+            "Expected author_file to pass through the provided value"
+        );
     }
 
     #[test]
@@ -180,6 +192,10 @@ mod tests {
             author_command: None,
             author_file: None,
         };
-        assert_eq!(args.author_file(), None);
+        assert_eq!(
+            args.author_file(),
+            None,
+            "Expected author_file to be None when not set"
+        );
     }
 }

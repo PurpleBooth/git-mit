@@ -223,7 +223,11 @@ mod tests {
             None,
             None,
         );
-        assert_eq!(problem.error(), "Some error");
+        assert_eq!(
+            problem.error(),
+            "Some error",
+            "error() should return the value passed to new()"
+        );
     }
 
     #[test]
@@ -236,7 +240,10 @@ mod tests {
             Some(vec![("String".to_string(), 10_usize, 20_usize)]),
             None,
         );
-        assert!(problem.labels().is_none());
+        assert!(
+            problem.labels().is_none(),
+            "Labels should be None for empty commit message"
+        );
     }
 
     #[test]
@@ -249,7 +256,10 @@ mod tests {
             Some(vec![("String".to_string(), 10_usize, 20_usize)]),
             None,
         );
-        assert!(problem.source_code().is_none());
+        assert!(
+            problem.source_code().is_none(),
+            "Source code should be None for empty commit message"
+        );
     }
 
     #[allow(
@@ -279,7 +289,11 @@ mod tests {
             None,
             None,
         );
-        assert_eq!(problem.tip(), "Some tip");
+        assert_eq!(
+            problem.tip(),
+            "Some tip",
+            "tip() should return the value passed to new()"
+        );
     }
 
     #[allow(
@@ -309,7 +323,11 @@ mod tests {
             None,
             None,
         );
-        assert_eq!(problem.code(), &Code::NotConventionalCommit);
+        assert_eq!(
+            problem.code(),
+            &Code::NotConventionalCommit,
+            "code() should return the Code passed to new()"
+        );
     }
 
     #[quickcheck]
@@ -331,7 +349,8 @@ mod tests {
         );
         assert_eq!(
             problem.commit_message(),
-            CommitMessage::from("Commit message")
+            CommitMessage::from("Commit message"),
+            "commit_message() should return the value passed to new()"
         );
     }
 
@@ -368,7 +387,8 @@ mod tests {
                 .unwrap()
                 .map(|x| (x.label().unwrap().to_string(), x.offset(), x.len()))
                 .collect::<Vec<_>>(),
-            vec![("String".to_string(), 10_usize, 20_usize)]
+            vec![("String".to_string(), 10_usize, 20_usize)],
+            "Labels should contain the expected label text, offset, and length"
         );
     }
 
@@ -388,7 +408,8 @@ mod tests {
                 .unwrap()
                 .map(|x| (x.label().unwrap().to_string(), x.offset(), x.len()))
                 .collect::<Vec<_>>(),
-            vec![("String".to_string(), start, offset)]
+            vec![("String".to_string(), start, offset)],
+            "Labels should match the provided start and offset values"
         );
     }
 }
