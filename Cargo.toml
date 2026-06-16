@@ -1,14 +1,6 @@
 [workspace]
+members = ["git-mit-config", "git-mit-install", "mit-prepare-commit-msg", "mit-pre-commit", "mit-commit-msg", "mit-commit-message-lints", "mit-hook-test-helper", "git-mit", "git-mit-relates-to"]
 resolver = "3"
 
-members = [
-    "git-mit-config",
-    "git-mit-install",
-    "mit-prepare-commit-msg",
-    "mit-pre-commit",
-    "mit-commit-msg",
-    "mit-commit-message-lints",
-    "mit-hook-test-helper",
-    "git-mit",
-    "git-mit-relates-to",
-]
+[workspace.package]
+edition = "2024"

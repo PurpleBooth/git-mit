@@ -1,12 +1,12 @@
 use std::{collections::BTreeMap, time::Duration};
 
-use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
+use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
 use indoc::indoc;
 use mit_commit::{CommitMessage, Trailer};
 use mit_commit_message_lints::{
     external,
-    mit::{get_commit_coauthor_configuration, set_commit_authors, Author},
-    relates::{get_relate_to_configuration, set_relates_to, RelateTo},
+    mit::{Author, get_commit_coauthor_configuration, set_commit_authors},
+    relates::{RelateTo, get_relate_to_configuration, set_relates_to},
 };
 
 const COMMIT_WITH_ALL_FEATURES: &str = indoc!(

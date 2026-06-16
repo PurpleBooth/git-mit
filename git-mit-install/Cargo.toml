@@ -1,34 +1,47 @@
 [package]
 name = "git-mit-install"
 version = "6.4.1"
-authors = [ "Billie Thompson <billie+git-mit-install@billiecodes.com>" ]
-edition = "2018"
-license = "CC0-1.0"
+authors = ["Billie Thompson <billie+git-mit-install@billiecodes.com>"]
 description = "Install git-mit into a repository"
-categories = [ "development-tools", "command-line-utilities" ]
-keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
+keywords = ["git", "git-hooks"]
+categories = ["development-tools", "command-line-utilities"]
+license = "CC0-1.0"
 repository = "https://github.com/PurpleBooth/git-mit"
 
+[package.edition]
+workspace = true
+
 [dependencies]
-which = "8"
-thiserror = "2"
-miette = { version = "7", features = [ "fancy" ] }
 clap_complete = "4"
-clap = { version = "4", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
-
-
 git2 = "0.21"
-openssl = { version = "0.10", optional = true }
-
 indoc = "2"
+thiserror = "2"
+which = "8"
 
-  [dependencies.mit-commit-message-lints]
-  path = "../mit-commit-message-lints"
+[dependencies.clap]
+version = "4"
+features = ["derive", "cargo", "wrap_help", "env", "unicode"]
+
+[dependencies.miette]
+version = "7"
+features = ["fancy"]
+
+[dependencies.mit-commit-message-lints]
 version = "6"
+path = "../mit-commit-message-lints"
+
+[dependencies.openssl]
+version = "0.10"
+optional = true
 
 [dev-dependencies]
 
 [features]
 default = []
 vendored-openssl = ["openssl/vendored"]
+
+[[bin]]
+path = "src/main.rs"
+name = "git-mit-install"
+required-features = []

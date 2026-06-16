@@ -16,7 +16,9 @@ pub struct SerializeAuthorsError(#[from] pub toml::ser::Error);
 #[error("could not parse author configuration")]
 #[diagnostic(
     code(mit_commit_message_lints::mit::lib::authors::deserialise_authors_error),
-    help("`git mit-config mit example` can show you an example of what it should look like, or you can generate one using `git mit-config mit generate` after setting up some authors with `git mit-config mit set`"),
+    help(
+        "`git mit-config mit example` can show you an example of what it should look like, or you can generate one using `git mit-config mit generate` after setting up some authors with `git mit-config mit set`"
+    )
 )]
 pub struct DeserializeAuthorsError {
     #[source_code]

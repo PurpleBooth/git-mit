@@ -3,7 +3,7 @@ use rand::seq::SliceRandom;
 
 use crate::external::Vcs;
 use crate::mit::cmd::set_commit_authors::{remove_coauthors, set_vcs_coauthor, set_vcs_user};
-use crate::mit::{cmd::vcs::get_vcs_coauthors_config, Author};
+use crate::mit::{Author, cmd::vcs::get_vcs_coauthors_config};
 
 /// Rotate the primary author among configured authors
 ///
@@ -98,7 +98,7 @@ mod tests {
     use miette::Result;
 
     use crate::external::InMemory;
-    use crate::mit::{set_commit_authors, Author};
+    use crate::mit::{Author, set_commit_authors};
 
     #[test]
     fn rotate_authors_rotates_three_authors() -> Result<()> {

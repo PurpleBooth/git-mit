@@ -29,7 +29,7 @@ use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
     console::{error_handling::miette_install, style},
     external::Git2,
-    mit::{get_authors, set_commit_authors, Authors},
+    mit::{Authors, get_authors, set_commit_authors},
 };
 
 use crate::{cli::app::CliArgs, errors::UnknownAuthor};
@@ -82,7 +82,10 @@ fn main() -> Result<()> {
 }
 
 fn not_setup_warning() {
-    style::warning("Hooks not found in this repository, your commits won't contain trailers, and lints will not be checked", Some("`git mit-install` will fix this"));
+    style::warning(
+        "Hooks not found in this repository, your commits won't contain trailers, and lints will not be checked",
+        Some("`git mit-install` will fix this"),
+    );
 }
 
 fn is_hook_present() -> bool {

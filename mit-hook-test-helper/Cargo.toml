@@ -1,24 +1,31 @@
 [package]
 name = "mit-hook-test-helper"
 version = "6.4.1"
-authors = [
-  "Billie Thompson <billie+mit-hook-test-helper@billiecodes.com>"
-]
-edition = "2018"
-license = "CC0-1.0"
-categories = [ "development-tools", "command-line-utilities" ]
-keywords = [ "git", "git-hooks" ]
-readme = "../README.md"
-repository = "https://github.com/PurpleBooth/git-mit"
+authors = ["Billie Thompson <billie+mit-hook-test-helper@billiecodes.com>"]
 description = "Testing help tools for git-mit"
+readme = "../README.md"
+keywords = ["git", "git-hooks"]
+categories = ["development-tools", "command-line-utilities"]
+license = "CC0-1.0"
+repository = "https://github.com/PurpleBooth/git-mit"
+
+[package.edition]
+workspace = true
 
 [dependencies]
-tempfile = "3"
 git2 = "0.21"
-openssl = { version = "0.10", optional = true }
+tempfile = "3"
 
-
+[dependencies.openssl]
+version = "0.10"
+optional = true
 
 [features]
 default = []
 vendored-openssl = ["openssl/vendored"]
+
+[lib]
+path = "src/lib.rs"
+name = "mit_hook_test_helper"
+required-features = []
+crate-type = ["lib"]

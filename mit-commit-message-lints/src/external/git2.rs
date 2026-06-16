@@ -1,10 +1,10 @@
 use std::{collections::BTreeMap, convert::TryFrom, path::PathBuf};
 
 use git2::{Config, Repository, RepositoryState};
-use miette::{miette, IntoDiagnostic, Report, Result};
+use miette::{IntoDiagnostic, Report, Result, miette};
 
 use crate::{
-    external::{vcs::RepoState, Vcs},
+    external::{Vcs, vcs::RepoState},
     mit::{Author, Authors},
 };
 

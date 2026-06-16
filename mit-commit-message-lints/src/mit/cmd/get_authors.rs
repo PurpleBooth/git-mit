@@ -106,7 +106,7 @@ fn from_exec(command: &str) -> Result<String> {
 mod tests {
     use std::io::Write;
 
-    use crate::mit::{get_authors, GenericArgs};
+    use crate::mit::{GenericArgs, get_authors};
 
     #[test]
     #[cfg(unix)]

@@ -1,39 +1,51 @@
 [package]
 name = "mit-prepare-commit-msg"
 version = "6.4.1"
-authors = [
-  "Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>"
-]
-edition = "2018"
-license = "CC0-1.0"
+authors = ["Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>"]
 description = "This hook is invoked by git-commit right after preparing the default log message, and before the editor is started."
-categories = [ "development-tools", "command-line-utilities" ]
-keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
+keywords = ["git", "git-hooks"]
+categories = ["development-tools", "command-line-utilities"]
+license = "CC0-1.0"
 repository = "https://github.com/PurpleBooth/git-mit"
 
+[package.edition]
+workspace = true
+
 [dependencies]
-tinytemplate = "1"
-thiserror = "2"
-miette = { version = "7", features = [ "fancy" ] }
-shell-words = "1"
 clap_complete = "4"
-clap = { version = "4", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
-openssl = { version = "0.10", optional = true }
 mit-commit = "3"
+shell-words = "1"
+thiserror = "2"
+tinytemplate = "1"
 
+[dependencies.clap]
+version = "4"
+features = ["derive", "cargo", "wrap_help", "env", "unicode"]
 
+[dependencies.miette]
+version = "7"
+features = ["fancy"]
 
-  [dependencies.serde]
-version = "1"
-features = [ "derive" ]
-
-  [dependencies.mit-commit-message-lints]
-  path = "../mit-commit-message-lints"
+[dependencies.mit-commit-message-lints]
 version = "6"
+path = "../mit-commit-message-lints"
+
+[dependencies.openssl]
+version = "0.10"
+optional = true
+
+[dependencies.serde]
+version = "1"
+features = ["derive"]
+
+[dev-dependencies]
 
 [features]
 default = []
 vendored-openssl = ["openssl/vendored"]
 
-[dev-dependencies]
+[[bin]]
+path = "src/main.rs"
+name = "mit-prepare-commit-msg"
+required-features = []

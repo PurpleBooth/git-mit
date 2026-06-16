@@ -9,8 +9,8 @@ use miette::{IntoDiagnostic, Result, WrapErr};
 use crate::{
     external::Vcs,
     mit::{
-        cmd::{errors::Error::NoAuthorsToSet, vcs::has_vcs_coauthor, CONFIG_KEY_EXPIRES},
         Author,
+        cmd::{CONFIG_KEY_EXPIRES, errors::Error::NoAuthorsToSet, vcs::has_vcs_coauthor},
     },
 };
 
@@ -124,11 +124,11 @@ mod tests {
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
 
-    use miette::{miette, Result};
+    use miette::{Result, miette};
 
     use crate::{
         external::{InMemory, RepoState, Vcs},
-        mit::{set_commit_authors, Author},
+        mit::{Author, set_commit_authors},
     };
 
     struct FailingVcs;

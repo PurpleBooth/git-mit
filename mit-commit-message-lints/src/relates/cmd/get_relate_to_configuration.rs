@@ -57,7 +57,7 @@ mod tests {
 
     use crate::{
         external::InMemory,
-        relates::{get_relate_to_configuration, RelateTo},
+        relates::{RelateTo, get_relate_to_configuration},
     };
 
     #[test]

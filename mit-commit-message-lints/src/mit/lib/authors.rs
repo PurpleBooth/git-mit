@@ -1,5 +1,5 @@
 use std::{
-    collections::{btree_map::IntoIter, BTreeMap, HashSet},
+    collections::{BTreeMap, HashSet, btree_map::IntoIter},
     convert::TryFrom,
 };
 
@@ -134,7 +134,7 @@ mod tests {
 
     use crate::{
         external::InMemory,
-        mit::{lib::author::Author, Authors},
+        mit::{Authors, lib::author::Author},
     };
 
     #[test]

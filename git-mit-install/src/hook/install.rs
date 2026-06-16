@@ -112,7 +112,10 @@ mod tests {
         std::fs::set_permissions(&binary, perms).unwrap();
 
         let old_path = std::env::var("PATH").unwrap_or_default();
-        std::env::set_var("PATH", format!("{}:{}", bin_dir.display(), old_path));
+        // SAFETY: this test is single-threaded
+        unsafe {
+            std::env::set_var("PATH", format!("{}:{}", bin_dir.display(), old_path));
+        }
 
         // First install creates the symlink
         link(&hook_dir, "pre-commit").unwrap();
@@ -135,7 +138,10 @@ mod tests {
             "Expected error when regular file exists at install path, got Ok(())"
         );
 
-        std::env::set_var("PATH", old_path);
+        // SAFETY: this test is single-threaded
+        unsafe {
+            std::env::set_var("PATH", old_path);
+        }
         let _ = std::fs::remove_dir_all(&temp);
     }
 }
@@ -252,7 +258,10 @@ mod windows_tests {
         let binary = bin_dir.join("mit-pre-commit.exe");
         std::fs::write(&binary, b"placeholder").unwrap();
         let old_path = std::env::var("PATH").unwrap_or_default();
-        std::env::set_var("PATH", format!("{};{old_path}", bin_dir.display()));
+        // SAFETY: this test is single-threaded
+        unsafe {
+            std::env::set_var("PATH", format!("{};{old_path}", bin_dir.display()));
+        }
 
         // First install writes the wrapper at the bare hook name Git looks for.
         link(&hook_dir, "pre-commit").unwrap();
@@ -279,7 +288,10 @@ mod windows_tests {
             "re-install must be idempotent, got {again:?}"
         );
 
-        std::env::set_var("PATH", old_path);
+        // SAFETY: this test is single-threaded
+        unsafe {
+            std::env::set_var("PATH", old_path);
+        }
         let _ = std::fs::remove_dir_all(&temp);
     }
 }

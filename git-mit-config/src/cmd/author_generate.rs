@@ -4,7 +4,7 @@ use miette::Result;
 use mit_commit_message_lints::{
     console::style::author_table,
     external::Git2,
-    mit::{get_authors, Authors, GenericArgs},
+    mit::{Authors, GenericArgs, get_authors},
 };
 
 use crate::current_dir;

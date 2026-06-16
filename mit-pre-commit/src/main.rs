@@ -27,7 +27,7 @@ use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
     console::error_handling::miette_install,
     external::Git2,
-    mit::{get_commit_coauthor_configuration, AuthorState},
+    mit::{AuthorState, get_commit_coauthor_configuration},
 };
 
 use crate::{

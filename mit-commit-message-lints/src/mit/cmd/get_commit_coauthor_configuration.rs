@@ -5,7 +5,7 @@ use time::OffsetDateTime;
 
 use crate::{
     external::Vcs,
-    mit::{cmd::CONFIG_KEY_EXPIRES, Author, AuthorState},
+    mit::{Author, AuthorState, cmd::CONFIG_KEY_EXPIRES},
 };
 
 /// Get the co-authors that are currently defined for this vcs config source
@@ -72,7 +72,7 @@ mod tests {
 
     use crate::{
         external::InMemory,
-        mit::{get_commit_coauthor_configuration, Author, AuthorState},
+        mit::{Author, AuthorState, get_commit_coauthor_configuration},
     };
 
     #[test]

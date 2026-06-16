@@ -21,7 +21,7 @@ use std::{
     convert::TryFrom,
     env,
     fs::File,
-    io::{stdout, Write},
+    io::{Write, stdout},
     path::PathBuf,
     process::{Command, Stdio},
 };
@@ -34,15 +34,15 @@ use mit_commit_message_lints::{
     console::error_handling::miette_install,
     external::{self, Git2, RepoState, Vcs},
     mit::{
+        Author, AuthorState,
         cmd::{
             get_config_non_clean_behaviour::get_config_non_clean_behaviour,
             get_config_rotation::get_config_rotation, rotate_authors::rotate_authors,
         },
         get_commit_coauthor_configuration,
         lib::non_clean_behaviour::BehaviourOption,
-        Author, AuthorState,
     },
-    relates::{get_relate_to_configuration, RelateTo},
+    relates::{RelateTo, get_relate_to_configuration},
 };
 use serde::Serialize;
 use tinytemplate::TinyTemplate;

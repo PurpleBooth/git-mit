@@ -28,7 +28,9 @@ impl Diagnostic for StaleAuthorError {
     }
 
     fn help<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
-        Some(Box::new("Can you confirm who's currently coding? It's nice to get and give the right credit. You can fix this by running `git mit` with the initials of whoever is coding (e.g. `git mit bt`). To list available authors, run `git mit-config mit available`"))
+        Some(Box::new(
+            "Can you confirm who's currently coding? It's nice to get and give the right credit. You can fix this by running `git mit` with the initials of whoever is coding (e.g. `git mit bt`). To list available authors, run `git mit-config mit available`",
+        ))
     }
 
     fn source_code(&self) -> Option<&dyn SourceCode> {
@@ -50,7 +52,9 @@ impl Diagnostic for StaleAuthorError {
 #[derive(Error, Debug, Diagnostic)]
 #[error("No authors set")]
 #[diagnostic(
-code(mit_pre_commit::errors::no_author_error),
-help("Can you set who's currently coding? It's nice to get and give the right credit. You can fix this by running `git mit` with the initials of whoever is coding (e.g. `git mit bt`). To list available authors, run `git mit-config mit available`")
+    code(mit_pre_commit::errors::no_author_error),
+    help(
+        "Can you set who's currently coding? It's nice to get and give the right credit. You can fix this by running `git mit` with the initials of whoever is coding (e.g. `git mit bt`). To list available authors, run `git mit-config mit available`"
+    )
 )]
 pub struct NoAuthorError {}

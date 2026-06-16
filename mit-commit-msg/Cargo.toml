@@ -1,33 +1,51 @@
 [package]
 name = "mit-commit-msg"
 version = "6.4.1"
-authors = [ "Billie Thompson <billie+mit-commit-msg@billiecodes.com>" ]
-edition = "2018"
-license = "CC0-1.0"
+authors = ["Billie Thompson <billie+mit-commit-msg@billiecodes.com>"]
 description = "Validate the commit message that a user has input"
-categories = [ "development-tools", "command-line-utilities" ]
-keywords = [ "git", "git-hooks" ]
 readme = "../README.md"
+keywords = ["git", "git-hooks"]
+categories = ["development-tools", "command-line-utilities"]
+license = "CC0-1.0"
 repository = "https://github.com/PurpleBooth/git-mit"
 
+[package.edition]
+workspace = true
+
 [dependencies]
-thiserror = "2"
-tokio = { version = "1", features = ["full"] }
-mit-lint = "4"
-clap_complete = "4"
-clap = { version = "4", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
-openssl = { version = "0.10", optional = true }
-miette = { version = "7", features = [ "fancy" ] }
-mit-commit = "3"
-
 arboard = "3"
+clap_complete = "4"
+mit-commit = "3"
+mit-lint = "4"
+thiserror = "2"
 
-  [dependencies.mit-commit-message-lints]
-  path = "../mit-commit-message-lints"
+[dependencies.clap]
+version = "4"
+features = ["derive", "cargo", "wrap_help", "env", "unicode"]
+
+[dependencies.miette]
+version = "7"
+features = ["fancy"]
+
+[dependencies.mit-commit-message-lints]
 version = "6"
+path = "../mit-commit-message-lints"
+
+[dependencies.openssl]
+version = "0.10"
+optional = true
+
+[dependencies.tokio]
+version = "1"
+features = ["full"]
 
 [dev-dependencies]
 
 [features]
 default = []
 vendored-openssl = ["openssl/vendored"]
+
+[[bin]]
+path = "src/main.rs"
+name = "mit-commit-msg"
+required-features = []

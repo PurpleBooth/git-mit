@@ -30,11 +30,11 @@ pub fn set_config_authors(store: &mut dyn Vcs, initial: &str, author: &Author<'_
 mod tests {
     use std::collections::BTreeMap;
 
-    use miette::{miette, Result};
+    use miette::{Result, miette};
 
     use crate::{
         external::{InMemory, RepoState, Vcs},
-        mit::{cmd::set_config_authors::set_config_authors, Author},
+        mit::{Author, cmd::set_config_authors::set_config_authors},
     };
 
     /// A Vcs mock that mimics git2's `Config::remove`, which errors when

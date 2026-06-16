@@ -1,6 +1,6 @@
 use std::{convert::TryInto, time::Duration};
 
-use miette::{miette, Result, WrapErr};
+use miette::{Result, WrapErr, miette};
 use time::OffsetDateTime;
 
 use crate::{external::Vcs, relates::RelateTo};
@@ -53,7 +53,7 @@ mod tests {
 
     use crate::{
         external::InMemory,
-        relates::{set_relates_to, RelateTo},
+        relates::{RelateTo, set_relates_to},
     };
 
     #[test]

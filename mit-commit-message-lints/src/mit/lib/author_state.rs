@@ -38,10 +38,9 @@ impl<T> AuthorState<T> {
         match self {
             Self::Some(value) => value,
             Self::None => panic!("called `AuthorState::unwrap()` on a `None` value"),
-            Self::Timeout(value) => panic!(
-                "called `AuthorState::unwrap()` on a `Timeout({})` value",
-                value
-            ),
+            Self::Timeout(value) => {
+                panic!("called `AuthorState::unwrap()` on a `Timeout({value})` value")
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ use std::env::current_dir;
 
 use miette::{IntoDiagnostic, Result};
 use mit_commit_message_lints::{
-    mit::{set_config_authors, Author},
+    mit::{Author, set_config_authors},
     scope::Scope,
 };
 

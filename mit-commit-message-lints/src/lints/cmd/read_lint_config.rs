@@ -4,7 +4,7 @@ use std::{
 };
 
 use miette::{IntoDiagnostic, Result, SourceSpan};
-use mit_lint::{Lint, Lints, CONFIG_KEY_PREFIX};
+use mit_lint::{CONFIG_KEY_PREFIX, Lint, Lints};
 
 use crate::{external::Vcs, lints::cmd::errors::SerialiseLintError};
 
