@@ -357,7 +357,6 @@ dependencies = [
  "serde",
  "serde_json",
  "tinytemplate",
- "tokio",
  "walkdir",
 ]
 
@@ -709,7 +708,7 @@ dependencies = [
  "git2",
  "miette",
  "mit-commit-message-lints",
- "mit-lint 4.0.1",
+ "mit-lint",
  "openssl",
  "thiserror",
 ]
@@ -1025,7 +1024,7 @@ dependencies = [
  "indoc",
  "miette",
  "mit-commit",
- "mit-lint 4.0.1",
+ "mit-lint",
  "openssl",
  "rand",
  "serde",
@@ -1047,7 +1046,7 @@ dependencies = [
  "miette",
  "mit-commit",
  "mit-commit-message-lints",
- "mit-lint 4.0.1",
+ "mit-lint",
  "openssl",
  "thiserror",
  "tokio",
@@ -1064,9 +1063,9 @@ dependencies = [
 
 [[package]]
 name = "mit-lint"
-version = "4.0.1"
+version = "4.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d57cd896a0b3eb9c9896e769247e5686041e77e85b51aa217ddbb5e2973df953"
+checksum = "729677b8c5bef5d50d0ee39ed350aea48d5391f99aa1f3ee6d492f6ddfbe4330"
 dependencies = [
  "futures",
  "miette",
@@ -1076,24 +1075,6 @@ dependencies = [
  "strum",
  "strum_macros",
  "thiserror",
- "toml",
-]
-
-[[package]]
-name = "mit-lint"
-version = "6.4.1"
-dependencies = [
- "criterion",
- "futures",
- "miette",
- "mit-commit",
- "quickcheck",
- "quickcheck_macros",
- "regex",
- "strum",
- "strum_macros",
- "thiserror",
- "tokio",
  "toml",
 ]
 
@@ -1451,17 +1432,6 @@ dependencies = [
  "env_logger",
  "log",
  "rand",
-]
-
-[[package]]
-name = "quickcheck_macros"
-version = "1.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9a28b8493dd664c8b171dd944da82d933f7d456b829bfb236738e1fe06c5ba4"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]

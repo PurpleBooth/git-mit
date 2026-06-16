@@ -11,5 +11,4 @@ members = [
     "mit-hook-test-helper",
     "git-mit",
     "git-mit-relates-to",
-    "mit-lint",
 ]
