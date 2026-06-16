@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.4.2](https://github.com/PurpleBooth/git-mit/compare/46ecfd0a1abed28847552ecddd49897b857cb796..v6.4.2) - 2026-06-16
+#### Bug Fixes
+- (**deps**) update rust docker tag to v1.96.0 - ([b480655](https://github.com/PurpleBooth/git-mit/commit/b480655357284d50862ab03477fbd0db08ac22ea)) - renovate[bot]
+- add gitlab lint - ([89aa435](https://github.com/PurpleBooth/git-mit/commit/89aa4351749ac9abf8bec2cfea6da408733c6a32)) - Billie Thompson
+- quickcheck test skips comment lines - ([1f9ad84](https://github.com/PurpleBooth/git-mit/commit/1f9ad849e5fe1d47f501449b8d9c508eaea4c810)) - PurpleBooth
+#### Documentation
+- add gitlab id to homepage - ([be2262d](https://github.com/PurpleBooth/git-mit/commit/be2262d31773a22319cbf2ab90cbc72be1d834d4)) - Billie Thompson
+- add JIRA comment test and update lint list - ([b321b89](https://github.com/PurpleBooth/git-mit/commit/b321b89091aa212b8a97fcae17d7327cb4581782)) - Billie Thompson
+#### Miscellaneous Chores
+- (**deps**) bump mit-commit and syn - ([11c7b59](https://github.com/PurpleBooth/git-mit/commit/11c7b5985a6fdb16f078a4a03d4f12227cd2d5a9)) - Billie Thompson
+- (**deps**) loosen up the pins - ([de78357](https://github.com/PurpleBooth/git-mit/commit/de783572dc4a2d2fbb206782577eab59a0182947)) - Billie Thompson
+- (**deps**) bump versions - ([46ecfd0](https://github.com/PurpleBooth/git-mit/commit/46ecfd0a1abed28847552ecddd49897b857cb796)) - Billie Thompson
+- update to 2024 - ([25256b0](https://github.com/PurpleBooth/git-mit/commit/25256b0e3a72f5e47ba50740c1253eb01426355c)) - Billie Thompson
+- remove embedded mit-lint it is an external - ([6213aec](https://github.com/PurpleBooth/git-mit/commit/6213aec9bf718d7c335a3edcc3de36177bb41e06)) - Billie Thompson
+
+- - -
+
 ## [v6.4.1](https://github.com/PurpleBooth/git-mit/compare/353b3e2ea1949097d403020950ec873e332fea73..v6.4.1) - 2026-06-15
 #### Bug Fixes
 - use shell wrapper instead of symlink on windows - ([e2d4174](https://github.com/PurpleBooth/git-mit/commit/e2d4174800784bdc9b9bd7c1524f87ff25a84f37)) - Billie Thompson
