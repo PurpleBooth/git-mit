@@ -49,6 +49,8 @@ git mit-config lint available
 │ not-conventional-commit           ┆ disabled │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
 │ not-emoji-log                     ┆ disabled │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ gitlab-id-missing                 ┆ disabled │
 ╰───────────────────────────────────┴──────────╯
 ```
 
@@ -859,6 +861,42 @@ Error: JiraIssueKeyMissing (https://support.atlassian.com/jira-software-cloud/do
  3 │ This is a commit message that is invalid
    · ────────────────────┬───────────────────
    ·                     ╰── No JIRA Issue Key
+   ╰────
+  help: It's important to add the issue key because it allows us to link code
+        back to the motivations for doing it, and in some cases provide an
+        audit trail for compliance purposes.
+        
+        You can fix this by adding a key like `JRA-123` to the commit message
+
+```
+
+###### Comments are ignored
+
+JIRA keys in comment lines should be ignored. Using message
+
+``` shell,file(path="message")
+demonstration Commit Message
+
+# JRA-123 is in a comment and should be ignored
+```
+
+Committing will fail because the JIRA key is in a comment
+
+``` shell,script(name="jira-issue-key-missing-comment-ignored",expected_exit_code=1)
+echo $RANDOM > changes
+git add changes
+git commit --message="$(cat message)"
+```
+
+``` text,verify(script_name="jira-issue-key-missing-comment-ignored",stream=stderr)
+Error: JiraIssueKeyMissing (https://support.atlassian.com/jira-software-cloud/docs/what-is-an-issue/#Workingwithissues-Projectkeys)
+
+  × Your commit message is missing a JIRA Issue Key
+   ╭─[3:1]
+ 2 │ 
+ 3 │ # JRA-123 is in a comment and should be ignored
+   · ───────────────────────┬───────────────────────
+   ·                        ╰── No JIRA Issue Key
    ╰────
   help: It's important to add the issue key because it allows us to link code
         back to the motivations for doing it, and in some cases provide an
