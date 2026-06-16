@@ -11,10 +11,10 @@ repository = "https://github.com/PurpleBooth/git-mit"
 description = "A command for enabling and disabling git lints"
 
 [dependencies]
-mit-lint = "3.4.1"
-thiserror = "2.0.18"
-miette = { version = "7.6.0", features = [ "fancy" ] }
-git2 = "0.21.0"
+mit-lint = "4"
+thiserror = "2"
+miette = { version = "7", features = [ "fancy" ] }
+git2 = "0"
 openssl = { version = "0.10.81", optional = true }
 clap_complete = "4.6.5"
 clap = { version = "4.6.1", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
