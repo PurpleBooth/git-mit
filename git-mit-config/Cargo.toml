@@ -15,14 +15,14 @@ mit-lint = "4"
 thiserror = "2"
 miette = { version = "7", features = [ "fancy" ] }
 git2 = "0"
-openssl = { version = "0.10.81", optional = true }
-clap_complete = "4.6.5"
-clap = { version = "4.6.1", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+openssl = { version = "0.10", optional = true }
+clap_complete = "4"
+clap = { version = "4", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
 
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "6.4.1"
+version = "6"
 
 [dev-dependencies]
 

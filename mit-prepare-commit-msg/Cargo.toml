@@ -13,24 +13,24 @@ readme = "../README.md"
 repository = "https://github.com/PurpleBooth/git-mit"
 
 [dependencies]
-tinytemplate = "1.2.1"
-thiserror = "2.0.18"
-miette = { version = "7.6.0", features = [ "fancy" ] }
-shell-words = "1.1.1"
-clap_complete = "4.6.5"
-clap = { version = "4.6.1", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
-openssl = { version = "0.10.81", optional = true }
-mit-commit = "3.3.2"
+tinytemplate = "1"
+thiserror = "2"
+miette = { version = "7", features = [ "fancy" ] }
+shell-words = "1"
+clap_complete = "4"
+clap = { version = "4", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+openssl = { version = "0.10", optional = true }
+mit-commit = "3"
 
 
 
   [dependencies.serde]
-version = "1.0.228"
+version = "1"
 features = [ "derive" ]
 
   [dependencies.mit-commit-message-lints]
   path = "../mit-commit-message-lints"
-version = "6.4.1"
+version = "6"
 
 [features]
 default = []
