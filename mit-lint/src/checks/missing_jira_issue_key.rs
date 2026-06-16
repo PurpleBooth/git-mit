@@ -336,13 +336,20 @@ This is an example commit
             return TestResult::discard();
         }
 
-        let message = CommitMessage::from(format!(
-            "{}{}-{}{}\n# comment",
+        let first_line = format!(
+            "{}{}-{}{}",
             before.map(|x| format!("{x} ")).unwrap_or_default(),
             characters,
             numbers,
             after.map(|x| format!(" {x} ")).unwrap_or_default(),
-        ));
+        );
+
+        // Discard if the first line would be treated as a comment
+        if first_line.trim_start().starts_with('#') {
+            return TestResult::discard();
+        }
+
+        let message = CommitMessage::from(format!("{first_line}\\n# comment"));
         let result = lint(&message);
         TestResult::from_bool(result.is_none())
     }
