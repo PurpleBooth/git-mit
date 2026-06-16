@@ -68,6 +68,8 @@ git mit-config lint available
 │ not-conventional-commit           ┆ disabled │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
 │ not-emoji-log                     ┆ disabled │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ gitlab-id-missing                 ┆ disabled │
 ╰───────────────────────────────────┴──────────╯
 ```
 
