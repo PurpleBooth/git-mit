@@ -1002,9 +1002,9 @@ dependencies = [
 
 [[package]]
 name = "mit-commit"
-version = "3.3.2"
+version = "3.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "26f88450746fed0df304123d553845f72a9b594bcf5e1a7e3b646d30cf086b29"
+checksum = "20fb5c64833e392ee2433355e210512f4b4ce1915dd21a2f368845ea83ea992a"
 dependencies = [
  "indoc",
  "miette",
@@ -1747,9 +1747,9 @@ checksum = "b7401a30af6cb5818bb64852270bb722533397edcfc7344954a38f420819ece2"
 
 [[package]]
 name = "syn"
-version = "2.0.117"
+version = "2.0.118"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e665b8803e7b1d2a727f4023456bbbbe74da67099c585258af0ad9c5013b9b99"
+checksum = "1b9ae57f904213ebb649ce6895b8a66c66f0203b9319718f69a5612a065b1422"
 dependencies = [
  "proc-macro2",
  "quote",
