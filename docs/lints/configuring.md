@@ -121,6 +121,7 @@ git mit-config lint generate
 body-wider-than-72-characters = true
 duplicated-trailers = true
 github-id-missing = false
+gitlab-id-missing = false
 jira-issue-key-missing = false
 not-conventional-commit = false
 not-emoji-log = false

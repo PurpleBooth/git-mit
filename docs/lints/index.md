@@ -49,7 +49,7 @@ git mit-config lint available
 │ not-conventional-commit           ┆ disabled │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
 │ not-emoji-log                     ┆ disabled │
-├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
 │ gitlab-id-missing                 ┆ disabled │
 ╰───────────────────────────────────┴──────────╯
 ```
@@ -1013,4 +1013,106 @@ Disable it with
 
 ``` shell,script(name="github-id-missing-disabled",expected_exit_code=0)
 git mit-config lint disable github-id-missing
+```
+
+#### Style Formats
+
+Alternative style formats for commit messages
+
+##### not-emoji-log
+
+Check for emoji-log style commit messages
+
+###### Default status
+
+On an empty repository
+
+``` shell,script(name="not-emoji-log-default",expected_exit_code=0)
+git mit-config lint status not-emoji-log
+```
+
+``` text,verify(script_name="not-emoji-log-default",stream=stdout)
+╭───────────────┬──────────╮
+│ Lint          ┆ Status   │
+╞═══════════════╪══════════╡
+│ not-emoji-log ┆ disabled │
+╰───────────────┴──────────╯
+```
+
+###### Enabling
+
+Enable it with
+
+``` shell,script(name="not-emoji-log-enabled",expected_exit_code=0)
+git mit-config lint enable not-emoji-log
+```
+
+###### Valid
+
+Using message
+
+``` shell,file(path="message")
+📦 NEW: Add new feature
+
+This commit message follows emoji-log style
+```
+
+Committing will succeed
+
+``` shell,script(name="not-emoji-log-valid",expected_exit_code=0)
+echo $RANDOM > changes
+git add changes
+git commit --message="$(cat message)"
+```
+
+###### Invalid
+
+Using message
+
+``` shell,file(path="message")
+Add new feature
+
+This commit message does not follow emoji-log style
+```
+
+Committing will fail
+
+``` shell,script(name="not-emoji-log-invalid",expected_exit_code=1)
+echo $RANDOM > changes
+git add changes
+git commit --message="$(cat message)"
+```
+
+``` text,verify(script_name="not-emoji-log-invalid",stream=stderr)
+Error: NotEmojiLog (https://github.com/ahmadawais/Emoji-Log)
+
+  × Your commit message isn't in emoji log style
+   ╭─[1:1]
+ 1 │ Add new feature
+   · ───────┬───────
+   ·        ╰── Not emoji log
+ 2 │ 
+   ╰────
+  help: It's important to follow the emoji log style when creating your commit
+        message. By using this style we can automatically generate changelogs.
+        
+        You can fix it using one of the prefixes:
+        
+        
+        📦 NEW:
+        👌 IMPROVE:
+        🐛 FIX:
+        📖 DOC:
+        🚀 RELEASE:
+        🤖 TEST:
+        ‼️ BREAKING:
+
+```
+
+###### Disabling
+
+Disable it with
+
+``` shell,script(name="not-emoji-log-disabled",expected_exit_code=0)
+git mit-config lint disable not-emoji-log
 ```
