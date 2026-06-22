@@ -43,8 +43,8 @@ version = "1"
 features = ["derive"]
 
 [dev-dependencies]
-criterion = "0.8"
-tempfile = "3"
+criterion = "=0.8.2"
+tempfile = "=3.27.0"
 
 [features]
 default = []
