@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-config"
-version = "6.4.2"
+version = "6.4.3"
 authors = ["Billie Thompson <billie+git-mit-config@billiecodes.com>"]
 description = "A command for enabling and disabling git lints"
 readme = "../README.md"

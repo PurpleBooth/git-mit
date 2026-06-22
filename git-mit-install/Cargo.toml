@@ -1,6 +1,6 @@
 [package]
 name = "git-mit-install"
-version = "6.4.2"
+version = "6.4.3"
 authors = ["Billie Thompson <billie+git-mit-install@billiecodes.com>"]
 description = "Install git-mit into a repository"
 readme = "../README.md"

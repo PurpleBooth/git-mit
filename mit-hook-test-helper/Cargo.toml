@@ -1,6 +1,6 @@
 [package]
 name = "mit-hook-test-helper"
-version = "6.4.2"
+version = "6.4.3"
 authors = ["Billie Thompson <billie+mit-hook-test-helper@billiecodes.com>"]
 description = "Testing help tools for git-mit"
 readme = "../README.md"

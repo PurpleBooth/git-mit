@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.4.3](https://github.com/PurpleBooth/git-mit/compare/e005c4a35cd0c6e37ca10d909d8332add88ea25f..v6.4.3) - 2026-06-22
+#### Bug Fixes
+- (**deps**) pin dependencies (#1620) - ([e005c4a](https://github.com/PurpleBooth/git-mit/commit/e005c4a35cd0c6e37ca10d909d8332add88ea25f)) - renovate[bot], renovate[bot]
+
+- - -
+
 ## [v6.4.2](https://github.com/PurpleBooth/git-mit/compare/46ecfd0a1abed28847552ecddd49897b857cb796..v6.4.2) - 2026-06-16
 #### Bug Fixes
 - (**deps**) update rust docker tag to v1.96.0 - ([b480655](https://github.com/PurpleBooth/git-mit/commit/b480655357284d50862ab03477fbd0db08ac22ea)) - renovate[bot]
