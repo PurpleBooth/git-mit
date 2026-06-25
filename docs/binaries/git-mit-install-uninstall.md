@@ -20,9 +20,9 @@ After installing, the hooks should be present.
 
 ``` shell,script(name="verify-local-installed",expected_exit_code=0)
 cd local-repo
-test -L .git/hooks/prepare-commit-msg && echo "prepare-commit-msg present"
-test -L .git/hooks/pre-commit && echo "pre-commit present"
-test -L .git/hooks/commit-msg && echo "commit-msg present"
+test -e .git/hooks/prepare-commit-msg && echo "prepare-commit-msg present"
+test -e .git/hooks/pre-commit && echo "pre-commit present"
+test -e .git/hooks/commit-msg && echo "commit-msg present"
 ```
 
 Now uninstall from the local repository.
