@@ -27,6 +27,9 @@ Options:
       --home-dir <HOME_DIR>
           [env: HOME=/example/home/dir]
 
+      --uninstall
+          Uninstall git-mit hooks instead of installing them
+
   -h, --help
           Print help (see a summary with '-h')
 
@@ -55,6 +58,9 @@ Options:
       --home-dir <HOME_DIR>
           [env: USERPROFILE=F:\some\userprofile]
 
+      --uninstall
+          Uninstall git-mit hooks instead of installing them
+
   -h, --help
           Print help (see a summary with '-h')
 
@@ -67,3 +73,8 @@ You can generate completion with
 ``` shell,script(name="generate-bash-completion",expected_exit_code=0)
 git-mit-install --completion bash
 ```
+
+## Uninstalling
+
+To remove git-mit hooks from a repository, see the
+[uninstall documentation](./git-mit-install-uninstall.md).
