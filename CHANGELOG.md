@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.5.0](https://github.com/PurpleBooth/git-mit/compare/9df04ebd420c40f738c71397c93a267ced775dd1..v6.5.0) - 2026-06-25
+#### Features
+- add --uninstall flag to git-mit-install - ([9df04eb](https://github.com/PurpleBooth/git-mit/commit/9df04ebd420c40f738c71397c93a267ced775dd1)) - Billie Thompson
+#### Bug Fixes
+- use test -e instead of test -L for Windows compatibility - ([48506f8](https://github.com/PurpleBooth/git-mit/commit/48506f87f0a6cc97e11947172967dc74e86d3f56)) - Billie Thompson
+
+- - -
+
 ## [v6.4.3](https://github.com/PurpleBooth/git-mit/compare/e005c4a35cd0c6e37ca10d909d8332add88ea25f..v6.4.3) - 2026-06-22
 #### Bug Fixes
 - (**deps**) pin dependencies (#1620) - ([e005c4a](https://github.com/PurpleBooth/git-mit/commit/e005c4a35cd0c6e37ca10d909d8332add88ea25f)) - renovate[bot], renovate[bot]

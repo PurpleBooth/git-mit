@@ -1,6 +1,6 @@
 [package]
 name = "mit-pre-commit"
-version = "6.4.3"
+version = "6.5.0"
 authors = ["Billie Thompson <billie+mit-pre-commit@billiecodes.com>"]
 description = "Run first, before you even type in a commit message. It's used to inspect the snapshot that's about to be committed."
 readme = "../README.md"
