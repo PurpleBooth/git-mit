@@ -22,4 +22,8 @@ pub struct CliArgs {
 
     #[clap(long, env = HOME_ENV_KEY, required_if_eq("scope", "global"))]
     pub home_dir: Option<PathBuf>,
+
+    /// Uninstall git-mit hooks instead of installing them
+    #[clap(long)]
+    pub uninstall: bool,
 }

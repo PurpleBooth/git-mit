@@ -294,6 +294,7 @@ Each binary also has a command to generate completion.
 - [git-mit](./docs/binaries/git-mit.md)
 - [git-mit-config](./docs/binaries/git-mit-config.md)
 - [git-mit-install](./docs/binaries/git-mit-install.md)
+- [git-mit-install --uninstall](./docs/binaries/git-mit-install-uninstall.md)
 - [git-mit-relates-to](./docs/binaries/git-mit-relates-to.md)
 - [Hook: mit-commit-msg](./docs/binaries/mit-commit-msg.md)
 - [Hook: mit-pre-commit](./docs/binaries/mit-pre-commit.md)

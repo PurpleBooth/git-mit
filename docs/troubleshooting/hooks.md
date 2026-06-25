@@ -63,7 +63,8 @@ If hooks are missing or not working:
     ```
 
 See the [installation documentation](../binaries/git-mit-install.md) for
-more details.
+more details, or the [uninstall documentation](../binaries/git-mit-install-uninstall.md)
+to remove git-mit hooks.
 
 ## Test Hook Execution
 
