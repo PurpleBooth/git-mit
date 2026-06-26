@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.5.1](https://github.com/PurpleBooth/git-mit/compare/6ccf8d8812b2fd6a15489865f03f2a95eb562e6c..v6.5.1) - 2026-06-26
+#### Bug Fixes
+- (**deps**) update rust:1.96.0 docker digest to 6df234c (#1640) - ([a2cd40a](https://github.com/PurpleBooth/git-mit/commit/a2cd40a3b488d55562e7d8059fed717a9c10d365)) - renovate[bot], renovate[bot]
+- (**deps**) update debian:bookworm-slim docker digest to 60eac75 (#1646) - ([39578d6](https://github.com/PurpleBooth/git-mit/commit/39578d6e090fb7a2f54b4ecb02b32e750f11d929)) - renovate[bot], renovate[bot]
+#### Miscellaneous Chores
+- (**deps**) update actions/checkout action to v7 (#1639) - ([a37ed4c](https://github.com/PurpleBooth/git-mit/commit/a37ed4cc3ccb7be0d7e6d24ee3735ba3d07a140c)) - renovate[bot], renovate[bot]
+- (**deps**) lock file maintenance (#1641) - ([0ac14d4](https://github.com/PurpleBooth/git-mit/commit/0ac14d414aac33b1f7970d9e5fa8af73d34fcc81)) - renovate[bot], renovate[bot]
+- (**deps**) update rust crate time to v0.3.51 (#1642) - ([f3199bf](https://github.com/PurpleBooth/git-mit/commit/f3199bf915a6b450d069cb1bd0062c81090ef10e)) - renovate[bot], renovate[bot]
+- (**deps**) update actions/checkout digest to b9e0990 (#1643) - ([514a4e8](https://github.com/PurpleBooth/git-mit/commit/514a4e869f81feb916d283ba8ced496d5b4aef5a)) - renovate[bot], renovate[bot]
+- (**deps**) update taiki-e/install-action digest to c1a5378 (#1644) - ([2111c6a](https://github.com/PurpleBooth/git-mit/commit/2111c6a10e24dd154fb5525156bf484335932b34)) - renovate[bot], renovate[bot]
+- (**deps**) update actions/cache action to v6 (#1647) - ([1118b61](https://github.com/PurpleBooth/git-mit/commit/1118b610ce1898ee64f7443b041afe101b5b543b)) - renovate[bot], renovate[bot]
+- (**deps**) update github artifact actions (#1648) - ([6ccf8d8](https://github.com/PurpleBooth/git-mit/commit/6ccf8d8812b2fd6a15489865f03f2a95eb562e6c)) - renovate[bot], renovate[bot]
+
+- - -
+
 ## [v6.5.0](https://github.com/PurpleBooth/git-mit/compare/9df04ebd420c40f738c71397c93a267ced775dd1..v6.5.0) - 2026-06-25
 #### Features
 - add --uninstall flag to git-mit-install - ([9df04eb](https://github.com/PurpleBooth/git-mit/commit/9df04ebd420c40f738c71397c93a267ced775dd1)) - Billie Thompson
