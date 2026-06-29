@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.5.2](https://github.com/PurpleBooth/git-mit/compare/fb720628e6673c327f1b9ac11cd166a9592ccffe..v6.5.2) - 2026-06-29
+#### Bug Fixes
+- remove redundant shells from generate_completions_from_executable template - ([d160de2](https://github.com/PurpleBooth/git-mit/commit/d160de26088c52cb84a1ab977aba10cee783a2d8)) - PurpleBooth
+#### Miscellaneous Chores
+- (**deps**) update taiki-e/install-action digest to 2c7d624 (#1650) - ([65d73b5](https://github.com/PurpleBooth/git-mit/commit/65d73b5b66b8faba9dacade032ab5325cb848820)) - renovate[bot], renovate[bot]
+- (**deps**) update actions/cache action to v6.1.0 (#1651) - ([345d6c7](https://github.com/PurpleBooth/git-mit/commit/345d6c7679dbed94451d134bbe71f17e7b3ceda3)) - renovate[bot], renovate[bot]
+- (**deps**) update cargo-bins/cargo-binstall digest to 910d9e4 (#1649) - ([fb72062](https://github.com/PurpleBooth/git-mit/commit/fb720628e6673c327f1b9ac11cd166a9592ccffe)) - renovate[bot], renovate[bot]
+
+- - -
+
 ## [v6.5.1](https://github.com/PurpleBooth/git-mit/compare/6ccf8d8812b2fd6a15489865f03f2a95eb562e6c..v6.5.1) - 2026-06-26
 #### Bug Fixes
 - (**deps**) update rust:1.96.0 docker digest to 6df234c (#1640) - ([a2cd40a](https://github.com/PurpleBooth/git-mit/commit/a2cd40a3b488d55562e7d8059fed717a9c10d365)) - renovate[bot], renovate[bot]
