@@ -25,11 +25,7 @@ class GitMit < Formula
       system "cargo", "install", *std_cargo_args(path: "./#{binary}/")
 
       # Completions
-      generate_completions_from_executable(bin/binary.to_s, "--completion", shells: [
-        :bash,
-        :fish,
-        :zsh,
-      ])
+      generate_completions_from_executable(bin/binary.to_s, "--completion")
 
       # Man pages
       output = Utils.safe_popen_read("help2man", bin/binary.to_s)
