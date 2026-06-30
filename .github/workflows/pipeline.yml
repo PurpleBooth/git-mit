@@ -33,7 +33,7 @@ jobs:
       previous_version: ${{ steps.previous_version.outputs.previous_version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b9e0990d219a03df7633c93f6f005a8fecbcab22 # main
+      - uses: actions/checkout@4f1f4aec02e41874fa0262ea8ff5172d7978ad1e # main
         with:
           fetch-depth: 0
       - uses: taiki-e/install-action@2c7d624cfb6e31cf9c4246a7552cf3ab47a620e7 # cargo-binstall
