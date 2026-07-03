@@ -15,9 +15,7 @@ const CONFIG_KEY_AUTHOR_STATUS: &str = "mit.author.enabled";
 ///
 /// Returns an error if reading the git config fails.
 pub fn get_config_author_status(store: &dyn Vcs) -> Result<bool> {
-    Ok(store
-        .get_bool(CONFIG_KEY_AUTHOR_STATUS)?
-        .unwrap_or(true))
+    Ok(store.get_bool(CONFIG_KEY_AUTHOR_STATUS)?.unwrap_or(true))
 }
 
 #[cfg(test)]

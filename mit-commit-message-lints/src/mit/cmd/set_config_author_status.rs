@@ -62,9 +62,8 @@ mod tests {
         }
 
         let vcs_config = InMemory::new(&mut buffer);
-        let result = crate::mit::cmd::get_config_author_status::get_config_author_status(
-            &vcs_config,
-        );
+        let result =
+            crate::mit::cmd::get_config_author_status::get_config_author_status(&vcs_config);
         assert!(
             !result.unwrap(),
             "Expected author status to be false after setting it to false"
