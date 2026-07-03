@@ -1,0 +1,204 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    name: Release
+    runs-on: codeberg-small
+    outputs:
+      current_version: ${{ steps.release.outputs.current_version }}
+      previous_version: ${{ steps.release.outputs.previous_version }}
+      changelog: ${{ steps.release.outputs.changelog }}
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@v4
+        name: Checkout
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust Toolchain
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+
+      - name: Install system dependencies
+        run: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+
+      - name: Release with cog
+        id: release
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/release-with-cog@main
+
+  build:
+    name: Build (${{ matrix.target }})
+    needs: release
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@v4
+        name: Checkout
+        with:
+          lfs: true
+          ref: v${{ needs.release.outputs.current_version }}
+      - name: Install Rust Toolchain
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+      - run: rustup target add ${{ matrix.target }}
+      - run: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+        if: runner.os == 'Linux'
+      - run: cargo build --release --locked --target ${{ matrix.target }}
+      - name: Move binary to upload location
+        env:
+          TARGET: ${{ matrix.target }}
+          EXTENSION: ${{ matrix.suffix }}
+        run: |
+          mv -v "./target/release/git-mit$EXTENSION" "./git-mit-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/$TARGET/release/git-mit$EXTENSION" "./git-mit-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/release/git-mit-config$EXTENSION" "./git-mit-config-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/$TARGET/release/git-mit-config$EXTENSION" "./git-mit-config-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/release/git-mit-install$EXTENSION" "./git-mit-install-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/$TARGET/release/git-mit-install$EXTENSION" "./git-mit-install-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/release/git-mit-relates-to$EXTENSION" "./git-mit-relates-to-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/$TARGET/release/git-mit-relates-to$EXTENSION" "./git-mit-relates-to-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/release/mit-commit-msg$EXTENSION" "./mit-commit-msg-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/$TARGET/release/mit-commit-msg$EXTENSION" "./mit-commit-msg-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/release/mit-pre-commit$EXTENSION" "./mit-pre-commit-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/$TARGET/release/mit-pre-commit$EXTENSION" "./mit-pre-commit-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/release/mit-prepare-commit-msg$EXTENSION" "./mit-prepare-commit-msg-$TARGET$EXTENSION" 2>/dev/null || true
+          mv -v "./target/$TARGET/release/mit-prepare-commit-msg$EXTENSION" "./mit-prepare-commit-msg-$TARGET$EXTENSION" 2>/dev/null || true
+        shell: bash
+      - uses: https://code.forgejo.org/forgejo/upload-artifact@v4
+        name: Upload binaries
+        with:
+          name: bins-${{ matrix.target }}
+          path: ./*${{ matrix.target }}${{ matrix.suffix }}
+    strategy:
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            runner: macos-latest
+            suffix: ""
+          - target: x86_64-apple-darwin
+            runner: macos-latest
+            suffix: ""
+          - target: x86_64-unknown-linux-gnu
+            runner: ubuntu-latest
+            suffix: ""
+          - target: x86_64-pc-windows-msvc
+            runner: windows-latest
+            suffix: .exe
+
+  forgejo-release:
+    name: Forgejo Release
+    needs:
+      - release
+      - build
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
+    runs-on: codeberg-small
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@v4
+        name: Checkout
+        with:
+          lfs: true
+          fetch-depth: 0
+          ref: v${{ needs.release.outputs.current_version }}
+      - uses: https://code.forgejo.org/forgejo/download-artifact@v4
+        name: Download binaries
+        with:
+          merge-multiple: true
+          path: bins
+          pattern: bins-*
+      - name: Create Forgejo Release
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/forgejo-release@main
+        with:
+          fj_token: ${{ secrets.GITHUB_TOKEN }}
+          target: bins
+          tag: v${{ needs.release.outputs.current_version }}
+          changelog: ${{ needs.release.outputs.changelog }}
+
+  cargo-publish:
+    name: Publish to Crates
+    needs: release
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
+    runs-on: codeberg-small
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@v4
+        name: Checkout
+        with:
+          ref: v${{ needs.release.outputs.current_version }}
+      - name: Install Rust Toolchain
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+      - run: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+      - name: Publish mit-hook-test-helper
+        run: |
+          cargo login "$CARGO_TOKEN"
+          ( cd mit-hook-test-helper && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish mit-commit-message-lints
+        run: |
+          cargo login "$CARGO_TOKEN"
+          ( cd mit-commit-message-lints && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish mit-commit-msg
+        run: |
+          cargo login "$CARGO_TOKEN"
+          ( cd mit-commit-msg && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish mit-pre-commit
+        run: |
+          cargo login "$CARGO_TOKEN"
+          ( cd mit-pre-commit && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish mit-prepare-commit-msg
+        run: |
+          cargo login "$CARGO_TOKEN"
+          ( cd mit-prepare-commit-msg && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish git-mit
+        run: |
+          cargo login "$CARGO_TOKEN"
+          ( cd git-mit && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish git-mit-config
+        run: |
+          cargo login "$CARGO_TOKEN"
+          ( cd git-mit-config && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish git-mit-install
+        run: |
+          cargo login "$CARGO_TOKEN"
+          ( cd git-mit-install && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      - name: Publish git-mit-relates-to
+        run: |
+          cargo login "$CARGO_TOKEN"
+          ( cd git-mit-relates-to && cargo publish )
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+
+  generate-formula:
+    name: Generate Homebrew Formula
+    needs: release
+    if: needs.release.outputs.current_version != needs.release.outputs.previous_version
+    runs-on: codeberg-small
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@v4
+        name: Checkout
+      - name: Generate Homebrew Formula
+        uses: https://codeberg.org/PurpleBooth/generate-formula-action@main
+        with:
+          current_version: ${{ needs.release.outputs.current_version }}
+          previous_version: ${{ needs.release.outputs.previous_version }}
+          committer_token: ${{ secrets.COMMITTER_TOKEN }}
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}

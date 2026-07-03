@@ -6,7 +6,7 @@ use toml::de::Error as TomlDeserializeError;
 #[derive(Error, Debug, Diagnostic)]
 #[error("could not convert author configuration to toml")]
 #[diagnostic(
-    url("https://github.com/PurpleBooth/git-mit/issues/new"),
+    url("https://codeberg.org/PurpleBooth/git-mit/issues/new"),
     code(mit_commit_message_lints::mit::lib::authors::serialise_authors_error),
     help("please report this error on our issue tracker, this is a bug")
 )]

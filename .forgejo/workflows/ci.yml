@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - CHANGELOG.md
+      - "**.md"
+  pull_request:
+    paths-ignore:
+      - CHANGELOG.md
+      - "**.md"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: Test
+    runs-on: codeberg-small
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@v4
+        name: Checkout
+
+      - name: Install Rust Toolchain
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+
+      - name: Install system dependencies
+        run: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+
+      - name: Run tests
+        run: cargo test
+
+  lints:
+    name: Lints
+    runs-on: codeberg-small
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@v4
+        name: Checkout
+
+      - name: Install Rust Toolchain
+        uses: https://codeberg.org/PurpleBooth/common-pipelines/actions/install-rust@main
+
+      - name: Install system dependencies
+        run: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+
+      - name: Format check
+        run: cargo +nightly fmt -- --check
+
+      - name: Clippy
+        run: cargo +nightly clippy
+
+      - name: Check
+        run: cargo check

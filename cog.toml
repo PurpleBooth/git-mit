@@ -20,7 +20,7 @@ post_package_bump_hooks = []
 [changelog]
 path = "CHANGELOG.md"
 template = "remote"
-remote = "github.com"
+remote = "codeberg.org"
 repository = "git-mit"
 owner = "PurpleBooth"
 

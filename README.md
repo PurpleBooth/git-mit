@@ -261,7 +261,7 @@ cargo install mit-prepare-commit-msg
 ```
 
 You can also download the [latest
-release](https://github.com/PurpleBooth/git-mit/releases/latest) and run
+release](https://codeberg.org/PurpleBooth/git-mit/releases/latest) and run
 it.
 
 There is a script to download the latest release:

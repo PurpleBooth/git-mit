@@ -1,7 +1,7 @@
 class GitMit < Formula
   desc "Minimalist set of hooks to aid pairing and link commits to issues"
-  homepage "https://github.com/{{ github_repo }}"
-  url "https://github.com/{{ github_repo }}/archive/refs/tags/{{ git_tag }}.tar.gz"
+  homepage "https://codeberg.org/{{ codeberg_repo }}"
+  url "https://codeberg.org/{{ codeberg_repo }}/archive/refs/tags/{{ git_tag }}.tar.gz"
   sha256 "{{ file_sha }}"
   depends_on "help2man" => :build
   depends_on "homebrew/core/rust" => :build

@@ -7,7 +7,7 @@ readme = "../README.md"
 keywords = ["git", "git-hooks"]
 categories = ["development-tools", "command-line-utilities"]
 license = "CC0-1.0"
-repository = "https://github.com/PurpleBooth/git-mit"
+repository = "https://codeberg.org/PurpleBooth/git-mit"
 
 [package.edition]
 workspace = true

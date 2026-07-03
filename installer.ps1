@@ -13,7 +13,7 @@ New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
 foreach ($Binary in $Binaries)
 {
     Write-Host "📥 Downloading $Binary..."
-    $BinaryUrl = "https://github.com/PurpleBooth/git-mit/releases/latest/download/${Binary}-${Arch}"
+    $BinaryUrl = "https://codeberg.org/PurpleBooth/git-mit/releases/latest/download/${Binary}-${Arch}"
     $HashUrl = "${BinaryUrl}.sha256"
 
     # Download files

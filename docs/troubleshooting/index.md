@@ -23,7 +23,7 @@ If you're still experiencing problems:
 3.  **Check for conflicting hook managers**: Other tools like Husky or
     pre-commit might interfere
 4.  **File an issue**: Visit the [git-mit
-    repository](https://github.com/PurpleBooth/git-mit) with details
+    repository](https://codeberg.org/PurpleBooth/git-mit) with details
     about your setup
 
 For more help, consult:
