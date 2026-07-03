@@ -110,6 +110,12 @@ fn main() -> Result<()> {
         Some(Action::Mit {
             action: app::Mit::SetRotation { scope, rotation },
         }) => cmd::rotation_set::run(scope, rotation),
+        Some(Action::Mit {
+            action: app::Mit::AuthorStatus { scope },
+        }) => cmd::author_status::run(scope),
+        Some(Action::Mit {
+            action: app::Mit::SetAuthorStatus { scope, enabled },
+        }) => cmd::author_status_set::run(scope, enabled),
         Some(Action::RelatesTo {
             action: app::RelatesTo::Template { scope, template },
         }) => cmd::relates_to_template::run(scope, &template),

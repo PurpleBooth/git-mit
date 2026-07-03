@@ -4,10 +4,12 @@ pub use cmd::{
     get_authors::{AuthorArgs, GenericArgs, get_authors},
     get_commit_coauthor_configuration::get_commit_coauthor_configuration,
     get_config_rotation::get_config_rotation,
+    get_config_author_status::get_config_author_status,
     rotate_authors::rotate_authors,
     set_commit_authors::set_commit_authors,
     set_config_authors::set_config_authors,
     set_config_rotation::set_config_rotation,
+    set_config_author_status::set_config_author_status,
 };
 pub use lib::{
     author::Author, author_state::AuthorState, authors::Authors, rotation_option::RotationOption,

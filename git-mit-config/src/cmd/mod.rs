@@ -1,6 +1,8 @@
 pub mod author_example;
 pub mod author_generate;
 pub mod author_set;
+pub mod author_status;
+pub mod author_status_set;
 pub mod lint_available;
 pub mod lint_disable;
 pub mod lint_enable;

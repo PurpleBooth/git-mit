@@ -36,6 +36,7 @@ use mit_commit_message_lints::{
     mit::{
         Author, AuthorState,
         cmd::{
+            get_config_author_status::get_config_author_status,
             get_config_non_clean_behaviour::get_config_non_clean_behaviour,
             get_config_rotation::get_config_rotation, rotate_authors::rotate_authors,
         },
@@ -104,7 +105,9 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
-    if let AuthorState::Some(authors) = get_commit_coauthor_configuration(&git_config)? {
+    if get_config_author_status(&git_config)?
+        && let AuthorState::Some(authors) = get_commit_coauthor_configuration(&git_config)?
+    {
         append_coauthors_to_commit_message(commit_message_path.clone(), &authors)?;
 
         // Rotate primary author for the next commit if rotation is enabled

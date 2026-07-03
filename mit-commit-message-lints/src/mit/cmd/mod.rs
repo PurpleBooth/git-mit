@@ -8,6 +8,7 @@ pub(crate) mod set_commit_authors;
 pub(crate) mod set_config_authors;
 
 pub mod errors;
+pub mod get_config_author_status;
 pub mod get_config_non_clean_behaviour;
 
 /// Configuration for rotating primary author across commits
@@ -17,6 +18,7 @@ pub mod get_config_non_clean_behaviour;
 pub mod get_config_rotation;
 /// Rotate the primary author among configured authors
 pub mod rotate_authors;
+pub mod set_config_author_status;
 pub mod set_config_non_clean_behaviour;
 /// Configuration for rotating primary author across commits
 pub mod set_config_rotation;

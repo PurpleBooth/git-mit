@@ -135,6 +135,24 @@ pub enum Mit {
         )]
         rotation: RotationOption,
     },
+    /// Get whether the author bit (Co-authored-by trailer) is enabled
+    AuthorStatus {
+        #[clap(long, value_enum, value_parser, default_value = "local")]
+        scope: Scope,
+    },
+    /// Enable or disable the author bit (Co-authored-by trailer)
+    SetAuthorStatus {
+        #[clap(long, value_enum, value_parser, default_value = "local")]
+        scope: Scope,
+        /// Whether to enable (true) or disable (false) the author bit
+        #[clap(
+            index = 1,
+            env = "GIT_MIT_SET_AUTHOR_STATUS",
+            default_value = "true",
+            num_args = 1
+        )]
+        enabled: bool,
+    },
     /// Generate a file version of available authors
     Generate {
         /// Path to a file where mit initials, emails and names can be found

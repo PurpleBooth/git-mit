@@ -60,6 +60,8 @@ Commands:
   set-non-clean-behaviour  Set the current behavior when the repository is mid-rebase or merge
   rotation                 Get the current rotation setting for primary author across commits
   set-rotation             Set the rotation setting for primary author across commits
+  author-status            Get whether the author bit (Co-authored-by trailer) is enabled
+  set-author-status        Enable or disable the author bit (Co-authored-by trailer)
   generate                 Generate a file version of available authors
   available                List available authors
   example                  Print example mit toml file
