@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.5.3](https://github.com/PurpleBooth/git-mit/compare/7b549754d8fda36fd965e5babf0f6a7ada696f75..v6.5.3) - 2026-07-05
+#### Bug Fixes
+- (**deps**) update rust docker tag to v1.96.1 - ([7b54975](https://github.com/PurpleBooth/git-mit/commit/7b549754d8fda36fd965e5babf0f6a7ada696f75)) - renovate[bot]
+#### Miscellaneous Chores
+- (**deps**) update rust crate clap_complete to v4.6.7 - ([2eb1d08](https://github.com/PurpleBooth/git-mit/commit/2eb1d084d17b4e06ff06687df60c5e565be61c84)) - renovate[bot]
+- (**deps**) update rust crate rand to v0.10.2 - ([f5cfff1](https://github.com/PurpleBooth/git-mit/commit/f5cfff1eb95bcfe6ba991b955a23dfd450a30421)) - renovate[bot]
+- (**deps**) update rust crate time to v0.3.53 - ([d5e9a16](https://github.com/PurpleBooth/git-mit/commit/d5e9a164e5ed7a267311033a0a83bdfe04b0bf99)) - renovate[bot]
+
+- - -
+
 ## [v6.5.2](https://github.com/PurpleBooth/git-mit/compare/fb720628e6673c327f1b9ac11cd166a9592ccffe..v6.5.2) - 2026-06-29
 #### Bug Fixes
 - remove redundant shells from generate_completions_from_executable template - ([d160de2](https://github.com/PurpleBooth/git-mit/commit/d160de26088c52cb84a1ab977aba10cee783a2d8)) - PurpleBooth

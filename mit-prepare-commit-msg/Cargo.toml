@@ -1,6 +1,6 @@
 [package]
 name = "mit-prepare-commit-msg"
-version = "6.5.2"
+version = "6.5.3"
 authors = ["Billie Thompson <billie+mit-prepare-commit-msg@billiecodes.com>"]
 description = "This hook is invoked by git-commit right after preparing the default log message, and before the editor is started."
 readme = "../README.md"
