@@ -1,0 +1,2 @@
+[run]
+add_path = ["target/release"]
