@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.5.3](https://github.com/PurpleBooth/git-mit/compare/d33e50553f1256d6c0e942002cf1090f37ec5af5..v6.5.3) - 2026-07-13
+#### Bug Fixes
+- (**deps**) upgrade crossbeam-epoch to 0.9.20 (RUSTSEC-2026-0204) - ([d33e505](https://github.com/PurpleBooth/git-mit/commit/d33e50553f1256d6c0e942002cf1090f37ec5af5)) - PurpleBooth
+
+- - -
+
 ## [v6.5.2](https://github.com/PurpleBooth/git-mit/compare/fb720628e6673c327f1b9ac11cd166a9592ccffe..v6.5.2) - 2026-06-29
 #### Bug Fixes
 - remove redundant shells from generate_completions_from_executable template - ([d160de2](https://github.com/PurpleBooth/git-mit/commit/d160de26088c52cb84a1ab977aba10cee783a2d8)) - PurpleBooth
