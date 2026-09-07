@@ -33,7 +33,7 @@ jobs:
       previous_version: ${{ steps.previous_version.outputs.previous_version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b9e0990d219a03df7633c93f6f005a8fecbcab22 # main
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # main
         with:
           fetch-depth: 0
       - uses: taiki-e/install-action@2c7d624cfb6e31cf9c4246a7552cf3ab47a620e7 # cargo-binstall
@@ -64,7 +64,7 @@ jobs:
       - release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         name: Checkout the repository
         with:
           ref: v${{ needs.release.outputs.current_version }}
@@ -173,7 +173,7 @@ jobs:
       - run: ${{ matrix.install }}
         env:
           DEBIAN_FRONTEND: noninteractive
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           lfs: true
           ref: v${{ needs.release.outputs.current_version }}
@@ -241,7 +241,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           lfs: true
           fetch-depth: 0
