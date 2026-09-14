@@ -8,15 +8,15 @@ on:
 
 jobs:
   docker-build:
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@a9eefe0eb33eb8f7de3476da8e836e6919652410 # main
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-build.yml@152a6e40d97db5f9f2a1913166cff9ad04924131 # main
 
   rust-check:
-    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@a9eefe0eb33eb8f7de3476da8e836e6919652410 # main
+    uses: PurpleBooth/common-pipelines/.github/workflows/rust-check.yml@152a6e40d97db5f9f2a1913166cff9ad04924131 # main
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 
   specdown:
-    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@a9eefe0eb33eb8f7de3476da8e836e6919652410 # main
+    uses: PurpleBooth/common-pipelines/.github/workflows/specdown-check.yml@152a6e40d97db5f9f2a1913166cff9ad04924131 # main
     with:
       ubuntu_before_script: sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev && npm install -g lefthook
       mac_before_script: brew install lefthook
@@ -287,7 +287,7 @@ jobs:
     if: needs.release.outputs.current_version != needs.release.outputs.previous_version
     needs:
       - release
-    uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@a9eefe0eb33eb8f7de3476da8e836e6919652410 # main
+    uses: PurpleBooth/common-pipelines/.github/workflows/docker-push.yml@152a6e40d97db5f9f2a1913166cff9ad04924131 # main
     with:
       current_version: ${{ needs.release.outputs.current_version }}
 
