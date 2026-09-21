@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.5.4](https://github.com/PurpleBooth/git-mit/compare/d01b47350d15bde0f70c666272093e11f423ff33..v6.5.4) - 2026-09-21
+#### Bug Fixes
+- (**deps**) update rust docker tag to v1.98.1 - ([36ff9fb](https://github.com/PurpleBooth/git-mit/commit/36ff9fb834c87cf494f3e823e0b09b4fe768983e)) - renovate[bot]
+#### Continuous Integration
+- update common-pipelines digest to 152a6e40 - ([2be313f](https://github.com/PurpleBooth/git-mit/commit/2be313fb6db38d8254c1345d78d7a63bd5b12559)) - Billie
+- update common-pipelines digest to a9eefe0 - ([d416c2e](https://github.com/PurpleBooth/git-mit/commit/d416c2eed3b2bdafeed6dc58fb0670537a3cc2b0)) - Billie
+#### Miscellaneous Chores
+- (**deps**) update rust crate glob to v0.3.4 - ([e7dcc0c](https://github.com/PurpleBooth/git-mit/commit/e7dcc0c05f659dc25463acd8d2b9c5618077703e)) - renovate[bot]
+- (**deps**) update rust crate which to v8.0.6 - ([2f39ecb](https://github.com/PurpleBooth/git-mit/commit/2f39ecb6d8ef4a70cd7e58df944c064a9fdb9865)) - renovate[bot]
+- (**deps**) update rust crate clap_complete to v4.6.11 - ([1113552](https://github.com/PurpleBooth/git-mit/commit/11135522dab9d56e9cc7edea6d1d417767681167)) - renovate[bot]
+- (**deps**) update taiki-e/install-action digest to 1785aaa - ([0e7b573](https://github.com/PurpleBooth/git-mit/commit/0e7b573dcd74dc718e9cd22895536639ceb86284)) - renovate[bot]
+- (**deps**) update cargo-bins/cargo-binstall digest to 59d3cd5 (#1689) - ([833e458](https://github.com/PurpleBooth/git-mit/commit/833e458b7883f8b2a1f6132997299ff02afd1db4)) - renovate[bot], renovate[bot]
+- (**deps**) update dtolnay/rust-toolchain digest to 02cb101 (#1655) - ([72052d1](https://github.com/PurpleBooth/git-mit/commit/72052d1a7b23b25d569398b26cad1b35231ad58e)) - renovate[bot], renovate[bot]
+- (**deps**) update cargo-bins/cargo-binstall digest to 94dc7fe (#1669) - ([7ef053d](https://github.com/PurpleBooth/git-mit/commit/7ef053db00198f41aa89fbaf9c7312a446e70de4)) - renovate[bot], renovate[bot]
+- (**deps**) update actions/checkout digest (#1674) - ([d01b473](https://github.com/PurpleBooth/git-mit/commit/d01b47350d15bde0f70c666272093e11f423ff33)) - renovate[bot], renovate[bot]
+
+- - -
+
 ## [v6.5.3](https://github.com/PurpleBooth/git-mit/compare/0f0ef6592663a645304440fc82a3f23d3d309419..v6.5.3) - 2026-09-02
 #### Bug Fixes
 - (**deps**) update crossbeam-epoch to v0.9.20 - ([33dc84a](https://github.com/PurpleBooth/git-mit/commit/33dc84a3a28b3b917a20524049965029fc565726)) - billie.codes
