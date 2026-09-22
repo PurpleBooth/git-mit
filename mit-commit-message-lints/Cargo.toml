@@ -13,7 +13,7 @@ repository = "https://github.com/PurpleBooth/git-mit"
 workspace = true
 
 [dependencies]
-comfy-table = "7"
+comfy-table = "8"
 git2 = "0.21"
 glob = "0.3"
 indoc = "2"
