@@ -36,7 +36,7 @@ version = "0.10"
 optional = true
 
 [dev-dependencies]
-tempfile = "3"
+tempfile = "=3.27.0"
 
 [features]
 default = []
