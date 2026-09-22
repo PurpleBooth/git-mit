@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.6.0](https://github.com/PurpleBooth/git-mit/compare/71481c294e90c323ff3ece08691bc1b6f03c47c1..v6.6.0) - 2026-09-22
+#### Features
+- (**deps**) replace deprecated serde_yaml with serde-saphyr - ([71481c2](https://github.com/PurpleBooth/git-mit/commit/71481c294e90c323ff3ece08691bc1b6f03c47c1)) - billie.codes
+- replace tinytemplate with an in-house trailer template renderer - ([64a632b](https://github.com/PurpleBooth/git-mit/commit/64a632ba75ca6da57e5118b02a8cf0f15cd1bb7e)) - billie.codes
+#### Miscellaneous Chores
+- (**deps**) update taiki-e/install-action digest to db28968 - ([389e20c](https://github.com/PurpleBooth/git-mit/commit/389e20c6cce65ddb1a48a23bd872d4230974e3cf)) - renovate[bot]
+- (**deps**) pin rust crate tempfile to =3.27.0 - ([e0adf26](https://github.com/PurpleBooth/git-mit/commit/e0adf267e4061c1073cb6ef478a9e28db9ffcaf3)) - renovate[bot]
+
+- - -
+
 ## [v6.5.7](https://github.com/PurpleBooth/git-mit/compare/3841546f6633169825b4426ce8a63203c67f10c0..v6.5.7) - 2026-09-22
 #### Bug Fixes
 - (**deps**) update rust crate comfy-table to v8 - ([4924595](https://github.com/PurpleBooth/git-mit/commit/4924595a7367749a02453b08bbf73fe532c620f8)) - renovate[bot]
