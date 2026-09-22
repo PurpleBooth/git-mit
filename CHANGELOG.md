@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.5.6](https://github.com/PurpleBooth/git-mit/compare/10b230861d970631db9f7ded4d90e31ff54ab876..v6.5.6) - 2026-09-22
+#### Bug Fixes
+- (**deps**) update docker/dockerfile docker tag to v1.27 - ([10b2308](https://github.com/PurpleBooth/git-mit/commit/10b230861d970631db9f7ded4d90e31ff54ab876)) - renovate[bot]
+
+- - -
+
 ## [v6.5.5](https://github.com/PurpleBooth/git-mit/compare/b8ca076416cb39d0299d97726bd4c47350ed0fa8..v6.5.5) - 2026-09-22
 #### Bug Fixes
 - (**deps**) update debian:bookworm-slim docker digest to 3783cc0 - ([e9814b0](https://github.com/PurpleBooth/git-mit/commit/e9814b03e84e8d53e2a89c35836af387f8325ff0)) - renovate[bot]
