@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.5.5](https://github.com/PurpleBooth/git-mit/compare/b8ca076416cb39d0299d97726bd4c47350ed0fa8..v6.5.5) - 2026-09-22
+#### Bug Fixes
+- (**deps**) update debian:bookworm-slim docker digest to 3783cc0 - ([e9814b0](https://github.com/PurpleBooth/git-mit/commit/e9814b03e84e8d53e2a89c35836af387f8325ff0)) - renovate[bot]
+#### Miscellaneous Chores
+- (**deps**) update cargo-bins/cargo-binstall digest to 34d2323 - ([5d17251](https://github.com/PurpleBooth/git-mit/commit/5d172515a4d12dfe63fad4ee5063c4a1051b5c9a)) - renovate[bot]
+- (**deps**) update rust crate tokio to v1.53.1 - ([69e3cac](https://github.com/PurpleBooth/git-mit/commit/69e3cacd3ed466bcd34408be3732150fbb2f2dbb)) - renovate[bot]
+- (**deps**) update rust crate time to v0.3.55 - ([7569a38](https://github.com/PurpleBooth/git-mit/commit/7569a38ca50021146c9c3f2da65393dcf93c66aa)) - renovate[bot]
+- (**deps**) update rust crate serde to v1.0.229 - ([b85c737](https://github.com/PurpleBooth/git-mit/commit/b85c737cf4962a41f06087e2e7b20866589a5962)) - renovate[bot]
+- (**deps**) update rust crate thiserror to v2.0.20 - ([4c64b0e](https://github.com/PurpleBooth/git-mit/commit/4c64b0e8dc9d43c095f756543077346e0064dd94)) - renovate[bot]
+- (**deps**) update rust crate toml to v1.1.6 - ([b8ca076](https://github.com/PurpleBooth/git-mit/commit/b8ca076416cb39d0299d97726bd4c47350ed0fa8)) - renovate[bot]
+
+- - -
+
 ## [v6.5.4](https://github.com/PurpleBooth/git-mit/compare/d01b47350d15bde0f70c666272093e11f423ff33..v6.5.4) - 2026-09-21
 #### Bug Fixes
 - (**deps**) update rust docker tag to v1.98.1 - ([36ff9fb](https://github.com/PurpleBooth/git-mit/commit/36ff9fb834c87cf494f3e823e0b09b4fe768983e)) - renovate[bot]
