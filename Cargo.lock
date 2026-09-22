@@ -710,6 +710,7 @@ dependencies = [
  "miette",
  "mit-commit-message-lints",
  "openssl",
+ "tempfile",
  "thiserror",
  "which",
 ]

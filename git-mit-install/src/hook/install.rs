@@ -93,15 +93,9 @@ mod tests {
 
     #[test]
     fn link_detects_existing_correct_symlink_and_rejects_regular_file() {
-        let temp = std::env::temp_dir().join(format!(
-            "git-mit-install-test-{}",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_nanos()
-        ));
-        let hook_dir = temp.join("hooks");
-        let bin_dir = temp.join("bin");
+        let temp = tempfile::tempdir().unwrap();
+        let hook_dir = temp.path().join("hooks");
+        let bin_dir = temp.path().join("bin");
         std::fs::create_dir_all(&hook_dir).unwrap();
         std::fs::create_dir_all(&bin_dir).unwrap();
 
@@ -142,7 +136,6 @@ mod tests {
         unsafe {
             std::env::set_var("PATH", old_path);
         }
-        let _ = std::fs::remove_dir_all(&temp);
     }
 }
 
@@ -185,54 +178,36 @@ mod pure_tests {
 
     #[test]
     fn is_our_wrapper_is_true_for_our_wrapper_content() {
-        let temp = std::env::temp_dir().join(format!(
-            "git-mit-install-pure-test-{}",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_nanos()
-        ));
-        std::fs::create_dir_all(&temp).unwrap();
+        let temp = tempfile::tempdir().unwrap();
 
-        let binary = temp.join("mit-pre-commit");
+        let binary = temp.path().join("mit-pre-commit");
         std::fs::write(&binary, b"binary-bytes").unwrap();
         let binary = binary.canonicalize().unwrap();
 
-        let hook = temp.join("pre-commit");
+        let hook = temp.path().join("pre-commit");
         std::fs::write(&hook, wrapper_content(&binary)).unwrap();
 
         assert!(
             is_our_wrapper(&hook, &binary),
             "a file containing our exact wrapper content must count as already installed"
         );
-
-        let _ = std::fs::remove_dir_all(&temp);
     }
 
     #[test]
     fn is_our_wrapper_is_false_for_foreign_file() {
-        let temp = std::env::temp_dir().join(format!(
-            "git-mit-install-pure-test-{}",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_nanos()
-        ));
-        std::fs::create_dir_all(&temp).unwrap();
+        let temp = tempfile::tempdir().unwrap();
 
-        let binary = temp.join("mit-pre-commit");
+        let binary = temp.path().join("mit-pre-commit");
         std::fs::write(&binary, b"binary-bytes").unwrap();
         let binary = binary.canonicalize().unwrap();
 
-        let hook = temp.join("pre-commit");
+        let hook = temp.path().join("pre-commit");
         std::fs::write(&hook, b"#!/bin/sh\necho someone elses hook\n").unwrap();
 
         assert!(
             !is_our_wrapper(&hook, &binary),
             "a file with different content must not count as already installed"
         );
-
-        let _ = std::fs::remove_dir_all(&temp);
     }
 }
 
@@ -242,15 +217,9 @@ mod windows_tests {
 
     #[test]
     fn link_writes_runnable_wrapper_and_is_idempotent() {
-        let temp = std::env::temp_dir().join(format!(
-            "git-mit-install-win-test-{}",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_nanos()
-        ));
-        let hook_dir = temp.join("hooks");
-        let bin_dir = temp.join("bin");
+        let temp = tempfile::tempdir().unwrap();
+        let hook_dir = temp.path().join("hooks");
+        let bin_dir = temp.path().join("bin");
         std::fs::create_dir_all(&hook_dir).unwrap();
         std::fs::create_dir_all(&bin_dir).unwrap();
 
@@ -292,6 +261,5 @@ mod windows_tests {
         unsafe {
             std::env::set_var("PATH", old_path);
         }
-        let _ = std::fs::remove_dir_all(&temp);
     }
 }
