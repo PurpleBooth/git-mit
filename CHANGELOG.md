@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.5.7](https://github.com/PurpleBooth/git-mit/compare/3841546f6633169825b4426ce8a63203c67f10c0..v6.5.7) - 2026-09-22
+#### Bug Fixes
+- (**deps**) update rust crate comfy-table to v8 - ([4924595](https://github.com/PurpleBooth/git-mit/commit/4924595a7367749a02453b08bbf73fe532c620f8)) - renovate[bot]
+- migrate to the comfy-table 8 style API - ([f875a67](https://github.com/PurpleBooth/git-mit/commit/f875a67071420e308e5a044b36e2cdde3529ea5c)) - billie.codes
+#### Tests
+- use tempfile for collision-proof temp dirs in git-mit-install - ([e2bf9d3](https://github.com/PurpleBooth/git-mit/commit/e2bf9d3526372b6b732257737734aceade84f771)) - billie.codes
+#### Miscellaneous Chores
+- (**deps**) update rust crate rand to v0.10.3 - ([3841546](https://github.com/PurpleBooth/git-mit/commit/3841546f6633169825b4426ce8a63203c67f10c0)) - renovate[bot]
+
+- - -
+
 ## [v6.5.6](https://github.com/PurpleBooth/git-mit/compare/10b230861d970631db9f7ded4d90e31ff54ab876..v6.5.6) - 2026-09-22
 #### Bug Fixes
 - (**deps**) update docker/dockerfile docker tag to v1.27 - ([10b2308](https://github.com/PurpleBooth/git-mit/commit/10b230861d970631db9f7ded4d90e31ff54ab876)) - renovate[bot]

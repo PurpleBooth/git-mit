@@ -1,6 +1,6 @@
 [package]
 name = "git-mit"
-version = "6.5.6"
+version = "6.5.7"
 authors = ["Billie Thompson <billie+git-mit@billiecodes.com>"]
 description = "Set author and Co-authored trailer."
 readme = "../README.md"
