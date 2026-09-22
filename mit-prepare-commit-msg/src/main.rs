@@ -44,18 +44,11 @@ use mit_commit_message_lints::{
     },
     relates::{RelateTo, get_relate_to_configuration},
 };
-use serde::Serialize;
-use tinytemplate::TinyTemplate;
 
 use crate::{cli::Args, errors::MitPrepareCommitMessageError};
 
 mod cli;
 mod errors;
-
-#[derive(Serialize)]
-struct Context<'a> {
-    value: &'a str,
-}
 
 fn main() -> Result<()> {
     miette_install();
@@ -123,13 +116,13 @@ fn main() -> Result<()> {
         append_relate_to_trailer_to_commit_message(
             commit_message_path,
             &get_relates_to_from_exec(&exec)?,
-            relates_to_template,
+            relates_to_template.as_deref(),
         )?;
     } else if let Some(relates_to) = get_relate_to_configuration(&git_config)? {
         append_relate_to_trailer_to_commit_message(
             commit_message_path,
             &relates_to,
-            relates_to_template,
+            relates_to_template.as_deref(),
         )?;
     }
 
@@ -176,27 +169,50 @@ fn append_coauthors_to_commit_message(
 fn append_relate_to_trailer_to_commit_message(
     commit_message_path: PathBuf,
     relates: &RelateTo<'_>,
-    template: Option<String>,
+    template: Option<&str>,
 ) -> Result<()> {
     let _path = String::from(commit_message_path.to_string_lossy());
     let commit_message = CommitMessage::try_from(commit_message_path.clone()).into_diagnostic()?;
 
-    let mut tt = TinyTemplate::new();
-    let defaulted_template = template.unwrap_or_else(|| "{ value }".to_string());
-    tt.add_template("template", &defaulted_template)
-        .into_diagnostic()?;
-    let value = tt
-        .render(
-            "template",
-            &Context {
-                value: relates.to(),
-            },
-        )
-        .into_diagnostic()?;
+    let defaulted_template = template.unwrap_or("{ value }");
+    let value = render_relates_to_template(defaulted_template, relates.to())?;
     let trailer = Trailer::new("Relates-to".into(), value.into());
     add_trailer_if_not_existing(commit_message_path, &commit_message, &trailer)?;
 
     Ok(())
+}
+
+/// Substitute the `{ value }` placeholder in a relates-to template.
+///
+/// The inner whitespace is optional, so `{value}` works too. Everything outside
+/// a placeholder is literal text; any other name inside braces, or a `{` with
+/// no matching `}`, is an error.
+fn render_relates_to_template(template: &str, value: &str) -> Result<String> {
+    let invalid = |span_offset: usize, span_len: usize| {
+        MitPrepareCommitMessageError::InvalidRelatesToTemplate {
+            src: template.to_string(),
+            span: (span_offset, span_len).into(),
+        }
+        .into()
+    };
+
+    let mut rendered = String::with_capacity(template.len());
+    let mut remainder = template;
+    while let Some(open) = remainder.find('{') {
+        rendered.push_str(&remainder[..open]);
+        let after_open = &remainder[open + 1..];
+        let Some(close) = after_open.find('}') else {
+            return Err(invalid(open, 1));
+        };
+        if after_open[..close].trim() != "value" {
+            return Err(invalid(open, close + 2));
+        }
+        rendered.push_str(value);
+        remainder = &after_open[close + 1..];
+    }
+    rendered.push_str(remainder);
+
+    Ok(rendered)
 }
 
 fn add_trailer_if_not_existing(
@@ -262,6 +278,90 @@ mod tests {
         assert!(
             result.is_err(),
             "Expected an error when the exec command exits non-zero"
+        );
+    }
+
+    #[test]
+    fn renders_the_default_template() {
+        let result = render_relates_to_template("{ value }", "[#123]").unwrap();
+        assert_eq!(
+            result, "[#123]",
+            "the default template must substitute the value, got {result:?}"
+        );
+    }
+
+    #[test]
+    fn renders_a_custom_template_with_surrounding_text() {
+        let result = render_relates_to_template("Relates to { value }, see also", "[#1]").unwrap();
+        assert_eq!(
+            result, "Relates to [#1], see also",
+            "text around the placeholder must be kept verbatim, got {result:?}"
+        );
+    }
+
+    #[test]
+    fn accepts_the_placeholder_without_inner_whitespace() {
+        let result = render_relates_to_template("{value}", "abc").unwrap();
+        assert_eq!(
+            result, "abc",
+            "`{{value}}` without spaces must also substitute, got {result:?}"
+        );
+    }
+
+    #[test]
+    fn substitutes_every_placeholder() {
+        let result = render_relates_to_template("{ value } and { value }", "x").unwrap();
+        assert_eq!(
+            result, "x and x",
+            "every occurrence must be substituted, got {result:?}"
+        );
+    }
+
+    #[test]
+    fn passes_braces_in_the_value_through() {
+        let result = render_relates_to_template("{ value }", "{ not a placeholder }").unwrap();
+        assert_eq!(
+            result, "{ not a placeholder }",
+            "the substituted value must not be re-scanned for placeholders, got {result:?}"
+        );
+    }
+
+    #[test]
+    fn renders_an_empty_template_to_an_empty_value() {
+        let result = render_relates_to_template("", "abc").unwrap();
+        assert_eq!(
+            result, "",
+            "an empty template must render to an empty string, got {result:?}"
+        );
+    }
+
+    #[test]
+    fn errors_on_an_unknown_placeholder() {
+        let result = render_relates_to_template("no { value } but { typo }", "abc");
+        assert!(
+            result.is_err(),
+            "an unknown placeholder name must be an error, got {:?}",
+            result.map(|_| ()).map_err(|err| err.to_string())
+        );
+    }
+
+    #[test]
+    fn errors_on_an_unterminated_placeholder() {
+        let result = render_relates_to_template("value is { value", "abc");
+        assert!(
+            result.is_err(),
+            "an opening brace with no closing brace must be an error, got {:?}",
+            result.map(|_| ()).map_err(|err| err.to_string())
+        );
+    }
+
+    #[test]
+    fn errors_on_an_empty_placeholder() {
+        let result = render_relates_to_template("value is {}", "abc");
+        assert!(
+            result.is_err(),
+            "an empty placeholder must be an error, got {:?}",
+            result.map(|_| ()).map_err(|err| err.to_string())
         );
     }
 }

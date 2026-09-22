@@ -152,10 +152,10 @@ it possible to avoid typing so much or skip awkward characters.
 git mit-config relates-to template "[#{value}]"
 ```
 
-The templating uses
-[TinyTemplate](https://docs.rs/tinytemplate/latest/tinytemplate/), with
-a single `value` variable available, containing the value passed to the
-command
+The templating supports a single `value` placeholder, written as
+`{value}` or `{ value }`, which contains the value passed to the
+command. Any other name inside braces is an error, and everything
+outside a placeholder is literal text
 
 Next time you commit after running relates to
 

@@ -17,7 +17,6 @@ clap_complete = "4"
 mit-commit = "3"
 shell-words = "1"
 thiserror = "2"
-tinytemplate = "1"
 
 [dependencies.clap]
 version = "4"
@@ -34,10 +33,6 @@ path = "../mit-commit-message-lints"
 [dependencies.openssl]
 version = "0.10"
 optional = true
-
-[dependencies.serde]
-version = "1"
-features = ["derive"]
 
 [dev-dependencies]
 
