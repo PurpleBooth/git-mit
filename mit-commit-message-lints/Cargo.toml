@@ -20,7 +20,7 @@ indoc = "2"
 mit-commit = "3"
 mit-lint = "4"
 rand = "0.10"
-serde_yaml = "0.9"
+serde-saphyr = { version = "1.3", default-features = false, features = ["miette"] }
 shell-words = "1"
 thiserror = "2"
 time = "0.3"

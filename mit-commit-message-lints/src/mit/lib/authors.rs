@@ -89,7 +89,7 @@ impl<'a> TryFrom<&'a str> for Authors<'a> {
     type Error = DeserializeAuthorsError;
 
     fn try_from(input: &str) -> Result<Self, Self::Error> {
-        serde_yaml::from_str(input)
+        serde_saphyr::from_str(input)
             .or_else(|yaml_error| {
                 toml::from_str(input).map_err(|toml_error| {
                     DeserializeAuthorsError::new(input, &yaml_error, &toml_error)
@@ -103,7 +103,7 @@ impl TryFrom<String> for Authors<'_> {
     type Error = DeserializeAuthorsError;
 
     fn try_from(input: String) -> Result<Self, Self::Error> {
-        serde_yaml::from_str(&input)
+        serde_saphyr::from_str(&input)
             .or_else(|yaml_error| {
                 toml::from_str(&input).map_err(|toml_error| {
                     DeserializeAuthorsError::new(&input, &yaml_error, &toml_error)

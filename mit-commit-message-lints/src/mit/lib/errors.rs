@@ -1,5 +1,5 @@
 use miette::{Diagnostic, SourceOffset, SourceSpan};
-use serde_yaml::Error as YamlDeserializeError;
+use serde_saphyr::DeserializeError as YamlDeserializeError;
 use thiserror::Error;
 use toml::de::Error as TomlDeserializeError;
 
@@ -64,7 +64,7 @@ impl DeserializeAuthorsError {
             src: input.to_string(),
             toml_span: (Self::span_from_toml_err(toml_error, input), 0).into(),
             yaml_span: (Self::span_from_yaml_err(yaml_error, input), 0).into(),
-            yaml_message: yaml_error.to_string(),
+            yaml_message: yaml_error.without_snippet().to_string(),
             toml_message: toml_error.to_string(),
         }
     }
@@ -80,7 +80,13 @@ impl DeserializeAuthorsError {
         err.location()
             .map_or_else(
                 || SourceOffset::from(0),
-                |location| SourceOffset::from_location(input, location.line(), location.column()),
+                |location| {
+                    let (line, column) = (
+                        usize::try_from(location.line()).unwrap_or_default(),
+                        usize::try_from(location.column()).unwrap_or_default(),
+                    );
+                    SourceOffset::from_location(input, line, column)
+                },
             )
             .offset()
     }
@@ -88,7 +94,10 @@ impl DeserializeAuthorsError {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::BTreeMap;
+
     use super::*;
+    use crate::mit::lib::author::Author;
     use miette::Diagnostic;
     use serde::ser;
 
@@ -122,7 +131,7 @@ mod tests {
     #[test]
     fn deserialize_authors_error_new_populates_error_messages() {
         let input = "{[invalid";
-        let yaml_result: Result<serde_yaml::Value, _> = serde_yaml::from_str(input);
+        let yaml_result: Result<BTreeMap<String, Author<'_>>, _> = serde_saphyr::from_str(input);
         let toml_result: Result<toml::Value, _> = toml::from_str(input);
         let yaml_error = yaml_result.unwrap_err();
         let toml_error = toml_result.unwrap_err();
