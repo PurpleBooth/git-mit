@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # main
         with:
           fetch-depth: 0
-      - uses: taiki-e/install-action@1785aaac536aeb3231b16697ec88a11f29bff521 # cargo-binstall
+      - uses: taiki-e/install-action@db2896812b19771a5ff38d39ccaf33c81750567a # cargo-binstall
       - name: Get tags
         run: git fetch --tags origin
       - shell: bash
@@ -185,7 +185,7 @@ jobs:
             ~/.cargo/git
             ~/.cargo/bin
             target
-      - uses: taiki-e/install-action@1785aaac536aeb3231b16697ec88a11f29bff521 # cargo-binstall
+      - uses: taiki-e/install-action@db2896812b19771a5ff38d39ccaf33c81750567a # cargo-binstall
       - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de # master
         with:
           toolchain: stable
