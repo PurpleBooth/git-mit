@@ -2,9 +2,7 @@
 
 use std::fmt::Display;
 
-use comfy_table::{
-    Attribute, Cell, ContentArrangement, Table, modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL,
-};
+use comfy_table::{Attribute, Cell, ContentArrangement, Table, presets::UTF8_FULL};
 use miette::{Diagnostic, GraphicalReportHandler, Severity};
 use mit_lint::{Lint, Lints};
 use thiserror::Error;
@@ -94,8 +92,7 @@ pub fn to_be_piped(output: &str) {
 pub fn lint_table(list: &Lints, enabled: &Lints) {
     let mut table = Table::new();
     table
-        .load_preset(UTF8_FULL)
-        .apply_modifier(UTF8_ROUND_CORNERS)
+        .load_style(UTF8_FULL.with_rounded_corners())
         .set_content_arrangement(ContentArrangement::Dynamic)
         .set_header(vec!["Lint", "Status"]);
 
@@ -121,8 +118,7 @@ pub fn lint_table(list: &Lints, enabled: &Lints) {
 pub fn author_table(authors: &Authors<'_>) -> String {
     let mut table = Table::new();
     table
-        .load_preset(UTF8_FULL)
-        .apply_modifier(UTF8_ROUND_CORNERS)
+        .load_style(UTF8_FULL.with_rounded_corners())
         .set_content_arrangement(ContentArrangement::Dynamic)
         .set_header(vec!["Initial", "Name", "Email", "Signing Key"]);
 
