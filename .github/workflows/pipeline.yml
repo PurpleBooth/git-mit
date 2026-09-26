@@ -265,7 +265,7 @@ jobs:
            md5sum "$file" > "$file.md5"
           fi
           done
-      - uses: cargo-bins/cargo-binstall@34d2323c40447f79d77146d8269c123a27f4ced5 # main
+      - uses: cargo-bins/cargo-binstall@422f3094be6a0843857aa008b499caaf6bce0da8 # main
         name: Install cargo binstall
       - shell: bash
         run: cargo binstall --no-confirm --locked cocogitto
