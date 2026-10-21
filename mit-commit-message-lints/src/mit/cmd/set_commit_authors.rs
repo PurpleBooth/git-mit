@@ -365,15 +365,11 @@ mod tests {
 
         assert!(
             actual_expire_time < sec61min,
-            "Expected less than {}, found {}",
-            sec61min,
-            actual_expire_time
+            "Expected less than {sec61min}, found {actual_expire_time}"
         );
         assert!(
             actual_expire_time > sec59min,
-            "Expected more than {} seconds since UNIX EPOCH, found {}",
-            sec59min,
-            actual_expire_time
+            "Expected more than {sec59min} seconds since UNIX EPOCH, found {actual_expire_time}"
         );
     }
 
@@ -437,13 +433,11 @@ mod tests {
         let err_msg = format!("{err:#?}");
         assert!(
             err_msg.contains("time") || format!("{err}").contains("time"),
-            "Expected the expiry error message to mention 'time', got: {}",
-            err_msg
+            "Expected the expiry error message to mention 'time', got: {err_msg}"
         );
         assert!(
             !format!("{err}").contains("expiry name"),
-            "Error message should not say 'expiry name', got: {}",
-            err
+            "Error message should not say 'expiry name', got: {err}"
         );
     }
 }

@@ -118,8 +118,7 @@ mod tests {
         let result = link(&hook_dir, "pre-commit");
         assert!(
             result.is_ok(),
-            "Expected Ok(()) when symlink already points to correct binary, got {:?}",
-            result
+            "Expected Ok(()) when symlink already points to correct binary, got {result:?}"
         );
 
         // Replace symlink with a regular file
