@@ -207,7 +207,7 @@ jobs:
           mv -v "./target/release/mit-pre-commit$EXTENSION" "./mit-pre-commit-$TARGET$EXTENSION"
           mv -v "./target/release/mit-prepare-commit-msg$EXTENSION" "./mit-prepare-commit-msg-$TARGET$EXTENSION"
         shell: bash
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: bins-${{ matrix.target }}${{ matrix.suffix }}
           path: ./*${{ matrix.target }}${{ matrix.suffix }}
@@ -265,7 +265,7 @@ jobs:
            md5sum "$file" > "$file.md5"
           fi
           done
-      - uses: cargo-bins/cargo-binstall@7bebc2e59eb8820162b7ac8f62a92bfdb2732447 # main
+      - uses: cargo-bins/cargo-binstall@8a2045612414e945291083f820cd50b4d8fc2218 # main
         name: Install cargo binstall
       - shell: bash
         run: cargo binstall --no-confirm --locked cocogitto
