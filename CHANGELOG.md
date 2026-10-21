@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v6.6.1](https://github.com/PurpleBooth/git-mit/compare/8df68bbaf494c272c0031f11487869ed80387ce1..v6.6.1) - 2026-10-21
+#### Bug Fixes
+- (**deps**) update debian:bookworm-slim docker digest - ([dded9e0](https://github.com/PurpleBooth/git-mit/commit/dded9e0cce44c9d6bdd258581a54e75b4a57bd2d)) - billie.codes
+- (**deps**) update docker/dockerfile:1.27 docker digest to 4edf897 (#1711) - ([3a96d51](https://github.com/PurpleBooth/git-mit/commit/3a96d5188e61964f865235a0ef67c223b078a0cb)) - renovate[bot], renovate[bot]
+#### Tests
+- inline format args to satisfy clippy pedantic - ([9979998](https://github.com/PurpleBooth/git-mit/commit/99799981b6ee8ab83581ac90d3977b69b3d82325)) - billie.codes
+#### Build system
+- (**deps**) update serde-saphyr to v2 - ([7c2e692](https://github.com/PurpleBooth/git-mit/commit/7c2e692d3869a1af4a80bf7f127b6e58fe987cb8)) - billie.codes
+#### Miscellaneous Chores
+- (**deps**) update upload-artifact and cargo-binstall action digests - ([d4493c0](https://github.com/PurpleBooth/git-mit/commit/d4493c03b42de276e40d4d6deac39502701192bd)) - billie.codes
+- (**deps**) update github actions references - ([e737439](https://github.com/PurpleBooth/git-mit/commit/e737439e1d9861ec9ee679c91d33fc8cb05a88b7)) - billie.codes
+- (**deps**) update rust crate thiserror to v2.0.21 (#1706) - ([861d954](https://github.com/PurpleBooth/git-mit/commit/861d9549e731a89e304162c34891580d2c8746b3)) - renovate[bot], renovate[bot]
+- (**deps**) update ncipollo/release-action action to v1.21.0 (#1702) - ([4c6fe22](https://github.com/PurpleBooth/git-mit/commit/4c6fe229d4cfa6c0ccdac49a6f38345aab4fa705)) - renovate[bot], renovate[bot]
+- (**deps**) lock file maintenance (#1709) - ([bda4e23](https://github.com/PurpleBooth/git-mit/commit/bda4e23de2493db7533f842f5901353ea7c1a398)) - renovate[bot], renovate[bot]
+- (**deps**) update dtolnay/rust-toolchain digest to e2a55d2 (#1712) - ([a51aac9](https://github.com/PurpleBooth/git-mit/commit/a51aac92856c3b370a8da826dc488069f208cd49)) - renovate[bot], renovate[bot]
+- (**deps**) update cargo-bins/cargo-binstall digest to 7bebc2e (#1710) - ([7390ee8](https://github.com/PurpleBooth/git-mit/commit/7390ee8f5eb45b4faebbe951db259d63ca3516e2)) - renovate[bot], renovate[bot]
+- (**deps**) update cargo-bins/cargo-binstall digest to 422f309 (#1707) - ([8df68bb](https://github.com/PurpleBooth/git-mit/commit/8df68bbaf494c272c0031f11487869ed80387ce1)) - renovate[bot], renovate[bot]
+
+- - -
+
 ## [v6.6.0](https://github.com/PurpleBooth/git-mit/compare/71481c294e90c323ff3ece08691bc1b6f03c47c1..v6.6.0) - 2026-09-22
 #### Features
 - (**deps**) replace deprecated serde_yaml with serde-saphyr - ([71481c2](https://github.com/PurpleBooth/git-mit/commit/71481c294e90c323ff3ece08691bc1b6f03c47c1)) - billie.codes
