@@ -1,4 +1,2 @@
 [advisories]
-ignore = [
-    "RUSTSEC-2021-0119", # ardboard does not use the effected getgrouplist function
-]
+ignore = []
